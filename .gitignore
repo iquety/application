@@ -1,0 +1,6 @@
+git
+.phpunit.result.cache
+.vscode
+super-linter.log
+coverage/
+vendor/

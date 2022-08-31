@@ -1,0 +1,60 @@
+{
+    "name": "ricardopedias/freep-application",
+    "type": "tool",
+    "description": "Libraries to create a decoupled application",
+    "keywords": ["framework", "freep", "application"],
+    "license": "MIT",
+    "require": {
+        "php": "^8.0.0",
+        "psr/container": "^2.0",
+        "psr/http-factory": "^1.0",
+        "psr/http-message": "^1.0",
+        "ricardopedias/freep-console": "dev-main"
+    },
+    "require-dev": {
+        "laminas/laminas-diactoros": "^2.17",
+        "phpunit/phpunit": "^9",
+        "phpstan/phpstan": "^0.12",
+        "squizlabs/php_codesniffer": "3.*",
+        "phpmd/phpmd": "@stable",
+        "codacy/coverage": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Freep\\Application\\": "src/",
+            "Modules\\": "tests/project/Modules/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts" : {
+        "test": [
+            "vendor/bin/phpunit --testdox"
+        ],
+        "docmap" : [
+            "rm -Rf docs/pt-br/*",
+            "vendor/bin/docmap -s assets/docs/pt-br -d docs/pt-br -r leiame.md -l pt-br",
+            "rm -Rf docs/en/*",
+            "vendor/bin/docmap -s assets/docs/en -d docs/en"
+        ],
+        "coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "analyse": [
+            "phpcbf --standard=PSR1,PSR12 src tests",
+            "phpcs --standard=PSR1,PSR12 src tests",
+            "phpmd ./src ansi cleancode,codesize,unusedcode,naming,design,controversial",
+            "phpmd ./tests ansi cleancode,codesize,unusedcode,naming,design,controversial",
+            "phpstan analyse --level=8 src",
+            "phpstan analyse --level=8 tests"
+        ]
+    }
+}
