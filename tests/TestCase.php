@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Freep\Application\Adapter\DiactorosHttpFactory;
 use Freep\Application\Application;
 use Freep\Application\Bootstrap;
+use Freep\Application\Http\HttpFactory;
 use Freep\Application\Http\Request;
 use Freep\Application\Http\Response;
 use Freep\Application\Http\Stream;
@@ -46,14 +48,17 @@ class TestCase extends FrameworkTestCase
             public function bootRoutes(Router $router): void {}
 
             public function bootDependencies(Application $app): void {
-                $app->addSingleton(Request::class, fn() => TestCase::requestFactory('/user/33'));
-                $app->addSingleton(Response::class, fn() => TestCase::responseFactory());
-                $app->addFactory(Stream::class, fn() => TestCase::streamFactory());
-                $app->addFactory(
-                    UploadedFile::class,
-                    fn() => TestCase::uploadedFileFactory(TestCase::streamFactory())
-                );
-                $app->addFactory(Uri::class, fn() => TestCase::uriFactory());
+                $app->addSingleton(HttpFactory::class, function(){
+                    return new class extends DiactorosHttpFactory {
+                        public function createRequestFromGlobals(): ServerRequestInterface
+                        {
+                            $server = $_SERVER;
+                            $server['REQUEST_URI'] = '/user/33';
+
+                            return (new ServerRequestFactory())->fromGlobals($server);
+                        }
+                    };
+                });
             }
         });
 
@@ -62,22 +67,31 @@ class TestCase extends FrameworkTestCase
 
     public static function requestFactory(string $path = ''): ServerRequestInterface
     {
-        $server = $_SERVER;
-        $server['REQUEST_URI'] = $path;
+        $factory = new class extends DiactorosHttpFactory {
+            public string $path = '';
 
-        return ServerRequestFactory::fromGlobals($server);
+            public function createRequestFromGlobals(): ServerRequestInterface
+            {
+                $server = $_SERVER;
+                $server['REQUEST_URI'] = $this->path;
+
+                return (new ServerRequestFactory())->fromGlobals($server);
+            }
+        };
+
+        $factory->path = $path;
+
+        return $factory->createRequestFromGlobals();
     }
 
     public static function responseFactory(int $code = 200, string $reasonPhrase = ''): ResponseInterface
     {
-        $factory = new ResponseFactory();
-        return $factory->createResponse($code, $reasonPhrase);
+        return (new DiactorosHttpFactory())->createResponse($code, $reasonPhrase);
     }
 
-    public static function streamFactory(string $contents = ''): StreamInterface
+    public static function streamFactory(string $content = ''): StreamInterface
     {
-        $factory = new StreamFactory();
-        return $factory->createStream($contents);
+        return (new DiactorosHttpFactory())->createStream($content);
     }
 
     public static function uploadedFileFactory(
@@ -88,8 +102,7 @@ class TestCase extends FrameworkTestCase
         ?string $clientMediaType = null
     ): UploadedFileInterface
     {
-        $factory = new UploadedFileFactory();
-        return $factory->createUploadedFile(
+        return (new DiactorosHttpFactory())->createUploadedFile(
             $stream,
             $size,
             $error,
@@ -100,7 +113,6 @@ class TestCase extends FrameworkTestCase
 
     public static function uriFactory(string $path = ''): UriInterface
     {
-        $factory = new UriFactory();
-        return $factory->createUri($path);
+        return (new DiactorosHttpFactory())->createUri($path);
     }
 }
