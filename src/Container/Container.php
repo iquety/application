@@ -82,13 +82,13 @@ class Container implements ContainerInterface
      * @throws NotFoundException
      * @return mixed
      */
-    public function getWithArguments(string $id, array $arguments = [])
+    public function getWithArguments(string $id, array $arguments)
     {
         if ($this->has($id) === false) {
             throw new NotFoundException(sprintf('Could not find dependency definition for %s', $id));
         }
 
-        $singletonObject = $this->resolveSingleton($id);
+        $singletonObject = $this->resolveSingleton($id, $arguments);
         if ($singletonObject !== null) {
             return $singletonObject;
         }
@@ -100,14 +100,14 @@ class Container implements ContainerInterface
      * @throws ContainerException
      * @return mixed
      */
-    private function resolveSingleton(string $id)
+    private function resolveSingleton(string $id, array $arguments = [])
     {
         if (isset($this->singleton[$id]) === false) {
             return null;
         }
 
         if ($this->singletonResolved[$id] === false) {
-            $this->singleton[$id] = $this->resolve($id, self::RESOLVE_SINGLETON);
+            $this->singleton[$id] = $this->resolve($id, self::RESOLVE_SINGLETON, $arguments);
             $this->singletonResolved[$id] = true;
         }
 
