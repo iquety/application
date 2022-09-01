@@ -89,12 +89,12 @@ class RouterTest extends TestCase
         $router = new Router();
 
         switch($method) {
-            case Route::ANY: $router->any($pattern)->withMethod($method); break;
-            case Route::DELETE: $router->delete($pattern)->withMethod($method); break;
-            case Route::GET: $router->get($pattern)->withMethod($method); break;
-            case Route::PATCH: $router->patch($pattern)->withMethod($method); break;
-            case Route::POST: $router->post($pattern)->withMethod($method); break;
-            case Route::PUT: $router->put($pattern)->withMethod($method); break;
+            case Route::ANY: $router->any($pattern)->setMethod($method); break;
+            case Route::DELETE: $router->delete($pattern)->setMethod($method); break;
+            case Route::GET: $router->get($pattern)->setMethod($method); break;
+            case Route::PATCH: $router->patch($pattern)->setMethod($method); break;
+            case Route::POST: $router->post($pattern)->setMethod($method); break;
+            case Route::PUT: $router->put($pattern)->setMethod($method); break;
         }
 
         $this->assertFalse($router->routeNotFound());
@@ -112,10 +112,10 @@ class RouterTest extends TestCase
     public function contextualizedByModule(): void
     {
         $router = new Router();
-        $router->get('/user/:name')->withMethod(Route::GET);
+        $router->get('/user/:name')->setMethod(Route::GET);
 
         $router->forModule('module_identifier');
-        $router->get('/post/:id')->withMethod(Route::GET);
+        $router->get('/post/:id')->setMethod(Route::GET);
 
         $router->process(ROUTE::GET, '/user/ricardo');
         $this->assertInstanceOf(Route::class, $router->currentRoute());

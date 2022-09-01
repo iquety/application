@@ -8,6 +8,9 @@ use Freep\Application\Application;
 use Freep\Application\Bootstrap;
 use Freep\Application\Http\Request;
 use Freep\Application\Http\Response;
+use Freep\Application\Http\Stream;
+use Freep\Application\Http\UploadedFile;
+use Freep\Application\Http\Uri;
 use Freep\Application\Routing\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -70,6 +73,12 @@ class ApplicationMainBootTest extends TestCase
             public function bootDependencies(Application $app): void {
                 $app->addSingleton(Request::class, fn() => TestCase::requestFactory());
                 $app->addSingleton(Response::class, fn() => TestCase::responseFactory());
+                $app->addFactory(Stream::class, fn() => TestCase::streamFactory());
+                $app->addFactory(
+                    UploadedFile::class,
+                    fn() => TestCase::uploadedFileFactory(TestCase::streamFactory())
+                );
+                $app->addFactory(Uri::class, fn() => TestCase::uriFactory());
             }
         });
 

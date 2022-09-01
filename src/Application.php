@@ -8,9 +8,15 @@ use Closure;
 use Freep\Application\Container\Container;
 use Freep\Application\Http\Request;
 use Freep\Application\Http\Response;
+use Freep\Application\Http\Stream;
+use Freep\Application\Http\UploadedFile;
+use Freep\Application\Http\Uri;
 use Freep\Application\Routing\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UploadedFileInterface;
+use Psr\Http\Message\UriInterface;
 use RuntimeException;
 use Throwable;
 
@@ -63,6 +69,18 @@ class Application
             throw new RuntimeException("Please implement a " . ResponseInterface::class . " type response");
         }
 
+        if (! $this->make(Stream::class) instanceof StreamInterface) {
+            throw new RuntimeException("Please implement a " . StreamInterface::class . " type response");
+        }
+
+        if (! $this->make(UploadedFile::class) instanceof UploadedFileInterface) {
+            throw new RuntimeException("Please implement a " . UploadedFileInterface::class . " type response");
+        }
+
+        if (! $this->make(Uri::class) instanceof UriInterface) {
+            throw new RuntimeException("Please implement a " . UriInterface::class . " type response");
+        }
+
         $this->addSingleton(Router::class, Router::class);
 
         $bootstrap->bootRoutes($this->router());
@@ -83,7 +101,7 @@ class Application
         return $this->make(Router::class)->resetModuleInfo();
     }
 
-    public function run(): Response
+    public function run(): ResponseInterface
     {
         foreach ($this->modules as $identifier => $bootstrap) {
             $bootstrap->bootRoutes($this->router()->forModule($identifier));
@@ -109,8 +127,11 @@ class Application
             $route = $router->currentRoute();
             
             $routeModule = $route->module();
-            $routeCallback = $route->controller()
-                ?? $this->make(Response::class)->withContents('Status 200: sem callback');
+            $routeCallback = $route->controller();
+
+            if ($routeCallback === null) {
+                throw new RuntimeException('The route found does not have a controller');
+            }
 
             $this->modules[$routeModule]->bootDependencies($this);
 
@@ -126,29 +147,30 @@ class Application
         $this->modules = [];
     }
 
-    private function makeNotFoundResponse(): Response
+    private function makeNotFoundResponse(): ResponseInterface
     {
+        /** @var ResponseInterface $response */
         $response = $this->make(Response::class);
         $response->withStatus(404);
-        $response->withContents('Page not found');
+        $response->withBody($this->make(Stream::class, 'Not Found'));
 
         return $response;
     }
 
-    private function makeAccessDeniedResponse(): Response
+    private function makeAccessDeniedResponse(): ResponseInterface
     {
         $response = $this->make(Response::class);
         $response->withStatus(403);
-        $response->withContents('Access denied');
+        $response->withBody($this->make(Stream::class, 'Access denied'));
 
         return $response;
     }
 
-    private function makeServerErrorResponse(Throwable $exception): Response
+    private function makeServerErrorResponse(Throwable $exception): ResponseInterface
     {
         $response = $this->make(Response::class);
         $response->withStatus(500);
-        $response->withContents($exception->getMessage());
+        $response->withBody($this->make(Stream::class, $exception->getMessage()));
 
         return $response;
     }

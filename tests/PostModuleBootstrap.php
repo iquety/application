@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use ArrayObject;
 use Freep\Application\Application;
 use Freep\Application\Bootstrap;
 use Freep\Application\Routing\Router;
+use stdClass;
 
-class ModuleBootstrap implements Bootstrap
+class PostModuleBootstrap implements Bootstrap
 {
     public function bootRoutes(Router $router): void
     {
-        $router->get('/user/:id');
-        $router->post('/user/:id');
+        $router->get('/post/:id');
+        $router->post('/post/:id');
     }
 
     public function bootDependencies(Application $app): void

@@ -8,16 +8,16 @@ use Closure;
 
 class Route
 {
-    const ANY    = 'any';
-    const DELETE = 'delete';
-    const GET    = 'get';
-    const PATCH  = 'patch';
-    const POST   = 'post';
-    const PUT    = 'put';
+    const ANY    = 'ANY';
+    const DELETE = 'DELETE';
+    const GET    = 'GET';
+    const PATCH  = 'PATCH';
+    const POST   = 'POST';
+    const PUT    = 'PUT';
 
     private Closure|string $controller = '';
 
-    private string $method = 'get';
+    private string $method = 'GET';
 
     private string $module = '';
 
@@ -43,19 +43,19 @@ class Route
         return $this;
     }
     
-    public function withController(Closure|string $controller): Route
+    public function setController(Closure|string $controller): Route
     {
         $this->controller = $controller;
         return $this;
     }
 
-    public function withMethod(string $method): Route
+    public function setMethod(string $method): Route
     {
-        $this->method = $method;
+        $this->method = strtoupper($method);
         return $this;
     }
 
-    public function withPattern(string $pattern): Route
+    public function setPattern(string $pattern): Route
     {
         $this->pattern = trim($pattern, "/");
         return $this;
@@ -93,11 +93,13 @@ class Route
 
     public function matchTo(string $method, string $requestPath): bool
     {
-        if ($this->method() !== Route::ANY && $method !== $this->method()) {
+        if ($this->method() !== Route::ANY && strtoupper($method) !== $this->method()) {
             return false;
         }
 
-        $this->nodes = explode("/", trim($requestPath, "/"));
+        $requestPath = trim($requestPath, "/");
+
+        $this->nodes = $requestPath === '' ? [] : explode("/", $requestPath);
 
         $segments = explode("/", $this->pattern);
 

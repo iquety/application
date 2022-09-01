@@ -20,9 +20,9 @@ class RouteTest extends TestCase
         $route = (new Route())
             ->forModule('UserBootstrap')
             ->policyBy($policy)
-            ->withPattern('edit/:id')
-            ->withMethod(Route::ANY)
-            ->withController('UserController');
+            ->setPattern('edit/:id')
+            ->setMethod(Route::ANY)
+            ->setController('UserController');
 
         $this->assertSame('UserBootstrap', $route->module());
         $this->assertSame($policy, $route->policy());
@@ -127,9 +127,9 @@ class RouteTest extends TestCase
     public function matchRoute(string $pattern, string $path, array $params): void
     {
         $route = new Route();
-        $route->withPattern($pattern);
-        $route->withMethod(Route::GET);
-        $route->withController('CtrlTeste');
+        $route->setPattern($pattern);
+        $route->setMethod(Route::GET);
+        $route->setController('CtrlTeste');
 
         $this->assertTrue($route->matchTo(Route::GET, $path));
         $this->assertEquals($params, $route->params());
@@ -142,9 +142,9 @@ class RouteTest extends TestCase
     public function matchRouteClosure(): void
     {
         $route = new Route();
-        $route->withPattern('edit/:id');
-        $route->withMethod(Route::ANY);
-        $route->withController(fn() => true);
+        $route->setPattern('edit/:id');
+        $route->setMethod(Route::ANY);
+        $route->setController(fn() => true);
 
         $this->assertTrue($route->matchTo(Route::GET, 'edit/33')); // valor calculado
         $this->assertEquals([ 'id' => '33' ], $route->params());
@@ -172,8 +172,8 @@ class RouteTest extends TestCase
     public function notMatchRoute(string $pattern, string $path): void
     {
         $route = new Route();
-        $route->withPattern($pattern);
-        $route->withMethod(Route::ANY);
+        $route->setPattern($pattern);
+        $route->setMethod(Route::ANY);
 
         $this->assertFalse($route->matchTo(Route::GET, $path));
     }

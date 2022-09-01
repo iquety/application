@@ -136,6 +136,7 @@ class Container implements ContainerInterface
 
     public function has(string $id): bool
     {
+        // var_dump($this->factory, $this->singleton); exit;
         return isset($this->factory[$id]) || isset($this->singleton[$id]);
     }
 

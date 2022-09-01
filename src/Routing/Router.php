@@ -113,8 +113,8 @@ class Router
     {
         $route = new Route();
         $route->forModule($this->moduleIdentifier);
-        $route->withPattern($pattern);
-        $route->withMethod($method);
+        $route->setPattern($pattern);
+        $route->setMethod($method);
 
         $routeId = count($this->routes); 
         
