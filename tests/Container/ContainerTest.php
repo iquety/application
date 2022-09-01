@@ -120,9 +120,21 @@ class ContainerTest extends TestCase
     {
         $container = new Container();
         $container->registerDependency('id', fn() => microtime());
+        $container->registerDependency('args', fn($one, $two) => $one . $two );
+        $container->registerDependency(ArrayObject::class, fn(array $set) => new ArrayObject($set));
 
         // a instância é fabricada a cada chamada
         $this->assertNotEquals($container->get('id'), $container->get('id'));
+
+        $this->assertEquals(
+            'ricardo',
+            $container->getWithArguments('args', ['ric', 'ardo'])
+        );
+
+        $this->assertEquals(
+            new ArrayObject(['ric', 'ardo']),
+            $container->getWithArguments(ArrayObject::class, [['ric', 'ardo']])
+        );
     }
 
     /** @test */

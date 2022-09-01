@@ -79,6 +79,24 @@ class Container implements ContainerInterface
     }
 
     /**
+     * @throws NotFoundException
+     * @return mixed
+     */
+    public function getWithArguments(string $id, array $arguments = [])
+    {
+        if ($this->has($id) === false) {
+            throw new NotFoundException(sprintf('Could not find dependency definition for %s', $id));
+        }
+
+        $singletonObject = $this->resolveSingleton($id);
+        if ($singletonObject !== null) {
+            return $singletonObject;
+        }
+
+        return $this->resolveFactory($id, $arguments);
+    }
+
+    /**
      * @throws ContainerException
      * @return mixed
      */
@@ -100,17 +118,20 @@ class Container implements ContainerInterface
      * @throws ContainerException
      * @return mixed
      */
-    private function resolveFactory(string $id)
+    private function resolveFactory(string $id, array $arguments = [])
     {
-        return $this->resolve($id, self::RESOLVE_FACTORY);
+        return $this->resolve($id, self::RESOLVE_FACTORY, $arguments);
     }
 
     /**
      * @throws ContainerException
      * @return mixed
      */
-    private function resolve(string $id, string $type = Container::RESOLVE_SINGLETON)
-    {
+    private function resolve(
+        string $id,
+        string $type = Container::RESOLVE_SINGLETON,
+        array $arguments = []
+    ) {
         $registereds = ($type === self::RESOLVE_FACTORY)
             ? $this->factory
             : $this->singleton;
@@ -119,7 +140,7 @@ class Container implements ContainerInterface
 
         try {
             if (is_callable($registereds[$id]) === true) {
-                $resolved = call_user_func($registereds[$id]);
+                $resolved = call_user_func_array($registereds[$id], $arguments);
             }
         } catch (Throwable $exception) {
             throw new ContainerException($exception->getMessage(), $exception->getCode(), $exception);
