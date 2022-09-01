@@ -71,16 +71,15 @@ class Router
                 continue;
             }
 
+            $this->currentRoute = $routeObject;
+
+            $this->notFound = false;
+
             $policy = $routeObject->policy();
 
             if ($policy !== null && $policy->check() === false) {
                 $this->accessDenied = true;
-                continue;
             }
-
-            $this->currentRoute = $routeObject;
-
-            $this->notFound = false;
 
             break;
         }
@@ -113,8 +112,8 @@ class Router
     {
         $route = new Route();
         $route->forModule($this->moduleIdentifier);
-        $route->setPattern($pattern);
-        $route->setMethod($method);
+        $route->usingPattern($pattern);
+        $route->usingMethod($method);
 
         $routeId = count($this->routes); 
         

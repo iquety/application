@@ -15,7 +15,7 @@ class Route
     const POST   = 'POST';
     const PUT    = 'PUT';
 
-    private Closure|string $controller = '';
+    private Closure|string $action = '';
 
     private string $method = 'GET';
 
@@ -43,27 +43,27 @@ class Route
         return $this;
     }
     
-    public function setController(Closure|string $controller): Route
+    public function usingAction(Closure|string $action): Route
     {
-        $this->controller = $controller;
+        $this->action = $action;
         return $this;
     }
 
-    public function setMethod(string $method): Route
+    public function usingMethod(string $method): Route
     {
         $this->method = strtoupper($method);
         return $this;
     }
 
-    public function setPattern(string $pattern): Route
+    public function usingPattern(string $pattern): Route
     {
         $this->pattern = trim($pattern, "/");
         return $this;
     }
 
-    public function controller(): Closure|string
+    public function action(): Closure|string
     {
-        return $this->controller;
+        return $this->action;
     }
 
     public function method(): string

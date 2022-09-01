@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Routing;
 
+use Freep\Application\Routing\Policy;
 use Freep\Application\Routing\Route;
 use Freep\Application\Routing\Router;
 use Tests\TestCase;
@@ -89,12 +90,12 @@ class RouterTest extends TestCase
         $router = new Router();
 
         switch($method) {
-            case Route::ANY: $router->any($pattern)->setMethod($method); break;
-            case Route::DELETE: $router->delete($pattern)->setMethod($method); break;
-            case Route::GET: $router->get($pattern)->setMethod($method); break;
-            case Route::PATCH: $router->patch($pattern)->setMethod($method); break;
-            case Route::POST: $router->post($pattern)->setMethod($method); break;
-            case Route::PUT: $router->put($pattern)->setMethod($method); break;
+            case Route::ANY: $router->any($pattern)->usingMethod($method); break;
+            case Route::DELETE: $router->delete($pattern)->usingMethod($method); break;
+            case Route::GET: $router->get($pattern)->usingMethod($method); break;
+            case Route::PATCH: $router->patch($pattern)->usingMethod($method); break;
+            case Route::POST: $router->post($pattern)->usingMethod($method); break;
+            case Route::PUT: $router->put($pattern)->usingMethod($method); break;
         }
 
         $this->assertFalse($router->routeNotFound());
@@ -108,14 +109,59 @@ class RouterTest extends TestCase
         $this->assertInstanceOf(Route::class, $router->currentRoute());
     }
 
+    /**
+     * @test
+     * @dataProvider routesMatchProvider
+     * @param mixed $controller
+    */
+    public function denied(string $method, string $pattern, string $path): void
+    {
+        $router = new Router();
+
+        $policy = new class implements Policy {
+            public function check(): bool { return false; }
+        };
+
+        switch($method) {
+            case Route::ANY: 
+                $router->any($pattern)->usingMethod($method)->policyBy($policy);
+                break;
+            case Route::DELETE:
+                $router->delete($pattern)->usingMethod($method)->policyBy($policy);
+                break;
+            case Route::GET:
+                $router->get($pattern)->usingMethod($method)->policyBy($policy);
+                break;
+            case Route::PATCH:
+                $router->patch($pattern)->usingMethod($method)->policyBy($policy);
+                break;
+            case Route::POST:
+                $router->post($pattern)->usingMethod($method)->policyBy($policy);
+                break;
+            case Route::PUT:
+                $router->put($pattern)->usingMethod($method)->policyBy($policy);
+                break;
+        }
+
+        $this->assertFalse($router->routeNotFound());
+        $this->assertFalse($router->routeDenied());
+        $this->assertNull($router->currentRoute());
+
+        $router->process($method, $path);
+
+        $this->assertFalse($router->routeNotFound());
+        $this->assertTrue($router->routeDenied());
+        $this->assertInstanceOf(Route::class, $router->currentRoute());
+    }
+
     /** @test */
     public function contextualizedByModule(): void
     {
         $router = new Router();
-        $router->get('/user/:name')->setMethod(Route::GET);
+        $router->get('/user/:name')->usingMethod(Route::GET);
 
         $router->forModule('module_identifier');
-        $router->get('/post/:id')->setMethod(Route::GET);
+        $router->get('/post/:id')->usingMethod(Route::GET);
 
         $router->process(ROUTE::GET, '/user/ricardo');
         $this->assertInstanceOf(Route::class, $router->currentRoute());
