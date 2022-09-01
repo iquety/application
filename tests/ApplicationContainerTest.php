@@ -6,10 +6,7 @@ namespace Tests;
 
 use ArrayObject;
 use Freep\Application\Application;
-use Freep\Application\Bootstrap;
-use Freep\Application\Http\Request;
-use Freep\Application\Http\Response;
-use Freep\Application\Routing\Router;
+use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 
 class ApplicationContainerTest extends TestCase
@@ -24,11 +21,11 @@ class ApplicationContainerTest extends TestCase
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            "Could not find dependency definition for " . Request::class
+            "Could not find dependency definition for " . ServerRequestInterface::class
         );
 
         $app = Application::instance();
-        $app->make(Request::class);
+        $app->make(ServerRequestInterface::class);
     }
 
     /** @test */

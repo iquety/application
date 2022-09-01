@@ -27,7 +27,7 @@ class ApplicationBootModuleTest extends TestCase
 
         // O bootstrap do módulo cria uma rota apontando para o
         // padrão '/user/:id'
-        $app->bootModule(new UserModuleBootstrap());
+        $app->bootModule(new UserBootstrap());
 
         // as dependencias do módulo só serão resolvidas se 
         // a rota '/user/:id' bater com a requisição efetuada para '/user/33'
@@ -61,11 +61,11 @@ class ApplicationBootModuleTest extends TestCase
         $app = TestCase::applicationFactory();
 
         // O bootstrap do módulo cria uma rota apontando para o
-        // padrão '/post/:id'
-        $app->bootModule(new PostModuleBootstrap());
+        // padrão '/editor/:id'
+        $app->bootModule(new UserAlternateBootstrap());
 
         // as dependencias do módulo não serão resolvidas! Pois a
-        // rota '/post/:id' nunca vai bater com a requisição efetuada para '/user/33'
+        // rota '/editor/:id' nunca vai bater com a requisição efetuada para '/user/33'
         $app->run();
 
         $routeList = $app->router()->routes();
@@ -77,11 +77,11 @@ class ApplicationBootModuleTest extends TestCase
 
         $this->assertInstanceOf(Route::class, $routeOne);
         $this->assertEquals(Route::GET, $routeOne->method());
-        $this->assertEquals('post/:id', $routeOne->pattern());
+        $this->assertEquals('editor/:id', $routeOne->pattern());
 
         $this->assertInstanceOf(Route::class, $routeTwo);
         $this->assertEquals(Route::POST, $routeTwo->method());
-        $this->assertEquals('post/:id', $routeTwo->pattern());
+        $this->assertEquals('editor/:id', $routeTwo->pattern());
 
         // as dependencias não foram setadas!!
         $this->assertFalse($app->container()->has(ArrayObject::class));

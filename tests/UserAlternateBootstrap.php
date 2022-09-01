@@ -10,12 +10,12 @@ use Freep\Application\Bootstrap;
 use Freep\Application\Routing\Router;
 use stdClass;
 
-class PostModuleBootstrap implements Bootstrap
+class UserAlternateBootstrap implements Bootstrap
 {
     public function bootRoutes(Router $router): void
     {
-        $router->get('/post/:id');
-        $router->post('/post/:id');
+        $router->get('/editor/:id');
+        $router->post('/editor/:id');
     }
 
     public function bootDependencies(Application $app): void

@@ -22,26 +22,58 @@ class ApplicationRunTest extends TestCase
     }
 
     /** @test */
-    public function runApplication(): void
+    public function runForNotFoundRoute(): void
     {
+        // a fabrica cria a intancia de ServerRequestInterface com o
+        // URI apondando para '/user/33'
+        $app = TestCase::applicationFactory();
 
-        $this->assertTrue(true);
-        // $router->get('/comment/:id');
-        // $router->put('/comment/:id')->policyBy(new class implements Policy {
-        //     public function check(): bool { return false; }
-        // });
+        $response = $app->run();
 
-        // $router->post('/comment/:id')->withController(fn() => (object)[]);
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals(404, $response->getStatusCode());
+    }
 
-        // $router->delete('/comment/:id')->withController(fn() => (object)[]);
+    /** @test */
+    public function runForAccesDeniedRoute(): void
+    {
+        // a fabrica cria a intancia de ServerRequestInterface com o
+        // URI apondando para '/user/33'
+        $app = TestCase::applicationFactory();
 
-        // $app = TestCase::applicatioFactory();
+        // O bootstrap do módulo cria uma rota apontando para o
+        // padrão '/user/:id'
+        $app->bootModule(new UserRestrictedBootstrap());
 
-        // /** @var Request $raquest */
-        // $request = $app->make(Request::class);
-        // $request->withUri(new Uri('http://www.teste.com.br/teste/33'));
-        // $request->withMethod();
+        // as dependencias do módulo só serão resolvidas se 
+        // a rota '/user/:id' bater com a requisição efetuada para '/user/33'
+        $app->run();
 
-        // $app->run();
+        $response = $app->run();
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /** @test */
+    public function runForController(): void
+    {
+        // a fabrica cria a intancia de ServerRequestInterface com o
+        // URI apondando para '/user/33'
+        $app = TestCase::applicationFactory();
+
+        // O bootstrap do módulo cria uma rota apontando para o
+        // padrão '/user/:id'
+        $app->bootModule(new UserBootstrap());
+
+        // as dependencias do módulo só serão resolvidas se 
+        // a rota '/user/:id' bater com a requisição efetuada para '/user/33'
+        $app->run();
+
+        $response = $app->run();
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals('/user/33 - ID: 33', $response->getBody()->getContents());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 }

@@ -10,11 +10,11 @@ use Freep\Application\Bootstrap;
 use Freep\Application\Routing\Router;
 use stdClass;
 
-class UserModuleBootstrap implements Bootstrap
+class UserBootstrap implements Bootstrap
 {
     public function bootRoutes(Router $router): void
     {
-        $router->get('/user/:id');
+        $router->get('/user/:id')->usingAction(UserController::class . '::create');
         $router->post('/user/:id');
     }
 

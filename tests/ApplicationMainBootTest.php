@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Freep\Application\Adapter\DiactorosHttpFactory;
 use Freep\Application\Application;
 use Freep\Application\Bootstrap;
-use Freep\Application\Http\Request;
-use Freep\Application\Http\Response;
-use Freep\Application\Http\Stream;
-use Freep\Application\Http\UploadedFile;
-use Freep\Application\Http\Uri;
+use Freep\Application\Http\HttpFactory;
 use Freep\Application\Routing\Router;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UploadedFileInterface;
+use Psr\Http\Message\UriInterface;
 use RuntimeException;
 
 class ApplicationMainBootTest extends TestCase
@@ -24,18 +25,20 @@ class ApplicationMainBootTest extends TestCase
     }
 
     /** @test */
-    public function invalidRequest(): void
+    public function invalidHttpFactory(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            "Please implement a " . ServerRequestInterface::class . " type request"
+            "Please implement " . 
+                HttpFactory::class . " dependency for " . 
+                Application::class . "->bootApplication"
         );
 
         $app = Application::instance();
         $app->bootApplication(new class implements Bootstrap {
             public function bootRoutes(Router $router): void {}
             public function bootDependencies(Application $app): void {
-                $app->addSingleton(Request::class, fn() => (object)[]);
+                $app->addSingleton(HttpFactory::class, fn() => (object)[]);
             }
         });
 
@@ -43,25 +46,7 @@ class ApplicationMainBootTest extends TestCase
     }
 
     /** @test */
-    public function invalidResponse(): void
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage(
-            "Please implement a " . ResponseInterface::class . " type response"
-        );
-
-        $app = Application::instance();
-        $app->bootApplication(new class implements Bootstrap {
-            public function bootRoutes(Router $router): void {}
-            public function bootDependencies(Application $app): void {
-                $app->addSingleton(Request::class, fn() => TestCase::requestFactory());
-                $app->addSingleton(Response::class, fn() => (object)[]);
-            }
-        });
-    }
-
-    /** @test */
-    public function bootApplication(): void
+    public function mainDependencies(): void
     {
         $app = Application::instance();
         $app->bootApplication(new class implements Bootstrap {
@@ -71,14 +56,7 @@ class ApplicationMainBootTest extends TestCase
             }
 
             public function bootDependencies(Application $app): void {
-                $app->addSingleton(Request::class, fn() => TestCase::requestFactory());
-                $app->addSingleton(Response::class, fn() => TestCase::responseFactory());
-                $app->addFactory(Stream::class, fn() => TestCase::streamFactory());
-                $app->addFactory(
-                    UploadedFile::class,
-                    fn() => TestCase::uploadedFileFactory(TestCase::streamFactory())
-                );
-                $app->addFactory(Uri::class, fn() => TestCase::uriFactory());
+                $app->addSingleton(HttpFactory::class, DiactorosHttpFactory::class);
             }
         });
 
@@ -87,7 +65,14 @@ class ApplicationMainBootTest extends TestCase
             (new Router())->post('/user/:id')    
         ], $app->router()->routes());
 
-        $this->assertTrue($app->container()->has(Request::class));
-        $this->assertTrue($app->container()->has(Response::class));
+        $this->assertTrue($app->container()->has(Application::class));
+        $this->assertTrue($app->container()->has(Router::class));
+        $this->assertTrue($app->container()->has(ServerRequestInterface::class));
+        $this->assertTrue($app->container()->has(ResponseInterface::class));
+        $this->assertTrue($app->container()->has(StreamInterface::class));
+        $this->assertTrue($app->container()->has(UriInterface::class));
+
+        $this->assertFalse($app->container()->has(RequestInterface::class));
+        $this->assertFalse($app->container()->has(UploadedFileInterface::class));
     }
 }

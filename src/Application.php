@@ -6,17 +6,11 @@ namespace Freep\Application;
 
 use Closure;
 use Freep\Application\Container\Container;
-use Freep\Application\Http\Request;
-use Freep\Application\Http\Response;
-use Freep\Application\Http\Stream;
-use Freep\Application\Http\UploadedFile;
-use Freep\Application\Http\Uri;
+use Freep\Application\Http\HttpDependencies;
+use Freep\Application\Http\ResponseFactory;
 use Freep\Application\Routing\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\UploadedFileInterface;
-use Psr\Http\Message\UriInterface;
 use RuntimeException;
 use Throwable;
 
@@ -52,38 +46,30 @@ class Application
         $this->container()->registerSingletonDependency($identifier, $factory);
     }
 
-    public function make(string $identifier)
-    {
-        return $this->container()->get($identifier);
+    public function make(...$arguments)
+    {   
+        $identifier = array_shift($arguments);
+
+        return $this->container()->getWithArguments($identifier, $arguments);
     }
 
     public function bootApplication(Bootstrap $bootstrap): void
     {
         $bootstrap->bootDependencies($this);
 
-        if (! $this->make(Request::class) instanceof ServerRequestInterface) {
-            throw new RuntimeException("Please implement a " . ServerRequestInterface::class . " type request");
-        }
-
-        if (! $this->make(Response::class) instanceof ResponseInterface) {
-            throw new RuntimeException("Please implement a " . ResponseInterface::class . " type response");
-        }
-
-        if (! $this->make(Stream::class) instanceof StreamInterface) {
-            throw new RuntimeException("Please implement a " . StreamInterface::class . " type response");
-        }
-
-        if (! $this->make(UploadedFile::class) instanceof UploadedFileInterface) {
-            throw new RuntimeException("Please implement a " . UploadedFileInterface::class . " type response");
-        }
-
-        if (! $this->make(Uri::class) instanceof UriInterface) {
-            throw new RuntimeException("Please implement a " . UriInterface::class . " type response");
-        }
-
-        $this->addSingleton(Router::class, Router::class);
+        $this->setupMainDependencies();
 
         $bootstrap->bootRoutes($this->router());
+    }
+
+    private function setupMainDependencies(): void
+    {
+        (new HttpDependencies())->attachTo($this);
+
+        // para o ioc fazer uso da aplicação
+        $this->addSingleton(Application::class, fn() => Application::instance());
+
+        $this->addSingleton(Router::class, Router::class);
     }
 
     public function bootModule(Bootstrap $bootstrap): void
@@ -107,7 +93,7 @@ class Application
             $bootstrap->bootRoutes($this->router()->forModule($identifier));
         }
 
-        $request = $this->make(Request::class);
+        $request = $this->make(ServerRequestInterface::class);
         $router  = $this->router();
 
         $router->process(
@@ -116,28 +102,33 @@ class Application
         );
 
         if ($router->routeNotFound()) {
-            return $this->makeNotFoundResponse();
+            return (new ResponseFactory($this))->notFoundResponse();
         }
 
         if ($router->routeDenied()) {
-            return $this->makeAccessDeniedResponse();
+            return (new ResponseFactory($this))->accessDeniedResponse();
         }
 
         try {
             $route = $router->currentRoute();
             
             $routeModule = $route->module();
-            $routeCallback = $route->controller();
+            $routeAction = $route->action();
 
-            if ($routeCallback === null) {
-                throw new RuntimeException('The route found does not have a controller');
+            if ($routeAction === null) {
+                throw new RuntimeException('The route found does not have a action');
             }
 
             $this->modules[$routeModule]->bootDependencies($this);
 
-            return call_user_func($routeCallback);
+            if ($routeAction instanceof Closure) {
+                return call_user_func($routeAction);
+            }
+
+            return $this->container()->inversionOfControl($routeAction, $route->params());
+            
         } catch (Throwable $exception) {
-            return $this->makeServerErrorResponse($exception);
+            return (new ResponseFactory($this))->serverErrorResponse($exception);
         }
     }
 
@@ -145,33 +136,5 @@ class Application
     {
         $this->container = new Container();
         $this->modules = [];
-    }
-
-    private function makeNotFoundResponse(): ResponseInterface
-    {
-        /** @var ResponseInterface $response */
-        $response = $this->make(Response::class);
-        $response->withStatus(404);
-        $response->withBody($this->make(Stream::class, 'Not Found'));
-
-        return $response;
-    }
-
-    private function makeAccessDeniedResponse(): ResponseInterface
-    {
-        $response = $this->make(Response::class);
-        $response->withStatus(403);
-        $response->withBody($this->make(Stream::class, 'Access denied'));
-
-        return $response;
-    }
-
-    private function makeServerErrorResponse(Throwable $exception): ResponseInterface
-    {
-        $response = $this->make(Response::class);
-        $response->withStatus(500);
-        $response->withBody($this->make(Stream::class, $exception->getMessage()));
-
-        return $response;
     }
 }
