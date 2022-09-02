@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Tests;
 
 use Freep\Application\Adapter\HttpFactory\DiactorosHttpFactory;
+use Freep\Application\Adapter\Session\MemorySession;
 use Freep\Application\Application;
 use Freep\Application\Bootstrap;
 use Freep\Application\Http\HttpFactory;
+use Freep\Application\Http\Session;
 use Freep\Application\Routing\Router;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -25,6 +27,28 @@ class ApplicationMainBootTest extends TestCase
     }
 
     /** @test */
+    public function invalidSession(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            "Please implement " . 
+                Session::class . " dependency for " . 
+                Application::class . "->bootApplication"
+        );
+
+        $app = Application::instance();
+        $app->bootApplication(new class implements Bootstrap {
+            public function bootRoutes(Router $router): void {}
+            public function bootDependencies(Application $app): void {
+                $app->addSingleton(Session::class, fn() => (object)[]);
+                $app->addSingleton(HttpFactory::class, fn() => (object)[]);
+            }
+        });
+
+        $app->run();
+    }
+
+    /** @test */
     public function invalidHttpFactory(): void
     {
         $this->expectException(RuntimeException::class);
@@ -38,6 +62,7 @@ class ApplicationMainBootTest extends TestCase
         $app->bootApplication(new class implements Bootstrap {
             public function bootRoutes(Router $router): void {}
             public function bootDependencies(Application $app): void {
+                $app->addSingleton(Session::class, MemorySession::class);
                 $app->addSingleton(HttpFactory::class, fn() => (object)[]);
             }
         });
@@ -56,6 +81,7 @@ class ApplicationMainBootTest extends TestCase
             }
 
             public function bootDependencies(Application $app): void {
+                $app->addSingleton(Session::class, MemorySession::class);
                 $app->addSingleton(HttpFactory::class, DiactorosHttpFactory::class);
             }
         });

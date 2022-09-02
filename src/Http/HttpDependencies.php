@@ -15,10 +15,12 @@ class HttpDependencies
 {
     public function attachTo(Application $app): void
     {
+        $this->assertImplementation($app->make(Session::class), Session::class);
+
         /** @var HttpFactory $httpFactory */
         $httpFactory = $app->make(HttpFactory::class);
-
-        $this->checkHttpFactory($httpFactory);
+        
+        $this->assertImplementation($httpFactory, HttpFactory::class);
         
         $app->addSingleton(
             ServerRequestInterface::class,
@@ -44,13 +46,11 @@ class HttpDependencies
         );
     }
 
-    /** @param HttpFactory $resource */
-    private function checkHttpFactory($resource): void
+    private function assertImplementation(mixed $resource, string $requiredType): void
     {
-        if (! $resource instanceof HttpFactory) {
+        if (! is_subclass_of($resource, $requiredType)) {
             throw new RuntimeException(
-                "Please implement " . 
-                HttpFactory::class . " dependency for " . 
+                "Please implement $requiredType dependency for " . 
                 Application::class . "->bootApplication"
             );
         }

@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Tests;
 
 use Freep\Application\Adapter\HttpFactory\DiactorosHttpFactory;
+use Freep\Application\Adapter\Session\MemorySession;
 use Freep\Application\Application;
 use Freep\Application\Bootstrap;
 use Freep\Application\Http\HttpFactory;
+use Freep\Application\Http\Session;
 use Freep\Application\Routing\Router;
 use Laminas\Diactoros\ServerRequestFactory;
 use PHPUnit\Framework\TestCase as FrameworkTestCase;
@@ -39,7 +41,9 @@ class TestCase extends FrameworkTestCase
             public function bootRoutes(Router $router): void {}
 
             public function bootDependencies(Application $app): void {
-                $app->addSingleton(HttpFactory::class, function(){
+                $app->addSingleton(Session::class, MemorySession::class);
+                
+                $app->addSingleton(HttpFactory::class, function() {
                     return new class extends DiactorosHttpFactory {
                         public function createRequestFromGlobals(): ServerRequestInterface
                         {
