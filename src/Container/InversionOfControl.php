@@ -12,7 +12,6 @@ use ReflectionClass;
 use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionParameter;
-use Throwable;
 
 class InversionOfControl
 {

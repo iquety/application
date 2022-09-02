@@ -76,6 +76,4 @@ class DiactorosHttpFactory implements HttpFactory
     {
         return (new UriFactory())->createUri($uri);
     }
-
-
 }
