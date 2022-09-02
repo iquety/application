@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Freep\Application\Adapter\HttpFactory;
 
 use Freep\Application\Http\HttpFactory;
+use InvalidArgumentException;
 use Laminas\Diactoros\RequestFactory;
 use Laminas\Diactoros\ResponseFactory;
 use Laminas\Diactoros\ServerRequestFactory;
@@ -41,6 +42,14 @@ class DiactorosHttpFactory implements HttpFactory
 
     public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
+        $method = $method === '' && isset($serverParams['REQUEST_METHOD']) 
+            ? $serverParams['REQUEST_METHOD']
+            : $method;
+
+        if ($method === '') {
+            throw new InvalidArgumentException('Cannot determine HTTP method');
+        }
+        
         return (new ServerRequestFactory())->createServerRequest($method, $uri, $serverParams);
     }
 

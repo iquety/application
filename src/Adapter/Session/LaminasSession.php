@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Freep\Application\Adapter;
+namespace Freep\Application\Adapter\Session;
 
 use Freep\Application\Http\Session;
 use Symfony\Component\HttpFoundation\Session\Session as SymfonyObject;

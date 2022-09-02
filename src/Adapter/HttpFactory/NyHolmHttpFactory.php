@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Freep\Application\Adapter\HttpFactory;
 
 use Freep\Application\Http\HttpFactory;
+use InvalidArgumentException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use Psr\Http\Message\RequestInterface;
@@ -52,6 +53,14 @@ class NyHolmHttpFactory implements HttpFactory
 
     public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
+        $method = $method === '' && isset($serverParams['REQUEST_METHOD']) 
+            ? $serverParams['REQUEST_METHOD']
+            : $method;
+
+        if ($method === '') {
+            throw new InvalidArgumentException('Cannot determine HTTP method');
+        }
+        
         return $this->factory->createServerRequest($method, $uri, $serverParams);
     }
 
