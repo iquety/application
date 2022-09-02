@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Container;
+namespace Tests\Support;
 
 use ArrayObject;
 use stdClass;
 
-/** @codeCoverageIgnore */
-class ImplContainerIoc
+class ContainerIoc
 {
     /** @var array<int,string> */
     private array $values;

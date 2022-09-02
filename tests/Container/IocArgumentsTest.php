@@ -8,6 +8,7 @@ use ArrayObject;
 use Freep\Application\Container\Container;
 use Freep\Application\Container\InversionOfControl;
 use Freep\Application\Container\NotFoundException;
+use Tests\Support\ContainerIoc;
 use Tests\TestCase;
 
 class IocArgumentsTest extends TestCase
@@ -21,7 +22,7 @@ class IocArgumentsTest extends TestCase
         $control = new InversionOfControl($container);
 
         $value = $control->resolve(
-            ImplContainerIoc::class . "::injectedMethodExtraArguments", // <- injeta ArrayObject
+            ContainerIoc::class . "::injectedMethodExtraArguments", // <- injeta ArrayObject
             [ "id" => "1", "name" => "Ricardo"] // <- acrescenta  $id + $name
         );
         $this->assertSame([ 'x', 1, "Ricardo" ], $value);
@@ -40,7 +41,7 @@ class IocArgumentsTest extends TestCase
 
         $control = new InversionOfControl($container);
         $control->resolve(
-            ImplContainerIoc::class . "::injectedMethodExtraArguments", // <- injeta ArrayObject
+            ContainerIoc::class . "::injectedMethodExtraArguments", // <- injeta ArrayObject
             [ "id" => "1", ] // <- acrescenta  $id, mas esquece do $name
         );
     }
@@ -74,7 +75,7 @@ class IocArgumentsTest extends TestCase
         $control = new InversionOfControl($container);
 
         $value = $control->resolve(
-            ImplContainerIoc::class . "::injectedMethodExtraDefaultValueArguments", // <- injeta ArrayObject
+            ContainerIoc::class . "::injectedMethodExtraDefaultValueArguments", // <- injeta ArrayObject
             $arguments // <- acrescenta  $id + $name
         );
 

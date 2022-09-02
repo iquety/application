@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests;
+namespace Tests\Support;
 
 use ArrayObject;
 use Freep\Application\Application;

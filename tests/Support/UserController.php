@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests;
+namespace Tests\Support;
 
 use Freep\Application\Application;
 use Psr\Http\Message\ResponseInterface;

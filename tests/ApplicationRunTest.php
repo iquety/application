@@ -13,6 +13,8 @@ use Freep\Application\Routing\Router;
 use Laminas\Diactoros\Uri;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
+use Tests\Support\UserBootstrap;
+use Tests\Support\UserRestrictedBootstrap;
 
 class ApplicationRunTest extends TestCase
 {

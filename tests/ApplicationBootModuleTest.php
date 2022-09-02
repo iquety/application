@@ -10,6 +10,8 @@ use Freep\Application\Http\Request;
 use Freep\Application\Routing\Route;
 use Freep\Application\Routing\Router;
 use stdClass;
+use Tests\Support\UserAlternateBootstrap;
+use Tests\Support\UserBootstrap;
 
 class ApplicationBootModuleTest extends TestCase
 {

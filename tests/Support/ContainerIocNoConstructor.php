@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Container;
+namespace Tests\Support;
 
 use ArrayObject;
 
-/** @codeCoverageIgnore */
-class ImplContainerIocNoConstructor
+class ContainerIocNoConstructor
 {
     /**
      * @param ArrayObject<int,string> $object
