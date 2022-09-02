@@ -6,8 +6,9 @@ namespace Freep\Application;
 
 use Closure;
 use Freep\Application\Container\Container;
+use Freep\Application\Container\InversionOfControl;
 use Freep\Application\Http\HttpDependencies;
-use Freep\Application\Http\ResponseFactory;
+use Freep\Application\Http\HttpResponseFactory;
 use Freep\Application\Routing\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -102,11 +103,11 @@ class Application
         );
 
         if ($router->routeNotFound()) {
-            return (new ResponseFactory($this))->notFoundResponse();
+            return (new HttpResponseFactory($this))->notFoundResponse();
         }
 
         if ($router->routeDenied()) {
-            return (new ResponseFactory($this))->accessDeniedResponse();
+            return (new HttpResponseFactory($this))->accessDeniedResponse();
         }
 
         try {
@@ -125,10 +126,12 @@ class Application
                 return call_user_func($routeAction);
             }
 
-            return $this->container()->inversionOfControl($routeAction, $route->params());
+            $control = new InversionOfControl($this->container());
+            
+            return $control->resolve($routeAction, $route->params());
             
         } catch (Throwable $exception) {
-            return (new ResponseFactory($this))->serverErrorResponse($exception);
+            return (new HttpResponseFactory($this))->serverErrorResponse($exception);
         }
     }
 
