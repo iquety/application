@@ -4,21 +4,12 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Freep\Application\Adapter\DiactorosHttpFactory;
+use Freep\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Freep\Application\Application;
 use Freep\Application\Bootstrap;
 use Freep\Application\Http\HttpFactory;
-use Freep\Application\Http\Request;
-use Freep\Application\Http\Response;
-use Freep\Application\Http\Stream;
-use Freep\Application\Http\UploadedFile;
-use Freep\Application\Http\Uri;
 use Freep\Application\Routing\Router;
-use Laminas\Diactoros\ResponseFactory;
 use Laminas\Diactoros\ServerRequestFactory;
-use Laminas\Diactoros\StreamFactory;
-use Laminas\Diactoros\UploadedFileFactory;
-use Laminas\Diactoros\UriFactory;
 use PHPUnit\Framework\TestCase as FrameworkTestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

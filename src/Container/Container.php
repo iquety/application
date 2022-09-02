@@ -16,10 +16,10 @@ class Container implements ContainerInterface
 
     public const RESOLVE_SINGLETON = 'singleton';
 
-    /** @var array<string, Closure|string> */
+    /** @var array<string,Closure|string> */
     private array $factory = [];
 
-    /** @var array<string, Closure|string> */
+    /** @var array<string,Closure|string> */
     private array $singleton = [];
 
     /** @var array<string, bool> */
@@ -56,11 +56,8 @@ class Container implements ContainerInterface
         $this->singletonResolved[$id] = false;
     }
 
-    /**
-     * @throws NotFoundException
-     * @return mixed
-     */
-    public function get(string $id)
+    /** @throws NotFoundException */
+    public function get(string $id): mixed
     {
         if ($this->has($id) === false) {
             throw new NotFoundException(sprintf('Could not find dependency definition for %s', $id));
@@ -74,11 +71,8 @@ class Container implements ContainerInterface
         return $this->resolveFactory($id);
     }
 
-    /**
-     * @throws NotFoundException
-     * @return mixed
-     */
-    public function getWithArguments(string $id, array $arguments)
+    /** @throws NotFoundException */
+    public function getWithArguments(string $id, array $arguments): mixed
     {
         if ($this->has($id) === false) {
             throw new NotFoundException(sprintf('Could not find dependency definition for %s', $id));
@@ -92,11 +86,8 @@ class Container implements ContainerInterface
         return $this->resolveFactory($id, $arguments);
     }
 
-    /**
-     * @throws ContainerException
-     * @return mixed
-     */
-    private function resolveSingleton(string $id, array $arguments = [])
+    /** @throws ContainerException */
+    private function resolveSingleton(string $id, array $arguments = []): mixed
     {
         if (isset($this->singleton[$id]) === false) {
             return null;
@@ -110,24 +101,18 @@ class Container implements ContainerInterface
         return $this->singleton[$id];
     }
 
-    /**
-     * @throws ContainerException
-     * @return mixed
-     */
-    private function resolveFactory(string $id, array $arguments = [])
+    /** @throws ContainerException */
+    private function resolveFactory(string $id, array $arguments = []): mixed
     {
         return $this->resolve($id, self::RESOLVE_FACTORY, $arguments);
     }
 
-    /**
-     * @throws ContainerException
-     * @return mixed
-     */
+    /** @throws ContainerException */
     private function resolve(
         string $id,
         string $type = Container::RESOLVE_SINGLETON,
         array $arguments = []
-    ) {
+    ): mixed {
         $registereds = ($type === self::RESOLVE_FACTORY)
             ? $this->factory
             : $this->singleton;

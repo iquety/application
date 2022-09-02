@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Freep\Application\Adapter;
+namespace Freep\Application\Adapter\HttpFactory;
 
 use Freep\Application\Http\HttpFactory;
-use Laminas\Diactoros\RequestFactory;
-use Laminas\Diactoros\ResponseFactory;
-use Laminas\Diactoros\ServerRequestFactory;
-use Laminas\Diactoros\StreamFactory;
-use Laminas\Diactoros\UploadedFileFactory;
-use Laminas\Diactoros\UriFactory;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\ServerRequest;
+use GuzzleHttp\Psr7\Stream;
+use GuzzleHttp\Psr7\UploadedFile;
+use GuzzleHttp\Psr7\Uri;
+use GuzzleHttp\Psr7\Utils;
+use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,41 +20,53 @@ use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 
-class DiactorosHttpFactory implements HttpFactory
+/**
+ * Para usar esse adaptador, é preciso instalar a seguinte biblioteca:
+ * guzzlehttp/guzzle
+ */
+class GuzzleHttpFactory implements HttpFactory
 {
     public function createRequestFromGlobals(): ServerRequestInterface
     {
-        return (new ServerRequestFactory())->fromGlobals();
+        return ServerRequest::fromGlobals();
     }
 
     public function createRequest(string $method, $uri): RequestInterface
     {
-        return (new RequestFactory())->createRequest($method, $uri);
+        return new Request($method, $uri);
     }
 
     public function createResponse(int $code = 200, string $reasonPhrase = ''): ResponseInterface
     {
-        return (new ResponseFactory())->createResponse($code, $reasonPhrase);
+        return new Response($code, [], null, '1.1', $reasonPhrase);
     }
 
     public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
-        return (new ServerRequestFactory())->createServerRequest($method, $uri, $serverParams);
+        $method = $method === '' && isset($serverParams['REQUEST_METHOD']) 
+            ? $serverParams['REQUEST_METHOD']
+            : $method;
+
+        if ($method === '') {
+            throw new InvalidArgumentException('Cannot determine HTTP method');
+        }
+
+        return new ServerRequest($method, $uri, [], null, '1.1', $serverParams);
     }
 
     public function createStream(string $content = ''): StreamInterface
     {
-        return (new StreamFactory())->createStream($content);
+        return Utils::streamFor($content);
     }
 
     public function createStreamFromFile(string $filename, string $mode = 'r'): StreamInterface
     {
-        return (new StreamFactory())->createStreamFromFile($filename, $mode);
+        return $this->createStreamFromResource(Utils::tryFopen($filename, $mode));
     }
 
     public function createStreamFromResource($resource): StreamInterface
     {
-        return (new StreamFactory())->createStreamFromResource($resource);
+        return new Stream($resource);
     }
 
     public function createUploadedFile(
@@ -63,17 +77,15 @@ class DiactorosHttpFactory implements HttpFactory
         string $clientMediaType = null
     ): UploadedFileInterface
     {
-        return (new UploadedFileFactory())->createUploadedFile(
-            $stream,
-            $size,
-            $error,
-            $clientFilename,
-            $clientMediaType
-        );
+        if ($size === null) {
+            $size = $stream->getSize();
+        }
+
+        return new UploadedFile($stream, $size, $error, $clientFilename, $clientMediaType);
     }
 
     public function createUri(string $uri = ''): UriInterface
     {
-        return (new UriFactory())->createUri($uri);
+        return new Uri($uri);
     }
 }

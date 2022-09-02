@@ -89,11 +89,8 @@ class InversionOfControl
         );
     }
 
-    /**
-     * @param array<string,mixed> $arguments
-     * @return mixed
-    */
-    private function invokeFunction(Closure $function, array $arguments)
+    /** @param array<string,mixed> $arguments */
+    private function invokeFunction(Closure $function, array $arguments): mixed
     {
         $reflection = new ReflectionFunction($function);
         return $reflection->invokeArgs(

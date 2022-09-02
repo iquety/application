@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Freep\Application\Adapter\DiactorosHttpFactory;
+use Freep\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Freep\Application\Application;
 use Freep\Application\Bootstrap;
 use Freep\Application\Http\HttpFactory;
