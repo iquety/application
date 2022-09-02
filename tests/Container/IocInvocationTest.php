@@ -7,6 +7,7 @@ namespace Tests\Container;
 use ArrayObject;
 use Freep\Application\Container\Container;
 use Freep\Application\Container\ContainerException;
+use Freep\Application\Container\InversionOfControl;
 use Freep\Application\Container\NotFoundException;
 use stdClass;
 use Tests\TestCase;
@@ -21,9 +22,11 @@ class ContainerIocInvocationTest extends TestCase
         $container->registerDependency(ArrayObject::class, fn() => new ArrayObject());
         $container->registerDependency(stdClass::class, fn() => new stdClass());
 
+        $control = new InversionOfControl($container);
+        
         // o método ContainerIoc->values devolve um array com os valores setados
         // no construtor __construct(ArrayObject $object, stdClass $class = null)
-        $results = $container->inversionOfControl(ImplContainerIoc::class . "::values");
+        $results = $control->resolve(ImplContainerIoc::class . "::values");
         $this->assertInstanceOf(ArrayObject::class, $results[0]);
         $this->assertInstanceOf(stdClass::class, $results[1]);
     }
@@ -36,18 +39,18 @@ class ContainerIocInvocationTest extends TestCase
             "It was not possible to resolve the value for parameter (\$object) in method (__construct)"
         );
 
-        (new Container())->inversionOfControl(ImplContainerIoc::class . "::values");
+        $control = new InversionOfControl(new Container());
+        $control->resolve(ImplContainerIoc::class . "::values");
     }
 
     /** @test */
     public function containerException(): void
     {
         $this->expectException(ContainerException::class);
-        $this->expectExceptionMessage(
-            "Impossible to inject string dependency"
-        );
+        $this->expectExceptionMessage("Impossible to inject string dependency");
 
-        (new Container())->inversionOfControl("values");
+        $control = new InversionOfControl(new Container());
+        $control->resolve("values");
     }
 
     /** @return array<int,mixed> */
@@ -77,7 +80,8 @@ class ContainerIocInvocationTest extends TestCase
         $container = new Container();
         $container->registerDependency(ArrayObject::class, fn() => new ArrayObject(['x']));
 
-        $value = $container->inversionOfControl($caller); // <- injeta ArrayObject como argumento
+        $control = new InversionOfControl($container);
+        $value = $control->resolve($caller); // <- injeta ArrayObject como argumento
         $this->assertEquals([ 'x' ], $value);
     }
 
@@ -89,8 +93,7 @@ class ContainerIocInvocationTest extends TestCase
             "It was not possible to resolve the value for parameter (\$object) in method (injectedMethod)"
         );
 
-        (new Container())->inversionOfControl(
-            ImplContainerIocNoConstructor::class . "::injectedMethod"
-        );
+        $control = new InversionOfControl(new Container());
+        $control->resolve(ImplContainerIocNoConstructor::class . "::injectedMethod");
     }
 }

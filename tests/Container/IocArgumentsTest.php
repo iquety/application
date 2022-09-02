@@ -6,11 +6,11 @@ namespace Tests\Container;
 
 use ArrayObject;
 use Freep\Application\Container\Container;
+use Freep\Application\Container\InversionOfControl;
 use Freep\Application\Container\NotFoundException;
 use Tests\TestCase;
 
-/** @codeCoverageIgnore */
-class ContainerIocArgumentsTest extends TestCase
+class IocArgumentsTest extends TestCase
 {
     /** @test */
     public function runMethodWithRequiredArguments(): void
@@ -18,7 +18,9 @@ class ContainerIocArgumentsTest extends TestCase
         $container = new Container();
         $container->registerDependency(ArrayObject::class, fn() => new ArrayObject(['x']));
 
-        $value = $container->inversionOfControl(
+        $control = new InversionOfControl($container);
+
+        $value = $control->resolve(
             ImplContainerIoc::class . "::injectedMethodExtraArguments", // <- injeta ArrayObject
             [ "id" => "1", "name" => "Ricardo"] // <- acrescenta  $id + $name
         );
@@ -36,7 +38,8 @@ class ContainerIocArgumentsTest extends TestCase
         $container = new Container();
         $container->registerDependency(ArrayObject::class, fn() => new ArrayObject(['x']));
 
-        $container->inversionOfControl(
+        $control = new InversionOfControl($container);
+        $control->resolve(
             ImplContainerIoc::class . "::injectedMethodExtraArguments", // <- injeta ArrayObject
             [ "id" => "1", ] // <- acrescenta  $id, mas esquece do $name
         );
@@ -68,7 +71,9 @@ class ContainerIocArgumentsTest extends TestCase
         $container = new Container();
         $container->registerDependency(ArrayObject::class, fn() => new ArrayObject(['x']));
 
-        $value = $container->inversionOfControl(
+        $control = new InversionOfControl($container);
+
+        $value = $control->resolve(
             ImplContainerIoc::class . "::injectedMethodExtraDefaultValueArguments", // <- injeta ArrayObject
             $arguments // <- acrescenta  $id + $name
         );
