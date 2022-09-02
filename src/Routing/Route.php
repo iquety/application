@@ -29,7 +29,7 @@ class Route
 
     private string $pattern = '/';
 
-    private ?Policy $policy = null;
+    private Policy|string $policy = '';
 
     public function forModule(string $moduleIdentifier): Route
     {
@@ -37,7 +37,7 @@ class Route
         return $this;
     }
 
-    public function policyBy(Policy $policy): Route
+    public function policyBy(Policy|string $policy): Route
     {
         $this->policy = $policy;
         return $this;
@@ -86,7 +86,7 @@ class Route
         return $this->pattern;
     }
 
-    public function policy(): ?Policy
+    public function policy(): Policy|string
     {
         return $this->policy;
     }

@@ -85,7 +85,12 @@ class Application
 
     public function router(): Router
     {
-        return $this->make(Router::class)->resetModuleInfo();
+        /** @var Router $router */
+        $router = $this->make(Router::class);
+        $router->resetModuleInfo();
+        $router->useContainer($this->container);
+
+        return $router;
     }
 
     public function run(): ResponseInterface

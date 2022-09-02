@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Freep\Application\Routing;
 
+use Freep\Application\Container\InversionOfControl;
+use Psr\Container\ContainerInterface;
+
 class Router
 {
     private ?Route $currentRoute = null;
@@ -16,6 +19,8 @@ class Router
     private bool $accessDenied = false;
 
     private string $moduleIdentifier = 'all';
+
+    private ?ContainerInterface $container = null;
 
     public function any(string $pattern): Route
     {
@@ -75,14 +80,36 @@ class Router
 
             $this->notFound = false;
 
-            $policy = $routeObject->policy();
-
-            if ($policy !== null && $policy->check() === false) {
+            if ($this->accessAllowed($routeObject->policy()) === false) {
                 $this->accessDenied = true;
             }
 
             break;
         }
+    }
+
+    private function accessAllowed(Policy|string $policy = ''): bool
+    {
+        if ($policy === '') {
+            return true;
+        }
+
+        if (is_string($policy) === true) {
+            return $this->invokePolicyString($policy);
+        }
+
+        if ($this->container !== null) {
+            return $this->invokePolicyString($policy::class . '::check');
+        }
+
+        return $policy->check();
+    }
+
+    private function invokePolicyString(string $signature): bool
+    {
+        $control = new InversionOfControl($this->container);
+        
+        return $control->resolve($signature . '::check');
     }
 
     public function resetModuleInfo(): Router
@@ -106,6 +133,13 @@ class Router
     public function routes(): array
     {
         return $this->routes;
+    }
+
+    public function useContainer(ContainerInterface & $container): Router
+    {
+        $this->container = $container;
+
+        return $this;
     }
 
     private function makeRoute(string $method, string $pattern): Route
