@@ -6,6 +6,7 @@ namespace Freep\Application\Adapter\Session;
 
 use Freep\Application\Http\Session;
 
+/** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
 class MemorySession implements Session
 {
     /** @var array<int|string,mixed> */
@@ -40,7 +41,7 @@ class MemorySession implements Session
     {
         return static::$session['id'];
     }
-    
+
     /** Define o nome da sessão */
     public function setName(string $name)
     {
@@ -57,7 +58,7 @@ class MemorySession implements Session
     public function setParam(string $name, mixed $value): void
     {
         static::$session['data'][$name] = $value;
-    }    
+    }
 
     /** Devolve o valor de um atributo */
     public function param(string $name, mixed $default = null): mixed
@@ -115,8 +116,8 @@ class MemorySession implements Session
      * Limpa os atributos da memória e regenera a sessão.
      * Se existirem atributos pesistidos, remove-os também.
      * @param int $lifetime tempo de vida do cookie em segundos
-     * A null value will leave the system settings unchanged, 
-     * 0 sets the cookie to expire with browser session. 
+     * A null value will leave the system settings unchanged,
+     * 0 sets the cookie to expire with browser session.
      * Time is in seconds, and is not a Unix timestamp.
      */
     public function invalidate(int $lifetime = null): void

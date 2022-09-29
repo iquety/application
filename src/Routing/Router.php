@@ -7,6 +7,7 @@ namespace Freep\Application\Routing;
 use Freep\Application\Container\InversionOfControl;
 use Psr\Container\ContainerInterface;
 
+/** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
 class Router
 {
     private ?Route $currentRoute = null;
@@ -71,7 +72,7 @@ class Router
     {
         $this->notFound = true;
 
-        foreach($this->routes as $routeObject) {
+        foreach ($this->routes as $routeObject) {
             if ($routeObject->matchTo($method, $path) === false) {
                 continue;
             }
@@ -108,7 +109,7 @@ class Router
     private function invokePolicyString(string $signature): bool
     {
         $control = new InversionOfControl($this->container);
-        
+
         return $control->resolve($signature . '::check');
     }
 
@@ -123,7 +124,7 @@ class Router
     {
         return $this->accessDenied;
     }
-    
+
     public function routeNotFound(): bool
     {
         return $this->notFound;
@@ -135,7 +136,7 @@ class Router
         return $this->routes;
     }
 
-    public function useContainer(ContainerInterface & $container): Router
+    public function useContainer(ContainerInterface &$container): Router
     {
         $this->container = $container;
 
@@ -149,8 +150,8 @@ class Router
         $route->usingPattern($pattern);
         $route->usingMethod($method);
 
-        $routeId = count($this->routes); 
-        
+        $routeId = count($this->routes);
+
         $this->routes[$routeId] = $route;
 
         return $this->routes[$routeId];

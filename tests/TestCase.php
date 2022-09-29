@@ -27,7 +27,7 @@ class TestCase extends FrameworkTestCase
         $reflection = new ReflectionObject($instance);
         $property = $reflection->getProperty($name);
         $property->setAccessible(true);
-        
+
         return $property->getValue($instance);
     }
 
@@ -36,14 +36,17 @@ class TestCase extends FrameworkTestCase
         $app = Application::instance();
 
         $app->reset();
-        
-        $app->bootApplication(new class implements Bootstrap {
-            public function bootRoutes(Router $router): void {}
 
-            public function bootDependencies(Application $app): void {
+        $app->bootApplication(new class implements Bootstrap {
+            public function bootRoutes(Router $router): void
+            {
+            }
+
+            public function bootDependencies(Application $app): void
+            {
                 $app->addSingleton(Session::class, MemorySession::class);
-                
-                $app->addSingleton(HttpFactory::class, function() {
+
+                $app->addSingleton(HttpFactory::class, function () {
                     return new class extends DiactorosHttpFactory {
                         public function createRequestFromGlobals(): ServerRequestInterface
                         {
@@ -95,8 +98,7 @@ class TestCase extends FrameworkTestCase
         int $error = UPLOAD_ERR_OK,
         ?string $clientFilename = null,
         ?string $clientMediaType = null
-    ): UploadedFileInterface
-    {
+    ): UploadedFileInterface {
         return (new DiactorosHttpFactory())->createUploadedFile(
             $stream,
             $size,

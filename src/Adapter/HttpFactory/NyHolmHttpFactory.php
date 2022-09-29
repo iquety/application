@@ -37,7 +37,7 @@ class NyHolmHttpFactory implements HttpFactory
             $this->factory, // UploadedFileFactory
             $this->factory  // StreamFactory
         );
-        
+
         return $creator->fromGlobals();
     }
 
@@ -53,14 +53,14 @@ class NyHolmHttpFactory implements HttpFactory
 
     public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
-        $method = $method === '' && isset($serverParams['REQUEST_METHOD']) 
+        $method = $method === '' && isset($serverParams['REQUEST_METHOD'])
             ? $serverParams['REQUEST_METHOD']
             : $method;
 
         if ($method === '') {
             throw new InvalidArgumentException('Cannot determine HTTP method');
         }
-        
+
         return $this->factory->createServerRequest($method, $uri, $serverParams);
     }
 
@@ -85,8 +85,7 @@ class NyHolmHttpFactory implements HttpFactory
         int $error = \UPLOAD_ERR_OK,
         string $clientFilename = null,
         string $clientMediaType = null
-    ): UploadedFileInterface
-    {
+    ): UploadedFileInterface {
         return $this->factory->createUploadedFile(
             $stream,
             $size,

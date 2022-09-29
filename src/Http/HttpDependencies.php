@@ -19,9 +19,9 @@ class HttpDependencies
 
         /** @var HttpFactory $httpFactory */
         $httpFactory = $app->make(HttpFactory::class);
-        
+
         $this->assertImplementation($httpFactory, HttpFactory::class);
-        
+
         $app->addSingleton(
             ServerRequestInterface::class,
             fn() => $httpFactory->createRequestFromGlobals()
@@ -50,7 +50,7 @@ class HttpDependencies
     {
         if (! is_subclass_of($resource, $requiredType)) {
             throw new RuntimeException(
-                "Please implement $requiredType dependency for " . 
+                "Please implement $requiredType dependency for " .
                 Application::class . "->bootApplication"
             );
         }

@@ -47,7 +47,7 @@ class ApplicationRunTest extends TestCase
         // padrão '/user/:id'
         $app->bootModule(new UserRestrictedBootstrap());
 
-        // as dependencias do módulo só serão resolvidas se 
+        // as dependencias do módulo só serão resolvidas se
         // a rota '/user/:id' bater com a requisição efetuada para '/user/33'
         $app->run();
 
@@ -68,7 +68,7 @@ class ApplicationRunTest extends TestCase
         // padrão '/user/:id'
         $app->bootModule(new UserBootstrap());
 
-        // as dependencias do módulo só serão resolvidas se 
+        // as dependencias do módulo só serão resolvidas se
         // a rota '/user/:id' bater com a requisição efetuada para '/user/33'
         $app->run();
 

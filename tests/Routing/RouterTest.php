@@ -39,15 +39,27 @@ class RouterTest extends TestCase
     {
         $router = new Router();
 
-        switch($method) {
-            case Route::ANY: $router->any($pattern); break;
-            case Route::DELETE: $router->delete($pattern); break;
-            case Route::GET: $router->get($pattern); break;
-            case Route::PATCH: $router->patch($pattern); break;
-            case Route::POST: $router->post($pattern); break;
-            case Route::PUT: $router->put($pattern); break;
+        switch ($method) {
+            case Route::ANY:
+                $router->any($pattern);
+                break;
+            case Route::DELETE:
+                $router->delete($pattern);
+                break;
+            case Route::GET:
+                $router->get($pattern);
+                break;
+            case Route::PATCH:
+                $router->patch($pattern);
+                break;
+            case Route::POST:
+                $router->post($pattern);
+                break;
+            case Route::PUT:
+                $router->put($pattern);
+                break;
         }
-        
+
         $this->assertFalse($router->routeNotFound());
         $this->assertFalse($router->routeDenied());
         $this->assertNull($router->currentRoute());
@@ -68,6 +80,7 @@ class RouterTest extends TestCase
             Route::ANY,
             Route::DELETE,
             Route::GET,
+            Route::PATCH,
             Route::POST,
             Route::PUT
         ];
@@ -89,13 +102,25 @@ class RouterTest extends TestCase
     {
         $router = new Router();
 
-        switch($method) {
-            case Route::ANY: $router->any($pattern)->usingMethod($method); break;
-            case Route::DELETE: $router->delete($pattern)->usingMethod($method); break;
-            case Route::GET: $router->get($pattern)->usingMethod($method); break;
-            case Route::PATCH: $router->patch($pattern)->usingMethod($method); break;
-            case Route::POST: $router->post($pattern)->usingMethod($method); break;
-            case Route::PUT: $router->put($pattern)->usingMethod($method); break;
+        switch ($method) {
+            case Route::ANY:
+                $router->any($pattern)->usingMethod($method);
+                break;
+            case Route::DELETE:
+                $router->delete($pattern)->usingMethod($method);
+                break;
+            case Route::GET:
+                $router->get($pattern)->usingMethod($method);
+                break;
+            case Route::PATCH:
+                $router->patch($pattern)->usingMethod($method);
+                break;
+            case Route::POST:
+                $router->post($pattern)->usingMethod($method);
+                break;
+            case Route::PUT:
+                $router->put($pattern)->usingMethod($method);
+                break;
         }
 
         $this->assertFalse($router->routeNotFound());
@@ -119,11 +144,14 @@ class RouterTest extends TestCase
         $router = new Router();
 
         $policy = new class implements Policy {
-            public function check(): bool { return false; }
+            public function check(): bool
+            {
+                return false;
+            }
         };
 
-        switch($method) {
-            case Route::ANY: 
+        switch ($method) {
+            case Route::ANY:
                 $router->any($pattern)->usingMethod($method)->policyBy($policy);
                 break;
             case Route::DELETE:

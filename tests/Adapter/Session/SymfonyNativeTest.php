@@ -13,7 +13,7 @@ class SymfonyNativeTest extends AbstractCase
     protected function makeFactory(): Session
     {
         $session = new SymfonyNativeSession();
-        $session->enableMode();
+        $session->enableTestMode();
         return $session;
     }
 }

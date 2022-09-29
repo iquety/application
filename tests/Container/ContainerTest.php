@@ -44,7 +44,7 @@ class ContainerTest extends TestCase
 
         // tenta registrar uma dependencia não-compartilhada com mesmo $id
         $container->registerDependency('id', 'sobrescreve');
-        
+
         // valor foi sobrescrito na dependencia compartilhada
         // não é possível "descompartilhar"
         $sharedValue = $this->getPropertyValue($container, 'singleton');
@@ -69,7 +69,7 @@ class ContainerTest extends TestCase
 
         // tenta registrar uma dependencia não-compartilhada com mesmo $id
         $container->registerSingletonDependency('id', 'sobrescreve');
-        
+
         // dependência é removida da fabricação e alocada como compartilhada
         $sharedValue = $this->getPropertyValue($container, 'singleton');
         $factoryValue = $this->getPropertyValue($container, 'factory');
@@ -120,7 +120,7 @@ class ContainerTest extends TestCase
     {
         $container = new Container();
         $container->registerDependency('id', fn() => microtime());
-        $container->registerDependency('args', fn($one, $two) => $one . $two );
+        $container->registerDependency('args', fn($one, $two) => $one . $two);
         $container->registerDependency(ArrayObject::class, fn(array $set) => new ArrayObject($set));
 
         // a instância é fabricada a cada chamada

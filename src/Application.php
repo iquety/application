@@ -48,7 +48,7 @@ class Application
     }
 
     public function make(...$arguments)
-    {   
+    {
         $identifier = array_shift($arguments);
 
         return $this->container()->getWithArguments($identifier, $arguments);
@@ -63,6 +63,7 @@ class Application
         $bootstrap->bootRoutes($this->router());
     }
 
+    /** @SuppressWarnings(PHPMD.StaticAccess) */
     private function setupMainDependencies(): void
     {
         (new HttpDependencies())->attachTo($this);
@@ -117,7 +118,7 @@ class Application
 
         try {
             $route = $router->currentRoute();
-            
+
             $routeModule = $route->module();
             $routeAction = $route->action();
 
@@ -132,9 +133,8 @@ class Application
             }
 
             $control = new InversionOfControl($this->container());
-            
+
             return $control->resolve($routeAction, $route->params());
-            
         } catch (Throwable $exception) {
             return (new HttpResponseFactory($this))->serverErrorResponse($exception);
         }

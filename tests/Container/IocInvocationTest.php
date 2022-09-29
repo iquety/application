@@ -25,7 +25,7 @@ class ContainerIocInvocationTest extends TestCase
         $container->registerDependency(stdClass::class, fn() => new stdClass());
 
         $control = new InversionOfControl($container);
-        
+
         // o método ContainerIoc->values devolve um array com os valores setados
         // no construtor __construct(ArrayObject $object, stdClass $class = null)
         $results = $control->resolve(ContainerIoc::class . "::values");

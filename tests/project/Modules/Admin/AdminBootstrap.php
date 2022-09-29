@@ -21,8 +21,12 @@ class AdminBootstrap implements Bootstrap
 
     public function bootDependencies(Application $app): void
     {
-        $app->addFactory(Response::class, function() { return (object)[]; });
+        $app->addFactory(Response::class, function () {
+            return (object)[];
+        });
 
-        $app->addSingleton(ArrayObject::class, function() { return (object)[]; });
+        $app->addSingleton(ArrayObject::class, function () {
+            return (object)[];
+        });
     }
 }

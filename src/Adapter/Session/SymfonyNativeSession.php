@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 /**
  * Para usar esse adaptador, é preciso instalar a seguinte biblioteca:
  * symfony/http-foundation
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class SymfonyNativeSession implements Session
 {
@@ -33,7 +34,7 @@ class SymfonyNativeSession implements Session
         return $this->session;
     }
 
-    public function enableMode(): void
+    public function enableTestMode(): void
     {
         $this->testMode = true;
     }
@@ -129,8 +130,8 @@ class SymfonyNativeSession implements Session
      * Limpa os atributos da memória e regenera a sessão.
      * Se existirem atributos pesistidos, remove-os também.
      * @param int $lifetime tempo de vida do cookie em segundos
-     * A null value will leave the system settings unchanged, 
-     * 0 sets the cookie to expire with browser session. 
+     * A null value will leave the system settings unchanged,
+     * 0 sets the cookie to expire with browser session.
      * Time is in seconds, and is not a Unix timestamp.
      */
     public function invalidate(int $lifetime = null): void

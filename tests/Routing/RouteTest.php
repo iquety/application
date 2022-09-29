@@ -14,7 +14,10 @@ class RouteTest extends TestCase
     public function settersGetters(): void
     {
         $policy = new class implements Policy {
-            public function check(): bool { return true; }
+            public function check(): bool
+            {
+                return true;
+            }
         };
 
         $route = (new Route())

@@ -28,6 +28,7 @@ class InversionOfControl
      * @param string|array<string,string>|object|callable $callable
      * @param array<string,mixed> $arguments
      * @return mixed
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function resolve(string|array|object|callable $callable, array $arguments = [])
     {

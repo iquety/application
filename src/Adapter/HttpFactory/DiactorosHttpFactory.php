@@ -22,6 +22,7 @@ use Psr\Http\Message\UriInterface;
 /**
  * Para usar esse adaptador, é preciso instalar a seguinte biblioteca:
  * laminas/laminas-diactoros
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class DiactorosHttpFactory implements HttpFactory
 {
@@ -42,14 +43,14 @@ class DiactorosHttpFactory implements HttpFactory
 
     public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
-        $method = $method === '' && isset($serverParams['REQUEST_METHOD']) 
+        $method = $method === '' && isset($serverParams['REQUEST_METHOD'])
             ? $serverParams['REQUEST_METHOD']
             : $method;
 
         if ($method === '') {
             throw new InvalidArgumentException('Cannot determine HTTP method');
         }
-        
+
         return (new ServerRequestFactory())->createServerRequest($method, $uri, $serverParams);
     }
 
@@ -74,8 +75,7 @@ class DiactorosHttpFactory implements HttpFactory
         int $error = \UPLOAD_ERR_OK,
         string $clientFilename = null,
         string $clientMediaType = null
-    ): UploadedFileInterface
-    {
+    ): UploadedFileInterface {
         return (new UploadedFileFactory())->createUploadedFile(
             $stream,
             $size,

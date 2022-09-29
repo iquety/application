@@ -31,15 +31,18 @@ class ApplicationMainBootTest extends TestCase
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            "Please implement " . 
-                Session::class . " dependency for " . 
+            "Please implement " .
+                Session::class . " dependency for " .
                 Application::class . "->bootApplication"
         );
 
         $app = Application::instance();
         $app->bootApplication(new class implements Bootstrap {
-            public function bootRoutes(Router $router): void {}
-            public function bootDependencies(Application $app): void {
+            public function bootRoutes(Router $router): void
+            {
+            }
+            public function bootDependencies(Application $app): void
+            {
                 $app->addSingleton(Session::class, fn() => (object)[]);
                 $app->addSingleton(HttpFactory::class, fn() => (object)[]);
             }
@@ -53,15 +56,18 @@ class ApplicationMainBootTest extends TestCase
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            "Please implement " . 
-                HttpFactory::class . " dependency for " . 
+            "Please implement " .
+                HttpFactory::class . " dependency for " .
                 Application::class . "->bootApplication"
         );
 
         $app = Application::instance();
         $app->bootApplication(new class implements Bootstrap {
-            public function bootRoutes(Router $router): void {}
-            public function bootDependencies(Application $app): void {
+            public function bootRoutes(Router $router): void
+            {
+            }
+            public function bootDependencies(Application $app): void
+            {
                 $app->addSingleton(Session::class, MemorySession::class);
                 $app->addSingleton(HttpFactory::class, fn() => (object)[]);
             }
@@ -75,20 +81,22 @@ class ApplicationMainBootTest extends TestCase
     {
         $app = Application::instance();
         $app->bootApplication(new class implements Bootstrap {
-            public function bootRoutes(Router $router): void {
+            public function bootRoutes(Router $router): void
+            {
                 $router->get('/user/:id');
                 $router->post('/user/:id');
             }
 
-            public function bootDependencies(Application $app): void {
+            public function bootDependencies(Application $app): void
+            {
                 $app->addSingleton(Session::class, MemorySession::class);
                 $app->addSingleton(HttpFactory::class, DiactorosHttpFactory::class);
             }
         });
 
-        $this->assertEquals([ 
+        $this->assertEquals([
             (new Router())->get('/user/:id'),
-            (new Router())->post('/user/:id')    
+            (new Router())->post('/user/:id')
         ], $app->router()->routes());
 
         $this->assertTrue($app->container()->has(Application::class));

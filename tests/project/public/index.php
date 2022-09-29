@@ -11,12 +11,16 @@ use Modules\Articles\ArticlesBootstrap;
 $app = Application::instance();
 
 $app->bootApplication(new class implements Bootstrap {
-    public function bootRoutes(Router $router): void {}
-    public function bootDependencies(Application $app): void {}
+    public function bootRoutes(Router $router): void
+    {
+    }
+    public function bootDependencies(Application $app): void
+    {
+    }
 });
 
-// o boot configura as rotas e as dependências 
-// locais dos módulos 
+// o boot configura as rotas e as dependências
+// locais dos módulos
 $app->bootModule(new AdminBootstrap());
 $app->bootModule(new ArticlesBootstrap());
 

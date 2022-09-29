@@ -10,11 +10,11 @@ use Freep\Application\Routing\Policy;
 class IocPolicy implements Policy
 {
     public function __construct(private Session $session)
-    {}
+    {
+    }
 
     public function check(): bool
     {
         return $this->session->has('allow');
     }
 }
-

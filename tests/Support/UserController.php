@@ -12,7 +12,8 @@ use Psr\Http\Message\StreamInterface;
 class UserController
 {
     public function __construct(private Application $app)
-    {}
+    {
+    }
 
     public function create(ServerRequestInterface $request, int $id): ResponseInterface
     {

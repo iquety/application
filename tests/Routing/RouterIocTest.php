@@ -41,7 +41,7 @@ class RouterIocTest extends TestCase
         $container = new Container();
         $container->registerSingletonDependency(Session::class, MemorySession::class);
         $container->get(Session::class)->setParam('allow', 'yes');
-        
+
         $router = new Router();
         $router->useContainer($container);
         $router->get('edit/:id', 'CtrlTest')->policyBy(IocPolicy::class);
@@ -62,7 +62,7 @@ class RouterIocTest extends TestCase
     {
         $container = new Container();
         $container->registerSingletonDependency(Session::class, MemorySession::class);
-        
+
         $router = new Router();
         $router->useContainer($container);
         $router->get('edit/:id', 'CtrlTest')->policyBy(IocPolicy::class);
@@ -73,7 +73,7 @@ class RouterIocTest extends TestCase
         $this->assertFalse($router->routeNotFound());
         $this->assertFalse($router->routeDenied());
         $this->assertNull($router->currentRoute());
-        
+
         $router->process(Route::GET, "edit/33");
 
         $this->assertFalse($router->routeNotFound());

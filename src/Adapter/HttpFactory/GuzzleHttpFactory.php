@@ -23,6 +23,8 @@ use Psr\Http\Message\UriInterface;
 /**
  * Para usar esse adaptador, é preciso instalar a seguinte biblioteca:
  * guzzlehttp/guzzle
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.StaticAccess)
  */
 class GuzzleHttpFactory implements HttpFactory
 {
@@ -43,7 +45,7 @@ class GuzzleHttpFactory implements HttpFactory
 
     public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
-        $method = $method === '' && isset($serverParams['REQUEST_METHOD']) 
+        $method = $method === '' && isset($serverParams['REQUEST_METHOD'])
             ? $serverParams['REQUEST_METHOD']
             : $method;
 
@@ -75,8 +77,7 @@ class GuzzleHttpFactory implements HttpFactory
         int $error = \UPLOAD_ERR_OK,
         string $clientFilename = null,
         string $clientMediaType = null
-    ): UploadedFileInterface
-    {
+    ): UploadedFileInterface {
         if ($size === null) {
             $size = $stream->getSize();
         }

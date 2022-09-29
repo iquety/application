@@ -12,7 +12,8 @@ use Throwable;
 class HttpResponseFactory
 {
     public function __construct(private Application $app)
-    {}
+    {
+    }
 
     private function addHeader(ResponseInterface $response, string $name, string $value): ResponseInterface
     {
@@ -70,7 +71,7 @@ class HttpResponseFactory
     {
         /** @var ResponseInterface $response */
         $response = $this->app->make(ResponseInterface::class, 500, 'Internal Server Error');
-        
+
         return $this->setBody($response, $exception->getMessage());
     }
 }

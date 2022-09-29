@@ -17,7 +17,7 @@ class UserRestrictedBootstrap extends UserBootstrap
                 return false;
             }
         });
-        
+
         $router->post('/user/:id');
     }
 }

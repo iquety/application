@@ -10,6 +10,9 @@ use Freep\Application\Container\NotFoundException;
 use Psr\Container\ContainerInterface;
 use Throwable;
 
+/**
+ * @SuppressWarnings(PHPMD.ShortVariable)
+ */
 class Container implements ContainerInterface
 {
     public const RESOLVE_FACTORY = 'factory';

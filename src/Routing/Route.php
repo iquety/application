@@ -6,14 +6,15 @@ namespace Freep\Application\Routing;
 
 use Closure;
 
+/** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
 class Route
 {
-    const ANY    = 'ANY';
-    const DELETE = 'DELETE';
-    const GET    = 'GET';
-    const PATCH  = 'PATCH';
-    const POST   = 'POST';
-    const PUT    = 'PUT';
+    public const ANY    = 'ANY';
+    public const DELETE = 'DELETE';
+    public const GET    = 'GET';
+    public const PATCH  = 'PATCH';
+    public const POST   = 'POST';
+    public const PUT    = 'PUT';
 
     private Closure|string $action = '';
 
@@ -42,7 +43,7 @@ class Route
         $this->policy = $policy;
         return $this;
     }
-    
+
     public function usingAction(Closure|string $action): Route
     {
         $this->action = $action;
@@ -127,4 +128,3 @@ class Route
         return true;
     }
 }
-
