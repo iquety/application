@@ -7,13 +7,17 @@ namespace Tests\Support;
 use ArrayObject;
 use stdClass;
 
+/** @SuppressWarnings(PHPMD.ShortVariable) */
 class ContainerIoc
 {
     /** @var array<int,string> */
     private array $values;
 
     // Construtor só aceita injeções de objetos
-    /** @param ArrayObject<int,string> $object */
+    /**
+     * @param ArrayObject<int,string> $object
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function __construct(ArrayObject $object, stdClass $class = null)
     {
         $this->values = func_get_args();

@@ -19,6 +19,10 @@ use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use RuntimeException;
 
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class ApplicationMainBootTest extends TestCase
 {
     public function setUp(): void
@@ -26,7 +30,10 @@ class ApplicationMainBootTest extends TestCase
         Application::instance()->reset();
     }
 
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function invalidSession(): void
     {
         $this->expectException(RuntimeException::class);
@@ -41,6 +48,7 @@ class ApplicationMainBootTest extends TestCase
             public function bootRoutes(Router $router): void
             {
             }
+
             public function bootDependencies(Application $app): void
             {
                 $app->addSingleton(Session::class, fn() => (object)[]);
@@ -51,7 +59,10 @@ class ApplicationMainBootTest extends TestCase
         $app->run();
     }
 
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function invalidHttpFactory(): void
     {
         $this->expectException(RuntimeException::class);
@@ -66,6 +77,7 @@ class ApplicationMainBootTest extends TestCase
             public function bootRoutes(Router $router): void
             {
             }
+
             public function bootDependencies(Application $app): void
             {
                 $app->addSingleton(Session::class, MemorySession::class);

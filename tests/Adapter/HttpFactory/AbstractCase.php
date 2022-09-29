@@ -14,6 +14,9 @@ use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use Tests\TestCase;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 abstract class AbstractCase extends TestCase
 {
     abstract protected function makeFactory(): HttpFactory;

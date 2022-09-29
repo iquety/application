@@ -15,6 +15,7 @@ class UserController
     {
     }
 
+    /** @SuppressWarnings(PHPMD.ShortVariable) */
     public function create(ServerRequestInterface $request, int $id): ResponseInterface
     {
         return $this->app->make(ResponseInterface::class)->withBody(

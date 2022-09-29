@@ -13,6 +13,9 @@ use stdClass;
 use Tests\Support\UserAlternateBootstrap;
 use Tests\Support\UserBootstrap;
 
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
 class ApplicationBootModuleTest extends TestCase
 {
     public function setUp(): void

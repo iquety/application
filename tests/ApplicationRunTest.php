@@ -4,18 +4,12 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use ArrayObject;
 use Freep\Application\Application;
-use Freep\Application\Bootstrap;
-use Freep\Application\Http\Request;
-use Freep\Application\Http\Response;
-use Freep\Application\Routing\Router;
-use Laminas\Diactoros\Uri;
 use Psr\Http\Message\ResponseInterface;
-use RuntimeException;
 use Tests\Support\UserBootstrap;
 use Tests\Support\UserRestrictedBootstrap;
 
+/** @SuppressWarnings(PHPMD.StaticAccess) */
 class ApplicationRunTest extends TestCase
 {
     public function setUp(): void

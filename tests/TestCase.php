@@ -20,6 +20,7 @@ use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 use ReflectionObject;
 
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class TestCase extends FrameworkTestCase
 {
     public function getPropertyValue(object $instance, string $name)
@@ -31,6 +32,11 @@ class TestCase extends FrameworkTestCase
         return $property->getValue($instance);
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public static function applicationFactory(): Application
     {
         $app = Application::instance();
@@ -63,6 +69,9 @@ class TestCase extends FrameworkTestCase
         return $app;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD)
+     */
     public static function requestFactory(string $path = ''): ServerRequestInterface
     {
         $factory = new class extends DiactorosHttpFactory {

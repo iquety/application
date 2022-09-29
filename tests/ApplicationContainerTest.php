@@ -9,6 +9,9 @@ use Freep\Application\Application;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
 class ApplicationContainerTest extends TestCase
 {
     public function setUp(): void
