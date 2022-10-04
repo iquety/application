@@ -9,18 +9,25 @@ use Freep\Application\Container\Container;
 use Freep\Application\Container\InversionOfControl;
 use Freep\Application\Http\HttpDependencies;
 use Freep\Application\Http\HttpResponseFactory;
+use Freep\Application\Routing\Route;
 use Freep\Application\Routing\Router;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use Throwable;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class Application
 {
     private static ?Application $instance = null;
 
     private Container $container;
 
+    /** @var array<string,Bootstrap> */
     private array $modules = [];
 
     public static function instance(): Application
@@ -47,11 +54,17 @@ class Application
         $this->container()->registerSingletonDependency($identifier, $factory);
     }
 
-    public function make(...$arguments)
+    /** @param array<int,mixed> $arguments */
+    public function make(...$arguments): mixed
     {
+        if ($arguments === []) {
+            throw new InvalidArgumentException('Dependency id was not specified');
+        }
+
+        /** @var string $identifier */
         $identifier = array_shift($arguments);
 
-        return $this->container()->getWithArguments($identifier, $arguments);
+        return $this->container()->getWithArguments((string)$identifier, $arguments);
     }
 
     public function bootApplication(Bootstrap $bootstrap): void
@@ -117,12 +130,13 @@ class Application
         }
 
         try {
+            /** @var Route $route */
             $route = $router->currentRoute();
 
             $routeModule = $route->module();
             $routeAction = $route->action();
 
-            if ($routeAction === null) {
+            if ($routeAction === '') {
                 throw new RuntimeException('The route found does not have a action');
             }
 
@@ -144,5 +158,20 @@ class Application
     {
         $this->container = new Container();
         $this->modules = [];
+    }
+
+    /**
+     * @uses \header
+     * @uses \echo
+     */
+    public function sendResponse(ResponseInterface $response): void
+    {
+        foreach ($response->getHeaders() as $name => $values) {
+            foreach ($values as $value) {
+                header(sprintf('%s: %s', $name, $value), false);
+            }
+        }
+
+        echo $response->getBody()->getContents();
     }
 }

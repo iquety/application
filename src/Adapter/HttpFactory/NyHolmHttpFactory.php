@@ -51,6 +51,9 @@ class NyHolmHttpFactory implements HttpFactory
         return $this->factory->createResponse($code, $reasonPhrase);
     }
 
+    /**
+     * @param array<string,mixed> $serverParams
+     */
     public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
         $method = $method === '' && isset($serverParams['REQUEST_METHOD'])

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Freep\Application\Adapter\Session;
 
 use Freep\Application\Http\Session;
+use RuntimeException;
 
 /** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
 class MemorySession implements Session
@@ -43,7 +44,7 @@ class MemorySession implements Session
     }
 
     /** Define o nome da sessão */
-    public function setName(string $name)
+    public function setName(string $name): void
     {
         static::$session['name'] = $name;
     }

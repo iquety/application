@@ -7,6 +7,7 @@ namespace Tests\Routing;
 use Freep\Application\Routing\Policy;
 use Freep\Application\Routing\Route;
 use Freep\Application\Routing\Router;
+use RuntimeException;
 use Tests\TestCase;
 
 class RouterTest extends TestCase
@@ -96,7 +97,6 @@ class RouterTest extends TestCase
     /**
      * @test
      * @dataProvider routesMatchProvider
-     * @param mixed $controller
     */
     public function match(string $method, string $pattern, string $path): void
     {
@@ -137,7 +137,6 @@ class RouterTest extends TestCase
     /**
      * @test
      * @dataProvider routesMatchProvider
-     * @param mixed $controller
     */
     public function denied(string $method, string $pattern, string $path): void
     {
@@ -183,6 +182,27 @@ class RouterTest extends TestCase
     }
 
     /** @test */
+    public function deniedPolicySignatureWithoutContainer(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('The container is not available');
+
+        $router = new Router();
+
+        $router->any('show/:name')->usingMethod(ROUTE::GET)->policyBy(Policy::class);
+
+        $this->assertFalse($router->routeNotFound());
+        $this->assertFalse($router->routeDenied());
+        $this->assertNull($router->currentRoute());
+
+        $router->process(ROUTE::GET, 'show/ricardo');
+
+        $this->assertFalse($router->routeNotFound());
+        $this->assertTrue($router->routeDenied());
+        $this->assertInstanceOf(Route::class, $router->currentRoute());
+    }
+
+    /** @test */
     public function contextualizedByModule(): void
     {
         $router = new Router();
@@ -193,10 +213,10 @@ class RouterTest extends TestCase
 
         $router->process(ROUTE::GET, '/user/ricardo');
         $this->assertInstanceOf(Route::class, $router->currentRoute());
-        $this->assertEquals('all', $router->currentRoute()->module());
+        $this->assertEquals('all', $router->currentRoute()?->module());
 
         $router->process(ROUTE::GET, '/post/33');
         $this->assertInstanceOf(Route::class, $router->currentRoute());
-        $this->assertEquals('module_identifier', $router->currentRoute()->module());
+        $this->assertEquals('module_identifier', $router->currentRoute()?->module());
     }
 }

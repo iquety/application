@@ -4,29 +4,25 @@ declare(strict_types=1);
 
 namespace Modules\Admin;
 
+use ArrayObject;
 use Freep\Application\Application;
 use Freep\Application\Bootstrap;
-use Freep\Application\Route;
-use Freep\Application\Router;
+use Freep\Application\Routing\Router;
+use stdClass;
+use Tests\Support\UserController;
 
 class AdminBootstrap implements Bootstrap
 {
-    public function bootRoutes(string $moduleIdentifier, Router $router): void
+    public function bootRoutes(Router $router): void
     {
-        $route = new Route();
-        $route->setPolice((object)[]);
-
-        $router->addRoute($moduleIdentifier, $route);
+        $router->get('/user/:id')->usingAction(UserController::class . '::create');
+        $router->post('/user/:id');
     }
 
     public function bootDependencies(Application $app): void
     {
-        $app->addFactory(Response::class, function () {
-            return (object)[];
-        });
+        $app->addSingleton(ArrayObject::class, ArrayObject::class);
 
-        $app->addSingleton(ArrayObject::class, function () {
-            return (object)[];
-        });
+        $app->addSingleton(stdClass::class, stdClass::class);
     }
 }

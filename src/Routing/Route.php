@@ -77,6 +77,7 @@ class Route
         return $this->module;
     }
 
+    /** @return array<string,int|string> */
     public function params(): array
     {
         return $this->params;

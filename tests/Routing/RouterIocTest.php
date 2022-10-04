@@ -22,7 +22,7 @@ class RouterIocTest extends TestCase
 
         $router = new Router();
         $router->useContainer($container);
-        $router->get('edit/:id', 'CtrlTest')->policyBy(IocPolicy::class);
+        $router->get('edit/:id')->policyBy(IocPolicy::class);
 
         $this->assertFalse($router->routeNotFound());
         $this->assertFalse($router->routeDenied());
@@ -44,7 +44,7 @@ class RouterIocTest extends TestCase
 
         $router = new Router();
         $router->useContainer($container);
-        $router->get('edit/:id', 'CtrlTest')->policyBy(IocPolicy::class);
+        $router->get('edit/:id')->policyBy(IocPolicy::class);
 
         $this->assertFalse($router->routeNotFound());
         $this->assertFalse($router->routeDenied());
@@ -65,7 +65,7 @@ class RouterIocTest extends TestCase
 
         $router = new Router();
         $router->useContainer($container);
-        $router->get('edit/:id', 'CtrlTest')->policyBy(IocPolicy::class);
+        $router->get('edit/:id')->policyBy(IocPolicy::class);
 
         // aplica o valor após o uso da variável $container
         $container->get(Session::class)->setParam('allow', 'yes');

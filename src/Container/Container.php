@@ -74,7 +74,10 @@ class Container implements ContainerInterface
         return $this->resolveFactory($id);
     }
 
-    /** @throws NotFoundException */
+    /**
+     * @param array<int,mixed> $arguments
+     * @throws NotFoundException
+     */
     public function getWithArguments(string $id, array $arguments): mixed
     {
         if ($this->has($id) === false) {
@@ -89,7 +92,10 @@ class Container implements ContainerInterface
         return $this->resolveFactory($id, $arguments);
     }
 
-    /** @throws ContainerException */
+    /**
+     * @param array<int,mixed> $arguments
+     * @throws ContainerException
+     */
     private function resolveSingleton(string $id, array $arguments = []): mixed
     {
         if (isset($this->singleton[$id]) === false) {
@@ -104,13 +110,19 @@ class Container implements ContainerInterface
         return $this->singleton[$id];
     }
 
-    /** @throws ContainerException */
+    /**
+     * @param array<int,mixed> $arguments
+     * @throws ContainerException
+     */
     private function resolveFactory(string $id, array $arguments = []): mixed
     {
         return $this->resolve($id, self::RESOLVE_FACTORY, $arguments);
     }
 
-    /** @throws ContainerException */
+    /**
+     * @param array<int,mixed> $arguments
+     * @throws ContainerException
+     */
     private function resolve(
         string $id,
         string $type = Container::RESOLVE_SINGLETON,

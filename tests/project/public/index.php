@@ -24,4 +24,6 @@ $app->bootApplication(new class implements Bootstrap {
 $app->bootModule(new AdminBootstrap());
 $app->bootModule(new ArticlesBootstrap());
 
-$app->run()->send();
+$response = $app->run();
+
+$app->sendResponse($response);

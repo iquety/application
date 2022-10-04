@@ -6,9 +6,7 @@ namespace Tests;
 
 use ArrayObject;
 use Freep\Application\Application;
-use Freep\Application\Http\Request;
 use Freep\Application\Routing\Route;
-use Freep\Application\Routing\Router;
 use stdClass;
 use Tests\Support\UserAlternateBootstrap;
 use Tests\Support\UserBootstrap;

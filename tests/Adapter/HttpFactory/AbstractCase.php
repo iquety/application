@@ -91,6 +91,7 @@ abstract class AbstractCase extends TestCase
     /** @test */
     public function createStreamFromResource(): void
     {
+        /** @var resource $resource */
         $resource = fopen(__DIR__ . '/streamfile.txt', 'r');
 
         $object = $this->makeFactory()->createStreamFromResource($resource);

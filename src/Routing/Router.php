@@ -6,6 +6,7 @@ namespace Freep\Application\Routing;
 
 use Freep\Application\Container\InversionOfControl;
 use Psr\Container\ContainerInterface;
+use RuntimeException;
 
 /** @SuppressWarnings(PHPMD.TooManyPublicMethods) */
 class Router
@@ -99,15 +100,15 @@ class Router
             return $this->invokePolicyString($policy);
         }
 
-        if ($this->container !== null) {
-            return $this->invokePolicyString($policy::class . '::check');
-        }
-
         return $policy->check();
     }
 
     private function invokePolicyString(string $signature): bool
     {
+        if ($this->container === null) {
+            throw new RuntimeException('The container is not available');
+        }
+
         $control = new InversionOfControl($this->container);
 
         return $control->resolve($signature . '::check');

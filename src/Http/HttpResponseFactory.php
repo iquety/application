@@ -46,7 +46,10 @@ class HttpResponseFactory
         $response = $this->app->make(ResponseInterface::class, $status, 'OK');
 
         $response = $this->setBody($response, $content);
-        $response = $this->setMimeType($response, $mimeType);
+
+        if ($mimeType !== null) {
+            $response = $this->setMimeType($response, $mimeType);
+        }
 
         return $response;
     }

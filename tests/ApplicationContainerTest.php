@@ -6,6 +6,7 @@ namespace Tests;
 
 use ArrayObject;
 use Freep\Application\Application;
+use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 
@@ -32,6 +33,16 @@ class ApplicationContainerTest extends TestCase
     }
 
     /** @test */
+    public function dependencyInvalidCall(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Dependency id was not specified');
+
+        $app = Application::instance();
+        $app->make();
+    }
+
+    /** @test */
     public function dependencyFactory(): void
     {
         $app = Application::instance();
@@ -47,5 +58,17 @@ class ApplicationContainerTest extends TestCase
         $app->addSingleton('identifier', ArrayObject::class);
 
         $this->assertSame($app->make('identifier'), $app->make('identifier'));
+    }
+
+    /** @test */
+    public function dependencyFactoryWithArguments(): void
+    {
+        $app = Application::instance();
+        $app->addFactory('identifier', fn($teste) => new ArrayObject([ 'teste' => $teste ]));
+
+        $this->assertNotSame(
+            $app->make('identifier', 'none', 'naitis'),
+            $app->make('identifier', 'ho')
+        );
     }
 }

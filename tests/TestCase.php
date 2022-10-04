@@ -23,7 +23,7 @@ use ReflectionObject;
 /** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class TestCase extends FrameworkTestCase
 {
-    public function getPropertyValue(object $instance, string $name)
+    public function getPropertyValue(object $instance, string $name): mixed
     {
         $reflection = new ReflectionObject($instance);
         $property = $reflection->getProperty($name);

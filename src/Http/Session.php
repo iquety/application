@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Freep\Application\Http;
 
+use RuntimeException;
+
 interface Session
 {
     /**
@@ -18,8 +20,10 @@ interface Session
     /** Devolve o ID da sessão */
     public function identity(): string;
 
-    /** Define o nome da sessão */
-    public function setName(string $name);
+    /**
+     * Define o nome da sessão
+     */
+    public function setName(string $name): void;
 
     /** Devolve o nome da sessão */
     public function name(): string;
@@ -33,10 +37,16 @@ interface Session
     /** Verifica se o atributo já foi definido */
     public function has(string $name): bool;
 
-    /** Devolve todos os atributos da sessão */
+    /**
+     * Devolve todos os atributos da sessão
+     * @return array<string,mixed>
+     */
     public function all(): array;
 
-    /** Define vários atributos */
+    /**
+     * Define vários atributos
+     * @param array<string,mixed> $attributes
+     */
     public function replace(array $attributes): void;
 
     /** Remove um atributo */

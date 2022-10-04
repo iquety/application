@@ -41,6 +41,9 @@ class DiactorosHttpFactory implements HttpFactory
         return (new ResponseFactory())->createResponse($code, $reasonPhrase);
     }
 
+    /**
+     * @param array<string,mixed> $serverParams
+     */
     public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
         $method = $method === '' && isset($serverParams['REQUEST_METHOD'])
