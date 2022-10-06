@@ -5,7 +5,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/5a911e53f0cc421282d847d323f50203)](https://www.codacy.com/gh/ricardopedias/freep-console/dashboard?utm_source=github.com&utm_medium=referral&utm_content=ricardopedias/freep-console&utm_campaign=Badge_Coverage)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5a911e53f0cc421282d847d323f50203)](https://www.codacy.com/gh/ricardopedias/freep-console/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ricardopedias/freep-console&amp;utm_campaign=Badge_Grade)
 
-[English](readme.md) | [Português](./docs/pt-br/leiame.md)
+[English](../../readme.md) | [Português](leiame.md)
 -- | --
 
 ## Sinopse
@@ -17,7 +17,7 @@ padrões arquiteturais MVC e Hexagonal (Ports and Adapters).
 composer require ricardopedias/freep-application
 ```
 
-### Aplicação:
+### Aplicação
 
 * Proporciona a separação de interesses, usando módulos bootáveis;
 * Baseada no padrão arquitetural MVC;
