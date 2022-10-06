@@ -18,6 +18,7 @@ class HttpResponseFactoryTest extends TestCase
         Application::instance()->reset();
     }
 
+    /** @return array<string,array<int,mixed>> */
     public function responseProvider(): array
     {
         return [
