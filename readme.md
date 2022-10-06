@@ -2,15 +2,14 @@
 
 ## Sobre
 
-O Freep é um framework PHP implementado numa arquitetura baseada em eventos de domínio.
-Também possui as ferramentas necessárias para:
+O Freep Aplication é uma biblioteca para a criação de aplicações modulares, com
+as seguintes características:
 
-- Criação de objetos de domínio como Entidades, Objetos de Valor e Repositórios;
-- Armazenamento de eventos;
-- Consumo de eventos em seu estado puro;
-- Materialização de eventos;
-- Validação de valores
-
-## Projeto
-
-Este é um projeto esqueleto para uma aplicação baseada no Freep.
+* Baseado no padrão arquitetural MVC;
+* Dependências extremamente flexíveis, usando arquitetura Hexagonal (Ports and Adapters);
+* Proporciona a separação de interesses, usando módulos bootáveis;
+* Em cada módulo:
+  - Pode-se definir suas próprias rotas;
+  - Pode-se definir suas próprias dependências;
+  - Suas dependências são fabricadas apenas se uma rota do módulo for acessada;
+  - Carrega Controladores e Policies usando o padrão de Inversão de Controle.

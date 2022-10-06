@@ -1,0 +1,25 @@
+name: codacy-coverage
+
+on: ["push"]
+
+jobs:
+  codacy-coverage-reporter:
+    runs-on: ubuntu-latest
+    name: codacy-coverage-reporter
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.0
+          extensions: curl, mbstring, xdebug
+          tools: composer:v2
+
+      - run: composer update --no-progress
+      - run: vendor/bin/phpunit --coverage-clover clover.xml
+
+      - name: Run codacy-coverage-reporter
+        uses: codacy/codacy-coverage-reporter-action@master
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          coverage-reports: clover.xml
