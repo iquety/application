@@ -9,7 +9,8 @@
         "psr/container": "^2.0",
         "psr/http-factory": "^1.0",
         "psr/http-message": "^1.0",
-        "ricardopedias/freep-console": "dev-main"
+        "ricardopedias/freep-console": "dev-main",
+        "ricardopedias/freep-docmap": "^1.0"
     },
     "require-dev": {
         "guzzlehttp/guzzle": "^7.5",
