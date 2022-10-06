@@ -6,8 +6,14 @@ namespace Tests;
 
 use Freep\Application\Application;
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
+use Tests\Support\UserArrayClosureActionBootstrap;
 use Tests\Support\UserBootstrap;
+use Tests\Support\UserClosureActionBootstrap;
+use Tests\Support\UserNoActionBootstrap;
+use Tests\Support\UserNullClosureActionBootstrap;
 use Tests\Support\UserRestrictedBootstrap;
+use Tests\Support\UserStringClosureActionBootstrap;
 
 /** @SuppressWarnings(PHPMD.StaticAccess) */
 class ApplicationRunTest extends TestCase
@@ -43,12 +49,90 @@ class ApplicationRunTest extends TestCase
 
         // as dependencias do módulo só serão resolvidas se
         // a rota '/user/:id' bater com a requisição efetuada para '/user/33'
-        $app->run();
-
         $response = $app->run();
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /** @test */
+    public function runForNoActionRoute(): void
+    {
+        // a fabrica cria a intancia de ServerRequestInterface com o
+        // URI apondando para '/user/33'
+        $app = TestCase::applicationFactory();
+
+        // O bootstrap do módulo cria uma rota apontando para o
+        // padrão '/user/:id'
+        $app->bootModule(new UserNoActionBootstrap());
+
+        // as dependencias do módulo só serão resolvidas se
+        // a rota '/user/:id' bater com a requisição efetuada para '/user/33'
+        $response = $app->run();
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertEquals('The route found does not have a action', $response->getBody()->getContents());
+    }
+
+    /** @test */
+    public function runForClosureActionRoute(): void
+    {
+        // a fabrica cria a intancia de ServerRequestInterface com o
+        // URI apondando para '/user/33'
+        $app = TestCase::applicationFactory();
+
+        // O bootstrap do módulo cria uma rota apontando para o
+        // padrão '/user/:id'
+        $app->bootModule(new UserStringClosureActionBootstrap());
+
+        // as dependencias do módulo só serão resolvidas se
+        // a rota '/user/:id' bater com a requisição efetuada para '/user/33'
+        $response = $app->run();
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('closure naitis', $response->getBody()->getContents());
+    }
+
+    /** @test */
+    public function runForNullClosureActionRoute(): void
+    {
+        // a fabrica cria a intancia de ServerRequestInterface com o
+        // URI apondando para '/user/33'
+        $app = TestCase::applicationFactory();
+
+        // O bootstrap do módulo cria uma rota apontando para o
+        // padrão '/user/:id'
+        $app->bootModule(new UserNullClosureActionBootstrap());
+
+        // as dependencias do módulo só serão resolvidas se
+        // a rota '/user/:id' bater com a requisição efetuada para '/user/33'
+        $response = $app->run();
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('', $response->getBody()->getContents());
+    }
+
+    /** @test */
+    public function runForArrayClosureActionRoute(): void
+    {
+        // a fabrica cria a intancia de ServerRequestInterface com o
+        // URI apondando para '/user/33'
+        $app = TestCase::applicationFactory();
+
+        // O bootstrap do módulo cria uma rota apontando para o
+        // padrão '/user/:id'
+        $app->bootModule(new UserArrayClosureActionBootstrap());
+
+        // as dependencias do módulo só serão resolvidas se
+        // a rota '/user/:id' bater com a requisição efetuada para '/user/33'
+        $response = $app->run();
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('{"name":"naitis"}', $response->getBody()->getContents());
     }
 
     /** @test */
@@ -64,8 +148,6 @@ class ApplicationRunTest extends TestCase
 
         // as dependencias do módulo só serão resolvidas se
         // a rota '/user/:id' bater com a requisição efetuada para '/user/33'
-        $app->run();
-
         $response = $app->run();
 
         $this->assertInstanceOf(ResponseInterface::class, $response);

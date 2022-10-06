@@ -30,7 +30,9 @@ class Application
     /** @var array<string,Bootstrap> */
     private array $modules = [];
 
-    public static function instance(): Application
+    private bool $headersEmission = true;
+
+    public static function instance(): self
     {
         if (static::$instance === null) {
             static::$instance = new self();
@@ -52,6 +54,11 @@ class Application
     public function addSingleton(string $identifier, Closure|string $factory): void
     {
         $this->container()->registerSingletonDependency($identifier, $factory);
+    }
+
+    public function disableHeadersEmission(): void
+    {
+        $this->headersEmission = false;
     }
 
     /** @param array<int,mixed> $arguments */
@@ -143,7 +150,7 @@ class Application
             $this->modules[$routeModule]->bootDependencies($this);
 
             if ($routeAction instanceof Closure) {
-                return call_user_func($routeAction);
+                return $this->resolveClosure($routeAction);
             }
 
             $control = new InversionOfControl($this->container());
@@ -152,6 +159,21 @@ class Application
         } catch (Throwable $exception) {
             return (new HttpResponseFactory($this))->serverErrorResponse($exception);
         }
+    }
+
+    private function resolveClosure(Closure $routeAction): ResponseInterface
+    {
+        $result = call_user_func($routeAction);
+
+        $factory = new HttpResponseFactory($this);
+
+        if ($result === null) {
+            return $factory->response('');
+        }
+
+        return is_string($result)
+            ? $factory->response($result)
+            : $factory->jsonResponse($result);
     }
 
     public function reset(): void
@@ -166,12 +188,25 @@ class Application
      */
     public function sendResponse(ResponseInterface $response): void
     {
+        $this->emitHeaders($response);
+
+        $stream = $response->getBody();
+        $stream->rewind();
+        echo $stream->getContents();
+    }
+
+    protected function emitHeaders(ResponseInterface $response): void
+    {
+        if ($this->headersEmission === false) {
+            return;
+        }
+        
+        // @codeCoverageIgnoreStart
         foreach ($response->getHeaders() as $name => $values) {
             foreach ($values as $value) {
                 header(sprintf('%s: %s', $name, $value), false);
             }
         }
-
-        echo $response->getBody()->getContents();
+        // @codeCoverageIgnoreEnd
     }
 }

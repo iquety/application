@@ -42,6 +42,7 @@ class TestCase extends FrameworkTestCase
         $app = Application::instance();
 
         $app->reset();
+        $app->disableHeadersEmission();
 
         $app->bootApplication(new class implements Bootstrap {
             public function bootRoutes(Router $router): void

@@ -40,6 +40,13 @@ class HttpResponseFactory
         return $this->addHeader($response, 'Content-type', $mimeType);
     }
 
+    public function jsonResponse(array $content = [], int $status = 200): ResponseInterface
+    {
+        $jsonContent = json_encode($content, JSON_FORCE_OBJECT);
+
+        return $this->response($jsonContent, $status,  'application/json');
+    }
+
     public function response(string $content = '', int $status = 200, string $mimeType = null): ResponseInterface
     {
         /** @var ResponseInterface $response */
