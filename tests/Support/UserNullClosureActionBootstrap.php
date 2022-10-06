@@ -14,7 +14,8 @@ class UserNullClosureActionBootstrap implements Bootstrap
 {
     public function bootRoutes(Router $router): void
     {
-        $router->get('/user/:id')->usingAction(function(){});
+        $router->get('/user/:id')->usingAction(function () {
+        });
         $router->post('/user/:id');
     }
 

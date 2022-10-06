@@ -15,7 +15,7 @@ class MemorySession implements Session
 
     public function __construct()
     {
-        static::$session = [
+        static::$session = [ // @codeCoverageIgnore
             'id' => microtime(),
             'name' => '',
             'data' => []

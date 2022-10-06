@@ -27,7 +27,7 @@ class SymfonyNativeSession implements Session
         if ($this->session === null) {
             $storage = $this->testMode === true
                 ? new MockArraySessionStorage()
-                : new NativeSessionStorage();
+                : new NativeSessionStorage(); // @codeCoverageIgnore
 
             $this->session = new SymfonyObject($storage, new AttributeBag());
         }

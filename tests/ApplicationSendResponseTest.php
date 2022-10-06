@@ -15,6 +15,7 @@ use Tests\Support\UserNoActionBootstrap;
 use Tests\Support\UserNullClosureActionBootstrap;
 use Tests\Support\UserRestrictedBootstrap;
 use Tests\Support\UserStringClosureActionBootstrap;
+
 use function xdebug_get_headers;
 
 /** @SuppressWarnings(PHPMD.StaticAccess) */
@@ -45,7 +46,7 @@ class ApplicationSendResponseTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('closure naitis', $response->getBody()->getContents());
-        
+
         $app->sendResponse($response->withHeader('Content-type', 'text/html'));
     }
 }

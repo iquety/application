@@ -200,7 +200,7 @@ class Application
         if ($this->headersEmission === false) {
             return;
         }
-        
+
         // @codeCoverageIgnoreStart
         foreach ($response->getHeaders() as $name => $values) {
             foreach ($values as $value) {
