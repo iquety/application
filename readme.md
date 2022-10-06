@@ -16,7 +16,7 @@
 composer require ricardopedias/freep-application
 ```
 
-### Application:
+### Application
 
 * Provides separation of concerns (SOC), using bootable modules;
 * Based on the MVC architectural pattern;
