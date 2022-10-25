@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Support;
+namespace Tests\Support\Mvc;
 
 use ArrayObject;
 use Freep\Application\Application;
-use Freep\Application\Bootstrap;
+use Freep\Application\Layers\Mvc\MvcBootstrap;
 use Freep\Application\Routing\Router;
 use stdClass;
 
-class UserStringClosureActionBootstrap implements Bootstrap
+class UserStringClosureActionBootstrap extends MvcBootstrap
 {
     public function bootRoutes(Router $router): void
     {

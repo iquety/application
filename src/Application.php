@@ -10,8 +10,8 @@ use Freep\Application\Container\InversionOfControl;
 use Freep\Application\Http\HttpDependencies;
 use Freep\Application\Http\HttpResponseFactory;
 use Freep\Application\Routing\Route;
-use Freep\Application\Routing\Router;
 use InvalidArgumentException;
+use OutOfBoundsException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
@@ -27,8 +27,11 @@ class Application
 
     private Container $container;
 
+    /** @var array<Engine> */
+    private array $engineList = [];
+
     /** @var array<string,Bootstrap> */
-    private array $modules = [];
+    private array $moduleList = [];
 
     private bool $headersEmission = true;
 
@@ -46,6 +49,11 @@ class Application
         $this->container = new Container();
     }
 
+    public function addEngine(string $identifier): void
+    {
+        $this->engineList[] = new $identifier($this);
+    }
+
     public function addFactory(string $identifier, Closure|string $factory): void
     {
         $this->container()->registerDependency($identifier, $factory);
@@ -56,9 +64,52 @@ class Application
         $this->container()->registerSingletonDependency($identifier, $factory);
     }
 
+    /** @SuppressWarnings(PHPMD.StaticAccess) */
+    public function bootApplication(Bootstrap $bootstrap): void
+    {
+        $bootstrap->bootDependencies($this);
+
+        (new HttpDependencies())->attachTo($this);
+
+        // para o ioc fazer uso da aplicação
+        $this->addSingleton(Application::class, fn() => Application::instance());
+
+        $this->bootEngines('all', $bootstrap);
+    }
+
+    private function bootEngines(string $moduleIdentifier, Bootstrap $bootstrap): void
+    {
+        foreach($this->engineList as $engine) {
+            $engine->boot($moduleIdentifier, $bootstrap);
+        }
+    }
+
+    public function bootModule(Bootstrap $bootstrap): void
+    {
+        $this->moduleList[$bootstrap::class] = $bootstrap;
+    }
+
+    public function container(): Container
+    {
+        return $this->container;
+    }
+
     public function disableHeadersEmission(): void
     {
         $this->headersEmission = false;
+    }
+
+    private function executeEngine(ServerRequestInterface $request): ResponseInterface
+    {
+        foreach($this->engineList as $engine) {
+            $response = $engine->execute($this->moduleList, $request);
+
+            if ($response !== null) {
+                return $response;
+            }
+        }
+
+        return (new HttpResponseFactory($this))->notFoundResponse();
     }
 
     /** @param array<int,mixed> $arguments */
@@ -74,112 +125,26 @@ class Application
         return $this->container()->getWithArguments((string)$identifier, $arguments);
     }
 
-    public function bootApplication(Bootstrap $bootstrap): void
+    public function reset(): void
     {
-        $bootstrap->bootDependencies($this);
-
-        $this->setupMainDependencies();
-
-        $bootstrap->bootRoutes($this->router());
-    }
-
-    /** @SuppressWarnings(PHPMD.StaticAccess) */
-    private function setupMainDependencies(): void
-    {
-        (new HttpDependencies())->attachTo($this);
-
-        // para o ioc fazer uso da aplicação
-        $this->addSingleton(Application::class, fn() => Application::instance());
-
-        $this->addSingleton(Router::class, Router::class);
-    }
-
-    public function bootModule(Bootstrap $bootstrap): void
-    {
-        $this->modules[$bootstrap::class] = $bootstrap;
-    }
-
-    public function container(): Container
-    {
-        return $this->container;
-    }
-
-    public function router(): Router
-    {
-        /** @var Router $router */
-        $router = $this->make(Router::class);
-        $router->resetModuleInfo();
-        $router->useContainer($this->container);
-
-        return $router;
+        $this->container = new Container();
+        $this->engineList = [];
+        $this->moduleList = [];
     }
 
     public function run(): ResponseInterface
     {
-        foreach ($this->modules as $identifier => $bootstrap) {
-            $bootstrap->bootRoutes($this->router()->forModule($identifier));
+        if ($this->engineList === []) {
+            throw new RuntimeException('No web engine to handle the request');
         }
 
-        $request = $this->make(ServerRequestInterface::class);
-        $router  = $this->router();
+        foreach ($this->moduleList as $identifier => $bootstrap) {
+            $this->bootEngines($identifier, $bootstrap);
+        }
 
-        $router->process(
-            $request->getMethod(),
-            $request->getUri()->getPath()
+        return $this->executeEngine(
+            $this->make(ServerRequestInterface::class)
         );
-
-        if ($router->routeNotFound()) {
-            return (new HttpResponseFactory($this))->notFoundResponse();
-        }
-
-        if ($router->routeDenied()) {
-            return (new HttpResponseFactory($this))->accessDeniedResponse();
-        }
-
-        try {
-            /** @var Route $route */
-            $route = $router->currentRoute();
-
-            $routeModule = $route->module();
-            $routeAction = $route->action();
-
-            if ($routeAction === '') {
-                throw new RuntimeException('The route found does not have a action');
-            }
-
-            $this->modules[$routeModule]->bootDependencies($this);
-
-            if ($routeAction instanceof Closure) {
-                return $this->resolveClosure($routeAction);
-            }
-
-            $control = new InversionOfControl($this->container());
-
-            return $control->resolve($routeAction, $route->params());
-        } catch (Throwable $exception) {
-            return (new HttpResponseFactory($this))->serverErrorResponse($exception);
-        }
-    }
-
-    private function resolveClosure(Closure $routeAction): ResponseInterface
-    {
-        $result = call_user_func($routeAction);
-
-        $factory = new HttpResponseFactory($this);
-
-        if ($result === null) {
-            return $factory->response('');
-        }
-
-        return is_string($result)
-            ? $factory->response($result)
-            : $factory->jsonResponse($result);
-    }
-
-    public function reset(): void
-    {
-        $this->container = new Container();
-        $this->modules = [];
     }
 
     /**

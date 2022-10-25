@@ -2,14 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Tests;
+namespace Tests\Layers\Mvc;
 
 use ArrayObject;
 use Freep\Application\Application;
+use Freep\Application\Layers\Mvc\MvcEngine;
 use Freep\Application\Routing\Route;
+use Freep\Application\Routing\Router;
 use stdClass;
-use Tests\Support\UserAlternateBootstrap;
-use Tests\Support\UserBootstrap;
+use Tests\Support\Mvc\UserAlternateBootstrap;
+use Tests\Support\Mvc\UserBootstrap;
+use Tests\TestCase;
 
 /**
  * @SuppressWarnings(PHPMD.StaticAccess)
@@ -28,6 +31,8 @@ class ApplicationBootModuleTest extends TestCase
         // URI apondando para '/user/33'
         $app = TestCase::applicationFactory();
 
+        $app->addEngine(MvcEngine::class);
+
         // O bootstrap do módulo cria uma rota apontando para o
         // padrão '/user/:id'
         $app->bootModule(new UserBootstrap());
@@ -36,7 +41,7 @@ class ApplicationBootModuleTest extends TestCase
         // a rota '/user/:id' bater com a requisição efetuada para '/user/33'
         $app->run();
 
-        $routeList = $app->router()->routes();
+        $routeList = $app->make(Router::class)->routes();
 
         $this->assertCount(2, $routeList);
 
@@ -63,6 +68,8 @@ class ApplicationBootModuleTest extends TestCase
         // URI apondando para '/user/33'
         $app = TestCase::applicationFactory();
 
+        $app->addEngine(MvcEngine::class);
+
         // O bootstrap do módulo cria uma rota apontando para o
         // padrão '/editor/:id'
         $app->bootModule(new UserAlternateBootstrap());
@@ -71,7 +78,7 @@ class ApplicationBootModuleTest extends TestCase
         // rota '/editor/:id' nunca vai bater com a requisição efetuada para '/user/33'
         $app->run();
 
-        $routeList = $app->router()->routes();
+        $routeList = $app->make(Router::class)->routes();
 
         $this->assertCount(2, $routeList);
 
