@@ -32,7 +32,7 @@ Geralmente será no arquivo `index.php`:
 
 declare(strict_types=1);
 
-use Freep\Application\Application;
+use Iquety\Application\Application;
 use Core\AppBootstrap;
 use Modules\Admin\AdminBootstrap;
 use Modules\Articles\ArticlesBootstrap;

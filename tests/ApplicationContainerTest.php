@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use ArrayObject;
-use Freep\Application\Application;
+use Iquety\Application\Application;
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Freep\Application\Layers\FrontController;
+namespace Iquety\Application\Layers\FrontController;
 
 abstract class Command
 {

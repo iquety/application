@@ -4,8 +4,105 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "27336fbc32bf6e68f472912828b46730",
+    "content-hash": "de048e8d11bc756c2c4651831f4f2e8c",
     "packages": [
+        {
+            "name": "iquety/console",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/iquety/console.git",
+                "reference": "a63aafc34fc672bfd04293cd560d364caf389fb0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/iquety/console/zipball/a63aafc34fc672bfd04293cd560d364caf389fb0",
+                "reference": "a63aafc34fc672bfd04293cd560d364caf389fb0",
+                "shasum": ""
+            },
+            "require": {
+                "iquety/security": "dev-main",
+                "php": "^8.0.0"
+            },
+            "require-dev": {
+                "codacy/coverage": "dev-master",
+                "phpmd/phpmd": "@stable",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^9",
+                "ricardopedias/freep-docmap": "dev-main",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "default-branch": true,
+            "type": "tool",
+            "autoload": {
+                "psr-4": {
+                    "Iquety\\Console\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Toolkit for implementing PHP-based terminal commands",
+            "keywords": [
+                "console",
+                "framework",
+                "tool"
+            ],
+            "support": {
+                "issues": "https://github.com/iquety/console/issues",
+                "source": "https://github.com/iquety/console/tree/main"
+            },
+            "time": "2022-10-28T16:52:33+00:00"
+        },
+        {
+            "name": "iquety/security",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/iquety/security.git",
+                "reference": "81cf2bd1dd5c3a91dea42c58f9349511b7aaf14d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/iquety/security/zipball/81cf2bd1dd5c3a91dea42c58f9349511b7aaf14d",
+                "reference": "81cf2bd1dd5c3a91dea42c58f9349511b7aaf14d",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0.0"
+            },
+            "require-dev": {
+                "codacy/coverage": "dev-master",
+                "iquety/docmap": "dev-main",
+                "phpmd/phpmd": "@stable",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^9",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Iquety\\Security\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Secure implementations for critical native functions",
+            "keywords": [
+                "framework",
+                "freep",
+                "security"
+            ],
+            "support": {
+                "issues": "https://github.com/iquety/security/issues",
+                "source": "https://github.com/iquety/security/tree/main"
+            },
+            "time": "2022-10-28T15:16:25+00:00"
+        },
         {
             "name": "psr/container",
             "version": "2.0.2",
@@ -166,104 +263,6 @@
                 "source": "https://github.com/php-fig/http-message/tree/master"
             },
             "time": "2016-08-06T14:39:51+00:00"
-        },
-        {
-            "name": "ricardopedias/freep-console",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ricardopedias/freep-console.git",
-                "reference": "462b34262f90c638c827f28e9564dbdee871ad9f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ricardopedias/freep-console/zipball/462b34262f90c638c827f28e9564dbdee871ad9f",
-                "reference": "462b34262f90c638c827f28e9564dbdee871ad9f",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.0.0",
-                "ricardopedias/freep-security": "dev-main"
-            },
-            "require-dev": {
-                "codacy/coverage": "dev-master",
-                "phpmd/phpmd": "@stable",
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "^9",
-                "ricardopedias/freep-docmap": "dev-main",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "default-branch": true,
-            "type": "tool",
-            "autoload": {
-                "psr-4": {
-                    "Freep\\Console\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Toolkit for implementing PHP-based terminal commands",
-            "keywords": [
-                "console",
-                "framework",
-                "freep",
-                "tool"
-            ],
-            "support": {
-                "issues": "https://github.com/ricardopedias/freep-console/issues",
-                "source": "https://github.com/ricardopedias/freep-console/tree/main"
-            },
-            "time": "2022-08-26T17:15:27+00:00"
-        },
-        {
-            "name": "ricardopedias/freep-security",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ricardopedias/freep-security.git",
-                "reference": "6d98ef93782cc17c6cc3848ca87a03466933d8d6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ricardopedias/freep-security/zipball/6d98ef93782cc17c6cc3848ca87a03466933d8d6",
-                "reference": "6d98ef93782cc17c6cc3848ca87a03466933d8d6",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.0.0"
-            },
-            "require-dev": {
-                "codacy/coverage": "dev-master",
-                "phpmd/phpmd": "@stable",
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "^9",
-                "ricardopedias/freep-docmap": "dev-main",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Freep\\Security\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Secure implementations for critical native functions",
-            "keywords": [
-                "framework",
-                "freep",
-                "security"
-            ],
-            "support": {
-                "issues": "https://github.com/ricardopedias/freep-security/issues",
-                "source": "https://github.com/ricardopedias/freep-security/tree/main"
-            },
-            "time": "2022-08-26T17:14:51+00:00"
         }
     ],
     "packages-dev": [
@@ -814,16 +813,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.4.1",
+            "version": "2.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "69568e4293f4fa993f3b0e51c9723e1e17c41379"
+                "reference": "67c26b443f348a51926030c83481b85718457d3d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/69568e4293f4fa993f3b0e51c9723e1e17c41379",
-                "reference": "69568e4293f4fa993f3b0e51c9723e1e17c41379",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/67c26b443f348a51926030c83481b85718457d3d",
+                "reference": "67c26b443f348a51926030c83481b85718457d3d",
                 "shasum": ""
             },
             "require": {
@@ -913,7 +912,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.4.1"
+                "source": "https://github.com/guzzle/psr7/tree/2.4.3"
             },
             "funding": [
                 {
@@ -929,24 +928,125 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-08-28T14:45:39+00:00"
+            "time": "2022-10-26T14:07:24+00:00"
         },
         {
-            "name": "laminas/laminas-diactoros",
-            "version": "2.17.0",
+            "name": "iquety/docmap",
+            "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "https://github.com/laminas/laminas-diactoros.git",
-                "reference": "5b32597aa46b83c8b85bb1cf9a6ed4fe7dd980c5"
+                "url": "https://github.com/iquety/docmap.git",
+                "reference": "6f832a9ff8010fe62ce94682da8f53e64fb8e787"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-diactoros/zipball/5b32597aa46b83c8b85bb1cf9a6ed4fe7dd980c5",
-                "reference": "5b32597aa46b83c8b85bb1cf9a6ed4fe7dd980c5",
+                "url": "https://api.github.com/repos/iquety/docmap/zipball/6f832a9ff8010fe62ce94682da8f53e64fb8e787",
+                "reference": "6f832a9ff8010fe62ce94682da8f53e64fb8e787",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4 || ~8.0.0 || ~8.1.0",
+                "iquety/console": "dev-main",
+                "php": "^8.0.0"
+            },
+            "require-dev": {
+                "codacy/coverage": "dev-master",
+                "phpmd/phpmd": "@stable",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^9",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "default-branch": true,
+            "bin": [
+                "docmap"
+            ],
+            "type": "tool",
+            "autoload": {
+                "psr-4": {
+                    "Iquety\\Docmap\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Simple Markdown file interpreter, which adds a navigation menu on every page",
+            "keywords": [
+                "console",
+                "framework",
+                "tool"
+            ],
+            "support": {
+                "issues": "https://github.com/iquety/docmap/issues",
+                "source": "https://github.com/iquety/docmap/tree/main"
+            },
+            "time": "2022-10-28T16:58:43+00:00"
+        },
+        {
+            "name": "iquety/injection",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/iquety/injection.git",
+                "reference": "7a09010ee0f0b52f21b00dc09fdde8ef80ef69c6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/iquety/injection/zipball/7a09010ee0f0b52f21b00dc09fdde8ef80ef69c6",
+                "reference": "7a09010ee0f0b52f21b00dc09fdde8ef80ef69c6",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0.0",
+                "psr/container": "^2.0"
+            },
+            "require-dev": {
+                "codacy/coverage": "dev-master",
+                "phpmd/phpmd": "@stable",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^9",
+                "ricardopedias/freep-docmap": "^1.0",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Iquety\\Injection\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "library for implementing Dependency Injection and Inversion of Control",
+            "keywords": [
+                "container",
+                "dependency injection",
+                "freep",
+                "inversion of control"
+            ],
+            "support": {
+                "issues": "https://github.com/iquety/injection/issues",
+                "source": "https://github.com/iquety/injection/tree/main"
+            },
+            "time": "2022-10-28T12:32:46+00:00"
+        },
+        {
+            "name": "laminas/laminas-diactoros",
+            "version": "2.20.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laminas/laminas-diactoros.git",
+                "reference": "10696c809866bebd9d71dca14de6c0d6c1cac2f8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laminas/laminas-diactoros/zipball/10696c809866bebd9d71dca14de6c0d6c1cac2f8",
+                "reference": "10696c809866bebd9d71dca14de6c0d6c1cac2f8",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.0"
             },
@@ -965,9 +1065,9 @@
                 "http-interop/http-factory-tests": "^0.9.0",
                 "laminas/laminas-coding-standard": "^2.4.0",
                 "php-http/psr7-integration-tests": "^1.1.1",
-                "phpunit/phpunit": "^9.5.23",
+                "phpunit/phpunit": "^9.5.25",
                 "psalm/plugin-phpunit": "^0.17.0",
-                "vimeo/psalm": "^4.24.0"
+                "vimeo/psalm": "^4.28"
             },
             "type": "library",
             "extra": {
@@ -1026,7 +1126,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2022-08-30T17:01:46+00:00"
+            "time": "2022-10-25T13:35:54+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1657,16 +1757,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "9.2.17",
+            "version": "9.2.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "aa94dc41e8661fe90c7316849907cba3007b10d8"
+                "reference": "12fddc491826940cf9b7e88ad9664cf51f0f6d0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/aa94dc41e8661fe90c7316849907cba3007b10d8",
-                "reference": "aa94dc41e8661fe90c7316849907cba3007b10d8",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/12fddc491826940cf9b7e88ad9664cf51f0f6d0a",
+                "reference": "12fddc491826940cf9b7e88ad9664cf51f0f6d0a",
                 "shasum": ""
             },
             "require": {
@@ -1722,7 +1822,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.17"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.18"
             },
             "funding": [
                 {
@@ -1730,7 +1830,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-08-30T12:24:04+00:00"
+            "time": "2022-10-27T13:35:33+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -1975,16 +2075,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.5.25",
+            "version": "9.5.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "3e6f90ca7e3d02025b1d147bd8d4a89fd4ca8a1d"
+                "reference": "851867efcbb6a1b992ec515c71cdcf20d895e9d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3e6f90ca7e3d02025b1d147bd8d4a89fd4ca8a1d",
-                "reference": "3e6f90ca7e3d02025b1d147bd8d4a89fd4ca8a1d",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/851867efcbb6a1b992ec515c71cdcf20d895e9d2",
+                "reference": "851867efcbb6a1b992ec515c71cdcf20d895e9d2",
                 "shasum": ""
             },
             "require": {
@@ -2057,7 +2157,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.25"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.26"
             },
             "funding": [
                 {
@@ -2073,7 +2173,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-09-25T03:44:45+00:00"
+            "time": "2022-10-28T06:00:21+00:00"
         },
         {
             "name": "psr/http-client",
@@ -2220,57 +2320,6 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
-        },
-        {
-            "name": "ricardopedias/freep-docmap",
-            "version": "v1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ricardopedias/freep-docmap.git",
-                "reference": "003d67b32ee001fe70232f24ad532c3ee6f1d05b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ricardopedias/freep-docmap/zipball/003d67b32ee001fe70232f24ad532c3ee6f1d05b",
-                "reference": "003d67b32ee001fe70232f24ad532c3ee6f1d05b",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.0.0",
-                "ricardopedias/freep-console": "dev-main"
-            },
-            "require-dev": {
-                "codacy/coverage": "dev-master",
-                "phpmd/phpmd": "@stable",
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "^9",
-                "squizlabs/php_codesniffer": "3.*"
-            },
-            "bin": [
-                "docmap"
-            ],
-            "type": "tool",
-            "autoload": {
-                "psr-4": {
-                    "Freep\\Docmap\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Simple Markdown file interpreter, which adds a navigation menu on every page",
-            "keywords": [
-                "console",
-                "framework",
-                "freep",
-                "tool"
-            ],
-            "support": {
-                "issues": "https://github.com/ricardopedias/freep-docmap/issues",
-                "source": "https://github.com/ricardopedias/freep-docmap/tree/v1.0.1"
-            },
-            "time": "2022-08-24T17:07:17+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -3743,16 +3792,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v6.0.13",
+            "version": "v6.0.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "294208f37a73b7ae64b4297d936e890d5b514902"
+                "reference": "a93829f4043fdcddebabd8433bdb46c2dcaefe06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/294208f37a73b7ae64b4297d936e890d5b514902",
-                "reference": "294208f37a73b7ae64b4297d936e890d5b514902",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/a93829f4043fdcddebabd8433bdb46c2dcaefe06",
+                "reference": "a93829f4043fdcddebabd8433bdb46c2dcaefe06",
                 "shasum": ""
             },
             "require": {
@@ -3798,7 +3847,7 @@
             "description": "Defines an object-oriented layer for the HTTP specification",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-foundation/tree/v6.0.13"
+                "source": "https://github.com/symfony/http-foundation/tree/v6.0.15"
             },
             "funding": [
                 {
@@ -3814,7 +3863,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-09-17T07:33:45+00:00"
+            "time": "2022-10-12T09:44:26+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -4257,7 +4306,9 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "ricardopedias/freep-console": 20,
+        "iquety/console": 20,
+        "iquety/docmap": 20,
+        "iquety/injection": 20,
         "phpmd/phpmd": 0,
         "codacy/coverage": 20
     },

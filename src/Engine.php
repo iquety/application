@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Freep\Application;
+namespace Iquety\Application;
 
-use Freep\Application\Container\Container;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 

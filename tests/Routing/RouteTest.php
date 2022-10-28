@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Routing;
 
-use Freep\Application\Routing\Policy;
-use Freep\Application\Routing\Route;
+use Iquety\Application\Routing\Policy;
+use Iquety\Application\Routing\Route;
 use Tests\TestCase;
 
 class RouteTest extends TestCase

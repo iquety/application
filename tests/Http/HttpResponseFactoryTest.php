@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Http;
 
 use Exception;
-use Freep\Application\Application;
-use Freep\Application\Http\HttpResponseFactory;
+use Iquety\Application\Application;
+use Iquety\Application\Http\HttpResponseFactory;
 use Psr\Http\Message\ResponseInterface;
 use Tests\TestCase;
 

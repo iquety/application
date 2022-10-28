@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Freep\Application\Routing;
+namespace Iquety\Application\Routing;
 
 use Closure;
 

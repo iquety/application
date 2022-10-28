@@ -1,15 +1,15 @@
 {
-    "name": "ricardopedias/freep-application",
+    "name": "iquety/application",
     "type": "tool",
     "description": "Libraries to create a decoupled application",
-    "keywords": ["framework", "freep", "application"],
+    "keywords": ["framework", "application", "mvc", "application controller"],
     "license": "MIT",
     "require": {
         "php": "^8.0.0",
         "psr/container": "^2.0",
         "psr/http-factory": "^1.0",
         "psr/http-message": "^1.0",
-        "ricardopedias/freep-console": "dev-main"
+        "iquety/console": "dev-main"
     },
     "require-dev": {
         "guzzlehttp/guzzle": "^7.5",
@@ -19,14 +19,15 @@
         "symfony/http-foundation": "^6.0",
         "phpunit/phpunit": "^9",
         "phpstan/phpstan": "^0.12",
-        "ricardopedias/freep-docmap": "^1.0",
+        "iquety/docmap": "dev-main",
+        "iquety/injection": "dev-main",
         "squizlabs/php_codesniffer": "3.*",
         "phpmd/phpmd": "@stable",
         "codacy/coverage": "dev-master"
     },
     "autoload": {
         "psr-4": {
-            "Freep\\Application\\": "src/",
+            "Iquety\\Application\\": "src/",
             "Modules\\": "tests/project/Modules/"
         }
     },

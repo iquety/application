@@ -5,7 +5,7 @@
 # Este programa executa comandos do composer que está localizado dentro do conteiner
 # docker, dispensando a necessidade de instalar o composer no computador local
 
-PHP_CONTAINER='freep-app'
+PHP_CONTAINER='iquety-app'
 
 docker-compose up -d
 

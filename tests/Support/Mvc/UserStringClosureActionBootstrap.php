@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\Support\Mvc;
 
 use ArrayObject;
-use Freep\Application\Application;
-use Freep\Application\Layers\Mvc\MvcBootstrap;
-use Freep\Application\Routing\Router;
+use Iquety\Application\Application;
+use Iquety\Application\Layers\Mvc\MvcBootstrap;
+use Iquety\Application\Routing\Router;
 use stdClass;
 
 class UserStringClosureActionBootstrap extends MvcBootstrap

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Freep\Application\Routing;
+namespace Iquety\Application\Routing;
 
-use Freep\Application\Container\InversionOfControl;
+use Iquety\Injection\InversionOfControl;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 

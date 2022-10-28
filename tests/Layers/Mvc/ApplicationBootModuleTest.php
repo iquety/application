@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tests\Layers\Mvc;
 
 use ArrayObject;
-use Freep\Application\Application;
-use Freep\Application\Layers\Mvc\MvcEngine;
-use Freep\Application\Routing\Route;
-use Freep\Application\Routing\Router;
+use Iquety\Application\Application;
+use Iquety\Application\Layers\Mvc\MvcEngine;
+use Iquety\Application\Routing\Route;
+use Iquety\Application\Routing\Router;
 use stdClass;
 use Tests\Support\Mvc\UserAlternateBootstrap;
 use Tests\Support\Mvc\UserBootstrap;

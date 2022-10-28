@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Adapter\HttpFactory;
 
-use Freep\Application\Adapter\HttpFactory\NyHolmHttpFactory;
-use Freep\Application\Http\HttpFactory;
+use Iquety\Application\Adapter\HttpFactory\NyHolmHttpFactory;
+use Iquety\Application\Http\HttpFactory;
 
 class NyHolmTest extends AbstractCase
 {

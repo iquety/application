@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Freep\Application\Adapter\Session;
+namespace Iquety\Application\Adapter\Session;
 
-use Freep\Application\Http\Session;
+use Iquety\Application\Http\Session;
 use RuntimeException;
 
 /** @SuppressWarnings(PHPMD.TooManyPublicMethods) */

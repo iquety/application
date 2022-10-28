@@ -2,20 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Freep\Application;
+namespace Iquety\Application;
 
 use Closure;
-use Freep\Application\Container\Container;
-use Freep\Application\Container\InversionOfControl;
-use Freep\Application\Http\HttpDependencies;
-use Freep\Application\Http\HttpResponseFactory;
-use Freep\Application\Routing\Route;
+use Iquety\Application\Http\HttpDependencies;
+use Iquety\Application\Http\HttpResponseFactory;
 use InvalidArgumentException;
-use OutOfBoundsException;
+use Iquety\Injection\Container;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
-use Throwable;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)

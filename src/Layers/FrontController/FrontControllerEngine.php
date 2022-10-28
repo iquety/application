@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Freep\Application\Layers\FrontController;
+namespace Iquety\Application\Layers\FrontController;
 
-use Freep\Application\Bootstrap;
-use Freep\Application\Engine;
+use Iquety\Application\Bootstrap;
+use Iquety\Application\Engine;
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;

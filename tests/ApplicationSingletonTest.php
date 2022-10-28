@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use ArrayObject;
-use Freep\Application\Application;
+use Iquety\Application\Application;
 
 /** @SuppressWarnings(PHPMD.StaticAccess) */
 class ApplicationSingletonTest extends TestCase

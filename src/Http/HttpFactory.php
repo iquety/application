@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Freep\Application\Http;
+namespace Iquety\Application\Http;
 
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;

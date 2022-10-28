@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Freep\Application\Adapter\HttpFactory\DiactorosHttpFactory;
-use Freep\Application\Adapter\Session\MemorySession;
-use Freep\Application\Application;
-use Freep\Application\Bootstrap;
-use Freep\Application\Http\HttpFactory;
-use Freep\Application\Http\Session;
-use Freep\Application\Routing\Router;
+use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
+use Iquety\Application\Adapter\Session\MemorySession;
+use Iquety\Application\Application;
+use Iquety\Application\Bootstrap;
+use Iquety\Application\Http\HttpFactory;
+use Iquety\Application\Http\Session;
+use Iquety\Application\Routing\Router;
 use Laminas\Diactoros\ServerRequestFactory;
 use PHPUnit\Framework\TestCase as FrameworkTestCase;
 use Psr\Http\Message\ResponseInterface;

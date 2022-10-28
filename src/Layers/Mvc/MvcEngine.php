@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Freep\Application\Layers\Mvc;
+namespace Iquety\Application\Layers\Mvc;
 
 use Closure;
-use Freep\Application\Bootstrap;
-use Freep\Application\Container\InversionOfControl;
-use Freep\Application\Engine;
-use Freep\Application\Http\HttpResponseFactory;
-use Freep\Application\Routing\Router;
+use Iquety\Application\Bootstrap;
+use Iquety\Application\Engine;
+use Iquety\Application\Http\HttpResponseFactory;
+use Iquety\Application\Routing\Router;
 use InvalidArgumentException;
+use Iquety\Injection\InversionOfControl;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;

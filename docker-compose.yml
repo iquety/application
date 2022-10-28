@@ -3,6 +3,6 @@ services:
 
   php:
     image: ricardopedias/docker-project:php80
-    container_name: freep-app
+    container_name: iquety-app
     volumes:
       - .:/application

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Adapter\Session;
 
-use Freep\Application\Http\Session;
+use Iquety\Application\Http\Session;
 use Tests\TestCase;
 
 abstract class AbstractCase extends TestCase

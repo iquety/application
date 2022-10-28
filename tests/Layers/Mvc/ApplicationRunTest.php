@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Layers\Mvc;
 
-use Freep\Application\Application;
-use Freep\Application\Layers\Mvc\MvcEngine;
+use Iquety\Application\Application;
+use Iquety\Application\Layers\Mvc\MvcEngine;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 use Tests\Support\Mvc\UserArrayClosureActionBootstrap;

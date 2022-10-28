@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Freep\Application\Http;
+namespace Iquety\Application\Http;
 
-use Freep\Application\Application;
+use Iquety\Application\Application;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Throwable;

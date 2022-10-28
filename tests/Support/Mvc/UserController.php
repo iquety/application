@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Support\Mvc;
 
-use Freep\Application\Application;
+use Iquety\Application\Application;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Freep\Application\Layers\Mvc;
+namespace Iquety\Application\Layers\Mvc;
 
 abstract class Controller
 {

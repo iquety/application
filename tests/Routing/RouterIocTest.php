@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Routing;
 
-use Freep\Application\Adapter\Session\MemorySession;
-use Freep\Application\Container\Container;
-use Freep\Application\Http\Session;
-use Freep\Application\Routing\Route;
-use Freep\Application\Routing\Router;
+use Iquety\Application\Adapter\Session\MemorySession;
+use Iquety\Application\Http\Session;
+use Iquety\Application\Routing\Route;
+use Iquety\Application\Routing\Router;
+use Iquety\Injection\Container;
 use Tests\Support\IocPolicy;
 use Tests\TestCase;
 

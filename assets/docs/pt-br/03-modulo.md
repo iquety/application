@@ -11,9 +11,9 @@ O Docmap é um interpretador, que analisa um projeto de documentação em markdo
 
 declare(strict_types=1);
 
-use Freep\Application\Application;
-use Freep\Application\Bootstrap;
-use Freep\Application\Routing\Router;
+use Iquety\Application\Application;
+use Iquety\Application\Bootstrap;
+use Iquety\Application\Routing\Router;
 use Modules\Admin\AdminBootstrap;
 use Modules\Articles\ArticlesBootstrap;
 

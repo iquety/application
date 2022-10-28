@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Support\Mvc;
 
-use Freep\Application\Routing\Policy;
-use Freep\Application\Routing\Router;
+use Iquety\Application\Routing\Policy;
+use Iquety\Application\Routing\Router;
 
 class UserRestrictedBootstrap extends UserBootstrap
 {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Freep\Application\Adapter\HttpFactory;
+namespace Iquety\Application\Adapter\HttpFactory;
 
-use Freep\Application\Http\HttpFactory;
+use Iquety\Application\Http\HttpFactory;
 use InvalidArgumentException;
 use Laminas\Diactoros\RequestFactory;
 use Laminas\Diactoros\ResponseFactory;

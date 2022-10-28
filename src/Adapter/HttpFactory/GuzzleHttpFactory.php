@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Freep\Application\Adapter\HttpFactory;
+namespace Iquety\Application\Adapter\HttpFactory;
 
-use Freep\Application\Http\HttpFactory;
+use Iquety\Application\Http\HttpFactory;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
