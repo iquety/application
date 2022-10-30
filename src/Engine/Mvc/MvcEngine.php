@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Iquety\Application\Layers\Mvc;
+namespace Iquety\Application\Engine\Mvc;
 
 use Closure;
 use Iquety\Application\Bootstrap;
-use Iquety\Application\Engine;
 use Iquety\Application\Http\HttpResponseFactory;
-use Iquety\Application\Routing\Router;
 use InvalidArgumentException;
+use Iquety\Application\Engine\Engine;
 use Iquety\Injection\InversionOfControl;
+use Iquety\Routing\Router;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
@@ -39,10 +39,6 @@ class MvcEngine extends Engine
 
         if ($this->router()->routeNotFound()) {
             return null;
-        }
-
-        if ($this->router()->routeDenied()) {
-            return (new HttpResponseFactory($this->app()))->accessDeniedResponse();
         }
 
         try {
@@ -100,7 +96,6 @@ class MvcEngine extends Engine
         /** @var Router $router */
         $this->router = $this->app()->make(Router::class);
         $this->router->resetModuleInfo();
-        $this->router->useContainer($container);
 
         return $this->router;
     }

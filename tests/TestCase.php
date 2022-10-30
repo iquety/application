@@ -10,7 +10,7 @@ use Iquety\Application\Application;
 use Iquety\Application\Bootstrap;
 use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\Session;
-use Iquety\Application\Routing\Router;
+use Iquety\Routing\Router;
 use Laminas\Diactoros\ServerRequestFactory;
 use PHPUnit\Framework\TestCase as FrameworkTestCase;
 use Psr\Http\Message\ResponseInterface;

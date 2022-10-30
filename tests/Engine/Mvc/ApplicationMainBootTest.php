@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Layers\Mvc;
+namespace Tests\Engine\Mvc;
 
 use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\Adapter\Session\MemorySession;
@@ -10,9 +10,9 @@ use Iquety\Application\Application;
 use Iquety\Application\Bootstrap;
 use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\Session;
-use Iquety\Application\Layers\Mvc\MvcBootstrap;
-use Iquety\Application\Layers\Mvc\MvcEngine;
-use Iquety\Application\Routing\Router;
+use Iquety\Application\Engine\Mvc\MvcBootstrap;
+use Iquety\Application\Engine\Mvc\MvcEngine;
+use Iquety\Routing\Router;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

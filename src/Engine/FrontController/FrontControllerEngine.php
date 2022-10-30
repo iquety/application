@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Iquety\Application\Layers\FrontController;
+namespace Iquety\Application\Engine\FrontController;
 
 use Iquety\Application\Bootstrap;
-use Iquety\Application\Engine;
 use InvalidArgumentException;
+use Iquety\Application\Engine\Engine;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 

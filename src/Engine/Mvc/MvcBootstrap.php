@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Iquety\Application\Layers\Mvc;
+namespace Iquety\Application\Engine\Mvc;
 
 use Iquety\Application\Application;
 use Iquety\Application\Bootstrap;
-use Iquety\Application\Routing\Router;
+use Iquety\Routing\Router;
 
 abstract class MvcBootstrap implements Bootstrap
 {

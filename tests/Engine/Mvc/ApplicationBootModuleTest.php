@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Layers\Mvc;
+namespace Tests\Engine\Mvc;
 
 use ArrayObject;
 use Iquety\Application\Application;
-use Iquety\Application\Layers\Mvc\MvcEngine;
-use Iquety\Application\Routing\Route;
-use Iquety\Application\Routing\Router;
+use Iquety\Application\Engine\Mvc\MvcEngine;
+use Iquety\Routing\Route;
+use Iquety\Routing\Router;
 use stdClass;
 use Tests\Support\Mvc\UserAlternateBootstrap;
 use Tests\Support\Mvc\UserBootstrap;

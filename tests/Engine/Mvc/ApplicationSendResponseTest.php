@@ -2,17 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Layers\Mvc;
+namespace Tests\Engine\Mvc;
 
 use Iquety\Application\Application;
-use Iquety\Application\Layers\Mvc\MvcEngine;
+use Iquety\Application\Engine\Mvc\MvcEngine;
 use Psr\Http\Message\ResponseInterface;
-use ReflectionObject;
-use RuntimeException;
 use Tests\Support\Mvc\UserStringClosureActionBootstrap;
 use Tests\TestCase;
-
-use function xdebug_get_headers;
 
 /** @SuppressWarnings(PHPMD.StaticAccess) */
 class ApplicationSendResponseTest extends TestCase

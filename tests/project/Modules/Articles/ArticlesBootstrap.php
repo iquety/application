@@ -7,7 +7,7 @@ namespace Modules\Articles;
 use ArrayObject;
 use Iquety\Application\Application;
 use Iquety\Application\Bootstrap;
-use Iquety\Application\Routing\Router;
+use Iquety\Routing\Router;
 use stdClass;
 use Tests\Support\UserController;
 

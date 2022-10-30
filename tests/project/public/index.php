@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Iquety\Application\Application;
 use Iquety\Application\Bootstrap;
-use Iquety\Application\Routing\Router;
+use Iquety\Routing\Router;
 use Modules\Admin\AdminBootstrap;
 use Modules\Articles\ArticlesBootstrap;
 

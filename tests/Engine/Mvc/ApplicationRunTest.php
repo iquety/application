@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Layers\Mvc;
+namespace Tests\Engine\Mvc;
 
 use Iquety\Application\Application;
-use Iquety\Application\Layers\Mvc\MvcEngine;
+use Iquety\Application\Engine\Mvc\MvcEngine;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 use Tests\Support\Mvc\UserArrayClosureActionBootstrap;
@@ -38,27 +38,6 @@ class ApplicationRunTest extends TestCase
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertEquals(404, $response->getStatusCode());
-    }
-
-    /** @test */
-    public function runForAccesDeniedRoute(): void
-    {
-        // a fabrica cria a intancia de ServerRequestInterface com o
-        // URI apondando para '/user/33'
-        $app = TestCase::applicationFactory();
-
-        $app->addEngine(MvcEngine::class);
-
-        // O bootstrap do módulo cria uma rota apontando para o
-        // padrão '/user/:id'
-        $app->bootModule(new UserRestrictedBootstrap());
-
-        // as dependencias do módulo só serão resolvidas se
-        // a rota '/user/:id' bater com a requisição efetuada para '/user/33'
-        $response = $app->run();
-
-        $this->assertInstanceOf(ResponseInterface::class, $response);
-        $this->assertEquals(403, $response->getStatusCode());
     }
 
     /** @test */

@@ -21,6 +21,7 @@
         "phpstan/phpstan": "^0.12",
         "iquety/docmap": "dev-main",
         "iquety/injection": "dev-main",
+        "iquety/routing": "dev-main",
         "squizlabs/php_codesniffer": "3.*",
         "phpmd/phpmd": "@stable",
         "codacy/coverage": "dev-master"

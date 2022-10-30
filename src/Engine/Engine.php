@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Iquety\Application;
+namespace Iquety\Application\Engine;
 
+use Iquety\Application\Application;
+use Iquety\Application\Bootstrap;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 

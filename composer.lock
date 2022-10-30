@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "de048e8d11bc756c2c4651831f4f2e8c",
+    "content-hash": "044097c4abf702f72d220c0220830959",
     "packages": [
         {
             "name": "iquety/console",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/iquety/console.git",
-                "reference": "a63aafc34fc672bfd04293cd560d364caf389fb0"
+                "reference": "2be5c5b2e4d4b3cccc7e70ae76e4e1eafa53b488"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iquety/console/zipball/a63aafc34fc672bfd04293cd560d364caf389fb0",
-                "reference": "a63aafc34fc672bfd04293cd560d364caf389fb0",
+                "url": "https://api.github.com/repos/iquety/console/zipball/2be5c5b2e4d4b3cccc7e70ae76e4e1eafa53b488",
+                "reference": "2be5c5b2e4d4b3cccc7e70ae76e4e1eafa53b488",
                 "shasum": ""
             },
             "require": {
@@ -26,10 +26,10 @@
             },
             "require-dev": {
                 "codacy/coverage": "dev-master",
+                "iquety/docmap": "dev-main",
                 "phpmd/phpmd": "@stable",
                 "phpstan/phpstan": "^0.12",
                 "phpunit/phpunit": "^9",
-                "ricardopedias/freep-docmap": "dev-main",
                 "squizlabs/php_codesniffer": "3.*"
             },
             "default-branch": true,
@@ -53,7 +53,7 @@
                 "issues": "https://github.com/iquety/console/issues",
                 "source": "https://github.com/iquety/console/tree/main"
             },
-            "time": "2022-10-28T16:52:33+00:00"
+            "time": "2022-10-28T17:19:52+00:00"
         },
         {
             "name": "iquety/security",
@@ -61,12 +61,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/iquety/security.git",
-                "reference": "81cf2bd1dd5c3a91dea42c58f9349511b7aaf14d"
+                "reference": "62a8670b1df2f8223f0c8d4b314d8dba4fd367a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iquety/security/zipball/81cf2bd1dd5c3a91dea42c58f9349511b7aaf14d",
-                "reference": "81cf2bd1dd5c3a91dea42c58f9349511b7aaf14d",
+                "url": "https://api.github.com/repos/iquety/security/zipball/62a8670b1df2f8223f0c8d4b314d8dba4fd367a1",
+                "reference": "62a8670b1df2f8223f0c8d4b314d8dba4fd367a1",
                 "shasum": ""
             },
             "require": {
@@ -101,7 +101,7 @@
                 "issues": "https://github.com/iquety/security/issues",
                 "source": "https://github.com/iquety/security/tree/main"
             },
-            "time": "2022-10-28T15:16:25+00:00"
+            "time": "2022-10-28T17:26:49+00:00"
         },
         {
             "name": "psr/container",
@@ -936,12 +936,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/iquety/docmap.git",
-                "reference": "6f832a9ff8010fe62ce94682da8f53e64fb8e787"
+                "reference": "5538fa3a55ef6a573579cbc312c4c20d81dcae85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iquety/docmap/zipball/6f832a9ff8010fe62ce94682da8f53e64fb8e787",
-                "reference": "6f832a9ff8010fe62ce94682da8f53e64fb8e787",
+                "url": "https://api.github.com/repos/iquety/docmap/zipball/5538fa3a55ef6a573579cbc312c4c20d81dcae85",
+                "reference": "5538fa3a55ef6a573579cbc312c4c20d81dcae85",
                 "shasum": ""
             },
             "require": {
@@ -979,7 +979,7 @@
                 "issues": "https://github.com/iquety/docmap/issues",
                 "source": "https://github.com/iquety/docmap/tree/main"
             },
-            "time": "2022-10-28T16:58:43+00:00"
+            "time": "2022-10-28T17:32:50+00:00"
         },
         {
             "name": "iquety/injection",
@@ -1030,6 +1030,57 @@
                 "source": "https://github.com/iquety/injection/tree/main"
             },
             "time": "2022-10-28T12:32:46+00:00"
+        },
+        {
+            "name": "iquety/routing",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/iquety/routing.git",
+                "reference": "96f57cd87197a671b85da257580d69bda2c99416"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/iquety/routing/zipball/96f57cd87197a671b85da257580d69bda2c99416",
+                "reference": "96f57cd87197a671b85da257580d69bda2c99416",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0.0",
+                "psr/container": "^2.0",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.0"
+            },
+            "require-dev": {
+                "codacy/coverage": "dev-master",
+                "iquety/docmap": "dev-main",
+                "phpmd/phpmd": "@stable",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^9",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "default-branch": true,
+            "type": "tool",
+            "autoload": {
+                "psr-4": {
+                    "Iquety\\Routing\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Library to handle URI based routes",
+            "keywords": [
+                "framework",
+                "router",
+                "routing"
+            ],
+            "support": {
+                "issues": "https://github.com/iquety/routing/issues",
+                "source": "https://github.com/iquety/routing/tree/main"
+            },
+            "time": "2022-10-29T22:25:37+00:00"
         },
         {
             "name": "laminas/laminas-diactoros",
@@ -4309,6 +4360,7 @@
         "iquety/console": 20,
         "iquety/docmap": 20,
         "iquety/injection": 20,
+        "iquety/routing": 20,
         "phpmd/phpmd": 0,
         "codacy/coverage": 20
     },
