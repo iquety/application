@@ -2,24 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Modules\Admin;
+namespace Tests\AppEngine\FrontController\Support;
 
 use ArrayObject;
-use Iquety\Application\AppEngine\FrontController\CommandHandler;
-use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\Application;
+use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use stdClass;
 
-class AdminBootstrap extends FcBootstrap
+class UserBootstrapAlterDir extends FcBootstrap
 {
-    public function setupDirectories(CommandHandler $register): void
+    public function commandsDirectory(): string
     {
+        return 'CommandsDir';
     }
 
     public function bootDependencies(Application $app): void
     {
         $app->addSingleton(ArrayObject::class, ArrayObject::class);
-
         $app->addSingleton(stdClass::class, stdClass::class);
     }
 }

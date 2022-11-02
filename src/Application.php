@@ -6,12 +6,14 @@ namespace Iquety\Application;
 
 use Closure;
 use Iquety\Application\Http\HttpDependencies;
-use Iquety\Application\Http\HttpResponseFactory;
 use InvalidArgumentException;
+use Iquety\Application\Http\HttpFactory;
+use Iquety\Application\Http\HttpResponseFactory;
 use Iquety\Injection\Container;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
+use Throwable;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -19,17 +21,22 @@ use RuntimeException;
  */
 class Application
 {
-    private static ?Application $instance = null;
+    /** @var array<string> */
+    private array $appEngineIdentifiers = [];
+
+    /** @var array<Engine> */
+    private array $appEngineList = [];
 
     private Container $container;
 
-    /** @var array<Engine> */
-    private array $engineList = [];
+    private bool $headersEmission = true;
+
+    private static ?Application $instance = null;    
+
+    private ?Bootstrap $mainBootstrap = null;
 
     /** @var array<string,Bootstrap> */
     private array $moduleList = [];
-
-    private bool $headersEmission = true;
 
     public static function instance(): self
     {
@@ -45,9 +52,9 @@ class Application
         $this->container = new Container();
     }
 
-    public function addEngine(string $identifier): void
+    public function addEngine(string $engineIdentifier): void
     {
-        $this->engineList[] = new $identifier($this);
+        $this->appEngineIdentifiers[] = $engineIdentifier;
     }
 
     public function addFactory(string $identifier, Closure|string $factory): void
@@ -63,21 +70,7 @@ class Application
     /** @SuppressWarnings(PHPMD.StaticAccess) */
     public function bootApplication(Bootstrap $bootstrap): void
     {
-        $bootstrap->bootDependencies($this);
-
-        (new HttpDependencies())->attachTo($this);
-
-        // para o ioc fazer uso da aplicação
-        $this->addSingleton(Application::class, fn() => Application::instance());
-
-        $this->bootEngines('all', $bootstrap);
-    }
-
-    private function bootEngines(string $moduleIdentifier, Bootstrap $bootstrap): void
-    {
-        foreach($this->engineList as $engine) {
-            $engine->boot($moduleIdentifier, $bootstrap);
-        }
+        $this->mainBootstrap = $bootstrap;
     }
 
     public function bootModule(Bootstrap $bootstrap): void
@@ -95,19 +88,6 @@ class Application
         $this->headersEmission = false;
     }
 
-    private function executeEngine(ServerRequestInterface $request): ResponseInterface
-    {
-        foreach($this->engineList as $engine) {
-            $response = $engine->execute($this->moduleList, $request);
-
-            if ($response !== null) {
-                return $response;
-            }
-        }
-
-        return (new HttpResponseFactory($this))->notFoundResponse();
-    }
-
     /** @param array<int,mixed> $arguments */
     public function make(...$arguments): mixed
     {
@@ -123,25 +103,83 @@ class Application
 
     public function reset(): void
     {
-        $this->container = new Container();
-        $this->engineList = [];
-        $this->moduleList = [];
+        static::$instance = new self();
     }
 
     public function run(): ResponseInterface
     {
-        if ($this->engineList === []) {
+        if ($this->appEngineIdentifiers === []) {
             throw new RuntimeException('No web engine to handle the request');
         }
 
-        foreach ($this->moduleList as $identifier => $bootstrap) {
-            $this->bootEngines($identifier, $bootstrap);
+        if ($this->mainBootstrap === null) {
+            throw new RuntimeException('No bootstrap specified for the application');
         }
 
-        return $this->executeEngine(
-            $this->make(ServerRequestInterface::class)
-        );
+        try {
+            // registra as dependências especificadas pelo usuário
+            $this->mainBootstrap->bootDependencies($this);
+        } catch (Throwable $exception) {
+            return $this->make(HttpResponseFactory::class)->serverErrorResponse($exception);
+        }
+
+        // certifica que as dependências HTTP estejam todas injetadas
+        (new HttpDependencies())->attachTo($this);
+
+        try {
+            // para o ioc fazer uso da aplicação
+            $this->addSingleton(Application::class, fn() => Application::instance());
+
+            $this->bootIntoEngines($this->mainBootstrap);
+
+            foreach ($this->moduleList as $bootstrap) {
+                $this->bootIntoEngines($bootstrap);
+            }
+
+            return $this->executeAppEngine(
+                $this->make(ServerRequestInterface::class)
+            );
+
+        } catch (Throwable $exception) {
+            return $this->make(HttpResponseFactory::class)->serverErrorResponse($exception);
+        }
     }
+
+    private function bootIntoEngines(Bootstrap $bootstrap): void
+    {
+        foreach($this->appEngineIdentifiers as $engineIdentifier) {
+            $engine = new $engineIdentifier(
+                $this->container()
+            );
+
+            $engine->boot($bootstrap);
+
+            $this->appEngineList[] = $engine;
+        }
+    }
+
+    private function executeAppEngine(ServerRequestInterface $request): ResponseInterface
+    {
+        foreach($this->appEngineList as $engine) {
+            $response = $engine->execute(
+                $request,
+                $this->moduleList,
+                fn($bootstrap) => $bootstrap->bootDependencies($this)
+            );
+
+            if ($response !== null) {
+                return $response;
+            }
+        }
+
+        return $this->make(HttpResponseFactory::class)->notFoundResponse();
+    }
+
+    
+
+    
+
+    
 
     /**
      * @uses \header

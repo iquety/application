@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Closure;
 use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
+use Iquety\Application\Adapter\HttpFactory\GuzzleHttpFactory;
+use Iquety\Application\Adapter\HttpFactory\NyHolmHttpFactory;
 use Iquety\Application\Adapter\Session\MemorySession;
+use Iquety\Application\AppEngine\FrontController\FcBootstrap;
+use Iquety\Application\AppEngine\FrontController\FcEngine;
+use Iquety\Application\AppEngine\Mvc\MvcBootstrap;
 use Iquety\Application\Application;
 use Iquety\Application\Bootstrap;
 use Iquety\Application\Http\HttpFactory;
@@ -40,17 +46,58 @@ class TestCase extends FrameworkTestCase
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public static function applicationFactory(): Application
+    public static function appBootstrapFactory(?Closure $dependencies = null): Bootstrap
     {
+        $bootstrap = new class implements Bootstrap
+        {
+            private ?Closure $setup = null;
+
+            public function setupDependencies(Closure $routine): void
+            {
+                $this->setup = $routine;
+            }
+
+            public function bootDependencies(Application $app): void
+            {
+                $routine = $this->setup;
+                $routine($app);
+            }
+        };
+
+        $bootstrap->setupDependencies($dependencies ?? function(){});
+
+        return $bootstrap;
+    }
+
+    public function httpFactoryProvider(): array
+    {
+        return [
+            'Diactoros' => [ DiactorosHttpFactory::class ],
+            'Guzzle'    => [ GuzzleHttpFactory::class ],
+            'NyHolm'    => [ NyHolmHttpFactory::class ],
+        ];
+    }
+
+
+
+
+
+    
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public static function applicationFactory(string $path = '/user/33'): Application
+    {
+        $_SERVER['REQUEST_URI'] = $path;
+
         $app = Application::instance();
 
         $app->reset();
         $app->disableHeadersEmission();
 
         $app->bootApplication(new class implements Bootstrap {
-            public function bootRoutes(Router $router): void
-            {
-            }
 
             public function bootDependencies(Application $app): void
             {
@@ -60,10 +107,7 @@ class TestCase extends FrameworkTestCase
                     return new class extends DiactorosHttpFactory {
                         public function createRequestFromGlobals(): ServerRequestInterface
                         {
-                            $server = $_SERVER;
-                            $server['REQUEST_URI'] = '/user/33';
-
-                            return (new ServerRequestFactory())->fromGlobals($server);
+                            return (new ServerRequestFactory())->fromGlobals($_SERVER);
                         }
                     };
                 });

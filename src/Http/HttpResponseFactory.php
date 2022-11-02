@@ -4,85 +4,66 @@ declare(strict_types=1);
 
 namespace Iquety\Application\Http;
 
-use Iquety\Application\Application;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
 use Throwable;
 
 class HttpResponseFactory
 {
-    public function __construct(private Application $app)
+    public function __construct(private HttpFactory $factory)
     {
     }
 
-    private function addHeader(ResponseInterface $response, string $name, string $value): ResponseInterface
-    {
-        if ($value == '') {
-            return $response;
-        }
-
-        return $response->withAddedHeader($name, $value);
-    }
-
-    private function setBody(ResponseInterface $response, string $content): ResponseInterface
-    {
-        if ($content == '') {
-            return $response;
-        }
-
-        $stream = $this->app->make(StreamInterface::class, $content);
-
-        return $response->withBody($stream);
-    }
-
-    private function setMimeType(ResponseInterface $response, string $mimeType): ResponseInterface
-    {
-        return $this->addHeader($response, 'Content-type', $mimeType);
+    public function response(
+        string $content = '',
+        int $status = HttpStatus::HTTP_OK,
+        string $mimeType = ''
+    ): ResponseInterface {
+        return $this->rawResponse($content, $status, $mimeType);
     }
 
     /** @param array<mixed,mixed> $content */
-    public function jsonResponse(array $content = [], int $status = 200): ResponseInterface
+    public function jsonResponse(array $content = [], int $status = HttpStatus::HTTP_OK): ResponseInterface
     {
         $jsonContent = (string)json_encode($content, JSON_FORCE_OBJECT);
 
         return $this->response($jsonContent, $status, 'application/json');
     }
 
-    public function response(string $content = '', int $status = 200, string $mimeType = null): ResponseInterface
-    {
-        /** @var ResponseInterface $response */
-        $response = $this->app->make(ResponseInterface::class, $status, 'OK');
-
-        $response = $this->setBody($response, $content);
-
-        if ($mimeType !== null) {
-            $response = $this->setMimeType($response, $mimeType);
-        }
-
-        return $response;
-    }
-
     public function notFoundResponse(string $content = ''): ResponseInterface
     {
-        /** @var ResponseInterface $response */
-        $response = $this->app->make(ResponseInterface::class, 404, 'Not Found');
-
-        return $this->setBody($response, $content);
+        return $this->response($content, HttpStatus::HTTP_NOT_FOUND);
     }
 
     public function accessDeniedResponse(string $content = ''): ResponseInterface
     {
-        /** @var ResponseInterface $response */
-        $response = $this->app->make(ResponseInterface::class, 403, 'Forbidden');
-
-        return $this->setBody($response, $content);
+        return $this->response($content, HttpStatus::HTTP_FORBIDDEN);
     }
 
     public function serverErrorResponse(Throwable $exception): ResponseInterface
     {
-        /** @var ResponseInterface $response */
-        $response = $this->app->make(ResponseInterface::class, 500, 'Internal Server Error');
+        return $this->response($exception->getMessage(), HttpStatus::HTTP_INTERNAL_SERVER_ERROR);
+    }
 
-        return $this->setBody($response, $exception->getMessage());
+    private function rawResponse(
+        string $content = '',
+        int $status = HttpStatus::HTTP_OK,
+        string $mimeType = ''
+    ): ResponseInterface {
+        $response = $this->factory->createResponse($status, HttpStatus::reason($status));
+
+        if ($content == '') {
+            return $response;
+        }
+
+        $stream = $this->factory->createStream($content);
+        $stream->rewind();
+
+        $response = $response->withBody($stream);
+        
+        if ($mimeType !== '') {
+            return $response->withAddedHeader('Content-type', $mimeType);
+        }
+
+        return $response;
     }
 }

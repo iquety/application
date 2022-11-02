@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use Iquety\Application\Adapter\Session\MemorySession;
+use Iquety\Application\AppEngine\MemoryEngine;
 use Iquety\Application\Application;
 use Iquety\Application\Bootstrap;
 use Iquety\Application\Http\HttpFactory;
@@ -37,6 +38,8 @@ class ApplicationMainBootTest extends TestCase
 
         $app = Application::instance();
 
+        $app->addEngine(MemoryEngine::class);
+
         $app->bootApplication(new class implements Bootstrap {
             public function bootDependencies(Application $app): void
             {
@@ -62,6 +65,9 @@ class ApplicationMainBootTest extends TestCase
         );
 
         $app = Application::instance();
+
+        $app->addEngine(MemoryEngine::class);
+        
         $app->bootApplication(new class implements Bootstrap {
             public function bootDependencies(Application $app): void
             {

@@ -2,24 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Modules\Admin;
+namespace Tests\AppEngine\Mvc\Support;
 
 use ArrayObject;
-use Iquety\Application\AppEngine\FrontController\CommandHandler;
-use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\Application;
+use Iquety\Application\AppEngine\Mvc\MvcBootstrap;
+use Iquety\Routing\Router;
 use stdClass;
 
-class AdminBootstrap extends FcBootstrap
+class UserAlternateBootstrap extends MvcBootstrap
 {
-    public function setupDirectories(CommandHandler $register): void
+    public function bootRoutes(Router $router): void
     {
+        $router->get('/editor/:id');
+        $router->post('/editor/:id');
     }
 
     public function bootDependencies(Application $app): void
     {
         $app->addSingleton(ArrayObject::class, ArrayObject::class);
-
         $app->addSingleton(stdClass::class, stdClass::class);
     }
 }

@@ -28,14 +28,6 @@ class HttpDependencies
         );
 
         $app->addFactory(
-            ResponseInterface::class,
-            fn(
-                int $code = 200,
-                string $reasonPhrase = ''
-            ) => $httpFactory->createResponse($code, $reasonPhrase)
-        );
-
-        $app->addFactory(
             StreamInterface::class,
             fn(string $content = '') => $httpFactory->createStream($content)
         );
@@ -43,6 +35,19 @@ class HttpDependencies
         $app->addFactory(
             UriInterface::class,
             fn(string $uri = '') => $httpFactory->createUri($uri)
+        );
+
+        $app->addFactory(
+            ResponseInterface::class,
+            fn(
+                int $code = 200,
+                string $reasonPhrase = ''
+            ) => $httpFactory->createResponse($code, $reasonPhrase)
+        );
+
+        $app->addSingleton(
+            HttpResponseFactory::class,
+            fn() => new HttpResponseFactory($httpFactory)
         );
     }
 
