@@ -24,60 +24,108 @@ abstract class HttpResponseFactoryTestCase extends TestCase
 
     abstract public function httpFactory(): HttpFactory;
 
-    /** @return array<string,array<int,mixed>> */
-    public function responseProvider(): array
+    /** @test */
+    public function withoutArguments(): void
     {
-        return [
-            'complete' => ['monomono', HttpStatus::HTTP_CREATED, 'text/html'],
-            'empty mime' => ['monomono', HttpStatus::HTTP_CREATED, ''],
-            'empty body' => ['', HttpStatus::HTTP_CREATED, 'text/html'],
-            'empty body and mime' => ['', HttpStatus::HTTP_CREATED, '']
-        ];
+        $responseFactory = new HttpResponseFactory($this->httpFactory());
+
+        $response = $responseFactory->response();
+
+        $this->assertEquals('', (string)$response->getBody());
+        $this->assertEquals(HttpStatus::HTTP_OK, $response->getStatusCode());
+        $this->assertFalse($response->hasHeader('Content-type'));
+    }
+
+    public function contentProvider(): array
+    {
+        $list = [];
+
+        foreach (array_keys(HttpStatus::all()) as $httpStatus) {
+            $list["$httpStatus with body"]    = [ $httpStatus, 'body teste' ];
+            $list["$httpStatus without body"] = [ $httpStatus, '' ];
+        }
+
+        return $list;
+    }
+
+    /** 
+     * @test
+     * @dataProvider contentProvider
+     */
+    public function withEmptyArgumens(int $httpStatus): void
+    {
+        $responseFactory = new HttpResponseFactory($this->httpFactory());
+
+        $response = $responseFactory->response('', $httpStatus, '');
+
+        $this->assertEquals('', (string)$response->getBody());
+        $this->assertEquals($httpStatus, $response->getStatusCode());
+        $this->assertFalse($response->hasHeader('Content-type'));
     }
 
     /**
      * @test
-     * @dataProvider responseProvider
+     * @dataProvider contentProvider
      */
-    public function responseAdapters(string $content, int $status, string $mime): void
+    public function withStatus(int $httpStatus, string $body): void
     {
         $responseFactory = new HttpResponseFactory($this->httpFactory());
 
-        $response = $responseFactory->response($content, $status, $mime);
+        $response = $responseFactory->response($body, $httpStatus);
 
-        $this->assertInstanceOf(ResponseInterface::class, $response);
-
-        $this->assertEquals($content, $response->getBody()->getContents());
-        $this->assertEquals($status, $response->getStatusCode());
-
-        if ($mime === '') {
-            $this->assertFalse($response->hasHeader('Content-type'));
-            $this->assertEquals('', $response->getHeaderLine('Content-type'));
-        }
-
-        if ($mime !== '') {
-            $this->assertTrue($response->hasHeader('Content-type'));
-            $this->assertEquals($mime, $response->getHeaderLine('Content-type'));
-        }
+        $this->assertEquals($body, (string)$response->getBody());
+        $this->assertEquals($httpStatus, $response->getStatusCode());
+        $this->assertFalse($response->hasHeader('Content-type'));
     }
 
     /**
      * @test
-     * @dataProvider responseProvider
+     * @dataProvider contentProvider
      */
-    public function jsonResponse(string $content, int $status): void
+    public function withStatusAndEmptyMime(int $httpStatus, string $body): void
     {
         $responseFactory = new HttpResponseFactory($this->httpFactory());
 
-        $content = ['content' => $content];
-        $jsonContent = json_encode($content, JSON_FORCE_OBJECT);
+        $response = $responseFactory->response($body, $httpStatus, '');
 
-        $response = $responseFactory->jsonResponse($content, $status);
+        $this->assertEquals($body, (string)$response->getBody());
+        $this->assertEquals($httpStatus, $response->getStatusCode());
+        $this->assertFalse($response->hasHeader('Content-type'));
+    }
 
-        $this->assertInstanceOf(ResponseInterface::class, $response);
+    /**
+     * @test
+     * @dataProvider contentProvider
+     */
+    public function withMimeType(int $httpStatus, string $body): void
+    {
+        $responseFactory = new HttpResponseFactory($this->httpFactory());
 
-        $this->assertEquals($status, $response->getStatusCode());
-        $this->assertEquals($jsonContent, $response->getBody()->getContents());
+        $response = $responseFactory->response($body, $httpStatus, 'text/html');
+
+        $this->assertEquals($body, (string)$response->getBody());
+        $this->assertEquals($httpStatus, $response->getStatusCode());
+        $this->assertTrue($response->hasHeader('Content-type'));
+    }
+
+    /**
+     * @test
+     * @dataProvider contentProvider
+     */
+    public function jsonResponse(int $httpStatus, string $body): void
+    {
+        $responseFactory = new HttpResponseFactory($this->httpFactory());
+
+        $content = ['naitis' => ''];
+
+        $response = $responseFactory->jsonResponse($content, $httpStatus);
+
+        $this->assertEquals($httpStatus, $response->getStatusCode());
+        $this->assertEquals(
+            json_encode($content, JSON_FORCE_OBJECT),
+            (string)$response->getBody()
+        );
+        $this->assertTrue($response->hasHeader('Content-type'));
         $this->assertEquals(['application/json'], $response->getHeader('Content-type'));
     }
 
@@ -91,7 +139,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
 
         $this->assertEquals(404, $response->getStatusCode());
-        $this->assertEquals('monomo', $response->getBody()->getContents());
+        $this->assertEquals('monomo', (string)$response->getBody());
         $this->assertFalse($response->hasHeader('Content-type'));
     }
 
@@ -105,7 +153,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
 
         $this->assertEquals(403, $response->getStatusCode());
-        $this->assertEquals('monomo', $response->getBody()->getContents());
+        $this->assertEquals('monomo', (string)$response->getBody());
         $this->assertFalse($response->hasHeader('Content-type'));
     }
 
@@ -119,7 +167,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
 
         $this->assertEquals(500, $response->getStatusCode());
-        $this->assertEquals('monomo', $response->getBody()->getContents());
+        $this->assertEquals('monomo', (string)$response->getBody());
         $this->assertFalse($response->hasHeader('Content-type'));
     }
 }

@@ -148,5 +148,10 @@ class HttpStatus
     {
         return self::$statusReasonList[$statusCode] ?? '';
     }
+
+    public static function all(): array
+    {
+        return self::$statusReasonList;
+    }
     
 }

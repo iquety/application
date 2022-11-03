@@ -26,22 +26,22 @@ class HttpResponseFactory
     {
         $jsonContent = (string)json_encode($content, JSON_FORCE_OBJECT);
 
-        return $this->response($jsonContent, $status, 'application/json');
+        return $this->rawResponse($jsonContent, $status, 'application/json');
     }
 
     public function notFoundResponse(string $content = ''): ResponseInterface
     {
-        return $this->response($content, HttpStatus::HTTP_NOT_FOUND);
+        return $this->rawResponse($content, HttpStatus::HTTP_NOT_FOUND);
     }
 
     public function accessDeniedResponse(string $content = ''): ResponseInterface
     {
-        return $this->response($content, HttpStatus::HTTP_FORBIDDEN);
+        return $this->rawResponse($content, HttpStatus::HTTP_FORBIDDEN);
     }
 
     public function serverErrorResponse(Throwable $exception): ResponseInterface
     {
-        return $this->response($exception->getMessage(), HttpStatus::HTTP_INTERNAL_SERVER_ERROR);
+        return $this->rawResponse($exception->getMessage(), HttpStatus::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     private function rawResponse(
@@ -51,19 +51,16 @@ class HttpResponseFactory
     ): ResponseInterface {
         $response = $this->factory->createResponse($status, HttpStatus::reason($status));
 
+        if ($mimeType !== '') {
+            $response = $response->withHeader('Content-type', $mimeType);
+        }
+
         if ($content == '') {
             return $response;
         }
 
-        $stream = $this->factory->createStream($content);
-        $stream->rewind();
-
-        $response = $response->withBody($stream);
-        
-        if ($mimeType !== '') {
-            return $response->withAddedHeader('Content-type', $mimeType);
-        }
-
-        return $response;
+        return $response->withBody(
+            $this->factory->createStream($content)
+        );
     }
 }
