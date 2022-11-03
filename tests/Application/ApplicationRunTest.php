@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Application;
 
+use Exception;
 use Iquety\Application\Adapter\Session\MemorySession;
-use Iquety\Application\AppEngine\MemoryEngine;
+use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Application\Application;
 use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\HttpStatus;
 use Iquety\Application\Http\Session;
+use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
+use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
-use Tests\Application\Support\ErrorExceptionEngine;
-use Tests\Application\Support\NotFoundEngine;
-use Tests\Application\Support\ServerErrorEngine;
 use Tests\TestCase;
 
 /** @SuppressWarnings(PHPMD.StaticAccess) */
@@ -43,7 +43,7 @@ class ApplicationRunTest extends TestCase
 
         $app = Application::instance();
 
-        $app->addEngine(MemoryEngine::class);
+        $app->bootEngine($this->createMock(AppEngine::class));
 
         $app->run();
     }
@@ -58,7 +58,7 @@ class ApplicationRunTest extends TestCase
 
         $app = Application::instance();
 
-        $app->addEngine(MemoryEngine::class);
+        $app->bootEngine($this->createMock(AppEngine::class));
 
         $app->bootApplication($this->appBootstrapFactory(function(Application $app){
 
@@ -81,7 +81,7 @@ class ApplicationRunTest extends TestCase
 
         $app = Application::instance();
 
-        $app->addEngine(MemoryEngine::class);
+        $app->bootEngine($this->createMock(AppEngine::class));
 
         $app->bootApplication($this->appBootstrapFactory(function(Application $app){
             $app->addSingleton(Session::class, fn() => (object)[]);
@@ -100,7 +100,7 @@ class ApplicationRunTest extends TestCase
 
         $app = Application::instance();
 
-        $app->addEngine(MemoryEngine::class);
+        $app->bootEngine($this->createMock(AppEngine::class));
 
         $app->bootApplication($this->appBootstrapFactory(function(Application $app){
             $app->addSingleton(Session::class, MemorySession::class);
@@ -123,7 +123,7 @@ class ApplicationRunTest extends TestCase
 
         $app = Application::instance();
 
-        $app->addEngine(MemoryEngine::class);
+        $app->bootEngine($this->createMock(AppEngine::class));
 
         $app->bootApplication($this->appBootstrapFactory(function(Application $app){
             $app->addSingleton(Session::class, MemorySession::class);
@@ -141,7 +141,18 @@ class ApplicationRunTest extends TestCase
     {
         $app = Application::instance();
 
-        $app->addEngine(MemoryEngine::class);
+        /** @var InvocationMocker */
+        $response = $this->createMock(ResponseInterface::class);
+        $response->method('getStatusCode')->willReturn(HttpStatus::HTTP_OK);
+
+        /** @var InvocationMocker */
+        $engine = $this->createMock(AppEngine::class);
+        $engine->method('execute')->willReturn($response);
+
+        /** @var AppEngine $engine */
+        $app->bootEngine($engine);
+
+        $app->bootEngine($this->createMock(AppEngine::class));
 
         $bootstrap = $this->appBootstrapFactory(function(Application $app) use ($httpFactory){
             $app->addSingleton(Session::class, MemorySession::class);
@@ -154,7 +165,6 @@ class ApplicationRunTest extends TestCase
 
         $this->assertInstanceOf(Application::class, $app->make(Application::class));
         $this->assertSame(HttpStatus::HTTP_OK, $response->getStatusCode());
-        $this->assertSame('', (string)$response->getBody());
     }
 
     /**
@@ -165,7 +175,12 @@ class ApplicationRunTest extends TestCase
     {
         $app = Application::instance();
 
-        $app->addEngine(NotFoundEngine::class);
+        /** @var InvocationMocker */
+        $engine = $this->createMock(AppEngine::class);
+        $engine->method('execute')->willReturn(null);
+
+        /** @var AppEngine $engine */
+        $app->bootEngine($engine);
 
         $bootstrap = $this->appBootstrapFactory(function(Application $app) use ($httpFactory){
             $app->addSingleton(Session::class, MemorySession::class);
@@ -189,7 +204,12 @@ class ApplicationRunTest extends TestCase
     {
         $app = Application::instance();
 
-        $app->addEngine(ErrorExceptionEngine::class);
+        /** @var InvocationMocker */
+        $engine = $this->createMock(AppEngine::class);
+        $engine->method('execute')->will($this->throwException(new Exception('Error exception')));
+
+        /** @var AppEngine $engine */
+        $app->bootEngine($engine);
 
         $bootstrap = $this->appBootstrapFactory(function(Application $app) use ($httpFactory){
             $app->addSingleton(Session::class, MemorySession::class);
@@ -213,7 +233,16 @@ class ApplicationRunTest extends TestCase
     {
         $app = Application::instance();
 
-        $app->addEngine(ErrorExceptionEngine::class); // todo
+        $callback = function(){
+            trigger_error('Error triggered');
+        };
+
+        /** @var InvocationMocker */
+        $engine = $this->createMock(AppEngine::class);
+        $engine->method('execute')->will($this->returnCallback($callback));
+
+        /** @var AppEngine $engine */
+        $app->bootEngine($engine);
 
         $bootstrap = $this->appBootstrapFactory(function(Application $app) use ($httpFactory){
             $app->addSingleton(Session::class, MemorySession::class);
@@ -226,6 +255,6 @@ class ApplicationRunTest extends TestCase
 
         $this->assertInstanceOf(Application::class, $app->make(Application::class));
         $this->assertSame(HttpStatus::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
-        $this->assertSame('Error exception', (string)$response->getBody());
+        $this->assertSame('Error triggered', (string)$response->getBody());
     }
 }

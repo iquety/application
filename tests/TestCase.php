@@ -9,15 +9,16 @@ use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\Adapter\HttpFactory\GuzzleHttpFactory;
 use Iquety\Application\Adapter\HttpFactory\NyHolmHttpFactory;
 use Iquety\Application\Adapter\Session\MemorySession;
-use Iquety\Application\AppEngine\FrontController\FcBootstrap;
-use Iquety\Application\AppEngine\FrontController\FcEngine;
-use Iquety\Application\AppEngine\Mvc\MvcBootstrap;
+use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Application\Application;
 use Iquety\Application\Bootstrap;
 use Iquety\Application\Http\HttpFactory;
+use Iquety\Application\Http\HttpResponseFactory;
 use Iquety\Application\Http\Session;
+use Iquety\Injection\Container;
 use Iquety\Routing\Router;
 use Laminas\Diactoros\ServerRequestFactory;
+use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
 use PHPUnit\Framework\TestCase as FrameworkTestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -32,13 +33,48 @@ use ReflectionObject;
  */
 class TestCase extends FrameworkTestCase
 {
-    public function getPropertyValue(object $instance, string $name): mixed
-    {
-        $reflection = new ReflectionObject($instance);
-        $property = $reflection->getProperty($name);
-        $property->setAccessible(true);
+    // factories
 
-        return $property->getValue($instance);
+    protected function requestFactory(
+        HttpFactory $httpFactory,
+        string $path = ''
+    ): ServerRequestInterface
+    {
+        $request = $httpFactory->createRequestFromGlobals();
+
+        if ($path === '') {
+            return $request;
+        }
+
+        return $request->withUri(
+            $httpFactory->createUri("http://localhost/" . trim($path, '/'))
+        );
+    }
+
+    protected function httpFactory(string $httpFactoryContract): HttpFactory
+    {
+        return new $httpFactoryContract();
+    }
+
+    protected function httpResponseFactory(HttpFactory $httpFactory): HttpResponseFactory
+    {
+        return new HttpResponseFactory($httpFactory);
+    }
+
+    protected function appEngineFactory(HttpFactory $httpFactory, string $engineContract): AppEngine
+    {
+        $container = new Container();
+        $container->registerSingletonDependency(
+            HttpResponseFactory::class,
+            fn() => $this->httpResponseFactory($httpFactory)
+        );
+
+        // FcEngine | MvcEngine
+        $engine = new $engineContract();
+
+        $engine->useContainer($container);
+
+        return $engine;
     }
 
     /**
@@ -69,6 +105,27 @@ class TestCase extends FrameworkTestCase
         return $bootstrap;
     }
 
+    // tools
+
+    protected function extractNamespace(string $signature, string $addNode): string
+    {
+        $signature = explode('\\', $signature);
+        array_pop($signature);
+        return implode('\\', $signature) . $addNode;
+    }
+
+    protected function getPropertyValue(object $instance, string $name): mixed
+    {
+        $reflection = new ReflectionObject($instance);
+        $property = $reflection->getProperty($name);
+        $property->setAccessible(true);
+
+        return $property->getValue($instance);
+    }
+
+    // - - - - - - - - - - - - - - - - - - - -
+    // data providers
+
     public function httpFactoryProvider(): array
     {
         return [
@@ -77,6 +134,20 @@ class TestCase extends FrameworkTestCase
             'NyHolm'    => [ NyHolmHttpFactory::class ],
         ];
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -120,7 +191,7 @@ class TestCase extends FrameworkTestCase
     /**
      * @SuppressWarnings(PHPMD)
      */
-    public static function requestFactory(string $path = ''): ServerRequestInterface
+    public static function requestDFactory(string $path = ''): ServerRequestInterface
     {
         $factory = new class extends DiactorosHttpFactory {
             public string $path = '';

@@ -7,7 +7,7 @@ namespace Iquety\Application;
 use Closure;
 use Iquety\Application\Http\HttpDependencies;
 use InvalidArgumentException;
-use Iquety\Application\Http\HttpFactory;
+use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Application\Http\HttpResponseFactory;
 use Iquety\Injection\Container;
 use Psr\Http\Message\ResponseInterface;
@@ -21,15 +21,10 @@ use Throwable;
  */
 class Application
 {
-    /** @var array<string> */
-    private array $appEngineIdentifiers = [];
-
     /** @var array<Engine> */
     private array $appEngineList = [];
 
     private Container $container;
-
-    private bool $headersEmission = true;
 
     private static ?Application $instance = null;    
 
@@ -52,9 +47,9 @@ class Application
         $this->container = new Container();
     }
 
-    public function addEngine(string $engineIdentifier): void
+    public function bootEngine(AppEngine $engine): void
     {
-        $this->appEngineIdentifiers[] = $engineIdentifier;
+        $this->appEngineList[] = $engine;
     }
 
     public function addFactory(string $identifier, Closure|string $factory): void
@@ -83,11 +78,6 @@ class Application
         return $this->container;
     }
 
-    public function disableHeadersEmission(): void
-    {
-        $this->headersEmission = false;
-    }
-
     /** @param array<int,mixed> $arguments */
     public function make(...$arguments): mixed
     {
@@ -108,7 +98,7 @@ class Application
 
     public function run(): ResponseInterface
     {
-        if ($this->appEngineIdentifiers === []) {
+        if ($this->appEngineList === []) {
             throw new RuntimeException('No web engine to handle the request');
         }
 
@@ -147,14 +137,9 @@ class Application
 
     private function bootIntoEngines(Bootstrap $bootstrap): void
     {
-        foreach($this->appEngineIdentifiers as $engineIdentifier) {
-            $engine = new $engineIdentifier(
-                $this->container()
-            );
-
+        foreach($this->appEngineList as $engine) {
+            $engine->useContainer($this->container());
             $engine->boot($bootstrap);
-
-            $this->appEngineList[] = $engine;
         }
     }
 
@@ -175,37 +160,19 @@ class Application
         return $this->make(HttpResponseFactory::class)->notFoundResponse();
     }
 
-    
-
-    
-
-    
-
     /**
      * @uses \header
      * @uses \echo
+     * @codeCoverageIgnore
      */
     public function sendResponse(ResponseInterface $response): void
     {
-        $this->emitHeaders($response);
-
-        $stream = $response->getBody();
-        $stream->rewind();
-        echo $stream->getContents();
-    }
-
-    protected function emitHeaders(ResponseInterface $response): void
-    {
-        if ($this->headersEmission === false) {
-            return;
-        }
-
-        // @codeCoverageIgnoreStart
         foreach ($response->getHeaders() as $name => $values) {
             foreach ($values as $value) {
                 header(sprintf('%s: %s', $name, $value), false);
             }
         }
-        // @codeCoverageIgnoreEnd
+
+        echo (string)$response->getBody();
     }
 }
