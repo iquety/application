@@ -154,7 +154,7 @@ class ApplicationRunTest extends TestCase
 
         $this->assertInstanceOf(Application::class, $app->make(Application::class));
         $this->assertSame(HttpStatus::HTTP_OK, $response->getStatusCode());
-        $this->assertSame('', $response->getBody()->getContents());
+        $this->assertSame('', (string)$response->getBody());
     }
 
     /**
@@ -178,14 +178,14 @@ class ApplicationRunTest extends TestCase
 
         $this->assertInstanceOf(Application::class, $app->make(Application::class));
         $this->assertSame(HttpStatus::HTTP_NOT_FOUND, $response->getStatusCode());
-        $this->assertSame('', $response->getBody()->getContents());
+        $this->assertSame('', (string)$response->getBody());
     }
 
     /**
      * @test
      * @dataProvider httpFactoryProvider
      */
-    public function runServerError(string $httpFactory): void
+    public function runException(string $httpFactory): void
     {
         $app = Application::instance();
 
@@ -202,6 +202,30 @@ class ApplicationRunTest extends TestCase
 
         $this->assertInstanceOf(Application::class, $app->make(Application::class));
         $this->assertSame(HttpStatus::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
-        $this->assertSame('', $response->getBody()->getContents());
+        $this->assertSame('Error exception', (string)$response->getBody());
+    }
+
+    /**
+     * @test
+     * @dataProvider httpFactoryProvider
+     */
+    public function runServerError(string $httpFactory): void
+    {
+        $app = Application::instance();
+
+        $app->addEngine(ErrorExceptionEngine::class); // todo
+
+        $bootstrap = $this->appBootstrapFactory(function(Application $app) use ($httpFactory){
+            $app->addSingleton(Session::class, MemorySession::class);
+            $app->addSingleton(HttpFactory::class, $httpFactory);
+        });
+
+        $app->bootApplication($bootstrap);
+
+        $response = $app->run();
+
+        $this->assertInstanceOf(Application::class, $app->make(Application::class));
+        $this->assertSame(HttpStatus::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
+        $this->assertSame('Error exception', (string)$response->getBody());
     }
 }
