@@ -18,7 +18,7 @@ use Tests\TestCase;
 /** @SuppressWarnings(PHPMD.StaticAccess) */
 class GuzzleHttpResponseFactoryTest extends HttpResponseFactoryTestCase
 {
-    public function httpFactory(): HttpFactory
+    public function adapterFactory(): HttpFactory
     {
         return new GuzzleHttpFactory();
     }

@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Tests\Http;
 
 use Exception;
-use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\Application;
 use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\HttpResponseFactory;
 use Iquety\Application\Http\HttpStatus;
-use Iquety\Injection\Container;
 use Psr\Http\Message\ResponseInterface;
 use Tests\TestCase;
 
@@ -22,12 +20,12 @@ abstract class HttpResponseFactoryTestCase extends TestCase
         Application::instance()->reset();
     }
 
-    abstract public function httpFactory(): HttpFactory;
+    abstract public function adapterFactory(): HttpFactory;
 
     /** @test */
     public function withoutArguments(): void
     {
-        $responseFactory = new HttpResponseFactory($this->httpFactory());
+        $responseFactory = new HttpResponseFactory($this->adapterFactory());
 
         $response = $responseFactory->response();
 
@@ -54,7 +52,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
      */
     public function withEmptyArgumens(int $httpStatus): void
     {
-        $responseFactory = new HttpResponseFactory($this->httpFactory());
+        $responseFactory = new HttpResponseFactory($this->adapterFactory());
 
         $response = $responseFactory->response('', $httpStatus, '');
 
@@ -69,7 +67,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
      */
     public function withStatus(int $httpStatus, string $body): void
     {
-        $responseFactory = new HttpResponseFactory($this->httpFactory());
+        $responseFactory = new HttpResponseFactory($this->adapterFactory());
 
         $response = $responseFactory->response($body, $httpStatus);
 
@@ -84,7 +82,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
      */
     public function withStatusAndEmptyMime(int $httpStatus, string $body): void
     {
-        $responseFactory = new HttpResponseFactory($this->httpFactory());
+        $responseFactory = new HttpResponseFactory($this->adapterFactory());
 
         $response = $responseFactory->response($body, $httpStatus, '');
 
@@ -99,7 +97,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
      */
     public function withMimeType(int $httpStatus, string $body): void
     {
-        $responseFactory = new HttpResponseFactory($this->httpFactory());
+        $responseFactory = new HttpResponseFactory($this->adapterFactory());
 
         $response = $responseFactory->response($body, $httpStatus, 'text/html');
 
@@ -114,7 +112,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
      */
     public function jsonResponse(int $httpStatus, string $body): void
     {
-        $responseFactory = new HttpResponseFactory($this->httpFactory());
+        $responseFactory = new HttpResponseFactory($this->adapterFactory());
 
         $content = ['naitis' => ''];
 
@@ -132,7 +130,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
     /** @test */
     public function notFoundResponse(): void
     {
-        $responseFactory = new HttpResponseFactory($this->httpFactory());
+        $responseFactory = new HttpResponseFactory($this->adapterFactory());
 
         $response = $responseFactory->notFoundResponse('monomo');
 
@@ -146,7 +144,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
     /** @test */
     public function accessDeniedResponse(): void
     {
-        $responseFactory = new HttpResponseFactory($this->httpFactory());
+        $responseFactory = new HttpResponseFactory($this->adapterFactory());
 
         $response = $responseFactory->accessDeniedResponse('monomo');
 
@@ -160,7 +158,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
     /** @test */
     public function serverErrorResponse(): void
     {
-        $responseFactory = new HttpResponseFactory($this->httpFactory());
+        $responseFactory = new HttpResponseFactory($this->adapterFactory());
 
         $response = $responseFactory->serverErrorResponse(new Exception('monomo'));
 

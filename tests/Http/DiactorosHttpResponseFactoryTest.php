@@ -17,7 +17,7 @@ use Tests\TestCase;
 /** @SuppressWarnings(PHPMD.StaticAccess) */
 class DiactorosHttpResponseFactoryTest extends HttpResponseFactoryTestCase
 {
-    public function httpFactory(): HttpFactory
+    public function adapterFactory(): HttpFactory
     {
         return new DiactorosHttpFactory();
     }
