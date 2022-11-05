@@ -12,6 +12,7 @@ use Iquety\Application\Http\HttpResponseFactory;
 use Iquety\Injection\InversionOfControl;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
 use Throwable;
 
 class FcEngine extends AppEngine
@@ -27,9 +28,14 @@ class FcEngine extends AppEngine
         }
 
         $moduleIdentifier = $bootstrap::class;
+        $namespace = $bootstrap->commandsDirectory();
 
-        $lastBar = (int)strrpos($bootstrap::class, '\\') + 1;
-        $namespace = substr($bootstrap::class, 0, $lastBar) . $bootstrap->commandsDirectory();
+        $searchBar = strrpos($bootstrap::class, '\\');
+
+        if ($searchBar !== false) {
+            $lastBar = (int)$searchBar + 1;
+            $namespace = substr($bootstrap::class, 0, $lastBar) . $bootstrap->commandsDirectory();
+        }
 
         $this->handler()->addNamespace($moduleIdentifier, $namespace);
     }
@@ -41,6 +47,12 @@ class FcEngine extends AppEngine
     ): ?ResponseInterface
     {
         $handler = $this->handler();
+
+        if ($handler->namespaces() === []) {
+            throw new RuntimeException(
+                'This bootstrap has no directories registered as command source'
+            );
+        }
 
         $handler->process($request->getMethod(), $request->getUri()->getPath());
 
