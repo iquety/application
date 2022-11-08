@@ -66,7 +66,7 @@ class MvcOnlyExecuteTest extends TestCase
 
         $response = $engine->execute($request, [], fn() => null);
 
-        $this->assertEquals(HttpStatus::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
+        $this->assertEquals(HttpStatus::INTERNAL_SERVER_ERROR, $response->getStatusCode());
         $this->assertStringContainsString(
             'Error: The route found does not have a action on file',
             (string)$response->getBody()
@@ -103,7 +103,7 @@ class MvcOnlyExecuteTest extends TestCase
             }
         );
 
-        $this->assertEquals(HttpStatus::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
+        $this->assertEquals(HttpStatus::INTERNAL_SERVER_ERROR, $response->getStatusCode());
         $this->assertStringContainsString(
             'Error: Configuração das dependências efetuada',
             (string)$response->getBody()
@@ -136,7 +136,7 @@ class MvcOnlyExecuteTest extends TestCase
             function(MvcBootstrap $bootstrap) {}
         );
 
-        $this->assertEquals(HttpStatus::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
+        $this->assertEquals(HttpStatus::INTERNAL_SERVER_ERROR, $response->getStatusCode());
         $this->assertStringContainsString(
             sprintf('Error: Class type %s is not allowed', NoContractController::class),
             (string)$response->getBody()
@@ -169,7 +169,7 @@ class MvcOnlyExecuteTest extends TestCase
             function(MvcBootstrap $bootstrap) {}
         );
 
-        $this->assertEquals(HttpStatus::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals(HttpStatus::OK, $response->getStatusCode());
         $this->assertStringContainsString(
             'Resposta do controlador para id 42 input 42',
             (string)$response->getBody()

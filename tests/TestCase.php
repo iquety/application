@@ -13,6 +13,7 @@ use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Application\Application;
 use Iquety\Application\Bootstrap;
 use Iquety\Application\Http\HttpFactory;
+use Iquety\Application\Http\HttpMethod;
 use Iquety\Application\Http\HttpResponseFactory;
 use Iquety\Application\Http\Session;
 use Iquety\Injection\Container;
@@ -40,13 +41,18 @@ abstract class TestCase extends FrameworkTestCase
 
     protected function requestFactory(
         HttpFactory $httpFactory,
-        string $path = ''
+        string $path = '',
+        string $method = HttpMethod::ANY
     ): ServerRequestInterface
     {
         $request = $httpFactory->createRequestFromGlobals();
 
         if ($path === '') {
             return $request;
+        }
+
+        if ($method !== HttpMethod::ANY) {
+            $request = $request->withMethod($method);
         }
 
         return $request->withUri(
@@ -146,110 +152,4 @@ abstract class TestCase extends FrameworkTestCase
             'NyHolm'    => [ NyHolmHttpFactory::class ],
         ];
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    // /**
-    //  * @SuppressWarnings(PHPMD.StaticAccess)
-    //  * @SuppressWarnings(PHPMD.Superglobals)
-    //  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-    //  */
-    // public static function applicationFactory(string $path = '/user/33'): Application
-    // {
-    //     $_SERVER['REQUEST_URI'] = $path;
-
-    //     $app = Application::instance();
-
-    //     $app->reset();
-    //     $app->disableHeadersEmission();
-
-    //     $app->bootApplication(new class implements Bootstrap {
-
-    //         public function bootDependencies(Application $app): void
-    //         {
-    //             $app->addSingleton(Session::class, MemorySession::class);
-
-    //             $app->addSingleton(HttpFactory::class, function () {
-    //                 return new class extends DiactorosHttpFactory {
-    //                     public function createRequestFromGlobals(): ServerRequestInterface
-    //                     {
-    //                         return (new ServerRequestFactory())->fromGlobals($_SERVER);
-    //                     }
-    //                 };
-    //             });
-    //         }
-    //     });
-
-    //     return $app;
-    // }
-
-    // /**
-    //  * @SuppressWarnings(PHPMD)
-    //  */
-    // public static function requestDFactory(string $path = ''): ServerRequestInterface
-    // {
-    //     $factory = new class extends DiactorosHttpFactory {
-    //         public string $path = '';
-
-    //         public function createRequestFromGlobals(): ServerRequestInterface
-    //         {
-    //             $server = $_SERVER;
-    //             $server['REQUEST_URI'] = $this->path;
-
-    //             return (new ServerRequestFactory())->fromGlobals($server);
-    //         }
-    //     };
-
-    //     $factory->path = $path;
-
-    //     return $factory->createRequestFromGlobals();
-    // }
-
-    // public static function responseFactory(int $code = 200, string $reasonPhrase = ''): ResponseInterface
-    // {
-    //     return (new DiactorosHttpFactory())->createResponse($code, $reasonPhrase);
-    // }
-
-    // public static function streamFactory(string $content = ''): StreamInterface
-    // {
-    //     return (new DiactorosHttpFactory())->createStream($content);
-    // }
-
-    // public static function uploadedFileFactory(
-    //     StreamInterface $stream,
-    //     ?int $size = null,
-    //     int $error = UPLOAD_ERR_OK,
-    //     ?string $clientFilename = null,
-    //     ?string $clientMediaType = null
-    // ): UploadedFileInterface {
-    //     return (new DiactorosHttpFactory())->createUploadedFile(
-    //         $stream,
-    //         $size,
-    //         $error,
-    //         $clientFilename,
-    //         $clientMediaType
-    //     );
-    // }
-
-    // public static function uriFactory(string $path = ''): UriInterface
-    // {
-    //     return (new DiactorosHttpFactory())->createUri($path);
-    // }
 }

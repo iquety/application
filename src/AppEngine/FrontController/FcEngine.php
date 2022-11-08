@@ -9,6 +9,7 @@ use Iquety\Application\Bootstrap;
 use InvalidArgumentException;
 use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Application\AppEngine\Input;
+use Iquety\Application\AppEngine\MethodNotAllowedException;
 use Iquety\Injection\InversionOfControl;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -44,8 +45,7 @@ class FcEngine extends AppEngine
         RequestInterface $request,
         array $moduleList,
         Closure $bootModuleDependencies
-    ): ?ResponseInterface
-    {
+    ): ?ResponseInterface {
         $handler = $this->handler();
 
         if ($handler->namespaces() === []) {
@@ -76,7 +76,11 @@ class FcEngine extends AppEngine
 
             $control = new InversionOfControl($this->container());
 
-            return $control->resolveTo(Command::class, $action);
+            try {
+                return $control->resolveTo(Command::class, $action);
+            } catch (MethodNotAllowedException) {
+                return null;
+            }
         } catch (Throwable $exception) {
             return $this->responseFactory()->serverErrorResponse($exception);
         }
