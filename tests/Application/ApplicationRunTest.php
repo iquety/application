@@ -143,7 +143,7 @@ class ApplicationRunTest extends TestCase
 
         /** @var InvocationMocker */
         $response = $this->createMock(ResponseInterface::class);
-        $response->method('getStatusCode')->willReturn(HttpStatus::HTTP_OK);
+        $response->method('getStatusCode')->willReturn(HttpStatus::OK);
 
         /** @var InvocationMocker */
         $engine = $this->createMock(AppEngine::class);
@@ -164,7 +164,7 @@ class ApplicationRunTest extends TestCase
         $response = $app->run();
 
         $this->assertInstanceOf(Application::class, $app->make(Application::class));
-        $this->assertSame(HttpStatus::HTTP_OK, $response->getStatusCode());
+        $this->assertSame(HttpStatus::OK, $response->getStatusCode());
     }
 
     /**
@@ -192,7 +192,7 @@ class ApplicationRunTest extends TestCase
         $response = $app->run();
 
         $this->assertInstanceOf(Application::class, $app->make(Application::class));
-        $this->assertSame(HttpStatus::HTTP_NOT_FOUND, $response->getStatusCode());
+        $this->assertSame(HttpStatus::NOT_FOUND, $response->getStatusCode());
         $this->assertSame('', (string)$response->getBody());
     }
 
@@ -221,7 +221,7 @@ class ApplicationRunTest extends TestCase
         $response = $app->run();
 
         $this->assertInstanceOf(Application::class, $app->make(Application::class));
-        $this->assertSame(HttpStatus::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
+        $this->assertSame(HttpStatus::INTERNAL_SERVER_ERROR, $response->getStatusCode());
         $this->assertStringContainsString(
             'Error: Error exception on file',
             (string)$response->getBody()
@@ -257,7 +257,7 @@ class ApplicationRunTest extends TestCase
         $response = $app->run();
 
         $this->assertInstanceOf(Application::class, $app->make(Application::class));
-        $this->assertSame(HttpStatus::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
+        $this->assertSame(HttpStatus::INTERNAL_SERVER_ERROR, $response->getStatusCode());
         $this->assertStringContainsString(
             'Error: Error triggered on file',
             (string)$response->getBody()

@@ -30,7 +30,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
         $response = $responseFactory->response();
 
         $this->assertEquals('', (string)$response->getBody());
-        $this->assertEquals(HttpStatus::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals(HttpStatus::OK, $response->getStatusCode());
         $this->assertFalse($response->hasHeader('Content-type'));
     }
 

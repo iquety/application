@@ -15,14 +15,14 @@ class HttpResponseFactory
 
     public function response(
         string $content = '',
-        int $status = HttpStatus::HTTP_OK,
+        int $status = HttpStatus::OK,
         string $mimeType = ''
     ): ResponseInterface {
         return $this->rawResponse($content, $status, $mimeType);
     }
 
     /** @param array<mixed,mixed> $content */
-    public function jsonResponse(array $content = [], int $status = HttpStatus::HTTP_OK): ResponseInterface
+    public function jsonResponse(array $content = [], int $status = HttpStatus::OK): ResponseInterface
     {
         $jsonContent = (string)json_encode($content, JSON_FORCE_OBJECT);
 
@@ -31,12 +31,12 @@ class HttpResponseFactory
 
     public function notFoundResponse(string $content = ''): ResponseInterface
     {
-        return $this->rawResponse($content, HttpStatus::HTTP_NOT_FOUND);
+        return $this->rawResponse($content, HttpStatus::NOT_FOUND);
     }
 
     public function accessDeniedResponse(string $content = ''): ResponseInterface
     {
-        return $this->rawResponse($content, HttpStatus::HTTP_FORBIDDEN);
+        return $this->rawResponse($content, HttpStatus::FORBIDDEN);
     }
 
     public function serverErrorResponse(Throwable $exception): ResponseInterface
@@ -48,12 +48,12 @@ class HttpResponseFactory
             $exception->getLine(),
         );
 
-        return $this->rawResponse($message, HttpStatus::HTTP_INTERNAL_SERVER_ERROR);
+        return $this->rawResponse($message, HttpStatus::INTERNAL_SERVER_ERROR);
     }
 
     private function rawResponse(
         string $content = '',
-        int $status = HttpStatus::HTTP_OK,
+        int $status = HttpStatus::OK,
         string $mimeType = ''
     ): ResponseInterface {
         $response = $this->factory->createResponse($status, HttpStatus::reason($status));
