@@ -6,7 +6,7 @@ namespace Tests\AppEngine\FrontController\Support\Commands;
 
 use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\AppEngine\FrontController\Command;
-use Iquety\Application\AppEngine\FrontController\Input;
+use Iquety\Application\AppEngine\Input;
 use Psr\Http\Message\ResponseInterface;
 
 class UserCommand extends Command

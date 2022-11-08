@@ -8,6 +8,7 @@ use Closure;
 use Iquety\Application\Bootstrap;
 use InvalidArgumentException;
 use Iquety\Application\AppEngine\AppEngine;
+use Iquety\Application\AppEngine\Input;
 use Iquety\Injection\InversionOfControl;
 use Iquety\Routing\Router;
 use Psr\Http\Message\RequestInterface;
@@ -72,6 +73,11 @@ class MvcEngine extends AppEngine
                 return $this->resolveClosure($action);
             }
 
+            $this->container()->registerSingletonDependency(
+                Input::class,
+                fn() => new Input($params)
+            );
+            
             $control = new InversionOfControl($this->container());
 
             return $control->resolveTo(Controller::class, $action, $params);

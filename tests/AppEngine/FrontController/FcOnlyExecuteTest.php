@@ -81,9 +81,9 @@ class FcOnlyExecuteTest extends TestCase
             function(FcBootstrap $bootstrap) {}
         );
 
-        // $this->assertEquals(HttpStatus::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals(HttpStatus::HTTP_OK, $response->getStatusCode());
         $this->assertStringContainsString(
-            sprintf('Resposta do comando para id 42', UserCommand::class),
+            'Resposta do comando para id 42',
             (string)$response->getBody()
         );
     }

@@ -8,7 +8,7 @@ use Closure;
 use Iquety\Application\Bootstrap;
 use InvalidArgumentException;
 use Iquety\Application\AppEngine\AppEngine;
-use Iquety\Application\Http\HttpResponseFactory;
+use Iquety\Application\AppEngine\Input;
 use Iquety\Injection\InversionOfControl;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;

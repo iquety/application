@@ -171,7 +171,7 @@ class MvcOnlyExecuteTest extends TestCase
 
         $this->assertEquals(HttpStatus::HTTP_OK, $response->getStatusCode());
         $this->assertStringContainsString(
-            sprintf('Resposta do controlador para id 42', UserController::class),
+            'Resposta do controlador para id 42 input 42',
             (string)$response->getBody()
         );
     }
