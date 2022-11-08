@@ -16,10 +16,13 @@ class NoContractCommand
     }
 
     /** @SuppressWarnings(PHPMD.ShortVariable) */
-    public function create(ServerRequestInterface $request, int $id): ResponseInterface
+    public function create(ServerRequestInterface $request, int $identity): ResponseInterface
     {
         return $this->app->make(ResponseInterface::class)->withBody(
-            $this->app->make(StreamInterface::class, $request->getUri()->getPath() . ' - ID: ' . $id)
+            $this->app->make(
+                StreamInterface::class,
+                $request->getUri()->getPath() . ' - ID: ' . $identity
+            )
         );
     }
 }

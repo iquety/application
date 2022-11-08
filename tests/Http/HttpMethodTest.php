@@ -20,7 +20,10 @@ class HttpMethodTest extends TestCase
         $this->assertSame('PUT', HttpMethod::PUT);
     }
 
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function allMethods(): void
     {
         $this->assertSame([

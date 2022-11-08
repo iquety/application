@@ -12,10 +12,6 @@ use stdClass;
 
 class AdminBootstrap extends FcBootstrap
 {
-    public function setupDirectories(CommandHandler $register): void
-    {
-    }
-
     public function bootDependencies(Application $app): void
     {
         $app->addSingleton(ArrayObject::class, ArrayObject::class);

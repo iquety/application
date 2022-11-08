@@ -110,7 +110,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
      * @test
      * @dataProvider contentProvider
      */
-    public function jsonResponse(int $httpStatus, string $body): void
+    public function jsonResponse(int $httpStatus): void
     {
         $responseFactory = new HttpResponseFactory($this->adapterFactory());
 

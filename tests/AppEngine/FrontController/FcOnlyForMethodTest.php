@@ -14,6 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Tests\AppEngine\FrontController\Support\FcBootstrapConcrete;
 use Tests\TestCase;
 
+/** @SuppressWarnings(PHPMD.StaticAccess) */
 class FcOnlyForMethodTest extends TestCase
 {
     public function setUp(): void

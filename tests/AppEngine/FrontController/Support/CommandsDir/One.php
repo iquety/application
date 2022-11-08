@@ -13,15 +13,16 @@ use Psr\Http\Message\ResponseInterface;
 
 class One extends Command
 {
-    public function __construct(private int $id)
+    public function __construct(private int $identity)
     {
     }
 
     public function execute(): ResponseInterface
     {
-        $message = 'Resposta do comando para id ' . $this->id;
+        $message = 'Resposta do comando para id ' . $this->identity;
 
-        $factory = new DiactorosHttpFactory();
+        /** @var HttpFactory */
+        $factory = $this->make(HttpFactory::class);
 
         return $factory->createResponse()->withBody(
             $factory->createStream($message)

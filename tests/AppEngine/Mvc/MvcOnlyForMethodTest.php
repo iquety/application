@@ -15,6 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Tests\AppEngine\Mvc\Support\Controllers\UserControllerForMethod;
 use Tests\TestCase;
 
+/** @SuppressWarnings(PHPMD.StaticAccess) */
 class MvcOnlyForMethodTest extends TestCase
 {
     public function setUp(): void
@@ -22,6 +23,7 @@ class MvcOnlyForMethodTest extends TestCase
         Application::instance()->reset();
     }
 
+    /** @return array<string,array[int,mixed]> */
     public function controllerCasesProvider(): array
     {
         $factoryList = $this->httpFactoryProvider();
@@ -163,31 +165,4 @@ class MvcOnlyForMethodTest extends TestCase
 
         $this->assertNull($response);
     }
-
-    // /**
-    //  * @test
-    //  * @dataProvider httpFactoryProvider
-    //  */
-    // public function commandWithFactory(string $httpFactoryContract): void
-    // {
-    //     $httpFactory = $this->httpFactory($httpFactoryContract);
-    //     $engine = $this->appEngineFactory($httpFactory, FcEngine::class);
-    //     $request = $this->requestFactory($httpFactory, 'user/command/42');
-
-    //     $bootstrap = new FcBootstrapConcrete();
-
-    //     $engine->boot($bootstrap);
-
-    //     $response = $engine->execute(
-    //         $request,
-    //         [$bootstrap::class => &$bootstrap],
-    //         function(FcBootstrap $bootstrap) {}
-    //     );
-
-    //     $this->assertEquals(HttpStatus::HTTP_OK, $response->getStatusCode());
-    //     $this->assertStringContainsString(
-    //         'Resposta do comando para id 42',
-    //         (string)$response->getBody()
-    //     );
-    // }
 }

@@ -80,6 +80,7 @@ class HttpStatusTest extends TestCase
     /**
      * @test
      * @dataProvider statusProvider
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function reasons(int $statusCode, string $constantName, string $reason): void
     {
@@ -88,7 +89,10 @@ class HttpStatusTest extends TestCase
         $this->assertSame($reason, HttpStatus::reason($statusCode));
     }
 
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function allStatus(): void
     {
         // https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml

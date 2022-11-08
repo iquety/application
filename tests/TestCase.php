@@ -94,6 +94,7 @@ abstract class TestCase extends FrameworkTestCase
      * @SuppressWarnings(PHPMD.StaticAccess)
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(PHPMD.UndefinedVariable)
      */
     public static function appBootstrapFactory(?Closure $dependencies = null): Bootstrap
     {
@@ -113,8 +114,7 @@ abstract class TestCase extends FrameworkTestCase
             }
         };
 
-        $bootstrap->setupDependencies($dependencies ?? function () {
-        });
+        $bootstrap->setupDependencies($dependencies ?? fn() => null);
 
         return $bootstrap;
     }

@@ -17,11 +17,11 @@ class InjectionCommand extends Controller
     }
 
     /** @SuppressWarnings(PHPMD.ShortVariable) */
-    public function create(ServerRequestInterface $request, int $id): ResponseInterface
+    public function create(ServerRequestInterface $request, int $identity): ResponseInterface
     {
         $message = 'Resposta do controlador para '
             . $request->getUri()->getPath()
-             . ' - ID: ' . $id;
+             . ' - ID: ' . $identity;
 
         return $this->app->make(ResponseInterface::class)->withBody(
             $this->app->make(StreamInterface::class, $message)
