@@ -2,20 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Tests\AppEngine\Mvc\Support;
+namespace Tests\AppEngine\FrontController\Support;
 
 use ArrayObject;
 use Iquety\Application\Application;
-use Iquety\Application\AppEngine\Mvc\MvcBootstrap;
-use Iquety\Routing\Router;
+use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use stdClass;
 
-class UserNoActionBootstrap extends MvcBootstrap
+class FcBootstrapAlterDir extends FcBootstrap
 {
-    public function bootRoutes(Router $router): void
+    public function commandsDirectory(): string
     {
-        $router->get('/user/:id');
-        $router->post('/user/:id');
+        return 'AlterDir';
     }
 
     public function bootDependencies(Application $app): void

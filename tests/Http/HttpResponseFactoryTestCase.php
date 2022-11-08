@@ -165,7 +165,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
 
         $this->assertEquals(500, $response->getStatusCode());
-        $this->assertEquals('monomo', (string)$response->getBody());
+        $this->assertStringContainsString('Error: monomo on file', (string)$response->getBody());
         $this->assertFalse($response->hasHeader('Content-type'));
     }
 }

@@ -41,7 +41,14 @@ class HttpResponseFactory
 
     public function serverErrorResponse(Throwable $exception): ResponseInterface
     {
-        return $this->rawResponse($exception->getMessage(), HttpStatus::HTTP_INTERNAL_SERVER_ERROR);
+        $message = sprintf(
+            "Error: %s on file %s in line %d",
+            $exception->getMessage(),
+            $exception->getFile(),
+            $exception->getLine(),
+        );
+
+        return $this->rawResponse($message, HttpStatus::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     private function rawResponse(

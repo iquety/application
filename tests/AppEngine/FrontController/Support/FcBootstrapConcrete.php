@@ -9,13 +9,8 @@ use Iquety\Application\Application;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use stdClass;
 
-class UserBootstrapAlterDir extends FcBootstrap
+class FcBootstrapConcrete extends FcBootstrap
 {
-    public function commandsDirectory(): string
-    {
-        return 'CommandsDir';
-    }
-
     public function bootDependencies(Application $app): void
     {
         $app->addSingleton(ArrayObject::class, ArrayObject::class);

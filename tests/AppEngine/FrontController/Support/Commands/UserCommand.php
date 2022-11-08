@@ -4,21 +4,25 @@ declare(strict_types=1);
 
 namespace Tests\AppEngine\FrontController\Support\Commands;
 
+use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\AppEngine\FrontController\Command;
-use Iquety\Application\Application;
-use Iquety\Application\Http\HttpResponseFactory;
+use Iquety\Application\AppEngine\FrontController\Input;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
 class UserCommand extends Command
 {
-    public function __construct(private ServerRequestInterface $request)
+    public function __construct()
     {
     }
 
-    public function execute(): ResponseInterface
+    public function execute(Input $input): ResponseInterface
     {
-        return (new HttpResponseFactory(Application::instance()))
-            ->response('Resposta do comando UserCommand');
+        $message = 'Resposta do comando para id ' . $input;
+
+        $factory = new DiactorosHttpFactory();
+
+        return $factory->createResponse()->withBody(
+            $factory->createStream($message)
+        );
     }
 }

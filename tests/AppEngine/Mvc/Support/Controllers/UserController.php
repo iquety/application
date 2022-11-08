@@ -4,22 +4,25 @@ declare(strict_types=1);
 
 namespace Tests\AppEngine\Mvc\Support\Controllers;
 
-use Iquety\Application\Application;
+use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
+use Iquety\Application\AppEngine\Mvc\Controller;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamInterface;
 
-class UserController
+class UserController extends Controller
 {
-    public function __construct(private Application $app)
+    public function __construct()
     {
     }
 
     /** @SuppressWarnings(PHPMD.ShortVariable) */
-    public function create(ServerRequestInterface $request, int $id): ResponseInterface
+    public function create(int $id): ResponseInterface
     {
-        return $this->app->make(ResponseInterface::class)->withBody(
-            $this->app->make(StreamInterface::class, $request->getUri()->getPath() . ' - ID: ' . $id)
+        $message = 'Resposta do controlador para id ' . $id;
+
+        $factory = new DiactorosHttpFactory();
+
+        return $factory->createResponse()->withBody(
+            $factory->createStream($message)
         );
     }
 }

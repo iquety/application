@@ -6,7 +6,6 @@ namespace Iquety\Application\AppEngine\Mvc;
 
 use Closure;
 use Iquety\Application\Bootstrap;
-use Iquety\Application\Http\HttpResponseFactory;
 use InvalidArgumentException;
 use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Injection\InversionOfControl;
@@ -43,6 +42,12 @@ class MvcEngine extends AppEngine
     {
         $router = $this->router();
 
+        if ($router->routes() === []) {
+            throw new RuntimeException(
+                'This bootstrap has no routes registered'
+            );
+        }
+
         $router->process($request->getMethod(), $request->getUri()->getPath());
 
         if ($router->routeNotFound()) {
@@ -69,9 +74,7 @@ class MvcEngine extends AppEngine
 
             $control = new InversionOfControl($this->container());
 
-            // TODO
-            // Impedir o uso de classes que não implementem Controller
-            return $control->resolve($action, $params);
+            return $control->resolveTo(Controller::class, $action, $params);
         } catch (Throwable $exception) {
             return $this->responseFactory()->serverErrorResponse($exception);
         }
@@ -87,9 +90,13 @@ class MvcEngine extends AppEngine
             return $factory->response('');
         }
 
+        if ($result instanceof ResponseInterface) {
+            return $result;
+        }
+
         return is_string($result)
             ? $factory->response($result)
-            : $factory->jsonResponse($result);
+            : $factory->jsonResponse((array)$result);
     }
 
     private function router(): Router

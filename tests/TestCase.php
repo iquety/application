@@ -25,14 +25,17 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
+use ReflectionClass;
 use ReflectionObject;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
-class TestCase extends FrameworkTestCase
+abstract class TestCase extends FrameworkTestCase
 {
+    private static ?Container $container = null;
+
     // factories
 
     protected function requestFactory(
@@ -63,8 +66,8 @@ class TestCase extends FrameworkTestCase
 
     protected function appEngineFactory(HttpFactory $httpFactory, string $engineContract): AppEngine
     {
-        $container = new Container();
-        $container->registerSingletonDependency(
+        static::$container = new Container();
+        static::$container->registerSingletonDependency(
             HttpResponseFactory::class,
             fn() => $this->httpResponseFactory($httpFactory)
         );
@@ -72,9 +75,14 @@ class TestCase extends FrameworkTestCase
         // FcEngine | MvcEngine
         $engine = new $engineContract();
 
-        $engine->useContainer($container);
+        $engine->useContainer(static::$container);
 
         return $engine;
+    }
+
+    protected function appEngineContainer(): Container
+    {
+        return static::$container;
     }
 
     /**
@@ -107,11 +115,15 @@ class TestCase extends FrameworkTestCase
 
     // tools
 
-    protected function extractNamespace(string $signature, string $addNode): string
+    protected function extractNamespace(string $signature, string $addNode = ''): string
     {
-        $signature = explode('\\', $signature);
-        array_pop($signature);
-        return implode('\\', $signature) . $addNode;
+        $namespace = (new ReflectionClass($signature))->getNamespaceName();
+        
+        if ($addNode !== '') {
+            $namespace .= "\\$addNode";
+        }
+
+        return $namespace;
     }
 
     protected function getPropertyValue(object $instance, string $name): mixed
@@ -154,90 +166,90 @@ class TestCase extends FrameworkTestCase
 
 
     
-    /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     * @SuppressWarnings(PHPMD.Superglobals)
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public static function applicationFactory(string $path = '/user/33'): Application
-    {
-        $_SERVER['REQUEST_URI'] = $path;
+    // /**
+    //  * @SuppressWarnings(PHPMD.StaticAccess)
+    //  * @SuppressWarnings(PHPMD.Superglobals)
+    //  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+    //  */
+    // public static function applicationFactory(string $path = '/user/33'): Application
+    // {
+    //     $_SERVER['REQUEST_URI'] = $path;
 
-        $app = Application::instance();
+    //     $app = Application::instance();
 
-        $app->reset();
-        $app->disableHeadersEmission();
+    //     $app->reset();
+    //     $app->disableHeadersEmission();
 
-        $app->bootApplication(new class implements Bootstrap {
+    //     $app->bootApplication(new class implements Bootstrap {
 
-            public function bootDependencies(Application $app): void
-            {
-                $app->addSingleton(Session::class, MemorySession::class);
+    //         public function bootDependencies(Application $app): void
+    //         {
+    //             $app->addSingleton(Session::class, MemorySession::class);
 
-                $app->addSingleton(HttpFactory::class, function () {
-                    return new class extends DiactorosHttpFactory {
-                        public function createRequestFromGlobals(): ServerRequestInterface
-                        {
-                            return (new ServerRequestFactory())->fromGlobals($_SERVER);
-                        }
-                    };
-                });
-            }
-        });
+    //             $app->addSingleton(HttpFactory::class, function () {
+    //                 return new class extends DiactorosHttpFactory {
+    //                     public function createRequestFromGlobals(): ServerRequestInterface
+    //                     {
+    //                         return (new ServerRequestFactory())->fromGlobals($_SERVER);
+    //                     }
+    //                 };
+    //             });
+    //         }
+    //     });
 
-        return $app;
-    }
+    //     return $app;
+    // }
 
-    /**
-     * @SuppressWarnings(PHPMD)
-     */
-    public static function requestDFactory(string $path = ''): ServerRequestInterface
-    {
-        $factory = new class extends DiactorosHttpFactory {
-            public string $path = '';
+    // /**
+    //  * @SuppressWarnings(PHPMD)
+    //  */
+    // public static function requestDFactory(string $path = ''): ServerRequestInterface
+    // {
+    //     $factory = new class extends DiactorosHttpFactory {
+    //         public string $path = '';
 
-            public function createRequestFromGlobals(): ServerRequestInterface
-            {
-                $server = $_SERVER;
-                $server['REQUEST_URI'] = $this->path;
+    //         public function createRequestFromGlobals(): ServerRequestInterface
+    //         {
+    //             $server = $_SERVER;
+    //             $server['REQUEST_URI'] = $this->path;
 
-                return (new ServerRequestFactory())->fromGlobals($server);
-            }
-        };
+    //             return (new ServerRequestFactory())->fromGlobals($server);
+    //         }
+    //     };
 
-        $factory->path = $path;
+    //     $factory->path = $path;
 
-        return $factory->createRequestFromGlobals();
-    }
+    //     return $factory->createRequestFromGlobals();
+    // }
 
-    public static function responseFactory(int $code = 200, string $reasonPhrase = ''): ResponseInterface
-    {
-        return (new DiactorosHttpFactory())->createResponse($code, $reasonPhrase);
-    }
+    // public static function responseFactory(int $code = 200, string $reasonPhrase = ''): ResponseInterface
+    // {
+    //     return (new DiactorosHttpFactory())->createResponse($code, $reasonPhrase);
+    // }
 
-    public static function streamFactory(string $content = ''): StreamInterface
-    {
-        return (new DiactorosHttpFactory())->createStream($content);
-    }
+    // public static function streamFactory(string $content = ''): StreamInterface
+    // {
+    //     return (new DiactorosHttpFactory())->createStream($content);
+    // }
 
-    public static function uploadedFileFactory(
-        StreamInterface $stream,
-        ?int $size = null,
-        int $error = UPLOAD_ERR_OK,
-        ?string $clientFilename = null,
-        ?string $clientMediaType = null
-    ): UploadedFileInterface {
-        return (new DiactorosHttpFactory())->createUploadedFile(
-            $stream,
-            $size,
-            $error,
-            $clientFilename,
-            $clientMediaType
-        );
-    }
+    // public static function uploadedFileFactory(
+    //     StreamInterface $stream,
+    //     ?int $size = null,
+    //     int $error = UPLOAD_ERR_OK,
+    //     ?string $clientFilename = null,
+    //     ?string $clientMediaType = null
+    // ): UploadedFileInterface {
+    //     return (new DiactorosHttpFactory())->createUploadedFile(
+    //         $stream,
+    //         $size,
+    //         $error,
+    //         $clientFilename,
+    //         $clientMediaType
+    //     );
+    // }
 
-    public static function uriFactory(string $path = ''): UriInterface
-    {
-        return (new DiactorosHttpFactory())->createUri($path);
-    }
+    // public static function uriFactory(string $path = ''): UriInterface
+    // {
+    //     return (new DiactorosHttpFactory())->createUri($path);
+    // }
 }

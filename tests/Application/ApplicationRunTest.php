@@ -222,7 +222,10 @@ class ApplicationRunTest extends TestCase
 
         $this->assertInstanceOf(Application::class, $app->make(Application::class));
         $this->assertSame(HttpStatus::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
-        $this->assertSame('Error exception', (string)$response->getBody());
+        $this->assertStringContainsString(
+            'Error: Error exception on file',
+            (string)$response->getBody()
+        );
     }
 
     /**
@@ -255,6 +258,9 @@ class ApplicationRunTest extends TestCase
 
         $this->assertInstanceOf(Application::class, $app->make(Application::class));
         $this->assertSame(HttpStatus::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
-        $this->assertSame('Error triggered', (string)$response->getBody());
+        $this->assertStringContainsString(
+            'Error: Error triggered on file',
+            (string)$response->getBody()
+        );
     }
 }

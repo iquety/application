@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Iquety\Application\AppEngine\FrontController;
 
-use RuntimeException;
-
 class CommandHandler
 {
-    private string $currentCommand = '';
-
-    private string $currentModule = 'all';
-
-    private array $currentParams = [];
-    
     /** @var array<string,string> */
     private array $namespaceList = [];
 
-    private bool $notFound = true;
+    /** @var array<int,string> */
+    private array $pathNodes = [];
+
+    private string $rootCommand = '';
+
+    public function setRootCommand(string $commandIdentifier): void
+    {
+        $this->rootCommand = $commandIdentifier;
+    }
 
     public function addNamespace(string $moduleIdentifier, string $commandsNamespace): void
     {
@@ -29,98 +29,104 @@ class CommandHandler
         return $this->namespaceList;
     }
     
-    /** Obtém o comando atual */
-    public function action(): string
-    {
-        return $this->currentCommand . '::execute';
-    }
-
-    /** Obtém o módulo do comando atual */
-    public function module(): string
-    {
-        return $this->currentModule;
-    }
-
-    /** Obtém o módulo do comando atual */
-    public function params(): array
-    {
-        return $this->currentParams;
-    }
-
-    public function commandNotFound(): bool
-    {
-        return $this->notFound;
-    }
-
-    public function process(string $method, string $path): void
+    /**
+     * Devolve a lista de possíveis comandos
+     * @return array<int,array<string,mixed>>
+     */
+    public function process(string $path): array
     {
         if ($this->namespaces() === []) {
-            throw new RuntimeException(
-                'This bootstrap has no directories registered as command source'
-            );
+            return [];
         }
 
-        $pathNodes = explode('/', trim($path, '/'));
+        $path = $this->sanitizePath($path);
 
-        $amountNodes = count($pathNodes);
+        if ($path === '') {
+            return [];
+        }
 
+        $this->pathNodes = $this->extractPathNodes($path);
+
+        return $this->resolvePossibilities();
+    }
+
+    private function sanitizePath(string $path): string
+    {
+        $info = parse_url(trim($path, '/'));
+
+        if (isset($info['path']) === false) {
+            return '';
+        }
+
+        return trim($info['path'], '/');
+    }
+
+    private function extractPathNodes(string $path): array
+    {
+        $pathNodes = explode('/', $path);
+
+        return $pathNodes[0] === "" ? [] : $pathNodes;
+    }
+
+    /** @return array<int,CommandPossibility> */
+    private function resolvePossibilities(): array
+    {
         $potentialCommands = [];
-        foreach($this->namespaces() as $moduleIdentifier => $namespace){
-            
-            for ($x = 0; $x < $amountNodes; $x++) {
-                $name = $this->makeCommandName($namespace, $pathNodes, 1, $x);
 
-                $potentialCommands[] = [
-                    'module' => $moduleIdentifier,
-                    'class' => $name
-                ];
+        $amountNodes = count($this->pathNodes);
+
+        foreach($this->namespaces() as $moduleIdentifier => $namespace){
+            for ($x = 0; $x < $amountNodes; $x++) {
+                $potentialCommands[] = 
+                    $this->makePossibility($moduleIdentifier, $namespace, $amountNodes, 1, $x);
             }
     
             for ($x = 0; $x < $amountNodes-1; $x++) {
-                $name = $this->makeCommandName($namespace, $pathNodes, 2, $x);
-
-                $potentialCommands[] = [
-                    'module' => $moduleIdentifier,
-                    'class' => $name
-                ];
+                $potentialCommands[] = 
+                    $this->makePossibility($moduleIdentifier, $namespace, $amountNodes, 2, $x);
             }
         }
 
-        $this->resolveCommand($potentialCommands);
-
-        // if (
-        //     $command !== null
-        //     && in_array($command->method(), [$method, Command::METHOD_ANY]) === true
-        // ) {
-        //     $this->currentCommand = $command;
-        //     $this->notFound = false;
-        // }
+        return $potentialCommands;
     }
 
-    private function resolveCommand(array $potentialCommands): void
+    /** @param array<int,CommandPossibility> $potentialCommands */
+    public function resolveCommand(array $potentialCommands): ?CommandDescriptor
     {
-        foreach($potentialCommands as $item) {
-            $moduleIdentifier = $item['module'];
+        if ($potentialCommands === [] && $this->rootCommand !== '') {
+            return new CommandDescriptor(
+                '',
+                $this->rootCommand,
+                []
+            );
+        }
 
-            $className = $item['class'];
-
-            if(class_exists($className) === true) {
-                $this->currentModule = $moduleIdentifier;
-                $this->currentCommand = $className;
-                $this->notFound = false;
-                break;
+        foreach($potentialCommands as $possibility) {
+            if (class_exists($possibility->callable()) === true) {
+                return new CommandDescriptor(
+                    $possibility->module(),
+                    $possibility->callable(),
+                    $possibility->params()
+                );
             }
         }
+
+        return null;
     }
 
-    private function makeCommandName(string $namespace, array $nodes, int $level, int $params = 0): string
-    {
-        $nodes = array_map(fn($value) => ucfirst($value), $nodes);
+    private function makePossibility(
+        string $moduleIdentifier,
+        string $namespace,
+        int $amountNodes,
+        int $level,
+        int $params = 0
+    ): CommandPossibility {
+        $nodes = $this->pathNodes;
 
-        $amountNodes = count($nodes);
         $level = $amountNodes < $level ? $amountNodes : $level;
 
         $directoryNodes = [];
+        $paramNodes = [];
 
         // extrai niveis de diretórios
         for ($x = 1; $x < $level; $x++) {
@@ -129,14 +135,45 @@ class CommandHandler
 
         // extrai parâmetros do final
         for ($x = 1; $x <= $params; $x++) {
-            array_pop($nodes);
+            $paramNodes[] = array_pop($nodes);
         }
+
+        $directoryNodes = array_map(fn($value) => ucfirst($value), $directoryNodes);
+        $nodes = array_map(fn($value) => ucfirst($value), $nodes);
 
         $base = implode('\\', $directoryNodes);
         $commandName = implode('', $nodes);
 
-        return $base === ''
+        $callable = $base === ''
             ? $namespace . '\\' . $commandName
             : $namespace . '\\' . $base . '\\' . $commandName;
+
+        // inverte a ordem  dos parâmetros
+        krsort($paramNodes);
+
+        // reindexa os itens
+        $paramNodes = array_values($paramNodes);
+
+        // ajusta os tipos
+
+        return new CommandPossibility($moduleIdentifier, $callable, $this->fixTypes($paramNodes));
+    }
+
+    private function fixTypes(array $params): array
+    {
+        foreach ($params as $index => $value) {
+            if (is_numeric($value) === false) {
+                continue;
+            }
+
+            if (is_int($value + 0) === true) {
+                $params[$index] = (int)$value;
+                continue;
+            }
+
+            $params[$index] = (float)$value;
+        }
+
+        return $params;
     }
 }

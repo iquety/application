@@ -54,25 +54,32 @@ class FcEngine extends AppEngine
             );
         }
 
-        $handler->process($request->getMethod(), $request->getUri()->getPath());
+        $possibiliyList = $handler->process($request->getUri()->getPath());
 
-        if ($handler->commandNotFound()) {
+        $command = $handler->resolveCommand($possibiliyList);
+
+        if ($command === null) {
             return null;
         }
 
-        
-            $module = $handler->module();
-            $action = $handler->action();
-            $params = $handler->params();
+        try {
+            $module = $command->module();
+            $action = $command->action();
+            $params = $command->params();
 
             $bootModuleDependencies($moduleList[$module]);
 
+            $this->container()->registerSingletonDependency(
+                Input::class,
+                fn() => new Input($params)
+            );
+
             $control = new InversionOfControl($this->container());
 
-            // TODO
-            // Impedir o uso de classes que não implementem Command
-            return $control->resolve($action, $params);
-        
+            return $control->resolveTo(Command::class, $action);
+        } catch (Throwable $exception) {
+            return $this->responseFactory()->serverErrorResponse($exception);
+        }
     }
 
     private function handler(): CommandHandler
