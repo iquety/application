@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\AppEngine\FrontController;
 
 use Iquety\Application\AppEngine\FrontController\CommandHandler;
-
 use Tests\AppEngine\FrontController\Support\FcBootstrapConcrete;
 use Tests\TestCase;
 
@@ -18,7 +17,7 @@ class HandlerResolveCommandTest extends TestCase
     public function processUnresolved(): void
     {
         $handler = new CommandHandler();
-        
+
         $handler->addNamespace(
             FcBootstrapConcrete::class,
             $this->extractNamespace(FcBootstrapConcrete::class, 'CommandsDir')
@@ -59,14 +58,14 @@ class HandlerResolveCommandTest extends TestCase
         return $list;
     }
 
-    /** 
+    /**
      * @test
      * @dataProvider commandsProvider
      */
     public function processCommand(string $path, string $commandSufix, array $params): void
     {
         $handler = new CommandHandler();
-        
+
         $handler->addNamespace(
             FcBootstrapConcrete::class,
             $this->extractNamespace(FcBootstrapConcrete::class, 'CommandsDir')

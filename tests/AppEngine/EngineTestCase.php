@@ -13,8 +13,8 @@ abstract class EngineTestCase extends TestCase
 {
     abstract protected function engineFactory(HttpFactory $httpFactory): AppEngine;
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider httpFactoryProvider
      */
     public function bootstrapWithoutRegisterInputs(string $httpFactoryContract): void
@@ -28,7 +28,8 @@ abstract class EngineTestCase extends TestCase
 
         $request = $this->requestFactory($httpFactory);
         $moduleList = [];
-        $bootModuleDependencies = function(){};
+        $bootModuleDependencies = function () {
+        };
 
         $response = $engine->execute($request, $moduleList, $bootModuleDependencies);
 

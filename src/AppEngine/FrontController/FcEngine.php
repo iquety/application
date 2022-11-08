@@ -16,6 +16,7 @@ use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 use Throwable;
 
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class FcEngine extends AppEngine
 {
     private ?CommandHandler $handler = null;
@@ -44,7 +45,7 @@ class FcEngine extends AppEngine
     public function execute(
         RequestInterface $request,
         array $moduleList,
-        Closure $bootModuleDependencies
+        Closure $bootDependencies
     ): ?ResponseInterface {
         $handler = $this->handler();
 
@@ -67,7 +68,7 @@ class FcEngine extends AppEngine
             $action = $command->action();
             $params = $command->params();
 
-            $bootModuleDependencies($moduleList[$module]);
+            $bootDependencies($moduleList[$module]);
 
             $this->container()->registerSingletonDependency(
                 Input::class,

@@ -77,14 +77,14 @@ class HttpStatusTest extends TestCase
         ];
     }
 
-    /** 
+    /**
      * @test
      * @dataProvider statusProvider
      */
     public function reasons(int $statusCode, string $constantName, string $reason): void
     {
         $this->assertTrue(defined(sprintf('%s::%s', HttpStatus::class, $constantName)));
-        
+
         $this->assertSame($reason, HttpStatus::reason($statusCode));
     }
 

@@ -15,7 +15,7 @@ use Tests\TestCase;
 class HandlerPossibilitiesTest extends TestCase
 {
     public function addPossibility(
-        array & $list,
+        array &$list,
         string $path,
         array $commandPossibilities
     ): void {
@@ -32,7 +32,7 @@ class HandlerPossibilitiesTest extends TestCase
 
         $list[$path] = [$path, $possibilityList];
     }
-    
+
     public function possibilitiesProvider(): array
     {
         $list = [];
@@ -131,7 +131,7 @@ class HandlerPossibilitiesTest extends TestCase
         array $commandPossibilities
     ): void {
         $handler = new CommandHandler();
-        
+
         $handler->addNamespace(
             FcBootstrapConcrete::class,
             $this->extractNamespace(FcBootstrapConcrete::class, 'CommandsDir')
@@ -144,7 +144,7 @@ class HandlerPossibilitiesTest extends TestCase
         // certifica que o teste está cobrindo todas as possibilidades
         $this->assertCount($amount, $resultPossibilities);
 
-        for($index = 0; $index < $amount; $index++) {
+        for ($index = 0; $index < $amount; $index++) {
             /** @var CommandPossibility */
             $processedPossibility = $resultPossibilities[$index];
             $testPossibility = $commandPossibilities[$index];

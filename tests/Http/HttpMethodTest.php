@@ -33,4 +33,3 @@ class HttpMethodTest extends TestCase
         ], HttpMethod::all());
     }
 }
-

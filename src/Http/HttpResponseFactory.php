@@ -51,6 +51,7 @@ class HttpResponseFactory
         return $this->rawResponse($message, HttpStatus::INTERNAL_SERVER_ERROR);
     }
 
+    /** @SuppressWarnings(PHPMD.StaticAccess) */
     private function rawResponse(
         string $content = '',
         int $status = HttpStatus::OK,

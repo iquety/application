@@ -32,8 +32,8 @@ class MvcOnlyForMethodTest extends TestCase
 
         $list = [];
 
-        foreach($factoryList as $name => $row) {
-            foreach($methodList as $method) {
+        foreach ($factoryList as $name => $row) {
+            foreach ($methodList as $method) {
                 $list["$name with method $method"] = [ $row[0], $method ];
             }
         }
@@ -41,8 +41,8 @@ class MvcOnlyForMethodTest extends TestCase
         return $list;
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider controllerCasesProvider
      */
     public function controllerOk(string $httpFactoryContract, string $method): void
@@ -59,7 +59,7 @@ class MvcOnlyForMethodTest extends TestCase
 
         /** @var InvocationMocker */
         $bootstrap = $this->createMock(MvcBootstrap::class);
-        $bootstrap->method('bootRoutes')->will($this->returnCallback(function(Router $router){
+        $bootstrap->method('bootRoutes')->will($this->returnCallback(function (Router $router) {
             $router->any('/user/:id')
                 ->usingAction(UserControllerForMethod::class . '::create');
         }));
@@ -70,7 +70,8 @@ class MvcOnlyForMethodTest extends TestCase
         $response = $engine->execute(
             $request,
             [$bootstrap::class => &$bootstrap],
-            function(MvcBootstrap $bootstrap) {}
+            function (MvcBootstrap $bootstrap) {
+            }
         );
 
         $this->assertStringContainsString(
@@ -80,8 +81,8 @@ class MvcOnlyForMethodTest extends TestCase
         $this->assertEquals(HttpStatus::OK, $response->getStatusCode());
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider controllerCasesProvider
      */
     public function commandMethodAnyOk(string $httpFactoryContract, string $method): void
@@ -98,7 +99,7 @@ class MvcOnlyForMethodTest extends TestCase
 
         /** @var InvocationMocker */
         $bootstrap = $this->createMock(MvcBootstrap::class);
-        $bootstrap->method('bootRoutes')->will($this->returnCallback(function(Router $router){
+        $bootstrap->method('bootRoutes')->will($this->returnCallback(function (Router $router) {
             $router->any('/user/:id')
                 ->usingAction(UserControllerForMethod::class . '::create');
         }));
@@ -109,7 +110,8 @@ class MvcOnlyForMethodTest extends TestCase
         $response = $engine->execute(
             $request,
             [$bootstrap::class => &$bootstrap],
-            function(MvcBootstrap $bootstrap) {}
+            function (MvcBootstrap $bootstrap) {
+            }
         );
 
         $this->assertStringContainsString(
@@ -120,8 +122,8 @@ class MvcOnlyForMethodTest extends TestCase
         $this->assertEquals(HttpStatus::OK, $response->getStatusCode());
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider controllerCasesProvider
      */
     public function commandMethodBlocked(string $httpFactoryContract, string $method): void
@@ -144,7 +146,7 @@ class MvcOnlyForMethodTest extends TestCase
 
         /** @var InvocationMocker */
         $bootstrap = $this->createMock(MvcBootstrap::class);
-        $bootstrap->method('bootRoutes')->will($this->returnCallback(function(Router $router){
+        $bootstrap->method('bootRoutes')->will($this->returnCallback(function (Router $router) {
             $router->any('/user/:id')
                 ->usingAction(UserControllerForMethod::class . '::create');
         }));
@@ -155,14 +157,15 @@ class MvcOnlyForMethodTest extends TestCase
         $response = $engine->execute(
             $request,
             [$bootstrap::class => &$bootstrap],
-            function(MvcBootstrap $bootstrap) {}
+            function (MvcBootstrap $bootstrap) {
+            }
         );
 
         $this->assertNull($response);
     }
 
-    // /** 
-    //  * @test 
+    // /**
+    //  * @test
     //  * @dataProvider httpFactoryProvider
     //  */
     // public function commandWithFactory(string $httpFactoryContract): void

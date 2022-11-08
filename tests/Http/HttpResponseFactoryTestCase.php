@@ -46,7 +46,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
         return $list;
     }
 
-    /** 
+    /**
      * @test
      * @dataProvider contentProvider
      */

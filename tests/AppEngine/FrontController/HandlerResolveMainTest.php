@@ -18,7 +18,7 @@ class HandlerResolveMainTest extends TestCase
     public function processMainUnresolved(): void
     {
         $handler = new CommandHandler();
-        
+
         $handler->addNamespace(
             FcBootstrapConcrete::class,
             $this->extractNamespace(FcBootstrapConcrete::class, 'CommandsDir')
@@ -40,14 +40,14 @@ class HandlerResolveMainTest extends TestCase
         ];
     }
 
-    /** 
+    /**
      * @test
      * @dataProvider mainPathProvider
      */
     public function processMainCommand(string $path, array $params): void
     {
         $handler = new CommandHandler();
-        
+
         $handler->addNamespace(
             FcBootstrapConcrete::class,
             $this->extractNamespace(FcBootstrapConcrete::class, 'CommandsDir')
@@ -79,14 +79,14 @@ class HandlerResolveMainTest extends TestCase
         ];
     }
 
-    /** 
+    /**
      * @test
      * @dataProvider invalideMainPathProvider
      */
     public function processInvalidMainCommand(string $path): void
     {
         $handler = new CommandHandler();
-        
+
         $handler->addNamespace(
             FcBootstrapConcrete::class,
             $this->extractNamespace(FcBootstrapConcrete::class, 'CommandsDir')

@@ -36,8 +36,8 @@ class FcOnlyForMethodTest extends TestCase
 
         $list = [];
 
-        foreach($factoryList as $name => $row) {
-            foreach($methodList as $method) {
+        foreach ($factoryList as $name => $row) {
+            foreach ($methodList as $method) {
                 $list["$name with method $method"] = [ $row[0], $method ];
             }
         }
@@ -45,8 +45,8 @@ class FcOnlyForMethodTest extends TestCase
         return $list;
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider commandCasesProvider
      */
     public function commandOk(string $httpFactoryContract, string $method): void
@@ -68,7 +68,8 @@ class FcOnlyForMethodTest extends TestCase
         $response = $engine->execute(
             $request,
             [$bootstrap::class => &$bootstrap],
-            function(FcBootstrap $bootstrap) {}
+            function (FcBootstrap $bootstrap) {
+            }
         );
 
         $this->assertEquals(HttpStatus::OK, $response->getStatusCode());
@@ -78,8 +79,8 @@ class FcOnlyForMethodTest extends TestCase
         );
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider commandCasesProvider
      */
     public function commandMethodAnyOk(string $httpFactoryContract, string $method): void
@@ -101,7 +102,8 @@ class FcOnlyForMethodTest extends TestCase
         $response = $engine->execute(
             $request,
             [$bootstrap::class => &$bootstrap],
-            function(FcBootstrap $bootstrap) {}
+            function (FcBootstrap $bootstrap) {
+            }
         );
 
         $this->assertEquals(HttpStatus::OK, $response->getStatusCode());
@@ -111,8 +113,8 @@ class FcOnlyForMethodTest extends TestCase
         );
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider commandCasesProvider
      */
     public function commandMethodBlocked(string $httpFactoryContract, string $method): void
@@ -140,7 +142,8 @@ class FcOnlyForMethodTest extends TestCase
         $response = $engine->execute(
             $request,
             [$bootstrap::class => &$bootstrap],
-            function(FcBootstrap $bootstrap) {}
+            function (FcBootstrap $bootstrap) {
+            }
         );
 
         $this->assertNull($response);

@@ -18,7 +18,7 @@ class HandlerPreparationTest extends TestCase
     public function withoutNamespaces(): void
     {
         $handler = new CommandHandler();
-        
+
         $this->assertEquals([], $handler->process(''));
     }
 
@@ -43,14 +43,14 @@ class HandlerPreparationTest extends TestCase
         ];
     }
 
-    /** 
+    /**
      * @test
      * @dataProvider sanitizeEmptyPathProvider
      */
     public function sanitizeEmptyPath(string $path): void
     {
         $handler = new CommandHandler();
-        
+
         $handler->addNamespace(
             FcBootstrapConcrete::class,
             $this->extractNamespace(FcBootstrapConcrete::class, 'CommandsDir')
@@ -91,7 +91,7 @@ class HandlerPreparationTest extends TestCase
     public function sanitizePath(string $path): void
     {
         $handler = new CommandHandler();
-        
+
         $handler->addNamespace(
             FcBootstrapConcrete::class,
             $this->extractNamespace(FcBootstrapConcrete::class, 'CommandsDir')

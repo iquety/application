@@ -17,8 +17,8 @@ use Tests\TestCase;
 
 class MvcOnlyBootTest extends TestCase
 {
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider httpFactoryProvider
      */
     public function bootException(string $httpFactoryContract): void
@@ -33,7 +33,7 @@ class MvcOnlyBootTest extends TestCase
 
         /** @var Bootstrap $bootstrap */
         $bootstrap = $this->createMock(Bootstrap::class);
-        
+
         $engine->boot($bootstrap);
     }
 }

@@ -19,7 +19,7 @@ class UserControllerForMethod extends Controller
     public function create(Input $input, int $id): ResponseInterface
     {
         $this->forMethod($this->make('forMethod'));
-        
+
         $message = 'Resposta do controlador para id ' . $id . ' input ' . $input;
 
         $factory = new DiactorosHttpFactory();

@@ -17,6 +17,7 @@ use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 use Throwable;
 
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class MvcEngine extends AppEngine
 {
     private ?Router $router = null;
@@ -32,16 +33,15 @@ class MvcEngine extends AppEngine
         $moduleIdentifier = $bootstrap::class;
 
         $this->router()->forModule($moduleIdentifier);
-        
+
         $bootstrap->bootRoutes($this->router());
     }
 
     public function execute(
         RequestInterface $request,
         array $moduleList,
-        Closure $bootModuleDependencies
-    ): ?ResponseInterface
-    {
+        Closure $bootDependencies
+    ): ?ResponseInterface {
         $router = $this->router();
 
         if ($router->routes() === []) {
@@ -68,7 +68,7 @@ class MvcEngine extends AppEngine
                 throw new RuntimeException('The route found does not have a action');
             }
 
-            $bootModuleDependencies($moduleList[$module]);
+            $bootDependencies($moduleList[$module]);
 
             if ($action instanceof Closure) {
                 return $this->resolveClosure($action);
@@ -78,7 +78,7 @@ class MvcEngine extends AppEngine
                 Input::class,
                 fn() => new Input($params)
             );
-            
+
             $control = new InversionOfControl($this->container());
 
             try {
@@ -127,4 +127,3 @@ class MvcEngine extends AppEngine
         return $this->router;
     }
 }
-

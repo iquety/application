@@ -16,8 +16,8 @@ use Tests\TestCase;
 
 class FcOnlyBootTest extends TestCase
 {
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider httpFactoryProvider
      */
     public function bootInstanceException(string $httpFactoryContract): void
@@ -32,12 +32,12 @@ class FcOnlyBootTest extends TestCase
 
         /** @var Bootstrap $bootstrap */
         $bootstrap = $this->createMock(Bootstrap::class);
-        
+
         $engine->boot($bootstrap);
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider httpFactoryProvider
      */
     public function bootNamespace(string $httpFactoryContract): void
@@ -58,8 +58,8 @@ class FcOnlyBootTest extends TestCase
         $this->assertEquals($commandsNamespace, $namespaces[$bootstrapNamespace]);
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider httpFactoryProvider
      */
     public function bootChangedCommandsDir(string $httpFactoryContract): void
@@ -79,8 +79,8 @@ class FcOnlyBootTest extends TestCase
         $this->assertEquals($commandsNamespace, $namespaces[$bootstrapNamespace]);
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider httpFactoryProvider
      */
     public function bootCommandsDirWithoutNamespace(string $httpFactoryContract): void
@@ -91,7 +91,7 @@ class FcOnlyBootTest extends TestCase
         /** @var InvocationMocker */
         $bootstrap = $this->createMock(FcBootstrap::class);
         $bootstrap->method('commandsDirectory')->willReturn('AlterCommands');
-        
+
         /** @var FcBootstrap $bootstrap */
         $engine->boot($bootstrap);
 

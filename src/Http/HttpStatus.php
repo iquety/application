@@ -70,11 +70,11 @@ class HttpStatus
     public const LOOP_DETECTED = 508;                                               // RFC5842
     public const NOT_EXTENDED = 510;                                                // RFC2774
     public const NETWORK_AUTHENTICATION_REQUIRED = 511;                             // RFC6585
-    
+
     /**
      * Tabela de tradução para códigod de Status HTTP.
      *
-     * {@link https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml Hypertext Transfer Protocol (HTTP) Status Code Registry}
+     * @link https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
      * (last updated 2022-11-02).
      *
      * Os códigos são definidos em RFC2616.
@@ -101,7 +101,7 @@ class HttpStatus
         304 => 'Not Modified',
         305 => 'Use Proxy',
         // Depreciado https://www.rfc-editor.org/rfc/rfc2616#section-10.3.7
-        // 306 => 'Switch Proxy', 
+        // 306 => 'Switch Proxy',
         307 => 'Temporary Redirect',
         308 => 'Permanent Redirect',    // RFC7238
         400 => 'Bad Request',

@@ -19,7 +19,7 @@ abstract class AppEngine
     {
         $this->container = $container;
     }
-    
+
     protected function container(): Container
     {
         return $this->container;
@@ -35,6 +35,6 @@ abstract class AppEngine
     abstract public function execute(
         RequestInterface $request,
         array $moduleList,
-        Closure $bootModuleDependencies
+        Closure $bootDependencies
     ): ?ResponseInterface;
 }

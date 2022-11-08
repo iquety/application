@@ -28,7 +28,7 @@ class CommandHandler
     {
         return $this->namespaceList;
     }
-    
+
     /**
      * Devolve a lista de possíveis comandos
      * @return array<int,array<string,mixed>>
@@ -75,14 +75,14 @@ class CommandHandler
 
         $amountNodes = count($this->pathNodes);
 
-        foreach($this->namespaces() as $moduleIdentifier => $namespace){
+        foreach ($this->namespaces() as $moduleIdentifier => $namespace) {
             for ($x = 0; $x < $amountNodes; $x++) {
-                $potentialCommands[] = 
+                $potentialCommands[] =
                     $this->makePossibility($moduleIdentifier, $namespace, $amountNodes, 1, $x);
             }
-    
-            for ($x = 0; $x < $amountNodes-1; $x++) {
-                $potentialCommands[] = 
+
+            for ($x = 0; $x < $amountNodes - 1; $x++) {
+                $potentialCommands[] =
                     $this->makePossibility($moduleIdentifier, $namespace, $amountNodes, 2, $x);
             }
         }
@@ -101,7 +101,7 @@ class CommandHandler
             );
         }
 
-        foreach($potentialCommands as $possibility) {
+        foreach ($potentialCommands as $possibility) {
             if (class_exists($possibility->callable()) === true) {
                 return new CommandDescriptor(
                     $possibility->module(),

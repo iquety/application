@@ -23,7 +23,7 @@ class HandlerNamespaceTest extends TestCase
             FcBootstrapConcrete::class,
             $this->extractNamespace(FcBootstrapConcrete::class, 'Commands')
         );
-        
+
         $this->assertCount(1, $handler->namespaces());
         $this->assertEquals([
             FcBootstrapConcrete::class => $this->extractNamespace(FcBootstrapConcrete::class, 'Commands'),

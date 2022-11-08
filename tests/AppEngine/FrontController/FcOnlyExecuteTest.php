@@ -16,8 +16,8 @@ class FcOnlyExecuteTest extends TestCase
     // RuntimeException: This bootstrap has no directories registered as command source
     // teste compartilhado em tests/AppEngine/EngineTestCase.php
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider httpFactoryProvider
      */
     public function commandNotFound(string $httpFactoryContract): void
@@ -33,8 +33,8 @@ class FcOnlyExecuteTest extends TestCase
         $this->assertNull($response);
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider httpFactoryProvider
      */
     public function commandInvalidContract(string $httpFactoryContract): void
@@ -50,7 +50,8 @@ class FcOnlyExecuteTest extends TestCase
         $response = $engine->execute(
             $request,
             [$bootstrap::class => &$bootstrap],
-            function(FcBootstrap $bootstrap) {}
+            function (FcBootstrap $bootstrap) {
+            }
         );
 
         $this->assertEquals(HttpStatus::INTERNAL_SERVER_ERROR, $response->getStatusCode());

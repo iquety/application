@@ -60,8 +60,7 @@ class ApplicationRunTest extends TestCase
 
         $app->bootEngine($this->createMock(AppEngine::class));
 
-        $app->bootApplication($this->appBootstrapFactory(function(Application $app){
-
+        $app->bootApplication($this->appBootstrapFactory(function (Application $app) {
         }));
 
         $app->run();
@@ -83,7 +82,7 @@ class ApplicationRunTest extends TestCase
 
         $app->bootEngine($this->createMock(AppEngine::class));
 
-        $app->bootApplication($this->appBootstrapFactory(function(Application $app){
+        $app->bootApplication($this->appBootstrapFactory(function (Application $app) {
             $app->addSingleton(Session::class, fn() => (object)[]);
         }));
 
@@ -102,7 +101,7 @@ class ApplicationRunTest extends TestCase
 
         $app->bootEngine($this->createMock(AppEngine::class));
 
-        $app->bootApplication($this->appBootstrapFactory(function(Application $app){
+        $app->bootApplication($this->appBootstrapFactory(function (Application $app) {
             $app->addSingleton(Session::class, MemorySession::class);
         }));
 
@@ -125,7 +124,7 @@ class ApplicationRunTest extends TestCase
 
         $app->bootEngine($this->createMock(AppEngine::class));
 
-        $app->bootApplication($this->appBootstrapFactory(function(Application $app){
+        $app->bootApplication($this->appBootstrapFactory(function (Application $app) {
             $app->addSingleton(Session::class, MemorySession::class);
             $app->addSingleton(HttpFactory::class, fn() => (object)[]);
         }));
@@ -154,7 +153,7 @@ class ApplicationRunTest extends TestCase
 
         $app->bootEngine($this->createMock(AppEngine::class));
 
-        $bootstrap = $this->appBootstrapFactory(function(Application $app) use ($httpFactory){
+        $bootstrap = $this->appBootstrapFactory(function (Application $app) use ($httpFactory) {
             $app->addSingleton(Session::class, MemorySession::class);
             $app->addSingleton(HttpFactory::class, $httpFactory);
         });
@@ -182,7 +181,7 @@ class ApplicationRunTest extends TestCase
         /** @var AppEngine $engine */
         $app->bootEngine($engine);
 
-        $bootstrap = $this->appBootstrapFactory(function(Application $app) use ($httpFactory){
+        $bootstrap = $this->appBootstrapFactory(function (Application $app) use ($httpFactory) {
             $app->addSingleton(Session::class, MemorySession::class);
             $app->addSingleton(HttpFactory::class, $httpFactory);
         });
@@ -211,7 +210,7 @@ class ApplicationRunTest extends TestCase
         /** @var AppEngine $engine */
         $app->bootEngine($engine);
 
-        $bootstrap = $this->appBootstrapFactory(function(Application $app) use ($httpFactory){
+        $bootstrap = $this->appBootstrapFactory(function (Application $app) use ($httpFactory) {
             $app->addSingleton(Session::class, MemorySession::class);
             $app->addSingleton(HttpFactory::class, $httpFactory);
         });
@@ -236,7 +235,7 @@ class ApplicationRunTest extends TestCase
     {
         $app = Application::instance();
 
-        $callback = function(){
+        $callback = function () {
             trigger_error('Error triggered');
         };
 
@@ -247,7 +246,7 @@ class ApplicationRunTest extends TestCase
         /** @var AppEngine $engine */
         $app->bootEngine($engine);
 
-        $bootstrap = $this->appBootstrapFactory(function(Application $app) use ($httpFactory){
+        $bootstrap = $this->appBootstrapFactory(function (Application $app) use ($httpFactory) {
             $app->addSingleton(Session::class, MemorySession::class);
             $app->addSingleton(HttpFactory::class, $httpFactory);
         });

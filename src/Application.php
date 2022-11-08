@@ -26,7 +26,7 @@ class Application
 
     private Container $container;
 
-    private static ?Application $instance = null;    
+    private static ?Application $instance = null;
 
     private ?Bootstrap $mainBootstrap = null;
 
@@ -96,6 +96,7 @@ class Application
         static::$instance = new self();
     }
 
+    /** @SuppressWarnings(PHPMD.StaticAccess) */
     public function run(): ResponseInterface
     {
         if ($this->appEngineList === []) {
@@ -129,7 +130,6 @@ class Application
             return $this->executeAppEngine(
                 $this->make(ServerRequestInterface::class)
             );
-
         } catch (Throwable $exception) {
             return $this->make(HttpResponseFactory::class)->serverErrorResponse($exception);
         }
@@ -137,7 +137,7 @@ class Application
 
     private function bootIntoEngines(Bootstrap $bootstrap): void
     {
-        foreach($this->appEngineList as $engine) {
+        foreach ($this->appEngineList as $engine) {
             $engine->useContainer($this->container());
             $engine->boot($bootstrap);
         }
@@ -145,7 +145,7 @@ class Application
 
     private function executeAppEngine(ServerRequestInterface $request): ResponseInterface
     {
-        foreach($this->appEngineList as $engine) {
+        foreach ($this->appEngineList as $engine) {
             $response = $engine->execute(
                 $request,
                 $this->moduleList,

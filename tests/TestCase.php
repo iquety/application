@@ -43,8 +43,7 @@ abstract class TestCase extends FrameworkTestCase
         HttpFactory $httpFactory,
         string $path = '',
         string $method = HttpMethod::ANY
-    ): ServerRequestInterface
-    {
+    ): ServerRequestInterface {
         $request = $httpFactory->createRequestFromGlobals();
 
         if ($path === '') {
@@ -114,7 +113,8 @@ abstract class TestCase extends FrameworkTestCase
             }
         };
 
-        $bootstrap->setupDependencies($dependencies ?? function(){});
+        $bootstrap->setupDependencies($dependencies ?? function () {
+        });
 
         return $bootstrap;
     }
@@ -124,7 +124,7 @@ abstract class TestCase extends FrameworkTestCase
     protected function extractNamespace(string $signature, string $addNode = ''): string
     {
         $namespace = (new ReflectionClass($signature))->getNamespaceName();
-        
+
         if ($addNode !== '') {
             $namespace .= "\\$addNode";
         }

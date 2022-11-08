@@ -12,12 +12,12 @@ class CommandDescriptor
         private array $params
     ) {
     }
-    
+
     public function action(): string
     {
         return $this->callable . '::execute';
     }
-    
+
     public function module(): string
     {
         return $this->moduleIdentifier;

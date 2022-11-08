@@ -12,7 +12,7 @@ class CommandPossibility
         private array $params = []
     ) {
     }
-    
+
     public function module(): string
     {
         return $this->moduleIdentifier;
@@ -22,7 +22,7 @@ class CommandPossibility
     {
         return $this->callable;
     }
-    
+
     public function params(): array
     {
         return $this->params;

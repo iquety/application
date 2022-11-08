@@ -14,7 +14,7 @@ class Input
     {
         $this->params = $params;
 
-        foreach(array_keys($params) as $index) {
+        foreach (array_keys($params) as $index) {
             $this->indexParams[] = $index;
         }
     }
@@ -30,10 +30,10 @@ class Input
         if (isset($this->indexParams[$index]) === false) {
             return null;
         }
-        
+
         $index = $this->indexParams[$index];
 
-        return $this->params[$index] ?? null; 
+        return $this->params[$index] ?? null;
     }
 
     public function __toString(): string

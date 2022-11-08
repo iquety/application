@@ -21,8 +21,8 @@ class MvcOnlyExecuteTest extends TestCase
     // RuntimeException: This bootstrap has no routes registered
     // teste compartilhado em tests/AppEngine/EngineTestCase.php
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider httpFactoryProvider
      */
     public function routeNotFound(string $httpFactoryContract): void
@@ -33,10 +33,10 @@ class MvcOnlyExecuteTest extends TestCase
 
         /** @var InvocationMocker */
         $bootstrap = $this->createMock(MvcBootstrap::class);
-        $bootstrap->method('bootRoutes')->will($this->returnCallback(function(Router $router){
+        $bootstrap->method('bootRoutes')->will($this->returnCallback(function (Router $router) {
             $router->get('/user/:id');
         }));
-        
+
         /** @var MvcBootstrap $bootstrap */
         $engine->boot($bootstrap);
 
@@ -45,8 +45,8 @@ class MvcOnlyExecuteTest extends TestCase
         $this->assertNull($response);
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider httpFactoryProvider
      */
     public function routeNoAction(string $httpFactoryContract): void
@@ -57,10 +57,10 @@ class MvcOnlyExecuteTest extends TestCase
 
         /** @var InvocationMocker */
         $bootstrap = $this->createMock(MvcBootstrap::class);
-        $bootstrap->method('bootRoutes')->will($this->returnCallback(function(Router $router){
+        $bootstrap->method('bootRoutes')->will($this->returnCallback(function (Router $router) {
             $router->get('/user/:id');
         }));
-        
+
         /** @var MvcBootstrap $bootstrap */
         $engine->boot($bootstrap);
 
@@ -73,8 +73,8 @@ class MvcOnlyExecuteTest extends TestCase
         );
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider httpFactoryProvider
      */
     public function bootModuleDependencies(string $httpFactoryContract): void
@@ -85,7 +85,7 @@ class MvcOnlyExecuteTest extends TestCase
 
         /** @var InvocationMocker */
         $bootstrap = $this->createMock(MvcBootstrap::class);
-        $bootstrap->method('bootRoutes')->will($this->returnCallback(function(Router $router){
+        $bootstrap->method('bootRoutes')->will($this->returnCallback(function (Router $router) {
             $router->get('/user/:id')
                 ->usingAction(fn() => 'serve pra nada neste teste');
         }));
@@ -96,7 +96,7 @@ class MvcOnlyExecuteTest extends TestCase
         $response = $engine->execute(
             $request,
             [$bootstrap::class => &$bootstrap],
-            function(MvcBootstrap $bootstrap) {
+            function (MvcBootstrap $bootstrap) {
                 throw new Exception(
                     'Configuração das dependências efetuada'
                 );
@@ -110,8 +110,8 @@ class MvcOnlyExecuteTest extends TestCase
         );
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider httpFactoryProvider
      */
     public function controllerInvalidContract(string $httpFactoryContract): void
@@ -122,7 +122,7 @@ class MvcOnlyExecuteTest extends TestCase
 
         /** @var InvocationMocker */
         $bootstrap = $this->createMock(MvcBootstrap::class);
-        $bootstrap->method('bootRoutes')->will($this->returnCallback(function(Router $router){
+        $bootstrap->method('bootRoutes')->will($this->returnCallback(function (Router $router) {
             $router->get('/user/:id')
                 ->usingAction(NoContractController::class . '::create');
         }));
@@ -133,7 +133,8 @@ class MvcOnlyExecuteTest extends TestCase
         $response = $engine->execute(
             $request,
             [$bootstrap::class => &$bootstrap],
-            function(MvcBootstrap $bootstrap) {}
+            function (MvcBootstrap $bootstrap) {
+            }
         );
 
         $this->assertEquals(HttpStatus::INTERNAL_SERVER_ERROR, $response->getStatusCode());
@@ -143,8 +144,8 @@ class MvcOnlyExecuteTest extends TestCase
         );
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider httpFactoryProvider
      */
     public function controllerOk(string $httpFactoryContract): void
@@ -155,7 +156,7 @@ class MvcOnlyExecuteTest extends TestCase
 
         /** @var InvocationMocker */
         $bootstrap = $this->createMock(MvcBootstrap::class);
-        $bootstrap->method('bootRoutes')->will($this->returnCallback(function(Router $router){
+        $bootstrap->method('bootRoutes')->will($this->returnCallback(function (Router $router) {
             $router->get('/user/:id')
                 ->usingAction(UserController::class . '::create');
         }));
@@ -166,7 +167,8 @@ class MvcOnlyExecuteTest extends TestCase
         $response = $engine->execute(
             $request,
             [$bootstrap::class => &$bootstrap],
-            function(MvcBootstrap $bootstrap) {}
+            function (MvcBootstrap $bootstrap) {
+            }
         );
 
         $this->assertEquals(HttpStatus::OK, $response->getStatusCode());

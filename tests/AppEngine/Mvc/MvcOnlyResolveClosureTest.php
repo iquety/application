@@ -32,8 +32,8 @@ class MvcOnlyResolveClosureTest extends TestCase
 
         $list = [];
 
-        foreach($returnTypes as $index => $returnValue) {
-            foreach($httpFactories as $name => $contractValue) {
+        foreach ($returnTypes as $index => $returnValue) {
+            foreach ($httpFactories as $name => $contractValue) {
                 $label = $name . ' ' . $index;
 
                 $list[$label] = [$contractValue[0], $returnValue[0]];
@@ -43,8 +43,8 @@ class MvcOnlyResolveClosureTest extends TestCase
         return $list;
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider returnTypesProvider
      */
     public function executeResolveClosure(string $httpFactoryContract, mixed $returnType): void
@@ -53,7 +53,7 @@ class MvcOnlyResolveClosureTest extends TestCase
         $engine = $this->appEngineFactory($httpFactory, MvcEngine::class);
         $request = $this->requestFactory($httpFactory, 'user/42');
 
-        $callback = function(Router $router) use ($returnType){
+        $callback = function (Router $router) use ($returnType) {
             $router->get('/user/:id')
                 ->usingAction(fn() => $returnType);
         };
@@ -74,7 +74,7 @@ class MvcOnlyResolveClosureTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
-    /** 
+    /**
      * @test
      * @dataProvider httpFactoryProvider
      */
@@ -84,7 +84,7 @@ class MvcOnlyResolveClosureTest extends TestCase
         $engine = $this->appEngineFactory($httpFactory, MvcEngine::class);
         $request = $this->requestFactory($httpFactory, 'user/42');
 
-        $callback = function(Router $router){
+        $callback = function (Router $router) {
             $router->get('/user/:id')
                 ->usingAction(fn() => null);
         };
