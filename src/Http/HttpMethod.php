@@ -13,6 +13,7 @@ class HttpMethod
     public const POST = 'POST';
     public const PUT = 'PUT';
 
+    /** @return array<int,string> */
     public static function all(): array
     {
         return [

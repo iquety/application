@@ -15,7 +15,7 @@ class MemorySession implements Session
 
     public function __construct()
     {
-        static::$session = [ // @codeCoverageIgnore
+        static::$session = [ // @codeCoverageIgnore @phpstan-ignore-line
             'id' => microtime(),
             'name' => '',
             'data' => []
@@ -28,7 +28,7 @@ class MemorySession implements Session
      */
     public function start(string $identity = ''): void
     {
-        static::$session['id'] = $identity;
+        static::$session['id'] = $identity; // @phpstan-ignore-line
     }
 
     /** Verifica se a sessão já foi iniciada */
@@ -40,50 +40,50 @@ class MemorySession implements Session
     /** Devolve o ID da sessão */
     public function identity(): string
     {
-        return static::$session['id'];
+        return static::$session['id']; //@phpstan-ignore-line
     }
 
     /** Define o nome da sessão */
     public function setName(string $name): void
     {
-        static::$session['name'] = $name;
+        static::$session['name'] = $name; //@phpstan-ignore-line
     }
 
     /** Devolve o nome da sessão */
     public function name(): string
     {
-        return static::$session['name'];
+        return static::$session['name']; //@phpstan-ignore-line
     }
 
     /** Define um atributo */
     public function setParam(string $name, mixed $value): void
     {
-        static::$session['data'][$name] = $value;
+        static::$session['data'][$name] = $value; //@phpstan-ignore-line
     }
 
     /** Devolve o valor de um atributo */
     public function param(string $name, mixed $default = null): mixed
     {
-        return static::$session['data'][$name] ?? $default;
+        return static::$session['data'][$name] ?? $default; //@phpstan-ignore-line
     }
 
     /** Verifica se o atributo já foi definido */
     public function has(string $name): bool
     {
-        return isset(static::$session['data'][$name]);
+        return isset(static::$session['data'][$name]); //@phpstan-ignore-line
     }
 
     /** Devolve todos os atributos da sessão */
     public function all(): array
     {
-        return static::$session['data'];
+        return static::$session['data']; //@phpstan-ignore-line
     }
 
     /** Define vários atributos */
     public function replace(array $attributes): void
     {
         foreach ($attributes as $name => $value) {
-            static::$session['data'][$name] = $value;
+            static::$session['data'][$name] = $value; //@phpstan-ignore-line
         }
     }
 
@@ -94,7 +94,7 @@ class MemorySession implements Session
             return;
         }
 
-        unset(static::$session['data'][$name]);
+        unset(static::$session['data'][$name]); //@phpstan-ignore-line
     }
 
     /** Devolve o valor e remove o atributo ao mesmo tempo */
@@ -110,7 +110,7 @@ class MemorySession implements Session
     /** Limpa todos os atributos da sessão */
     public function clear(): void
     {
-        static::$session['data'] = [];
+        static::$session['data'] = []; //@phpstan-ignore-line
     }
 
     /**
@@ -123,7 +123,7 @@ class MemorySession implements Session
      */
     public function invalidate(int $lifetime = null): void
     {
-        static::$session['id'] = microtime();
-        static::$session['data'] = [];
+        static::$session['id'] = microtime(); //@phpstan-ignore-line
+        static::$session['data'] = []; //@phpstan-ignore-line
     }
 }

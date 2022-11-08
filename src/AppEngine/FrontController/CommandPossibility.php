@@ -6,6 +6,7 @@ namespace Iquety\Application\AppEngine\FrontController;
 
 class CommandPossibility
 {
+    /** @param array<int,string|int|float> $params */
     public function __construct(
         private string $moduleIdentifier,
         private string $callable,
@@ -23,6 +24,7 @@ class CommandPossibility
         return $this->callable;
     }
 
+    /** @return array<int,string|int|float> */
     public function params(): array
     {
         return $this->params;

@@ -11,6 +11,7 @@ use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\HttpMethod;
 use Iquety\Application\Http\HttpStatus;
 use Iquety\Routing\Router;
+use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
 use Psr\Http\Message\ServerRequestInterface;
 use Tests\AppEngine\Mvc\Support\Controllers\UserControllerForMethod;
 use Tests\TestCase;
@@ -23,7 +24,7 @@ class MvcOnlyForMethodTest extends TestCase
         Application::instance()->reset();
     }
 
-    /** @return array<string,array[int,mixed]> */
+    /** @return array<string,array<mixed>> */
     public function controllerCasesProvider(): array
     {
         $factoryList = $this->httpFactoryProvider();
@@ -78,9 +79,9 @@ class MvcOnlyForMethodTest extends TestCase
 
         $this->assertStringContainsString(
             'Resposta do controlador para id 42 input 42',
-            (string)$response->getBody()
+            (string)$response?->getBody()
         );
-        $this->assertEquals(HttpStatus::OK, $response->getStatusCode());
+        $this->assertEquals(HttpStatus::OK, $response?->getStatusCode());
     }
 
     /**
@@ -118,10 +119,10 @@ class MvcOnlyForMethodTest extends TestCase
 
         $this->assertStringContainsString(
             'Resposta do controlador para id 42 input 42',
-            (string)$response->getBody()
+            (string)$response?->getBody()
         );
 
-        $this->assertEquals(HttpStatus::OK, $response->getStatusCode());
+        $this->assertEquals(HttpStatus::OK, $response?->getStatusCode());
     }
 
     /**

@@ -6,6 +6,7 @@ namespace Iquety\Application\AppEngine\FrontController;
 
 class CommandDescriptor
 {
+    /** @param array<int,string|int|float> $params */
     public function __construct(
         private string $moduleIdentifier,
         private string $callable,
@@ -23,6 +24,7 @@ class CommandDescriptor
         return $this->moduleIdentifier;
     }
 
+    /** @return array<int,string|int|float> */
     public function params(): array
     {
         return $this->params;

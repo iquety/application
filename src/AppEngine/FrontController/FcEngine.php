@@ -42,6 +42,7 @@ class FcEngine extends AppEngine
         $this->handler()->addNamespace($moduleIdentifier, $namespace);
     }
 
+    /** @param array<string,Bootstrap> $moduleList */
     public function execute(
         RequestInterface $request,
         array $moduleList,

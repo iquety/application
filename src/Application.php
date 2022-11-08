@@ -16,12 +16,11 @@ use RuntimeException;
 use Throwable;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class Application
 {
-    /** @var array<Engine> */
+    /** @var array<AppEngine> */
     private array $appEngineList = [];
 
     private Container $container;
@@ -35,11 +34,11 @@ class Application
 
     public static function instance(): self
     {
-        if (static::$instance === null) {
-            static::$instance = new self();
+        if (static::$instance === null) { // @phpstan-ignore-line
+            static::$instance = new self(); // @phpstan-ignore-line
         }
 
-        return static::$instance;
+        return static::$instance; // @phpstan-ignore-line
     }
 
     private function __construct()
@@ -78,7 +77,7 @@ class Application
         return $this->container;
     }
 
-    /** @param array<int,mixed> $arguments */
+    /** @param mixed ...$arguments */
     public function make(...$arguments): mixed
     {
         if ($arguments === []) {
@@ -88,12 +87,15 @@ class Application
         /** @var string $identifier */
         $identifier = array_shift($arguments);
 
-        return $this->container()->getWithArguments((string)$identifier, $arguments);
+        return $this->container()->getWithArguments(
+            (string)$identifier,
+            array_values($arguments)
+        );
     }
 
     public function reset(): void
     {
-        static::$instance = new self();
+        static::$instance = new self(); // @phpstan-ignore-line
     }
 
     /** @SuppressWarnings(PHPMD.StaticAccess) */
@@ -121,7 +123,9 @@ class Application
             // para o ioc fazer uso da aplicação
             $this->addSingleton(Application::class, fn() => Application::instance());
 
-            $this->bootIntoEngines($this->mainBootstrap);
+            if ($this->mainBootstrap !== null) {
+                $this->bootIntoEngines($this->mainBootstrap);
+            }
 
             foreach ($this->moduleList as $bootstrap) {
                 $this->bootIntoEngines($bootstrap);

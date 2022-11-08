@@ -6,10 +6,13 @@ namespace Iquety\Application\AppEngine;
 
 class Input
 {
+    /** @var array<int|string,int|string|int|float> */
     private array $params = [];
 
+    /** @var array<int,int|string> */
     private array $indexParams = [];
 
+    /** @param array<int|string|int|float> $params */
     public function __construct(array $params)
     {
         $this->params = $params;

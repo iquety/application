@@ -9,7 +9,7 @@ use Iquety\Application\Application;
 use Iquety\Application\Bootstrap;
 use Iquety\Routing\Router;
 use stdClass;
-use Tests\Support\UserController;
+use Tests\AppEngine\Mvc\Support\Controllers\UserController;
 
 class ArticlesBootstrap implements Bootstrap
 {

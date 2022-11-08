@@ -28,8 +28,7 @@ abstract class EngineTestCase extends TestCase
 
         $request = $this->requestFactory($httpFactory);
         $moduleList = [];
-        $bootDependencies = function () {
-        };
+        $bootDependencies = fn() => null;
 
         $response = $engine->execute($request, $moduleList, $bootDependencies);
 

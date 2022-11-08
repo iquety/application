@@ -18,7 +18,7 @@
         "nyholm/psr7-server": "^1.0",
         "symfony/http-foundation": "^6.0",
         "phpunit/phpunit": "^9",
-        "phpstan/phpstan": "^0.12",
+        "phpstan/phpstan": "^1.8",
         "iquety/docmap": "dev-main",
         "iquety/injection": "dev-main",
         "iquety/routing": "dev-main",
@@ -60,8 +60,8 @@
             "phpcs --standard=PSR1,PSR12 src tests",
             "phpmd ./src ansi cleancode,codesize,unusedcode,naming,design,controversial",
             "phpmd ./tests ansi cleancode,codesize,unusedcode,naming,design,controversial",
-            "phpstan analyse --level=8 src",
-            "phpstan analyse --level=8 tests"
+            "phpstan analyse --level=8 --xdebug src",
+            "phpstan analyse --level=8 --xdebug tests"
         ]
     }
 }

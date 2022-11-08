@@ -34,6 +34,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
         $this->assertFalse($response->hasHeader('Content-type'));
     }
 
+    /** @return array<string,array<int|string>> */
     public function contentProvider(): array
     {
         $list = [];

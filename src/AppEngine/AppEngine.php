@@ -8,6 +8,7 @@ use Closure;
 use Iquety\Application\Bootstrap;
 use Iquety\Application\Http\HttpResponseFactory;
 use Iquety\Injection\Container;
+use OutOfBoundsException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -22,6 +23,12 @@ abstract class AppEngine
 
     protected function container(): Container
     {
+        if ($this->container === null) {
+            throw new OutOfBoundsException(
+                'The container was not made available with the useContainer method'
+            );
+        }
+
         return $this->container;
     }
 
@@ -32,6 +39,7 @@ abstract class AppEngine
 
     abstract public function boot(Bootstrap $bootstrap): void;
 
+    /** @param array<string,Bootstrap> $moduleList */
     abstract public function execute(
         RequestInterface $request,
         array $moduleList,

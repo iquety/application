@@ -24,6 +24,7 @@ class CommandHandler
         $this->namespaceList[$moduleIdentifier] = $commandsNamespace;
     }
 
+    /** @return array<string,string> */
     public function namespaces(): array
     {
         return $this->namespaceList;
@@ -31,7 +32,7 @@ class CommandHandler
 
     /**
      * Devolve a lista de possíveis comandos
-     * @return array<int,array<string,mixed>>
+     * @return array<int,CommandPossibility>
      */
     public function process(string $path): array
     {
@@ -52,7 +53,7 @@ class CommandHandler
 
     private function sanitizePath(string $path): string
     {
-        $info = parse_url(trim($path, '/'));
+        $info = (array)parse_url(trim($path, '/'));
 
         if (isset($info['path']) === false) {
             return '';
@@ -61,6 +62,7 @@ class CommandHandler
         return trim($info['path'], '/');
     }
 
+    /** @return array<int,string> */
     private function extractPathNodes(string $path): array
     {
         $pathNodes = explode('/', $path);
@@ -130,12 +132,12 @@ class CommandHandler
 
         // extrai niveis de diretórios
         for ($x = 1; $x < $level; $x++) {
-            $directoryNodes[] = array_shift($nodes);
+            $directoryNodes[] = (string)array_shift($nodes);
         }
 
         // extrai parâmetros do final
         for ($x = 1; $x <= $params; $x++) {
-            $paramNodes[] = array_pop($nodes);
+            $paramNodes[] = (string)array_pop($nodes);
         }
 
         $directoryNodes = array_map(fn($value) => ucfirst($value), $directoryNodes);
@@ -159,6 +161,10 @@ class CommandHandler
         return new CommandPossibility($moduleIdentifier, $callable, $this->fixTypes($paramNodes));
     }
 
+    /**
+     * @param array<int,string> $params
+     * @return array<int,string|int|float>
+     */
     private function fixTypes(array $params): array
     {
         foreach ($params as $index => $value) {

@@ -9,6 +9,7 @@ use Tests\TestCase;
 
 class HttpStatusTest extends TestCase
 {
+    /** @return array<int,array<int|string>> */
     public function statusProvider(): array
     {
         return [

@@ -72,12 +72,11 @@ class HttpStatus
     public const NETWORK_AUTHENTICATION_REQUIRED = 511;                             // RFC6585
 
     /**
-     * Tabela de tradução para códigod de Status HTTP.
-     *
-     * @link https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
-     * (last updated 2022-11-02).
-     *
+     * Tabela de tradução para códigos de Status HTTP.
      * Os códigos são definidos em RFC2616.
+     * (last updated 2022-11-02).
+     * @var array<int,string>
+     * @link https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
      */
     private static array $statusReasonList = [
         100 => 'Continue',
@@ -151,6 +150,7 @@ class HttpStatus
         return self::$statusReasonList[$statusCode] ?? '';
     }
 
+    /** @return array<int,string> */
     public static function all(): array
     {
         return self::$statusReasonList;

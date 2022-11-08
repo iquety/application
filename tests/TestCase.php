@@ -8,24 +8,16 @@ use Closure;
 use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\Adapter\HttpFactory\GuzzleHttpFactory;
 use Iquety\Application\Adapter\HttpFactory\NyHolmHttpFactory;
-use Iquety\Application\Adapter\Session\MemorySession;
 use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Application\Application;
 use Iquety\Application\Bootstrap;
 use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\HttpMethod;
 use Iquety\Application\Http\HttpResponseFactory;
-use Iquety\Application\Http\Session;
 use Iquety\Injection\Container;
-use Iquety\Routing\Router;
-use Laminas\Diactoros\ServerRequestFactory;
-use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
+use OutOfBoundsException;
 use PHPUnit\Framework\TestCase as FrameworkTestCase;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\UploadedFileInterface;
-use Psr\Http\Message\UriInterface;
 use ReflectionClass;
 use ReflectionObject;
 
@@ -35,7 +27,7 @@ use ReflectionObject;
  */
 abstract class TestCase extends FrameworkTestCase
 {
-    private static ?Container $container = null;
+    private ?Container $appContainer = null;
 
     // factories
 
@@ -59,6 +51,7 @@ abstract class TestCase extends FrameworkTestCase
         );
     }
 
+    /** @param class-string<HttpFactory> $httpFactoryContract */
     protected function httpFactory(string $httpFactoryContract): HttpFactory
     {
         return new $httpFactoryContract();
@@ -69,10 +62,12 @@ abstract class TestCase extends FrameworkTestCase
         return new HttpResponseFactory($httpFactory);
     }
 
+    /** @param class-string<AppEngine> $engineContract */
     protected function appEngineFactory(HttpFactory $httpFactory, string $engineContract): AppEngine
     {
-        static::$container = new Container();
-        static::$container->registerSingletonDependency(
+        $this->appContainer = new Container();
+
+        $this->appContainer->registerSingletonDependency(
             HttpResponseFactory::class,
             fn() => $this->httpResponseFactory($httpFactory)
         );
@@ -80,14 +75,20 @@ abstract class TestCase extends FrameworkTestCase
         // FcEngine | MvcEngine
         $engine = new $engineContract();
 
-        $engine->useContainer(static::$container);
+        $engine->useContainer($this->appContainer);
 
         return $engine;
     }
 
     protected function appEngineContainer(): Container
     {
-        return static::$container;
+        if ($this->appContainer === null) {
+            throw new OutOfBoundsException(
+                'The container will only be available after invoking the appEngineFactory method'
+            );
+        }
+
+        return $this->appContainer;
     }
 
     /**
@@ -109,7 +110,7 @@ abstract class TestCase extends FrameworkTestCase
 
             public function bootDependencies(Application $app): void
             {
-                $routine = $this->setup;
+                $routine = $this->setup ?? fn() => null;
                 $routine($app);
             }
         };
@@ -121,6 +122,7 @@ abstract class TestCase extends FrameworkTestCase
 
     // tools
 
+    /** @param class-string<object> $signature */
     protected function extractNamespace(string $signature, string $addNode = ''): string
     {
         $namespace = (new ReflectionClass($signature))->getNamespaceName();
@@ -144,6 +146,7 @@ abstract class TestCase extends FrameworkTestCase
     // - - - - - - - - - - - - - - - - - - - -
     // data providers
 
+    /** @return array<string,array<class-string>> */
     public function httpFactoryProvider(): array
     {
         return [

@@ -30,6 +30,7 @@ class HandlerResolveMainTest extends TestCase
         $this->assertNull($handler->resolveCommand($possibilityList));
     }
 
+    /** @return array<string,array<mixed>> */
     public function mainPathProvider(): array
     {
         return [

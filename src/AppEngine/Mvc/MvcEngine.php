@@ -11,6 +11,7 @@ use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Application\AppEngine\Input;
 use Iquety\Application\AppEngine\MethodNotAllowedException;
 use Iquety\Injection\InversionOfControl;
+use Iquety\Routing\Route;
 use Iquety\Routing\Router;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -37,6 +38,7 @@ class MvcEngine extends AppEngine
         $bootstrap->bootRoutes($this->router());
     }
 
+    /** @param array<string,Bootstrap> $moduleList */
     public function execute(
         RequestInterface $request,
         array $moduleList,
@@ -120,7 +122,6 @@ class MvcEngine extends AppEngine
             return $this->router;
         }
 
-        /** @var Router $router */
         $this->router = $this->container()->get(Router::class);
         $this->router->resetModuleInfo();
 

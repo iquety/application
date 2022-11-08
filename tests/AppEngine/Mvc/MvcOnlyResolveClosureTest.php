@@ -5,26 +5,24 @@ declare(strict_types=1);
 namespace Tests\AppEngine\Mvc;
 
 use ArrayObject;
-use Exception;
-use InvalidArgumentException;
 use Iquety\Application\AppEngine\Mvc\MvcBootstrap;
 use Iquety\Application\AppEngine\Mvc\MvcEngine;
-use Iquety\Application\Bootstrap;
-use Iquety\Application\Http\HttpStatus;
 use Iquety\Routing\Router;
+use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
 use Psr\Http\Message\ResponseInterface;
 use Tests\TestCase;
 
 class MvcOnlyResolveClosureTest extends TestCase
 {
+    /** @return array<string,array<mixed>> */
     public function returnTypesProvider(): array
     {
         $returnTypes = [
             'response' => [ $this->createMock(ResponseInterface::class) ],
-            'string' => [ 'Retorno do closure em forma de string' ],
-            'integer' => [ 1234567 ],
-            'array' => [ ['teste' => 'unidade'] ],
-            'object' => [ (object)['teste' => 'unidade'] ],
+            'string'   => [ 'Retorno do closure em forma de string' ],
+            'integer'  => [ 1234567 ],
+            'array'    => [ ['teste' => 'unidade'] ],
+            'object'   => [ (object)['teste' => 'unidade'] ],
             'jsonable' => [ new ArrayObject(['teste' => 'unidade']) ],
         ];
 
@@ -103,6 +101,6 @@ class MvcOnlyResolveClosureTest extends TestCase
         );
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
-        $this->assertEquals('', (string)$response->getBody());
+        $this->assertEquals('', (string)$response?->getBody());
     }
 }
