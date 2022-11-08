@@ -22,6 +22,7 @@ class HandlerPreparationTest extends TestCase
         $this->assertEquals([], $handler->process(''));
     }
 
+    /** @return array<int,array<string>> */
     public function sanitizeEmptyPathProvider(): array
     {
         return [
@@ -59,6 +60,7 @@ class HandlerPreparationTest extends TestCase
         $this->assertEquals([], $handler->process($path));
     }
 
+    /** @return array<int,array<string>> */
     public function sanitizePathProvider(): array
     {
         return [

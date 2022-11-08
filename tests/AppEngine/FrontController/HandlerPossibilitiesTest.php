@@ -14,6 +14,10 @@ use Tests\TestCase;
  */
 class HandlerPossibilitiesTest extends TestCase
 {
+    /**
+     * @param array<string,array<mixed>> $list
+     * @param array<string,array<mixed>> $commandPossibilities
+     */
     public function addPossibility(
         array &$list,
         string $path,
@@ -33,6 +37,7 @@ class HandlerPossibilitiesTest extends TestCase
         $list[$path] = [$path, $possibilityList];
     }
 
+    /** @return array<string,array<mixed>> */
     public function possibilitiesProvider(): array
     {
         $list = [];
@@ -125,6 +130,7 @@ class HandlerPossibilitiesTest extends TestCase
     /**
      * @test
      * @dataProvider possibilitiesProvider
+     * @param array<CommandPossibility> $commandPossibilities
      */
     public function possiblitities(
         string $path,

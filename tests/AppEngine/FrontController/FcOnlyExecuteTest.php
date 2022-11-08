@@ -7,6 +7,7 @@ namespace Tests\AppEngine\FrontController;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\FcEngine;
 use Iquety\Application\Http\HttpStatus;
+use Psr\Http\Message\ResponseInterface;
 use Tests\AppEngine\FrontController\Support\Commands\NoContractCommand;
 use Tests\AppEngine\FrontController\Support\FcBootstrapConcrete;
 use Tests\TestCase;
@@ -47,6 +48,7 @@ class FcOnlyExecuteTest extends TestCase
 
         $engine->boot($bootstrap);
 
+        /** @var ResponseInterface $response */
         $response = $engine->execute(
             $request,
             [$bootstrap::class => &$bootstrap],

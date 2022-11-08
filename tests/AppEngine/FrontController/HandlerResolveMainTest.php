@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\AppEngine\FrontController;
 
+use Iquety\Application\AppEngine\FrontController\CommandDescriptor;
 use Iquety\Application\AppEngine\FrontController\CommandHandler;
 use Tests\AppEngine\FrontController\Support\CommandsDir\OneTwoThree;
 use Tests\AppEngine\FrontController\Support\FcBootstrapConcrete;
@@ -44,6 +45,7 @@ class HandlerResolveMainTest extends TestCase
     /**
      * @test
      * @dataProvider mainPathProvider
+     * @param array<int,mixed> $params
      */
     public function processMainCommand(string $path, array $params): void
     {
@@ -58,6 +60,7 @@ class HandlerResolveMainTest extends TestCase
 
         $possibilityList = $handler->process($path);
 
+        /** @var CommandDescriptor */
         $descriptor = $handler->resolveCommand($possibilityList);
 
         $this->assertSame('', $descriptor->module());
@@ -70,7 +73,8 @@ class HandlerResolveMainTest extends TestCase
         $this->assertSame($params, $descriptor->params());
     }
 
-    public function invalideMainPathProvider(): array
+    /** @return array<string,mixed> */
+    public function invalidMainPathProvider(): array
     {
         return [
             'value' => ['43'],
@@ -82,7 +86,7 @@ class HandlerResolveMainTest extends TestCase
 
     /**
      * @test
-     * @dataProvider invalideMainPathProvider
+     * @dataProvider invalidMainPathProvider
      */
     public function processInvalidMainCommand(string $path): void
     {

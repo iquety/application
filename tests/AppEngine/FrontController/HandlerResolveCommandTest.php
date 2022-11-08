@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\AppEngine\FrontController;
 
+use Iquety\Application\AppEngine\FrontController\CommandDescriptor;
 use Iquety\Application\AppEngine\FrontController\CommandHandler;
 use Tests\AppEngine\FrontController\Support\FcBootstrapConcrete;
 use Tests\TestCase;
@@ -28,6 +29,7 @@ class HandlerResolveCommandTest extends TestCase
         $this->assertNull($handler->resolveCommand($possibilityList));
     }
 
+    /** @return array<int,array<mixed>> */
     public function commandsProvider(): array
     {
         $list = [];
@@ -61,6 +63,7 @@ class HandlerResolveCommandTest extends TestCase
     /**
      * @test
      * @dataProvider commandsProvider
+     * @param array<int,mixed> $params
      */
     public function processCommand(string $path, string $commandSufix, array $params): void
     {
@@ -73,6 +76,7 @@ class HandlerResolveCommandTest extends TestCase
 
         $possibilityList = $handler->process($path);
 
+        /** @var CommandDescriptor */
         $descriptor = $handler->resolveCommand($possibilityList);
 
         $this->assertSame(FcBootstrapConcrete::class, $descriptor->module());

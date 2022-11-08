@@ -10,6 +10,7 @@ use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\FcEngine;
 use Iquety\Application\Application;
 use Iquety\Application\Bootstrap;
+use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
 use Tests\AppEngine\FrontController\Support\FcBootstrapAlterDir;
 use Tests\AppEngine\FrontController\Support\FcBootstrapConcrete;
 use Tests\TestCase;
@@ -45,7 +46,7 @@ class FcOnlyBootTest extends TestCase
         $httpFactory = $this->httpFactory($httpFactoryContract);
         $engine = $this->appEngineFactory($httpFactory, FcEngine::class);
 
-        $engine->boot(new FcBootstrapConcrete($this->createMock(Application::class)));
+        $engine->boot(new FcBootstrapConcrete());
 
         $handler = $this->appEngineContainer()->get(CommandHandler::class);
 
@@ -67,7 +68,7 @@ class FcOnlyBootTest extends TestCase
         $httpFactory = $this->httpFactory($httpFactoryContract);
         $engine = $this->appEngineFactory($httpFactory, FcEngine::class);
 
-        $engine->boot(new FcBootstrapAlterDir($this->createMock(Application::class)));
+        $engine->boot(new FcBootstrapAlterDir());
 
         $handler = $this->appEngineContainer()->get(CommandHandler::class);
 

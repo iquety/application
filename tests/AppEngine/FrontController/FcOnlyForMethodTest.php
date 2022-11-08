@@ -10,6 +10,7 @@ use Iquety\Application\Application;
 use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\HttpMethod;
 use Iquety\Application\Http\HttpStatus;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Tests\AppEngine\FrontController\Support\FcBootstrapConcrete;
 use Tests\TestCase;
@@ -22,6 +23,7 @@ class FcOnlyForMethodTest extends TestCase
         Application::instance()->reset();
     }
 
+    /** @return array<string,array<mixed>> */
     public function commandCasesProvider(): array
     {
         $factoryList = $this->httpFactoryProvider();
@@ -66,6 +68,7 @@ class FcOnlyForMethodTest extends TestCase
 
         $engine->boot($bootstrap);
 
+        /** @var ResponseInterface $response */
         $response = $engine->execute(
             $request,
             [$bootstrap::class => &$bootstrap],
@@ -73,11 +76,11 @@ class FcOnlyForMethodTest extends TestCase
             }
         );
 
-        $this->assertEquals(HttpStatus::OK, $response->getStatusCode());
         $this->assertStringContainsString(
             'Resposta do comando para id 42',
             (string)$response->getBody()
         );
+        $this->assertEquals(HttpStatus::OK, $response->getStatusCode());
     }
 
     /**
@@ -100,6 +103,7 @@ class FcOnlyForMethodTest extends TestCase
 
         $engine->boot($bootstrap);
 
+        /** @var ResponseInterface $response */
         $response = $engine->execute(
             $request,
             [$bootstrap::class => &$bootstrap],
@@ -107,11 +111,11 @@ class FcOnlyForMethodTest extends TestCase
             }
         );
 
-        $this->assertEquals(HttpStatus::OK, $response->getStatusCode());
         $this->assertStringContainsString(
             'Resposta do comando para id 42',
             (string)$response->getBody()
         );
+        $this->assertEquals(HttpStatus::OK, $response->getStatusCode());
     }
 
     /**

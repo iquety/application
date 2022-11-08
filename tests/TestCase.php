@@ -51,9 +51,9 @@ abstract class TestCase extends FrameworkTestCase
         );
     }
 
-    /** @param class-string<HttpFactory> $httpFactoryContract */
     protected function httpFactory(string $httpFactoryContract): HttpFactory
     {
+        /** @var HttpFactory */
         return new $httpFactoryContract();
     }
 

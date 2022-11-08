@@ -7,6 +7,7 @@ namespace Tests\AppEngine\Mvc;
 use ArrayObject;
 use Iquety\Application\AppEngine\Mvc\MvcBootstrap;
 use Iquety\Application\AppEngine\Mvc\MvcEngine;
+use Iquety\Application\Http\HttpFactory;
 use Iquety\Routing\Router;
 use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
 use Psr\Http\Message\ResponseInterface;
@@ -101,6 +102,6 @@ class MvcOnlyResolveClosureTest extends TestCase
         );
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
-        $this->assertEquals('', (string)$response?->getBody());
+        $this->assertEquals('', (string)$response->getBody());
     }
 }
