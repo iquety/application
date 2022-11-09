@@ -26,9 +26,7 @@ class MvcEngine extends AppEngine
     public function boot(Bootstrap $bootstrap): void
     {
         if (! $bootstrap instanceof MvcBootstrap) {
-            throw new InvalidArgumentException(
-                sprintf('Invalid bootstrap. Required a %s', MvcBootstrap::class)
-            );
+            return;
         }
 
         $moduleIdentifier = $bootstrap::class;
@@ -47,9 +45,7 @@ class MvcEngine extends AppEngine
         $router = $this->router();
 
         if ($router->routes() === []) {
-            throw new RuntimeException(
-                'This bootstrap has no routes registered'
-            );
+            throw new RuntimeException('There are no registered routes');
         }
 
         $router->process($request->getMethod(), $request->getUri()->getPath());

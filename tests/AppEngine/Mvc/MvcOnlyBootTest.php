@@ -4,15 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\AppEngine\Mvc;
 
-use ArrayObject;
-use Exception;
-use InvalidArgumentException;
-use Iquety\Application\AppEngine\Mvc\MvcBootstrap;
 use Iquety\Application\AppEngine\Mvc\MvcEngine;
-use Iquety\Application\Bootstrap;
-use Iquety\Application\Http\HttpStatus;
-use Iquety\Routing\Router;
-use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
 use Tests\TestCase;
 
 class MvcOnlyBootTest extends TestCase
@@ -21,19 +14,21 @@ class MvcOnlyBootTest extends TestCase
      * @test
      * @dataProvider httpFactoryProvider
      */
-    public function bootException(string $httpFactoryContract): void
+    public function bootstrapWithoutRegisterRoutes(string $httpFactoryContract): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage(
-            sprintf('Invalid bootstrap. Required a %s', MvcBootstrap::class)
-        );
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("There are no registered routes");
 
         $httpFactory = $this->httpFactory($httpFactoryContract);
+
         $engine = $this->appEngineFactory($httpFactory, MvcEngine::class);
 
-        /** @var Bootstrap $bootstrap */
-        $bootstrap = $this->createMock(Bootstrap::class);
+        $request = $this->requestFactory($httpFactory);
+        $moduleList = [];
+        $bootDependencies = fn() => null;
 
-        $engine->boot($bootstrap);
+        $response = $engine->execute($request, $moduleList, $bootDependencies);
+
+        $this->assertNull($response);
     }
 }

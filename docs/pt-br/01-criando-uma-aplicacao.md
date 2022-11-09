@@ -1,4 +1,4 @@
-# Como usar
+# Criando uma aplicação
 
 [◂ Índice da documentação ▸](indice.md)
 --

@@ -24,9 +24,7 @@ class FcEngine extends AppEngine
     public function boot(Bootstrap $bootstrap): void
     {
         if (! $bootstrap instanceof FcBootstrap) {
-            throw new InvalidArgumentException(
-                sprintf('Invalid bootstrap. Required a %s', FcBootstrap::class)
-            );
+            return;
         }
 
         $moduleIdentifier = $bootstrap::class;
@@ -52,7 +50,7 @@ class FcEngine extends AppEngine
 
         if ($handler->namespaces() === []) {
             throw new RuntimeException(
-                'This bootstrap has no directories registered as command source'
+                'No directories registered as command source'
             );
         }
 

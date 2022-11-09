@@ -4,39 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\AppEngine\FrontController;
 
-use InvalidArgumentException;
 use Iquety\Application\AppEngine\FrontController\CommandHandler;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\FcEngine;
-use Iquety\Application\Application;
-use Iquety\Application\Bootstrap;
 use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
+use RuntimeException;
 use Tests\AppEngine\FrontController\Support\FcBootstrapAlterDir;
 use Tests\AppEngine\FrontController\Support\FcBootstrapConcrete;
 use Tests\TestCase;
 
 class FcOnlyBootTest extends TestCase
 {
-    /**
-     * @test
-     * @dataProvider httpFactoryProvider
-     */
-    public function bootInstanceException(string $httpFactoryContract): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage(
-            sprintf('Invalid bootstrap. Required a %s', FcBootstrap::class)
-        );
-
-        $httpFactory = $this->httpFactory($httpFactoryContract);
-        $engine = $this->appEngineFactory($httpFactory, FcEngine::class);
-
-        /** @var Bootstrap $bootstrap */
-        $bootstrap = $this->createMock(Bootstrap::class);
-
-        $engine->boot($bootstrap);
-    }
-
     /**
      * @test
      * @dataProvider httpFactoryProvider
@@ -103,5 +81,27 @@ class FcOnlyBootTest extends TestCase
         $commandsNamespace = 'AlterCommands';
 
         $this->assertEquals($commandsNamespace, (string)current($namespaces));
+    }
+
+    /**
+     * @test
+     * @dataProvider httpFactoryProvider
+     */
+    public function bootstrapWithoutRegisterDirectories(string $httpFactoryContract): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage("No directories registered as command source");
+
+        $httpFactory = $this->httpFactory($httpFactoryContract);
+
+        $engine = $this->appEngineFactory($httpFactory, FcEngine::class);
+
+        $request = $this->requestFactory($httpFactory);
+        $moduleList = [];
+        $bootDependencies = fn() => null;
+
+        $response = $engine->execute($request, $moduleList, $bootDependencies);
+
+        $this->assertNull($response);
     }
 }

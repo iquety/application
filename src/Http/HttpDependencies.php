@@ -22,10 +22,12 @@ class HttpDependencies
 
         $this->assertImplementation($httpFactory, HttpFactory::class);
 
-        $app->addSingleton(
-            ServerRequestInterface::class,
-            fn() => $httpFactory->createRequestFromGlobals()
-        );
+        if ($app->container()->has(ServerRequestInterface::class) === false) {
+            $app->addSingleton(
+                ServerRequestInterface::class,
+                fn() => $httpFactory->createRequestFromGlobals()
+            );
+        }
 
         $app->addFactory(
             StreamInterface::class,
