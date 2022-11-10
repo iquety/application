@@ -113,7 +113,7 @@ class Application
             // registra as dependências especificadas pelo usuário
             $this->mainBootstrap->bootDependencies($this);
         } catch (Throwable $exception) {
-            return $this->make(HttpResponseFactory::class)->serverErrorResponse($exception);
+            throw new RuntimeException('The bootApplication method failed');
         }
 
         // certifica que as dependências HTTP estejam todas injetadas

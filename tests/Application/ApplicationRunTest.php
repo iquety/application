@@ -8,6 +8,7 @@ use Exception;
 use Iquety\Application\Adapter\Session\MemorySession;
 use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Application\Application;
+use Iquety\Application\Bootstrap;
 use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\HttpStatus;
 use Iquety\Application\Http\Session;
@@ -130,6 +131,26 @@ class ApplicationRunTest extends TestCase
         }));
 
         $app->run();
+    }
+
+    /** @test */
+    public function runWithExceptionMainBootstrap(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('The bootApplication method failed');
+
+        $app = Application::instance();
+
+        $app->bootEngine($this->createMock(AppEngine::class));
+
+        $app->bootApplication(new class implements Bootstrap {
+            public function bootDependencies(Application $app): void
+            {
+                throw new Exception('Teste');
+            }
+        });
+
+        $response = $app->run();
     }
 
     /**
