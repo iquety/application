@@ -10,6 +10,7 @@ use Iquety\Application\Bootstrap;
 use OutOfBoundsException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Tests\AppEngine\Support\EngineContainerAcessor;
 use Tests\TestCase;
 
 class AppEngineTest extends TestCase
@@ -22,24 +23,7 @@ class AppEngineTest extends TestCase
             'The container was not made available with the useContainer method'
         );
 
-        $object = new class extends AppEngine
-        {
-            public function boot(Bootstrap $bootstrap): void
-            {}
-
-            public function invokeContainer(): void
-            {
-                $this->container();
-            }
-
-            public function execute(
-                RequestInterface $request,
-                array $moduleList,
-                Closure $bootDependencies
-            ): ?ResponseInterface {
-                return null;
-            }
-        };
+        $object = new EngineContainerAcessor();
 
         $object->invokeContainer();
     }

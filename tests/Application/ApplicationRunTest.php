@@ -17,7 +17,10 @@ use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 use Tests\TestCase;
 
-/** @SuppressWarnings(PHPMD.StaticAccess) */
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class ApplicationRunTest extends TestCase
 {
     public function setUp(): void
@@ -150,7 +153,7 @@ class ApplicationRunTest extends TestCase
             }
         });
 
-        $response = $app->run();
+        $app->run();
     }
 
     /**

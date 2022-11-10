@@ -41,10 +41,8 @@ class HttpDependencies
 
         $app->addFactory(
             ResponseInterface::class,
-            fn(
-                int $code = 200,
-                string $reasonPhrase = ''
-            ) => $httpFactory->createResponse($code, $reasonPhrase)
+            fn(int $code = 200, string $reasonPhrase = '')
+                => $httpFactory->createResponse($code, $reasonPhrase)
         );
 
         $app->addSingleton(

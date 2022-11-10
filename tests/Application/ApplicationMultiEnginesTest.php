@@ -74,8 +74,8 @@ class ApplicationMultiEnginesTest extends TestCase
         );
 
         $app->bootEngine(new FcEngine()); // precedencia para o FrontController
-        $app->bootEngine(new MvcEngine()); 
-        
+        $app->bootEngine(new MvcEngine());
+
 
         $bootstrap = $this->appBootstrapFactory(function (Application $app) use ($httpFactoryContract) {
             $app->addSingleton(Session::class, MemorySession::class);
