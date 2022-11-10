@@ -10,10 +10,14 @@ use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Application\Application;
 use Iquety\Application\Bootstrap;
 use Iquety\Application\Http\HttpFactory;
+use Iquety\Application\Http\HttpResponseFactory;
 use Iquety\Application\Http\HttpStatus;
 use Iquety\Application\Http\Session;
 use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 use RuntimeException;
 use Tests\TestCase;
 
@@ -187,6 +191,33 @@ class ApplicationRunTest extends TestCase
         $response = $app->run();
 
         $this->assertInstanceOf(Application::class, $app->make(Application::class));
+        
+        $this->assertInstanceOf(HttpFactory::class, $app->make(HttpFactory::class));
+
+        $this->assertInstanceOf(
+            ServerRequestInterface::class,
+            $app->make(ServerRequestInterface::class)
+        );
+
+        $this->assertInstanceOf(
+            StreamInterface::class,
+            $app->make(StreamInterface::class, 'texto qualquer')
+        );
+
+        $this->assertInstanceOf(
+            UriInterface::class,
+            $app->make(UriInterface::class, 'http://localhost/user/naitis')
+        );
+
+        $this->assertInstanceOf(
+            ResponseInterface::class,
+            $app->make(ResponseInterface::class, 404, HttpStatus::NOT_FOUND)
+        );
+        $this->assertInstanceOf(
+            HttpResponseFactory::class,
+            $app->make(HttpResponseFactory::class)
+        );
+        
         $this->assertSame(HttpStatus::OK, $response->getStatusCode());
     }
 
