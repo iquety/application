@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Iquety\Application\Http;
 
-class HttpMethod
+enum HttpMethod: string
 {
-    public const ANY = 'ANY';
-    public const DELETE = 'DELETE';
-    public const GET = 'GET';
-    public const PATCH = 'PATCH';
-    public const POST = 'POST';
-    public const PUT = 'PUT';
+    case ANY    = 'ANY';
+    case DELETE = 'DELETE';
+    case GET    = 'GET';
+    case PATCH  = 'PATCH';
+    case POST   = 'POST';
+    case PUT    = 'PUT';
 
     /** @return array<int,string> */
     public static function all(): array

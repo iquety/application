@@ -47,10 +47,10 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts" : {
-        "feature": [
-            "vendor/bin/behat"
-        ],
-        "unit": [
+        "test:feature": "vendor/bin/behat",
+        "test:unit": "vendor/bin/phpunit --testdox",
+        "test": [
+            "vendor/bin/behat",
             "vendor/bin/phpunit --testdox"
         ],
         "docmap" : [

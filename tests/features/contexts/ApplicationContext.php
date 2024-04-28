@@ -1,8 +1,7 @@
 <?php
 
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\Context;
-use Iquety\Application\Adapter\HttpFactory\MemoryHttpFactory;
+use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\Adapter\Session\MemorySession;
 use Iquety\Application\AppEngine\FrontController\FcEngine;
 use Iquety\Application\AppEngine\Mvc\MvcEngine;
@@ -10,7 +9,6 @@ use Iquety\Application\Application;
 use Iquety\Application\Bootstrap;
 use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\Session;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -18,11 +16,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class ApplicationContext implements Context
 {
-    private ?Application $app = null;
-
     private ?Throwable $exception = null;
-
-    private ?ResponseInterface $response = null;
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
     // DADO
@@ -33,11 +27,7 @@ class ApplicationContext implements Context
      */
     public function umaAplicacaoInstanciada()
     {
-        $this->app = Application::instance();
-        $this->app->reset();
-
-        $this->exception = null;
-        $this->response = null;
+        Application::instance()->reset();
     }
 
     /**
@@ -45,7 +35,7 @@ class ApplicationContext implements Context
      */
     public function comMecanismoMvc()
     {
-        $this->app->bootEngine(new MvcEngine());
+        Application::instance()->bootEngine(new MvcEngine());
     }
 
     /**
@@ -53,7 +43,7 @@ class ApplicationContext implements Context
      */
     public function comMecanismoFrontcontroller()
     {
-        $this->app->bootEngine(new FcEngine());
+        Application::instance()->bootEngine(new FcEngine());
     }
 
     /**
@@ -69,7 +59,7 @@ class ApplicationContext implements Context
      */
     public function bootstrapComExcecao()
     {
-        $this->app->bootApplication(new class implements Bootstrap {
+        Application::instance()->bootApplication(new class implements Bootstrap {
             public function bootDependencies(Application $app): void
             {
                 throw new Exception();
@@ -82,7 +72,7 @@ class ApplicationContext implements Context
      */
     public function bootstrapSemDependencias()
     {
-        $this->app->bootApplication(new class implements Bootstrap {
+        Application::instance()->bootApplication(new class implements Bootstrap {
             public function bootDependencies(Application $app): void
             {
                 // sem declarar dependências
@@ -95,7 +85,7 @@ class ApplicationContext implements Context
      */
     public function bootstrapComDependenciaSessionInvalida()
     {
-        $this->app->bootApplication(new class implements Bootstrap {
+        Application::instance()->bootApplication(new class implements Bootstrap {
             public function bootDependencies(Application $app): void
             {
                 // não é uma implementação de session
@@ -109,7 +99,7 @@ class ApplicationContext implements Context
      */
     public function bootstrapComDependenciaSession()
     {
-        $this->app->bootApplication(new class implements Bootstrap {
+        Application::instance()->bootApplication(new class implements Bootstrap {
             public function bootDependencies(Application $app): void
             {
                 // implementação de session
@@ -123,7 +113,7 @@ class ApplicationContext implements Context
      */
     public function bootstrapComDependenciaSessionEHttpfactoryInvalida()
     {
-        $this->app->bootApplication(new class implements Bootstrap {
+        Application::instance()->bootApplication(new class implements Bootstrap {
             public function bootDependencies(Application $app): void
             {
                 // implementação de session
@@ -140,14 +130,14 @@ class ApplicationContext implements Context
      */
     public function bootstrapComDependenciaSessionEHttpfactory()
     {
-        $this->app->bootApplication(new class implements Bootstrap {
+        Application::instance()->bootApplication(new class implements Bootstrap {
             public function bootDependencies(Application $app): void
             {
                 // implementação de session
                 $app->addSingleton(Session::class, MemorySession::class); 
 
                 // implementação de HttpFactory
-                $app->addSingleton(HttpFactory::class, MemoryHttpFactory::class);
+                $app->addSingleton(HttpFactory::class, DiactorosHttpFactory::class);
             }
         });
     }
@@ -161,10 +151,8 @@ class ApplicationContext implements Context
      */
     public function aAplicacaoForExecutada()
     {
-        $this->exception = null;
-
         try {
-            $this->response = $this->app->run();
+            Application::instance()->run();
         } catch(Throwable $exception) {
             $this->exception = $exception;
         }
@@ -175,7 +163,7 @@ class ApplicationContext implements Context
      */
     public function containerNaoTeraDependenciaSession()
     {
-        if ($this->app->container()->has(Session::class) === true) {
+        if (Application::instance()->container()->has(Session::class) === true) {
             throw new Exception("Não era para Session ter sido declarada");
         }
     }
@@ -185,7 +173,7 @@ class ApplicationContext implements Context
      */
     public function containerTeraDependenciaSession()
     {
-        if ($this->app->container()->has(Session::class) === false) {
+        if (Application::instance()->container()->has(Session::class) === false) {
             throw new Exception("Esperada a dependência Session, mas ela não foi declarada");
         }
     }
@@ -195,7 +183,7 @@ class ApplicationContext implements Context
      */
     public function containerNaoTeraDependenciaHttpfactory()
     {
-        if ($this->app->container()->has(HttpFactory::class) === true) {
+        if (Application::instance()->container()->has(HttpFactory::class) === true) {
             throw new Exception("Não era para HttpFactory ter sido declarada");
         }
     }
@@ -205,7 +193,7 @@ class ApplicationContext implements Context
      */
     public function containerTeraDependenciaHttpfactory()
     {
-        if ($this->app->container()->has(HttpFactory::class) === false) {
+        if (Application::instance()->container()->has(HttpFactory::class) === false) {
             throw new Exception("Esperada a dependência HttpFactory, mas ela não foi declarada");
         }
     }
@@ -215,7 +203,7 @@ class ApplicationContext implements Context
      */
     public function containerTeraDependenciaApplication()
     {
-        if ($this->app->container()->has(Application::class) === false) {
+        if (Application::instance()->container()->has(Application::class) === false) {
             throw new Exception("Esperada a dependência Application, mas ela não foi declarada");
         }
     }
@@ -225,7 +213,7 @@ class ApplicationContext implements Context
      */
     public function containerTeraDependenciaServerrequestinterface()
     {
-        if ($this->app->container()->has(ServerRequestInterface::class) === false) {
+        if (Application::instance()->container()->has(ServerRequestInterface::class) === false) {
             throw new Exception("Esperada a dependência ServerRequestInterface, mas ela não foi declarada");
         }
     }
@@ -247,42 +235,26 @@ class ApplicationContext implements Context
     }
 
     /**
-     * @Then a exceção possui a mensagem :expectMessage
+     * @Then a exceção conterá a mensagem :expectedMessage
      */
-    public function aExcecaoPossuiAMensagem($expectMessage)
+    public function aExcecaoConteraAMensagem($expectedMessage)
     {
         $actualMessage = $this->exception->getMessage();
 
-        if ($actualMessage !== $expectMessage) {
-            throw new Exception("Esperada exceção com mensagem $expectMessage, mas recebida $actualMessage");
-        }
-    }
-
-    /**
-     * @When a resposta será :httpStatus
-     */
-    public function aRespostaSera(int $expectedStatus)
-    {
-        $actualStatus = $this->response->getStatusCode();
-
-        if ($actualStatus !== $expectedStatus) {
-            throw new Exception(
-                "Esperada resposta com status $expectedStatus, mas recebido status $actualStatus"
-            );
-        }
-    }
-
-    /**
-     * @When a resposta contém :expectedMessage
-     */
-    public function aRespostaContem(string $expectedMessage)
-    {
-        $actualMessage = (string)$this->response->getBody();
-
         if (strpos($actualMessage, $expectedMessage) === false) {
-            throw new Exception(
-                "Esperada mensagem contendo '$expectedMessage', mas recebida '$actualMessage'"
-            );
+            throw new Exception("Esperada exceção com mensagem $expectedMessage, mas recebida $actualMessage");
+        }
+    }
+
+    /**
+     * @Then a exceção possui a mensagem :expectedMessage
+     */
+    public function aExcecaoPossuiAMensagem($expectedMessage)
+    {
+        $actualMessage = $this->exception->getMessage();
+
+        if ($actualMessage !== $expectedMessage) {
+            throw new Exception("Esperada exceção com mensagem $expectedMessage, mas recebida $actualMessage");
         }
     }
 }

@@ -1,0 +1,4 @@
+Error: There are no registered routes on file /application/src/AppEngine/Mvc/MvcEngine.php in line 48
+#0 /application/src/Application.php(197): Iquety\Application\AppEngine\Mvc\MvcEngine->execute()
+#1 /application/src/Application.php(178): Iquety\Application\Application->executeAppEngine()
+#2 /application/tests/features/contexts/ResponseErrorContext.php(122): Iquety\Application\Application->run()

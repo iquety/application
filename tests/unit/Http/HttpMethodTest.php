@@ -12,12 +12,23 @@ class HttpMethodTest extends TestCase
     /** @test */
     public function allConstants(): void
     {
-        $this->assertSame('ANY', HttpMethod::ANY);
-        $this->assertSame('DELETE', HttpMethod::DELETE);
-        $this->assertSame('GET', HttpMethod::GET);
-        $this->assertSame('PATCH', HttpMethod::PATCH);
-        $this->assertSame('POST', HttpMethod::POST);
-        $this->assertSame('PUT', HttpMethod::PUT);
+        $this->assertSame('ANY', HttpMethod::ANY->name);
+        $this->assertSame('ANY', HttpMethod::ANY->value);
+
+        $this->assertSame('DELETE', HttpMethod::DELETE->name);
+        $this->assertSame('DELETE', HttpMethod::DELETE->value);
+
+        $this->assertSame('GET', HttpMethod::GET->name);
+        $this->assertSame('GET', HttpMethod::GET->value);
+
+        $this->assertSame('PATCH', HttpMethod::PATCH->name);
+        $this->assertSame('PATCH', HttpMethod::PATCH->value);
+
+        $this->assertSame('POST', HttpMethod::POST->name);
+        $this->assertSame('POST', HttpMethod::POST->value);
+
+        $this->assertSame('PUT', HttpMethod::PUT->name);
+        $this->assertSame('PUT', HttpMethod::PUT->value);
     }
 
     /**

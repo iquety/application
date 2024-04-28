@@ -28,6 +28,8 @@ class Application
 
     private Container $container;
 
+    private Environment $environment = Environment::PRODUCTION;
+    
     private static ?Application $instance = null;
 
     private ?Bootstrap $mainBootstrap = null;
@@ -36,6 +38,13 @@ class Application
     private array $moduleList = [];
 
     private DateTimeZone $timezone;
+
+    private function __construct()
+    {
+        $this->container = new Container();
+
+        $this->useTimezone(new DateTimeZone('America/Sao_Paulo'));
+    }
 
     public static function instance(): self
     {
@@ -46,21 +55,29 @@ class Application
         return static::$instance; // @phpstan-ignore-line
     }
 
-    private function __construct()
+    public function runInDevelopmentMode(): void
     {
-        $this->container = new Container();
+        $this->environment = Environment::DEVELOPMENT;
+    }
 
-        $this->useTimezone(new DateTimeZone('America/Sao_Paulo'));
+    public function runInTestMode(): void
+    {
+        $this->environment = Environment::TESTING;
+    }
+
+    public function runningMode(): Environment
+    {
+        return $this->environment;
     }
 
     public function useTimezone(DateTimeZone $timezone): void
     {
-        Configuration::instance()->set('timezone', $timezone);
+        $this->timezone = $timezone;
     }
 
     public function timezone(): DateTimeZone
     {
-        return Configuration::instance()->get('timezone');
+        return $this->timezone;
     }
 
     public function bootEngine(AppEngine $engine): void
@@ -78,15 +95,15 @@ class Application
         $this->container()->registerSingletonDependency($identifier, $factory);
     }
 
-    public function addSubscriber(string $channel, string $subscriberIdentifier): void
-    {
-        $this->eventPublisher()->subscribe($channel, $subscriberIdentifier);
-    }
+    // public function addSubscriber(string $channel, string $subscriberIdentifier): void
+    // {
+    //     $this->eventPublisher()->subscribe($channel, $subscriberIdentifier);
+    // }
 
-    public function eventPublisher(): EventPublisher
-    {
-        return SimpleEventPublisher::instance();
-    }
+    // public function eventPublisher(): EventPublisher
+    // {
+    //     return SimpleEventPublisher::instance();
+    // }
     
     /** @SuppressWarnings(PHPMD.StaticAccess) */
     public function bootApplication(Bootstrap $bootstrap): void
@@ -182,9 +199,6 @@ class Application
                 $this->moduleList,
                 fn($bootstrap) => $bootstrap->bootDependencies($this)
             );
-
-            var_dump($response);
-            exit;
 
             if ($response !== null) {
                 return $response;

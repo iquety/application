@@ -6,7 +6,6 @@ namespace Iquety\Application\Http;
 
 use Iquety\Application\Application;
 use Iquety\Injection\ContainerException;
-use Iquety\Injection\NotFoundException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
@@ -14,16 +13,16 @@ use Psr\Http\Message\UriInterface;
 use ReflectionClass;
 use RuntimeException;
 
-use function PHPUnit\Framework\throwException;
-
 class HttpDependencies
 {
     public function attachTo(Application $app): void
     {
         $this->assertSucessfulConstruction($app, Session::class);
 
+        $this->assertSucessfulConstruction($app, HttpFactory::class);
+
         /** @var HttpFactory $httpFactory */
-        $httpFactory = $this->assertSucessfulConstruction($app, HttpFactory::class);
+        $httpFactory = $app->make(HttpFactory::class);
 
         if ($app->container()->has(ServerRequestInterface::class) === false) {
             $app->addSingleton(
@@ -48,13 +47,29 @@ class HttpDependencies
                 => $httpFactory->createResponse($code, $reasonPhrase)
         );
 
+        $serverRequest = $this->resolveDefaultRequestHeaders($app);
+
         $app->addSingleton(
             HttpResponseFactory::class,
-            fn() => new HttpResponseFactory($httpFactory)
+            fn() => new HttpResponseFactory($httpFactory, $serverRequest)
         );
     }
 
-    private function assertSucessfulConstruction(Application $app, string $contract): mixed
+    private function resolveDefaultRequestHeaders(Application $app): ServerRequestInterface
+    {
+        /** @var ServerRequestInterface */
+        $serverRequest = $app->make(ServerRequestInterface::class);
+
+        if ($serverRequest->getHeaderLine('Accept') === "") {
+            $serverRequest = $serverRequest->withAddedHeader('Accept', HttpMime::HTML->value);
+        }
+
+        $serverRequest = $serverRequest->withAddedHeader('Environment', $app->runningMode()->value);
+
+        return $serverRequest;
+    }
+
+    private function assertSucessfulConstruction(Application $app, string $contract): void
     {
         try {
             $instance = $app->make($contract);
@@ -71,7 +86,5 @@ class HttpDependencies
                 (new ReflectionClass($contract))->getShortName(),
             ));
         }
-
-        return $instance;
     }
 }
