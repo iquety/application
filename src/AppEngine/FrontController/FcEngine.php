@@ -20,6 +20,8 @@ class FcEngine extends AppEngine
 {
     private ?CommandHandler $handler = null;
 
+    private DirectorySet $directorySet;
+
     public function boot(Bootstrap $bootstrap): void
     {
         if (! $bootstrap instanceof FcBootstrap) {
@@ -27,17 +29,11 @@ class FcEngine extends AppEngine
             return;
         }
 
-        $moduleIdentifier = $bootstrap::class;
-        $namespace = $bootstrap->commandsDirectory();
+        $this->directorySet = new DirectorySet();
 
-        $searchBar = strrpos($bootstrap::class, '\\');
+        $bootstrap->bootDirectories($this->directorySet);
 
-        if ($searchBar !== false) {
-            $lastBar = (int)$searchBar + 1;
-            $namespace = substr($bootstrap::class, 0, $lastBar) . $bootstrap->commandsDirectory();
-        }
-
-        $this->handler()->addNamespace($moduleIdentifier, $namespace);
+        $this->handler()->addModuleSources($bootstrap::class, $this->directorySet);
     }
 
     /** @param array<string,Bootstrap> $moduleList */
@@ -48,15 +44,15 @@ class FcEngine extends AppEngine
     ): ?ResponseInterface {
         $handler = $this->handler();
 
-        if ($handler->namespaces() === []) {
+        if ($handler->commandSources() === []) {
             throw new RuntimeException(
                 'No directories registered as command source'
             );
         }
 
-        $possibiliyList = $handler->process($request->getUri()->getPath());
+        // $possibiliyList = $handler->process($request->getUri()->getPath());
 
-        $command = $handler->resolveCommand($possibiliyList);
+        $command = $handler->resolveCommand($request->getUri()->getPath());
 
         if ($command === null) {
             return null;
@@ -84,6 +80,11 @@ class FcEngine extends AppEngine
         } catch (Throwable $exception) {
             return $this->responseFactory()->serverErrorResponse($exception);
         }
+    }
+
+    public function getDirectorySet(): DirectorySet
+    {
+        return $this->directorySet;
     }
 
     private function handler(): CommandHandler

@@ -36,7 +36,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Unit\\": "tests/unit/"
+            "Tests\\Unit\\": "tests/unit/",
+            "Tests\\FcCommands\\": "tests/feature/stubs/FcCommands/"
         }
     },
     "config": {

@@ -6,8 +6,8 @@ namespace Iquety\Application\AppEngine\FrontController;
 
 class CommandHandler
 {
-    /** @var array<string,string> */
-    private array $namespaceList = [];
+    /** @var array<string,DirectorySet> */
+    private array $commandSourceList = [];
 
     /** @var array<int,string> */
     private array $pathNodes = [];
@@ -19,15 +19,15 @@ class CommandHandler
         $this->rootCommand = $commandIdentifier;
     }
 
-    public function addNamespace(string $moduleIdentifier, string $commandsNamespace): void
+    public function addModuleSources(string $moduleIdentifier, DirectorySet $directorySet): void
     {
-        $this->namespaceList[$moduleIdentifier] = $commandsNamespace;
+        $this->commandSourceList[$moduleIdentifier] = $directorySet;
     }
 
     /** @return array<string,string> */
-    public function namespaces(): array
+    public function commandSources(): array
     {
-        return $this->namespaceList;
+        return $this->commandSourceList;
     }
 
     /**
@@ -36,7 +36,7 @@ class CommandHandler
      */
     public function process(string $path): array
     {
-        if ($this->namespaces() === []) {
+        if ($this->commandSources() === []) {
             return [];
         }
 
@@ -46,9 +46,7 @@ class CommandHandler
             return [];
         }
 
-        $this->pathNodes = $this->extractPathNodes($path);
-
-        return $this->resolvePossibilities();
+        return $this->resolvePossibilities($path);
     }
 
     private function sanitizePath(string $path): string
@@ -62,40 +60,55 @@ class CommandHandler
         return trim($info['path'], '/');
     }
 
-    /** @return array<int,string> */
-    private function extractPathNodes(string $path): array
+    // /** @return array<int,string> */
+    // private function extractPathNodes(string $path): array
+    // {
+    //     $pathNodes = explode('/', $path);
+
+    //     return $pathNodes[0] === "" ? [] : $pathNodes;
+    // }
+
+    // /** @return array<int,CommandPossibility> */
+    // private function resolvePossibilities(string $uri): array
+    // {
+    //     $potentialCommands = [];
+
+    //     /** @var DirectorySet $directorySet */
+    //     foreach ($this->namespaces() as $moduleIdentifier => $directorySet) {
+
+    //         var_dump($directorySet->getCommand($uri));
+    //         exit;
+
+    //         $amountNodes = count($this->pathNodes);
+
+    //         var_dump($this->namespaces(), $amountNodes, $this->pathNodes);
+    //         exit;
+
+    //         for ($x = 0; $x < $amountNodes; $x++) {
+    //             $potentialCommands[] =
+    //                 $this->makePossibility($moduleIdentifier, $namespace, $amountNodes, 1, $x);
+    //         }
+
+    //         for ($x = 0; $x < $amountNodes - 1; $x++) {
+    //             $potentialCommands[] =
+    //                 $this->makePossibility($moduleIdentifier, $namespace, $amountNodes, 2, $x);
+    //         }
+    //     }
+
+    //     return $potentialCommands;
+    // }
+
+    public function resolveCommand(string $path): ?CommandDescriptor
     {
-        $pathNodes = explode('/', $path);
+        $path = $this->sanitizePath($path);
 
-        return $pathNodes[0] === "" ? [] : $pathNodes;
-    }
-
-    /** @return array<int,CommandPossibility> */
-    private function resolvePossibilities(): array
-    {
-        $potentialCommands = [];
-
-        $amountNodes = count($this->pathNodes);
-
-        foreach ($this->namespaces() as $moduleIdentifier => $namespace) {
-            for ($x = 0; $x < $amountNodes; $x++) {
-                $potentialCommands[] =
-                    $this->makePossibility($moduleIdentifier, $namespace, $amountNodes, 1, $x);
-            }
-
-            for ($x = 0; $x < $amountNodes - 1; $x++) {
-                $potentialCommands[] =
-                    $this->makePossibility($moduleIdentifier, $namespace, $amountNodes, 2, $x);
-            }
+        if ($path === '') {
+            return null;
         }
 
-        return $potentialCommands;
-    }
+        $potentialCommands = [];
 
-    /** @param array<int,CommandPossibility> $potentialCommands */
-    public function resolveCommand(array $potentialCommands): ?CommandDescriptor
-    {
-        if ($potentialCommands === [] && $this->rootCommand !== '') {
+        if ($path === '' && $potentialCommands === [] && $this->rootCommand !== '') {
             return new CommandDescriptor(
                 '',
                 $this->rootCommand,

@@ -12,5 +12,5 @@ abstract class Command
 {
     use Makeable;
     use MethodChecker;
-    use Publisher;
+    // use Publisher;
 }

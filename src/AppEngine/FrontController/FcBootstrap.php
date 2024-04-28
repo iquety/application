@@ -11,9 +11,9 @@ use Iquety\Application\Settings;
 
 abstract class FcBootstrap implements Bootstrap
 {
-    public function commandsDirectory(): string
+    public function bootDirectories(DirectorySet $directories): void
     {
-        return 'Commands';
+        // ...
     }
 
     abstract public function bootDependencies(Application $app): void;

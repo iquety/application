@@ -1,18 +1,22 @@
 <?php
 
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\Context;
 use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\Adapter\HttpFactory\GuzzleHttpFactory;
 use Iquety\Application\Adapter\HttpFactory\NyHolmHttpFactory;
 use Iquety\Application\Adapter\Session\MemorySession;
+use Iquety\Application\AppEngine\FrontController\Directory;
+use Iquety\Application\AppEngine\FrontController\DirectorySet;
+use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\FcEngine;
+use Iquety\Application\AppEngine\Mvc\MvcBootstrap;
 use Iquety\Application\AppEngine\Mvc\MvcEngine;
 use Iquety\Application\Application;
 use Iquety\Application\Bootstrap;
 use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\HttpMime;
 use Iquety\Application\Http\Session;
+use Iquety\Routing\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -39,7 +43,7 @@ class ApplicationContext implements Context
         };
     }
 
-    private function makeCustomRequest(): void
+    private function makeCustomRequest(HttpFactory $httpFactory): void
     {
         // Em Application, o código (new HttpDependencies())->attachTo($this) 
         // registra uma ServerRequest usando as variáveis globais do servidor
@@ -49,20 +53,14 @@ class ApplicationContext implements Context
         // identificará que já existe uma ServerRequest e não irá registrá-la
         // mantendo a versão implementada aqui
 
-        if ($this->requestParams === []) {
-            return;
-        }
-
-        $httpFactory = $this->requestParams['httpFactory']
-            ?? throw new Exception('HttpFactory não fornecido para fabicar a requisição');
-
         $request = $httpFactory->createRequestFromGlobals();
 
         if (isset($this->requestParams['accept']) === true) {
             $request = $request->withAddedHeader('Accept', $this->requestParams['accept']);
         }
-
+        
         if (isset($this->requestParams['uri']) === true) {
+            
             $request = $request->withUri(
                 $httpFactory->createUri($this->requestParams['uri'])
             );
@@ -70,6 +68,58 @@ class ApplicationContext implements Context
 
         Application::instance()
             ->addSingleton(ServerRequestInterface::class, fn() => $request);
+    }
+
+    private function startModules(string $requestUri): void
+    {
+        if (isset($this->requestParams['engine-fc']) === true) {
+            Application::instance()->bootModule(
+                new class($requestUri) extends FcBootstrap
+                {
+                    public function __construct(private string $uri)
+                    {}
+
+                    public function bootDirectories(DirectorySet $directories): void
+                    {
+                        $directories->add(new Directory(
+                            'Tests\FcCommands',
+                            __DIR__ . '/stubs/FcCommands'
+                        ));
+                    }
+
+                    public function commandsDirectory(): string
+                    {
+                        return 'stubs/FcCommands';
+                    }
+    
+                    public function bootDependencies(Application $app): void
+                    {}
+                }
+            );
+        }
+
+        if (isset($this->requestParams['engine-mvc']) === true) {
+            Application::instance()->bootModule(
+                new class($requestUri) extends MvcBootstrap
+                {
+                    public function __construct(private string $uri)
+                    {}
+
+                    public function bootRoutes(Router $router): void
+                    {
+                        if ($this->uri === '/test/error') {
+                            $router->get($this->uri)->usingAction(function(){
+                                throw new Exception('Exceção lançada na execução do recurso solicitado');
+                            });
+                        }
+                    }
+    
+                    public function bootDependencies(Application $app): void
+                    {
+                    }
+                }
+            );
+        }
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -89,6 +139,8 @@ class ApplicationContext implements Context
      */
     public function comMecanismoFrontController()
     {
+        $this->requestParams['engine-fc'] = true;
+
         Application::instance()->bootEngine(new FcEngine());
     }
 
@@ -97,6 +149,8 @@ class ApplicationContext implements Context
      */
     public function comMecanismoMvc()
     {
+        $this->requestParams['engine-mvc'] = true;
+
         Application::instance()->bootEngine(new MvcEngine());
     }
 
@@ -177,22 +231,30 @@ class ApplicationContext implements Context
      */
     public function bootstrapComDependenciaSessionEDiactorosHttpFactory()
     {
-        Application::instance()->bootApplication($this->makeBootstrap(function(Application $app) {
+        $httpFactory = new DiactorosHttpFactory();
+
+        $this->requestParams['httpFactory'] = $httpFactory;
+
+        Application::instance()->bootApplication($this->makeBootstrap(function(Application $app) use($httpFactory) {
             $app->addSingleton(Session::class, MemorySession::class);
 
-            $app->addSingleton(HttpFactory::class, DiactorosHttpFactory::class);
+            $app->addSingleton(HttpFactory::class, fn() => $httpFactory);
         }));
-}
+    }
 
     /**
      * @Given bootstrap com dependência Session e GuzzleHttpFactory
      */
     public function bootstrapComDependenciaSessionEGuzzleHttpFactory()
     {
-        Application::instance()->bootApplication($this->makeBootstrap(function(Application $app) {
+        $httpFactory = new GuzzleHttpFactory();
+
+        $this->requestParams['httpFactory'] = $httpFactory;
+
+        Application::instance()->bootApplication($this->makeBootstrap(function(Application $app) use($httpFactory) {
             $app->addSingleton(Session::class, MemorySession::class);
 
-            $app->addSingleton(HttpFactory::class, GuzzleHttpFactory::class);
+            $app->addSingleton(HttpFactory::class, fn() => $httpFactory);
         }));
     }
 
@@ -201,10 +263,14 @@ class ApplicationContext implements Context
      */
     public function bootstrapComDependenciaSessionENyHolmHttpFactory()
     {
-        Application::instance()->bootApplication($this->makeBootstrap(function(Application $app) {
+        $httpFactory = new NyHolmHttpFactory();
+
+        $this->requestParams['httpFactory'] = $httpFactory;
+
+        Application::instance()->bootApplication($this->makeBootstrap(function(Application $app) use($httpFactory) {
             $app->addSingleton(Session::class, MemorySession::class);
 
-            $app->addSingleton(HttpFactory::class, NyHolmHttpFactory::class);
+            $app->addSingleton(HttpFactory::class, fn() => $httpFactory);
         }));
     }
 
@@ -235,6 +301,14 @@ class ApplicationContext implements Context
         $this->requestParams['httpFactory'] = new NyHolmHttpFactory();
     }
 
+    /**
+     * @Given com rota :uri
+     */
+    public function comRota(string $uri)
+    {
+        $this->requestParams['uri'] = $uri;
+    }
+
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
     // QUANDO
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -245,7 +319,13 @@ class ApplicationContext implements Context
     public function aAplicacaoForExecutada()
     {
         try {
-            $this->makeCustomRequest();
+            if (isset($this->requestParams['httpFactory']) === true) {
+                $this->makeCustomRequest($this->requestParams['httpFactory']);
+            }
+    
+            if (isset($this->requestParams['uri']) === true) {
+                $this->startModules($this->requestParams['uri']);
+            }
 
             $this->response = Application::instance()->run();
         } catch(Throwable $exception) {
