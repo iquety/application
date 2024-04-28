@@ -1,10 +1,15 @@
 default:
   autoload:
-    '': '%paths.base%/tests/features/contexts'
+    '': '%paths.base%/tests/features'
   suites:
-    defaults:
-      paths:
-        - '%paths.base%/tests/features'
+    application:
+      paths: 
+        - '%paths.base%/tests/features/application'
       contexts:
         - ApplicationContext
-        - ResponseErrorContext
+
+    # responses:
+    #   paths:
+    #     - '%paths.base%/tests/features/responses'
+    #   contexts:
+    #     - ApplicationContext

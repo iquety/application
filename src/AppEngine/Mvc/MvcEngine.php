@@ -51,7 +51,7 @@ class MvcEngine extends AppEngine
         $router->process($request->getMethod(), $request->getUri()->getPath());
 
         if ($router->routeNotFound()) {
-            return null;
+            return $this->responseFactory()->notFoundResponse('The requested uri was not found');
         }
 
         try {

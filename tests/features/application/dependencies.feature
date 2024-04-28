@@ -3,23 +3,25 @@
 Funcionalidade: Execução da aplicação
     Eu como bootstrap do sistema
     Quero executar uma nova aplicação
-    Para que os módulos usem as funcionaliades disponíveis
+    Para que as dependências sejam validadas e disponibilizadas
 
-Cenário: Executar sem um mecanismo Web
+Cenário: Executar sem um mecanismo web
     Dado uma aplicação instanciada
+    E sem mecanismo web
+    E sem bootstrap
     Quando a aplicação for executada
-    Então imite uma exceção do tipo "RuntimeException" 
-    E a exceção possui a mensagem "No web engine to handle the request"
-
-# FRONT CONTROLLER
+    Então será emitida uma exceção do tipo "RuntimeException" 
+    E a exceção conterá a mensagem "No web engine to handle the request"
 
 Esquema do Cenário: Executar sem Bootstrap
     Dado uma aplicação instanciada
     E com mecanismo <engine>
-    E sem Bootstrap
+    E sem bootstrap
     Quando a aplicação for executada
-    Então imite uma exceção do tipo "RuntimeException" 
-    E a exceção possui a mensagem "No bootstrap specified for the application"
+    Então será emitida uma exceção do tipo "RuntimeException" 
+    E a exceção conterá a mensagem "No bootstrap specified for the application"
+    E o container não possuirá dependência Session
+    E o container não possuirá dependência HttpFactory
     Exemplos:
         | engine |
         | FrontController |
@@ -28,11 +30,12 @@ Esquema do Cenário: Executar sem Bootstrap
 Esquema do Cenário: Executar com Bootstrap com exceção
     Dado uma aplicação instanciada
     E com mecanismo <engine>
-    E Bootstrap com Exceção
+    E bootstrap com exceção
     Quando a aplicação for executada
-    E Container não terá dependência Session
-    Então imite uma exceção do tipo "RuntimeException" 
-    E a exceção possui a mensagem "The bootApplication method failed"
+    Então será emitida uma exceção do tipo "RuntimeException" 
+    E a exceção conterá a mensagem "The bootApplication method failed"
+    E o container não possuirá dependência Session
+    E o container não possuirá dependência HttpFactory
     Exemplos:
         | engine |
         | FrontController |
@@ -41,11 +44,12 @@ Esquema do Cenário: Executar com Bootstrap com exceção
 Esquema do Cenário: Executar com Bootstrap mas sem Session
     Dado uma aplicação instanciada
     E com mecanismo <engine>
-    E Bootstrap sem dependências
+    E bootstrap sem dependências
     Quando a aplicação for executada
-    E Container não terá dependência Session
-    Então imite uma exceção do tipo "RuntimeException" 
+    Então será emitida uma exceção do tipo "RuntimeException" 
     E a exceção conterá a mensagem <message>
+    E o container não possuirá dependência Session
+    E o container não possuirá dependência HttpFactory
     Exemplos:
         | engine          | message |
         | FrontController | "Please provide an implementation for the dependency Session" |
@@ -54,11 +58,11 @@ Esquema do Cenário: Executar com Bootstrap mas sem Session
 Esquema do Cenário: Executar com Bootstrap com Session inválida
     Dado uma aplicação instanciada
     E com mecanismo <engine>
-    E Bootstrap com dependência Session inválida
+    E bootstrap com dependência Session inválida
     Quando a aplicação for executada
-    E Container terá dependência Session
-    Então imite uma exceção do tipo "RuntimeException" 
+    Então será emitida uma exceção do tipo "RuntimeException" 
     E a exceção conterá a mensagem <message>
+    E o container possuirá dependência Session
     Exemplos:
         | engine | message |
         | FrontController | "Session dependency in the bootstrap provided in the Application->bootApplication method is invalid" |
@@ -67,12 +71,12 @@ Esquema do Cenário: Executar com Bootstrap com Session inválida
 Esquema do Cenário: Executar com Bootstrap com Session mas sem HttpFactory
     Dado uma aplicação instanciada
     E com mecanismo <engine>
-    E Bootstrap com dependência Session
+    E bootstrap com dependência Session
     Quando a aplicação for executada
-    E Container terá dependência Session
-    E Container não terá dependência HttpFactory
-    Então imite uma exceção do tipo "RuntimeException" 
+    Então será emitida uma exceção do tipo "RuntimeException" 
     E a exceção conterá a mensagem <message>
+    E o container possuirá dependência Session
+    E o container não possuirá dependência HttpFactory
     Exemplos:
         | engine          | message |
         | FrontController | "Please provide an implementation for the dependency HttpFactory" |
@@ -81,12 +85,12 @@ Esquema do Cenário: Executar com Bootstrap com Session mas sem HttpFactory
 Esquema do Cenário: Executar com Bootstrap com Session válida e HttpFactory inválida
     Dado uma aplicação instanciada
     E com mecanismo <engine>
-    E Bootstrap com dependência Session e HttpFactory inválida
+    E bootstrap com dependência Session e HttpFactory inválida
     Quando a aplicação for executada
-    E Container terá dependência Session
-    E Container terá dependência HttpFactory
-    Então imite uma exceção do tipo "RuntimeException" 
+    Então será emitida uma exceção do tipo "RuntimeException" 
     E a exceção conterá a mensagem <message>
+    E o container possuirá dependência Session
+    E o container possuirá dependência HttpFactory
     Exemplos:
         | engine          | message | 
         | FrontController | "HttpFactory dependency in the bootstrap provided in the Application->bootApplication method is invalid" |
@@ -95,13 +99,17 @@ Esquema do Cenário: Executar com Bootstrap com Session válida e HttpFactory in
 Esquema do Cenário: Executar sem rotas ou comandos
     Dado uma aplicação instanciada
     E com mecanismo <engine>
-    E Bootstrap com dependência Session e HttpFactory
+    E bootstrap com dependência Session e <httpFactory>
     Quando a aplicação for executada
-    E Container terá dependência Session
-    E Container terá dependência HttpFactory
-    E Container terá dependência Application
-    E Container terá dependência ServerRequestInterface
+    Então o container possuirá dependência Session
+    E o container possuirá dependência HttpFactory
+    E o container possuirá dependência Application
+    E o container possuirá dependência ServerRequestInterface
     Exemplos:
-        | engine          |
-        | FrontController |
-        | Mvc             |
+        | engine          | httpFactory          |
+        | FrontController | DiactorosHttpFactory |
+        | FrontController | GuzzleHttpFactory    |
+        | FrontController | NyHolmHttpFactory    |
+        | Mvc | DiactorosHttpFactory             |
+        | Mvc | GuzzleHttpFactory                |
+        | Mvc | NyHolmHttpFactory                |

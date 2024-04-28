@@ -1,21 +1,24 @@
 <?php
 
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\Context;
 use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\Adapter\Session\MemorySession;
+use Iquety\Application\AppEngine\Mvc\MvcBootstrap;
 use Iquety\Application\AppEngine\Mvc\MvcEngine;
 use Iquety\Application\Application;
 use Iquety\Application\Bootstrap;
 use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\HttpMime;
 use Iquety\Application\Http\Session;
+use Iquety\Routing\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Defines application features from the specific context.
  */
-class ResponseErrorContext implements Context
+class MvcResponse404Context implements Context
 {
     private ?ResponseInterface $response = null;
 
@@ -24,7 +27,7 @@ class ResponseErrorContext implements Context
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
     // DADO
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-    
+
     private function makeApplication(HttpFactory $httpFactory): void
     {
         $this->httpFactory = $httpFactory;
@@ -46,6 +49,20 @@ class ResponseErrorContext implements Context
                 }
             }
         );
+
+        Application::instance()->bootModule(
+            new class extends MvcBootstrap
+            {
+                public function bootRoutes(Router $router): void
+                {
+                    $router->get('/article/:id')->usingAction(function(){});
+                    // $router->post('/article/:id');
+                }
+
+                public function bootDependencies(Application $app): void
+                {}
+            }
+        );
     }
 
     private function attachCustomRequest(HttpMime $acceptHeader): void
@@ -60,155 +77,85 @@ class ResponseErrorContext implements Context
 
         $serverRequest = $this->httpFactory->createRequestFromGlobals();
 
+        $uri = $this->httpFactory->createUri('/not-exists');
+
         Application::instance()->addSingleton(
             ServerRequestInterface::class,
-            fn() => $serverRequest->withAddedHeader('Accept', $acceptHeader->value)
+            fn() => $serverRequest->withAddedHeader('Accept', $acceptHeader->value)->withUri($uri)
         );
     }
 
     /**
-     * @Given uma aplicação Diactoros
+     * @Given um mecanismo Mvc
      */
-    public function umaAplicacaoDiactoros()
+    public function umMecanismoMvc()
     {
         $this->makeApplication(new DiactorosHttpFactory());
-    }
 
-    /**
-     * @Given com arquitetura Mvc
-     */
-    public function comArquiteturaMvc()
-    {
         Application::instance()->bootEngine(new MvcEngine());
     }
 
     /**
-     * @Given o tipo solicitado for Html
+     * @Given uma rota configurada
      */
-    public function oTipoSolicitadoForHtml()
+    public function umaRotaConfigurada()
+    {
+        // throw new PendingException();
+    }
+
+    /**
+     * @When for solicitada uma rota inexistente
+     */
+    public function forSolicitadaUmaRotaInexistente()
     {
         $this->attachCustomRequest(HttpMime::HTML);
-    }
 
-    /**
-     * @Given o tipo solicitado for Json
-     */
-    public function oTipoSolicitadoForJson()
-    {
-        $this->attachCustomRequest(HttpMime::JSON);
-    }
-
-    /**
-     * @Given o tipo solicitado for Text
-     */
-    public function oTipoSolicitadoForText()
-    {
-        $this->attachCustomRequest(HttpMime::TEXT);
-    }
-
-    /**
-     * @Given o tipo solicitado for Xml
-     */
-    public function oTipoSolicitadoForXml()
-    {
-        $this->attachCustomRequest(HttpMime::XML);
-    }
-
-    /**
-     * @When a solicitação for executada
-     */
-    public function aSolicitacaoForExecutada()
-    {
         $this->response = Application::instance()->run();
     }
 
     /**
-     * @When a resposta será :httpStatus
+     * @Then a resposta será Not Found
      */
-    public function aRespostaSera(int $expectedStatus)
+    public function aRespostaSeraNotFound()
     {
         $actualStatus = $this->response->getStatusCode();
 
-        if ($actualStatus !== $expectedStatus) {
+        if ($actualStatus !== 404) {
             throw new Exception(
-                "Esperada resposta com status $expectedStatus, mas recebido status $actualStatus"
+                "Esperada resposta com status 404, mas recebido status $actualStatus"
             );
         }
     }
 
     /**
-     * @When a resposta conterá :expectedFile
+     * @Then a resposta Not found conterá :expectedFile
      */
-    public function aRespostaContera(string $expectedFile)
+    public function aRespostaNotFoundContera(string $expectedFile)
     {
         $actualMessage = (string)$this->response->getBody();
 
         $expectedMessage = file_get_contents(__DIR__ . "/$expectedFile");
-
+        
         if (strpos($actualMessage, $expectedMessage) === false) {
             throw new Exception(
                 "Esperada mensagem contendo '$expectedMessage', mas recebida '$actualMessage'"
             );
-        }
+        }        
     }
 
     /**
-     * @Then a resposta será do tipo Html
+     * @Then a resposta Not found será do tipo Html
      */
-    public function aRespostaSeraDoTipoHtml()
+    public function aRespostaNotFoundSeraDoTipoHtml()
     {
-        $expectedMimeType = HttpMime::HTML->value;
         $actualMimeType   = $this->response->getHeaderLine('Content-type');
 
-        if ($expectedMimeType !== $actualMimeType) {
-            throw new Exception(
-                "Esperada resposta do tipo '$expectedMimeType', mas recebida '$actualMimeType'"
-            );            
-        }
-    }
-
-    /**
-     * @Then a resposta será do tipo Json
-     */
-    public function aRespostaSeraDoTipoJson()
-    {
-        $expectedMimeType = HttpMime::JSON->value;
-        $actualMimeType   = $this->response->getHeaderLine('Content-type');
-
-        if ($expectedMimeType !== $actualMimeType) {
-            throw new Exception(
-                "Esperada resposta do tipo '$expectedMimeType', mas recebida '$actualMimeType'"
-            );            
-        }
-    }
-
-    /**
-     * @Then a resposta será do tipo Text
-     */
-    public function aRespostaSeraDoTipoText()
-    {
-        $expectedMimeType = HttpMime::TEXT->value;
-        $actualMimeType   = $this->response->getHeaderLine('Content-type');
-
-        if ($expectedMimeType !== $actualMimeType) {
-            throw new Exception(
-                "Esperada resposta do tipo '$expectedMimeType', mas recebida '$actualMimeType'"
-            );            
-        }
-    }
-
-    /**
-     * @Then a resposta será do tipo Xml
-     */
-    public function aRespostaSeraDoTipoXml()
-    {
-        $expectedMimeType = HttpMime::XML->value;
-        $actualMimeType   = $this->response->getHeaderLine('Content-type');
-
-        if ($expectedMimeType !== $actualMimeType) {
-            throw new Exception(
-                "Esperada resposta do tipo '$expectedMimeType', mas recebida '$actualMimeType'"
-            );            
+        if ($actualMimeType !== HttpMime::HTML->value) {
+            throw new Exception(sprintf(
+                "Esperada resposta do tipo '%s', mas recebida '%s'",
+                HttpMime::HTML->value,
+                $actualMimeType
+            ));            
         }
     }
 }

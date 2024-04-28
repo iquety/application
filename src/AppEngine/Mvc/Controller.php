@@ -12,5 +12,5 @@ abstract class Controller
 {
     use Makeable;
     use MethodChecker;
-    use Publisher;
+    // use Publisher;
 }

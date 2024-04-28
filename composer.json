@@ -47,7 +47,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts" : {
-        "test:feature": "vendor/bin/behat",
+        "test:feature": "vendor/bin/behat --stop-on-failure",
         "test:unit": "vendor/bin/phpunit --testdox",
         "test": [
             "vendor/bin/behat",

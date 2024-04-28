@@ -11,10 +11,7 @@ use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\Session;
 use Psr\Http\Message\ServerRequestInterface;
 
-/**
- * Defines application features from the specific context.
- */
-class ApplicationContext implements Context
+class DependenciesContext implements Context
 {
     private ?Throwable $exception = null;
 
