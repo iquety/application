@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace Iquety\Application\AppEngine\Mvc;
 
 use Closure;
-use Iquety\Application\Bootstrap;
-use InvalidArgumentException;
+use Iquety\Application\AppEngine\Action\Input;
+use Iquety\Application\AppEngine\Action\MethodNotAllowedException;
 use Iquety\Application\AppEngine\AppEngine;
-use Iquety\Application\AppEngine\Input;
-use Iquety\Application\AppEngine\MethodNotAllowedException;
+use Iquety\Application\Bootstrap;
 use Iquety\Injection\InversionOfControl;
 use Iquety\Routing\Route;
 use Iquety\Routing\Router;
@@ -26,6 +25,7 @@ class MvcEngine extends AppEngine
     public function boot(Bootstrap $bootstrap): void
     {
         if (! $bootstrap instanceof MvcBootstrap) {
+            // TODO lançar exceção
             return;
         }
 

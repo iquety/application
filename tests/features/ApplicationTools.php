@@ -182,12 +182,16 @@ class ApplicationContext implements Context
 
             $app->addSingleton(HttpFactory::class, DiactorosHttpFactory::class);
         }));
-}
+
+        // // só existe após a execução
+        // var_dump('9999999', Application::instance()->container()->has(HttpFactory::class));
+        // exit;
+    }
 
     /**
      * @Given bootstrap com dependência Session e GuzzleHttpFactory
      */
-    public function bootstrapComDependenciaSessionEGuzzleHttpFactory()
+    public function bootstrapComDependenciaSessionEGuzzlehttpfactory()
     {
         Application::instance()->bootApplication($this->makeBootstrap(function(Application $app) {
             $app->addSingleton(Session::class, MemorySession::class);
@@ -199,7 +203,7 @@ class ApplicationContext implements Context
     /**
      * @Given bootstrap com dependência Session e NyHolmHttpFactory
      */
-    public function bootstrapComDependenciaSessionENyHolmHttpFactory()
+    public function bootstrapComDependenciaSessionENyholmhttpfactory()
     {
         Application::instance()->bootApplication($this->makeBootstrap(function(Application $app) {
             $app->addSingleton(Session::class, MemorySession::class);
@@ -209,29 +213,62 @@ class ApplicationContext implements Context
     }
 
     /**
-     * @Given o tipo solicitado em DiactorosHttpFactory for :mimeType
+     * @Given o tipo solicitado for Html
      */
-    public function oTipoSolicitadoEmDiactorosHttpFactoryFor(string $mimeType)
+    public function oTipoSolicitadoEmForHtml()
     {
-        $this->requestParams['accept'] = HttpMime::makeBy($mimeType)->value;
+
+        $this->requestParams['accept'] = HttpMime::HTML->value;
+    }
+
+    /**
+     * @Given o tipo solicitado for Json
+     */
+    public function oTipoSolicitadoForJson()
+    {
+        $this->requestParams['accept'] = HttpMime::JSON->value;
+    }
+
+    /**
+     * @Given o tipo solicitado for Text
+     */
+    public function oTipoSolicitadoForText()
+    {
+        $this->requestParams['accept'] = HttpMime::TEXT->value;
+    }
+
+    /**
+     * @Given o tipo solicitado for Xml
+     */
+    public function oTipoSolicitadoForXml()
+    {
+        $this->requestParams['accept'] = HttpMime::XML->value;
+    }
+
+    /**
+     * @Given o tipo solicitado em DiactorosHttpFactory for Json
+     */
+    public function oTipoSolicitadoEmDiactorosHttpFactoryForJson()
+    {
+        $this->requestParams['accept'] = HttpMime::JSON->value;
         $this->requestParams['httpFactory'] = new DiactorosHttpFactory();
     }
 
     /**
-     * @Given o tipo solicitado em GuzzleHttpFactory for :mimeType
+     * @Given o tipo solicitado em GuzzleHttpFactory for Json
      */
-    public function oTipoSolicitadoEmGuzzleHttpFactoryFor(string $mimeType)
+    public function oTipoSolicitadoEmGuzzleHttpFactoryForJson()
     {
-        $this->requestParams['accept'] = HttpMime::makeBy($mimeType)->value;
+        $this->requestParams['accept'] = HttpMime::JSON->value;
         $this->requestParams['httpFactory'] = new GuzzleHttpFactory();
     }
 
     /**
-     * @Given o tipo solicitado em NyHolmHttpFactory for :mimeType
+     * @Given o tipo solicitado em NyHolmHttpFactory for Json
      */
-    public function oTipoSolicitadoEmNyholmhttpfactoryFor(string $mimeType)
+    public function oTipoSolicitadoEmNyHolmHttpFactoryForJson()
     {
-        $this->requestParams['accept'] = HttpMime::makeBy($mimeType)->value;
+        $this->requestParams['accept'] = HttpMime::JSON->value;
         $this->requestParams['httpFactory'] = new NyHolmHttpFactory();
     }
 

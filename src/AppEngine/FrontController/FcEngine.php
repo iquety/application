@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace Iquety\Application\AppEngine\FrontController;
 
 use Closure;
+use Iquety\Application\AppEngine\Action\Input;
+use Iquety\Application\AppEngine\Action\MethodNotAllowedException;
 use Iquety\Application\Bootstrap;
-use InvalidArgumentException;
 use Iquety\Application\AppEngine\AppEngine;
-use Iquety\Application\AppEngine\Input;
-use Iquety\Application\AppEngine\MethodNotAllowedException;
 use Iquety\Injection\InversionOfControl;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -24,6 +23,7 @@ class FcEngine extends AppEngine
     public function boot(Bootstrap $bootstrap): void
     {
         if (! $bootstrap instanceof FcBootstrap) {
+            // TODO lançar exceção
             return;
         }
 

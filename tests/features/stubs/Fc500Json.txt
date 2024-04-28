@@ -1,0 +1,1 @@
+{"message":"No directories registered as command source","file":"\/application\/src\/AppEngine\/FrontController\/FcEngine.php","line":52,"trace":{"0":

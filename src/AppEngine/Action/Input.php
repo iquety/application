@@ -12,6 +12,10 @@ class Input
     /** @var array<int,int|string> */
     private array $indexParams = [];
 
+    // TODO deverá conter o corpo original da solicitação
+    // json, xml, text etc
+    private string $payload = '';
+
     /** @param array<int|string|int|float> $params */
     public function __construct(array $params)
     {

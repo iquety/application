@@ -174,7 +174,7 @@ class Application
             foreach ($this->moduleList as $bootstrap) {
                 $this->bootIntoEngines($bootstrap);
             }
-
+            
             return $this->executeAppEngine(
                 $this->make(ServerRequestInterface::class)
             );

@@ -1,104 +1,95 @@
 # language: pt
 
-Funcionalidade: Resposta Server Error da aplicação
+Funcionalidade: Respostas Server Error
     Eu como usuário
     Quero fazer uma solicitação para uma aplicação com erro
     Para que a resposta adequada seja devolvida no formato solicitado
 
-# Esquema do Cenário: 
-#     Dado uma aplicação Diactoros
-#     E com arquitetura Mvc
-#     Quando a solicitação for executada
-#     Então a resposta terá status 500
-#     E a resposta conterá "Response500Html.txt"
-#     E a resposta será do tipo "text/html"
+Esquema do Cenário: Resposta Server Error Default
+    Dado uma aplicação instanciada
+    E com mecanismo <engine>
+    E bootstrap com dependência Session e <httpFactory>
+    Quando a aplicação for executada
+    Então a resposta terá status 500
+    E a resposta conterá "<message>"
+    E a resposta será do tipo "text/html"
+    Exemplos:
+        | engine          | httpFactory          | message        |
+        | FrontController | DiactorosHttpFactory | Fc500Html.txt  |
+        | FrontController | GuzzleHttpFactory    | Fc500Html.txt  |
+        | FrontController | NyHolmHttpFactory    | Fc500Html.txt  |
+        | Mvc             | DiactorosHttpFactory | Mvc500Html.txt |
+        | Mvc             | GuzzleHttpFactory    | Mvc500Html.txt |
+        | Mvc             | NyHolmHttpFactory    | Mvc500Html.txt |
 
-# Esquema do Cenário: Resposta Server Error Default
-#     Dado uma aplicação instanciada
-#     E com mecanismo <engine>
-#     E sem Bootstrap
-#     Quando a aplicação for executada
-#     Então a resposta terá status 500
-#     E a resposta conterá "Response500Html.txt"
-#     E a resposta será do tipo "text/html"
-#     Exemplos:
-#         | engine |
-#         | FrontController |
-#         | Mvc |
+Esquema do Cenário: Resposta Server Error HTML
+    Dado uma aplicação instanciada
+    E com mecanismo <engine>
+    E o tipo solicitado em <httpFactory> for "text/html"
+    E bootstrap com dependência Session e <httpFactory>
+    Quando a aplicação for executada
+    Então a resposta terá status 500
+    E a resposta conterá "<message>"
+    E a resposta será do tipo "text/html"
+    Exemplos:
+        | engine          | httpFactory          | message        |
+        | FrontController | DiactorosHttpFactory | Fc500Html.txt  |
+        | FrontController | GuzzleHttpFactory    | Fc500Html.txt  |
+        | FrontController | NyHolmHttpFactory    | Fc500Html.txt  |
+        | Mvc             | DiactorosHttpFactory | Mvc500Html.txt |
+        | Mvc             | GuzzleHttpFactory    | Mvc500Html.txt |
+        | Mvc             | NyHolmHttpFactory    | Mvc500Html.txt |
 
+Esquema do Cenário: Resposta Server Error JSON
+    Dado uma aplicação instanciada
+    E com mecanismo <engine>
+    E bootstrap com dependência Session e <httpFactory>
+    E o tipo solicitado em <httpFactory> for "application/json"
+    Quando a aplicação for executada
+    Então a resposta terá status 500
+    E a resposta conterá "<message>"
+    E a resposta será do tipo "application/json"
+    Exemplos:
+        | engine          | httpFactory          | message        |
+        | Mvc             | DiactorosHttpFactory | Mvc500Json.txt |
+        | Mvc             | GuzzleHttpFactory    | Mvc500Json.txt |
+        | Mvc             | NyHolmHttpFactory    | Mvc500Json.txt |
+        | FrontController | DiactorosHttpFactory | Fc500Json.txt  |
+        | FrontController | GuzzleHttpFactory    | Fc500Json.txt  |
+        | FrontController | NyHolmHttpFactory    | Fc500Json.txt  |
 
-# Esquema do Cenário: Resposta Server Error Default
-#     Dado uma aplicação instanciada
-#     E com mecanismo <engine>
-#     E Bootstrap completo com <httpFactory>
-#     Quando a aplicação for executada
-#     Então será emitida uma exceção do tipo "RuntimeException" 
-#     E a exceção conterá a mensagem "No bootstrap specified for the application"
-#     E o Container possuirá dependência Session
-#     E o Container possuirá dependência HttpFactory
+Esquema do Cenário: Resposta Server Error TEXT
+    Dado uma aplicação instanciada
+    E com mecanismo <engine>
+    E bootstrap com dependência Session e <httpFactory>
+    E o tipo solicitado em <httpFactory> for "text/plain"
+    Quando a aplicação for executada
+    Então a resposta terá status 500
+    E a resposta conterá "<message>"
+    E a resposta será do tipo "text/plain"
+    Exemplos:
+        | engine          | httpFactory          | message        |
+        | Mvc             | DiactorosHttpFactory | Mvc500Text.txt |
+        | Mvc             | GuzzleHttpFactory    | Mvc500Text.txt |
+        | Mvc             | NyHolmHttpFactory    | Mvc500Text.txt |
+        | FrontController | DiactorosHttpFactory | Fc500Text.txt  |
+        | FrontController | GuzzleHttpFactory    | Fc500Text.txt  |
+        | FrontController | NyHolmHttpFactory    | Fc500Text.txt  |
 
-# Esquema do Cenário: Resposta Server Error Default
-#     Dado uma aplicação instanciada
-#     E com mecanismo <engine>
-#     E Bootstrap completo com <httpFactory>
-#     Quando a aplicação for executada
-#     Então será emitida uma exceção do tipo "RuntimeException" 
-#     E a exceção conterá a mensagem "No bootstrap specified for the application"
-#     E o Container possuirá dependência Session
-#     E o Container possuirá dependência HttpFactory
-    
-#     Exemplos:
-#         | engine          | httpFactory          |
-#         | FrontController | DiactorosHttpFactory |
-#         | FrontController | GuzzleHttpFactory    |
-#         | FrontController | NyHolmHttpFactory    |
-#         | Mvc | DiactorosHttpFactory             |
-#         | Mvc | GuzzleHttpFactory                |
-#         | Mvc | NyHolmHttpFactory                |
-
-
-# Cenário: 
-#     Dado uma aplicação Diactoros
-#     E com arquitetura Mvc
-#     Quando a solicitação for executada
-#     Então a resposta terá status 500
-#     E a resposta conterá "Response500Html.txt"
-#     E a resposta será do tipo "text/html"
-
-
-# Cenário: Resposta Server Error Html
-#     Dado uma aplicação Diactoros
-#     E com arquitetura Mvc
-#     E o tipo solicitado for Html
-#     Quando a solicitação for executada
-#     Então a resposta terá status 500
-#     E a resposta conterá "Response500Html.txt"
-#     E a resposta será do tipo Html
-
-# Cenário: Resposta Server Error Json
-#     Dado uma aplicação Diactoros
-#     E com arquitetura Mvc
-#     E o tipo solicitado for Json
-#     Quando a solicitação for executada
-#     Então a resposta será 500
-#     E a resposta conterá "Response500Json.txt"
-#     E a resposta será do tipo Json
-
-# Cenário: Resposta Server Error Text
-#     Dado uma aplicação Diactoros
-#     E com arquitetura Mvc
-#     E o tipo solicitado for Text
-#     Quando a solicitação for executada
-#     Então a resposta será 500
-#     E a resposta conterá "Response500Text.txt"
-#     E a resposta será do tipo Text
-
-# Cenário: Resposta Server Error Xml
-#     Dado uma aplicação Diactoros
-#     E com arquitetura Mvc
-#     E o tipo solicitado for Xml
-#     Quando a solicitação for executada
-#     Então a resposta será 500
-#     E a resposta conterá "Response500Xml.txt"
-#     E a resposta será do tipo Xml
-
+Esquema do Cenário: Resposta Server Error XML
+    Dado uma aplicação instanciada
+    E com mecanismo <engine>
+    E bootstrap com dependência Session e <httpFactory>
+    E o tipo solicitado em <httpFactory> for "application/xml"
+    Quando a aplicação for executada
+    Então a resposta terá status 500
+    E a resposta conterá "<message>"
+    E a resposta será do tipo "application/xml"
+    Exemplos:
+        | engine          | httpFactory          | message        |
+        | Mvc             | DiactorosHttpFactory | Mvc500Xml.txt |
+        | Mvc             | GuzzleHttpFactory    | Mvc500Xml.txt |
+        | Mvc             | NyHolmHttpFactory    | Mvc500Xml.txt |
+        | FrontController | DiactorosHttpFactory | Fc500Xml.txt  |
+        | FrontController | GuzzleHttpFactory    | Fc500Xml.txt  |
+        | FrontController | NyHolmHttpFactory    | Fc500Xml.txt  |
