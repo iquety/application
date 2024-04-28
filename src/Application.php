@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Iquety\Application;
 
 use Closure;
+use DateTimeZone;
 use Iquety\Application\Http\HttpDependencies;
 use InvalidArgumentException;
 use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Application\Http\HttpResponseFactory;
 use Iquety\Injection\Container;
+use Iquety\PubSub\Publisher\EventPublisher;
+use Iquety\PubSub\Publisher\SimpleEventPublisher;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
@@ -32,6 +35,8 @@ class Application
     /** @var array<string,Bootstrap> */
     private array $moduleList = [];
 
+    private DateTimeZone $timezone;
+
     public static function instance(): self
     {
         if (static::$instance === null) { // @phpstan-ignore-line
@@ -44,6 +49,18 @@ class Application
     private function __construct()
     {
         $this->container = new Container();
+
+        $this->useTimezone(new DateTimeZone('America/Sao_Paulo'));
+    }
+
+    public function useTimezone(DateTimeZone $timezone): void
+    {
+        Configuration::instance()->set('timezone', $timezone);
+    }
+
+    public function timezone(): DateTimeZone
+    {
+        return Configuration::instance()->get('timezone');
     }
 
     public function bootEngine(AppEngine $engine): void
@@ -61,6 +78,16 @@ class Application
         $this->container()->registerSingletonDependency($identifier, $factory);
     }
 
+    public function addSubscriber(string $channel, string $subscriberIdentifier): void
+    {
+        $this->eventPublisher()->subscribe($channel, $subscriberIdentifier);
+    }
+
+    public function eventPublisher(): EventPublisher
+    {
+        return SimpleEventPublisher::instance();
+    }
+    
     /** @SuppressWarnings(PHPMD.StaticAccess) */
     public function bootApplication(Bootstrap $bootstrap): void
     {
@@ -155,6 +182,9 @@ class Application
                 $this->moduleList,
                 fn($bootstrap) => $bootstrap->bootDependencies($this)
             );
+
+            var_dump($response);
+            exit;
 
             if ($response !== null) {
                 return $response;

@@ -1,0 +1,7 @@
+services:
+
+  php:
+    image: ricardopedias/docker-project:php83
+    container_name: iquety-app
+    volumes:
+      - .:/application

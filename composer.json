@@ -5,26 +5,28 @@
     "keywords": ["framework", "application", "mvc", "application controller"],
     "license": "MIT",
     "require": {
-        "php": "^8.0.0",
+        "php": "^8.3.0",
         "psr/container": "^2.0",
         "psr/http-factory": "^1.0",
         "psr/http-message": "^1.0",
-        "iquety/console": "dev-main"
+        "iquety/console": "dev-main",
+        "iquety/prospection": "dev-main"
     },
     "require-dev": {
+        "behat/behat": "^3.14",
+        "codacy/coverage": "dev-master",
         "guzzlehttp/guzzle": "^7.5",
-        "laminas/laminas-diactoros": "^2.17",
-        "nyholm/psr7": "^1.5",
-        "nyholm/psr7-server": "^1.0",
-        "symfony/http-foundation": "^6.0",
-        "phpunit/phpunit": "^9",
-        "phpstan/phpstan": "^1.8",
         "iquety/docmap": "dev-main",
         "iquety/injection": "dev-main",
         "iquety/routing": "dev-main",
-        "squizlabs/php_codesniffer": "3.*",
+        "laminas/laminas-diactoros": "^2.17",
+        "nyholm/psr7-server": "^1.0",
+        "nyholm/psr7": "^1.5",
         "phpmd/phpmd": "@stable",
-        "codacy/coverage": "dev-master"
+        "phpstan/phpstan": "^1.8",
+        "phpunit/phpunit": "^9",
+        "squizlabs/php_codesniffer": "3.*",
+        "symfony/http-foundation": "^6.0"
     },
     "autoload": {
         "psr-4": {
@@ -34,7 +36,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\Unit\\": "tests/unit/"
         }
     },
     "config": {
@@ -45,14 +47,17 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts" : {
-        "test": [
+        "feature": [
+            "vendor/bin/behat"
+        ],
+        "unit": [
             "vendor/bin/phpunit --testdox"
         ],
         "docmap" : [
             "rm -Rf docs/pt-br/*",
-            "vendor/bin/docmap -s assets/docs/pt-br -d docs/pt-br -r leiame.md -l pt-br",
+            "vendor/bin/docmap -s src/docs/pt-br -d docs/pt-br -r leiame.md -l pt-br",
             "rm -Rf docs/en/*",
-            "vendor/bin/docmap -s assets/docs/en -d docs/en"
+            "vendor/bin/docmap -s src/docs/en -d docs/en"
         ],
         "coverage": "vendor/bin/phpunit --coverage-html coverage",
         "analyse": [
