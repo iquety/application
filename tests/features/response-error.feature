@@ -5,6 +5,14 @@ Funcionalidade: Resposta Server Error da aplicação
     Quero processar uma solicitação
     Para que uma resposta adequada seja devolvida para o cliente
 
+Cenário: Resposta Server Error Default
+    Dado uma aplicação Diactoros
+    E com arquitetura Mvc
+    Quando a solicitação for executada
+    Então a resposta será 500
+    E a resposta conterá "ResponseErrorHtml.txt"
+    E a resposta será do tipo Html
+
 Cenário: Resposta Server Error Html
     Dado uma aplicação Diactoros
     E com arquitetura Mvc

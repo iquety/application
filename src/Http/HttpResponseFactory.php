@@ -51,7 +51,6 @@ class HttpResponseFactory
 
         $content = sprintf(
             "Error: %s on file %s in line %d\n%s",
-            // "Error: %s on file %s in line %d",
             $exception->getMessage(),
             $exception->getFile(),
             $exception->getLine(),
