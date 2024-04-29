@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace Iquety\Application\AppEngine\FrontController;
 
 use InvalidArgumentException;
-use RuntimeException;
 
 class Directory
 {
-    private string $lastUri = '';
-
-    private string $lastClassName = '';
+    /** @var array<string,string|int|float> */
+    private array $paramList = [];
 
     public function __construct(private string $namespace, private string $fullPath)
     {
@@ -31,37 +29,56 @@ class Directory
         return md5($this->namespace . $this->fullPath);
     }
 
-    /** 
-     * Devolve a última uri usada no método getCommandTo
-     */
-    public function getLastUri(): string
+    public function getDescriptorTo(string $bootstrapClass, string $uri): ?CommandDescriptor
     {
-        return $this->lastUri;
+        $cleanedUri = $this->sanitizePath($uri);
+
+        if ($cleanedUri === '') {
+            return null;
+        }
+
+        $nodeList = explode('/', $cleanedUri);
+
+        return $this->processUriLevel($bootstrapClass, $nodeList);
     }
 
-    /** 
-     * Devolve o nome da última classe procurada no método getCommandTo
-     */
-    public function getLastClassName(): string
+    private function processUriLevel(string $bootstrapClass, array &$nodeList): ?CommandDescriptor
     {
-        return $this->lastClassName;
-    }
+        if ($nodeList === []) {
+            return null;
+        }
 
-    public function getCommandTo(string $uri): ?Command
-    {
-        $this->lastUri = trim(trim($uri), '/');
+        $uri = implode('/', $nodeList);
 
         $className = $this->namespace 
             . "\\"
-            . $this->makeNamespaceFrom($this->lastUri);
+            . $this->makeNamespaceFrom($uri);
 
-        $this->lastClassName = $className;
-
-        if (class_exists($className) === false) {
-            return null;
+        if (class_exists($className) === true) {
+            return new CommandDescriptor(
+                $bootstrapClass,
+                $className,
+                $this->fixParams($this->paramList)
+            );
         }
-        
-        return new $className();
+
+        $this->paramList[] = (string)array_pop($nodeList);
+
+        return $this->processUriLevel($bootstrapClass, $nodeList);
+    }
+
+    private function sanitizePath(string $uri): string
+    {
+        $cleanedUri = trim($uri);
+        $cleanedUri = trim($cleanedUri, '/');
+
+        $info = (array)parse_url($cleanedUri);
+
+        if (isset($info['path']) === false) {
+            return '';
+        }
+
+        return trim($info['path'], '/');
     }
 
     private function makeNamespaceFrom(string $uri): string
@@ -85,5 +102,31 @@ class Directory
         );
 
         return implode('', $camelCase);
+    }
+
+    /**
+     * @param array<int,string> $paramList
+     * @return array<int,string|int|float>
+     */
+    private function fixParams(array $paramList): array
+    {
+        foreach ($paramList as $index => $value) {
+            if (is_numeric($value) === false) {
+                continue;
+            }
+
+            if (is_int($value + 0) === true) {
+                $paramList[$index] = (int)$value;
+                continue;
+            }
+
+            $paramList[$index] = (float)$value;
+        }
+
+        // inverte a ordem dos parâmetros
+        // para manter a ordem de aparição no URI
+        krsort($paramList);
+
+        return array_values($paramList);
     }
 }

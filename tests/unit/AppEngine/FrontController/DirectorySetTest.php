@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Tests\Unit\AppEngine\FrontController;
 
 use InvalidArgumentException;
-use Iquety\Application\AppEngine\FrontController\Command;
 use Iquety\Application\AppEngine\FrontController\Directory;
 use Iquety\Application\AppEngine\FrontController\DirectorySet;
-use Tests\Unit\AppEngine\FrontController\Stubs\OneCommand;
-use Tests\Unit\AppEngine\FrontController\Stubs\SubDirectory\TwoCommand;
+use Iquety\Application\AppEngine\FrontController\FcBootstrap;
+use Tests\Unit\AppEngine\FrontController\Stubs\Commands\OneCommand;
+use Tests\Unit\AppEngine\FrontController\Stubs\Commands\SubDirectory\TwoCommand;
 use Tests\Unit\TestCase;
 
 class DirectorySetTest extends TestCase
@@ -17,7 +17,7 @@ class DirectorySetTest extends TestCase
     /** @test */
     public function addDirectory(): void
     {
-        $directorySet = new DirectorySet();
+        $directorySet = new DirectorySet(FcBootstrap::class);
 
         $directorySet->add(new Directory(
             'Tests\Unit\AppEngine\FrontController\Stubs',
@@ -33,15 +33,15 @@ class DirectorySetTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The specified directory already exists');
 
-        $directorySet = new DirectorySet();
+        $directorySet = new DirectorySet(FcBootstrap::class);
 
         $directorySet->add(new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs',
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
             __DIR__ . "/Stubs"
         ));
 
         $directorySet->add(new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs',
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
             __DIR__ . "/Stubs"
         ));
     }
@@ -49,16 +49,16 @@ class DirectorySetTest extends TestCase
     /** @test */
     public function addTwoDirectories(): void
     {
-        $directorySet = new DirectorySet();
+        $directorySet = new DirectorySet(FcBootstrap::class);
 
         $directorySet->add(new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs',
-            __DIR__ . "/Stubs"
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
+            __DIR__ . "/Stubs/Commands"
         ));
 
         $directorySet->add(new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\SubDirectory',
-            __DIR__ . "/Stubs/SubDirectory"
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands\SubDirectory',
+            __DIR__ . "/Stubs/Commands/SubDirectory"
         ));
 
         $this->assertCount(2, $directorySet->toArray());
@@ -67,54 +67,64 @@ class DirectorySetTest extends TestCase
     /** @test */
     public function getCommandWithoutDirectories(): void
     {
-        $directorySet = new DirectorySet();
+        $directorySet = new DirectorySet(FcBootstrap::class);
 
-        $this->assertNull($directorySet->getCommandTo('one-command'));
+        $this->assertNull($directorySet->getDescriptorTo('one-command'));
     }
 
     /** @test */
     public function getCommandToLevelOne(): void
     {
-        $directorySet = new DirectorySet();
+        $directorySet = new DirectorySet(FcBootstrap::class);
 
         $directorySet->add(new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs',
-            __DIR__ . "/Stubs"
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
+            __DIR__ . "/Stubs/Commands"
         ));
 
         $directorySet->add(new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\SubDirectory',
-            __DIR__ . "/Stubs/SubDirectory"
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands\SubDirectory',
+            __DIR__ . "/Stubs/Commands/SubDirectory"
         ));
 
-        $this->assertInstanceOf(OneCommand::class, $directorySet->getCommandTo('one-command'));
-        $this->assertInstanceOf(TwoCommand::class, $directorySet->getCommandTo('two-command'));
+        $descriptor = $directorySet->getDescriptorTo('one-command');
+        $this->assertSame(OneCommand::class . "::execute", $descriptor->action());
+        $this->assertSame([], $descriptor->params());
+
+        $descriptor = $directorySet->getDescriptorTo('two-command');
+        $this->assertSame(TwoCommand::class . "::execute", $descriptor->action());
+        $this->assertSame([], $descriptor->params());
     }
 
     /** @test */
     public function getCommandToLevelTwo(): void
     {
-        $directorySet = new DirectorySet();
+        $directorySet = new DirectorySet(FcBootstrap::class);
 
         $directorySet->add(new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs',
-            __DIR__ . "/Stubs"
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
+            __DIR__ . "/Stubs/Commands"
         ));
 
-        $this->assertInstanceOf(OneCommand::class, $directorySet->getCommandTo('one-command'));
-        $this->assertInstanceOf(TwoCommand::class, $directorySet->getCommandTo('sub-directory/two-command'));
+        $descriptor = $directorySet->getDescriptorTo('one-command');
+        $this->assertSame(OneCommand::class . "::execute", $descriptor->action());
+        $this->assertSame([], $descriptor->params());
+
+        $descriptor = $directorySet->getDescriptorTo('sub-directory/two-command');
+        $this->assertSame(TwoCommand::class . "::execute", $descriptor->action());
+        $this->assertSame([], $descriptor->params());
     }
 
     /** @test */
     public function getCommandInexistent(): void
     {
-        $directorySet = new DirectorySet();
+        $directorySet = new DirectorySet(FcBootstrap::class);
 
         $directorySet->add(new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs',
-            __DIR__ . "/Stubs"
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
+            __DIR__ . "/Stubs/Commands"
         ));
 
-        $this->assertNull($directorySet->getCommandTo('not-exists'));
+        $this->assertNull($directorySet->getDescriptorTo('not-exists'));
     }
 }

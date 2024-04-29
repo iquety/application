@@ -8,20 +8,20 @@ class CommandDescriptor
 {
     /** @param array<int,string|int|float> $params */
     public function __construct(
-        private string $moduleIdentifier,
-        private string $callable,
+        private string $bootstrapClass,
+        private string $commandClass,
         private array $params
     ) {
     }
 
-    public function action(): string
-    {
-        return $this->callable . '::execute';
-    }
-
     public function module(): string
     {
-        return $this->moduleIdentifier;
+        return $this->bootstrapClass;
+    }
+
+    public function action(): string
+    {
+        return $this->commandClass . '::execute';
     }
 
     /** @return array<int,string|int|float> */

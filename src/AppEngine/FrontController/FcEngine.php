@@ -18,9 +18,7 @@ use Throwable;
 /** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class FcEngine extends AppEngine
 {
-    private ?CommandHandler $handler = null;
-
-    private DirectorySet $directorySet;
+    private ?SourceHandler $handler = null;
 
     public function boot(Bootstrap $bootstrap): void
     {
@@ -29,48 +27,46 @@ class FcEngine extends AppEngine
             return;
         }
 
-        $this->directorySet = new DirectorySet();
+        // para verificar a existencia do container
+        $this->container();
 
-        $bootstrap->bootDirectories($this->directorySet);
+        $directorySet = new DirectorySet($bootstrap::class);
 
-        $this->handler()->addModuleSources($bootstrap::class, $this->directorySet);
+        $bootstrap->bootDirectories($directorySet);
+
+        $this->sourceHandler()
+            ->setErrorCommand($bootstrap->getErrorCommand())
+            ->setNotFoundCommand($bootstrap->getNotFoundCommand())
+            ->setRootCommand($bootstrap->getRootCommand())
+            ->addSources($directorySet);
     }
 
     /** @param array<string,Bootstrap> $moduleList */
     public function execute(
         RequestInterface $request,
         array $moduleList,
-        Closure $bootDependencies
+        Closure $bootModuleDependencies
     ): ?ResponseInterface {
-        $handler = $this->handler();
+        $descriptor = $this->sourceHandler()
+            ->getDescriptorTo($request->getUri()->getPath());
 
-        if ($handler->commandSources() === []) {
-            throw new RuntimeException(
-                'No directories registered as command source'
-            );
-        }
-
-        // $possibiliyList = $handler->process($request->getUri()->getPath());
-
-        $command = $handler->resolveCommand($request->getUri()->getPath());
-
-        if ($command === null) {
+        if ($descriptor === null) {
             return null;
         }
 
-        try {
-            $module = $command->module();
-            $action = $command->action();
-            $params = $command->params();
+        $control = new InversionOfControl($this->container());
 
-            $bootDependencies($moduleList[$module]);
+        try {
+            $module = $descriptor->module();
+            $action = $descriptor->action();
+            $params = $descriptor->params();
+
+            $bootModuleDependencies($moduleList[$module]);
 
             $this->container()->registerSingletonDependency(
                 Input::class,
                 fn() => new Input($params)
             );
-
-            $control = new InversionOfControl($this->container());
 
             try {
                 return $control->resolveTo(Command::class, $action);
@@ -78,26 +74,29 @@ class FcEngine extends AppEngine
                 return null;
             }
         } catch (Throwable $exception) {
-            return $this->responseFactory()->serverErrorResponse($exception);
+            $this->container()->registerSingletonDependency(
+                Throwable::class,
+                fn() => $exception
+            );
+
+            // TODO: faz sentido?? o Application também tem erro.
+            $descriptor = $this->sourceHandler()->getErrorDescriptor();
+
+            return $control->resolveTo(Command::class, $descriptor->action());
         }
     }
 
-    public function getDirectorySet(): DirectorySet
+    private function sourceHandler(): SourceHandler
     {
-        return $this->directorySet;
-    }
-
-    private function handler(): CommandHandler
-    {
-        if ($this->container()->has(CommandHandler::class) === false) {
-            $this->container()->registerSingletonDependency(CommandHandler::class, CommandHandler::class);
+        if ($this->container()->has(SourceHandler::class) === false) {
+            $this->container()->registerSingletonDependency(SourceHandler::class, SourceHandler::class);
         }
 
         if ($this->handler !== null) {
             return $this->handler;
         }
 
-        $this->handler = $this->container()->get(CommandHandler::class);
+        $this->handler = $this->container()->get(SourceHandler::class);
 
         return $this->handler;
     }

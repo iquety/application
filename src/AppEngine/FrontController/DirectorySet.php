@@ -11,6 +11,10 @@ class DirectorySet
     /** @var array<string,Directory> */
     private array $directoryList = [];
 
+    public function __construct(private string $bootstrapClass)
+    {
+    }
+
     public function add(Directory $directory): void
     {
         $index = $directory->getIdentity();
@@ -24,13 +28,13 @@ class DirectorySet
         $this->directoryList[$index] = $directory;
     }
 
-    public function getCommandTo(string $uri): ?Command
+    public function getDescriptorTo(string $uri): ?CommandDescriptor
     {
         foreach($this->directoryList as $directory) {
-            $command = $directory->getCommandTo($uri);
+            $descriptor = $directory->getDescriptorTo($this->bootstrapClass, $uri);
 
-            if ($command !== null) {
-                return $command;
+            if ($descriptor !== null) {
+                return $descriptor;
             }
         }
 
