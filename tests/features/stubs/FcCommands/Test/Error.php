@@ -15,4 +15,3 @@ class Error extends Command
         throw new Exception('Exceção lançada na execução do recurso solicitado');
     }
 }
-

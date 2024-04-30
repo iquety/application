@@ -33,14 +33,15 @@ class ApplicationContext implements Context
         Application::instance()->reset();
 
         Application::instance()->bootApplication(
-            new class($httpFactory) implements Bootstrap {
+            new class ($httpFactory) implements Bootstrap {
                 public function __construct(private HttpFactory $httpFactory)
-                {}
+                {
+                }
 
                 public function bootDependencies(Application $app): void
                 {
                     // implementação de session
-                    $app->addSingleton(Session::class, MemorySession::class); 
+                    $app->addSingleton(Session::class, MemorySession::class);
 
                     // implementação de HttpFactory
                     $app->addSingleton(HttpFactory::class, fn() => $this->httpFactory);
@@ -53,18 +54,20 @@ class ApplicationContext implements Context
             {
                 public function bootRoutes(Router $router): void
                 {
-                    $router->get('/article/:id')->usingAction(function(){});
+                    $router->get('/article/:id')->usingAction(function () {
+                    });
                 }
 
                 public function bootDependencies(Application $app): void
-                {}
+                {
+                }
             }
         );
     }
 
     private function attachCustomRequest(): void
     {
-        // Em Application, o código (new HttpDependencies())->attachTo($this) 
+        // Em Application, o código (new HttpDependencies())->attachTo($this)
         // registra uma ServerRequest usando as variáveis globais do servidor
 
         // O código abaixo irá registrar uma ServerRequest personalizada
@@ -85,9 +88,9 @@ class ApplicationContext implements Context
         Application::instance()->addSingleton(ServerRequestInterface::class, fn() => $serverRequest);
     }
 
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // DADO
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     /**
      * @Given uma aplicação Diactoros
@@ -145,9 +148,9 @@ class ApplicationContext implements Context
         $this->acceptMimeType = HttpMime::XML;
     }
 
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // QUANDO
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     /**
      * @When a solicitação for executada
@@ -159,9 +162,9 @@ class ApplicationContext implements Context
         $this->response = Application::instance()->run();
     }
 
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // ENTÃO
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     /**
      * @Then a resposta terá status :expectedStatus
@@ -185,7 +188,7 @@ class ApplicationContext implements Context
         $actualMessage = (string)$this->response->getBody();
 
         $expectedMessage = file_get_contents(__DIR__ . "/$expectedFile");
-        
+
         if (strpos($actualMessage, $expectedMessage) === false) {
             throw new Exception(
                 "Esperada mensagem contendo '$expectedMessage', mas recebida '$actualMessage'"
@@ -204,7 +207,7 @@ class ApplicationContext implements Context
         if ($expectedMimeType !== $actualMimeType) {
             throw new Exception(
                 "Esperada resposta do tipo '$expectedMimeType', mas recebida '$actualMimeType'"
-            );            
+            );
         }
     }
 
@@ -212,7 +215,7 @@ class ApplicationContext implements Context
 
 
 
-    
+
     /**
      * @Given uma aplicação instanciada
      */

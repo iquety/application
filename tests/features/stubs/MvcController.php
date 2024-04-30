@@ -6,5 +6,4 @@ use Iquety\Application\AppEngine\Mvc\Controller;
 
 class MvcController extends Controller
 {
-        
 }

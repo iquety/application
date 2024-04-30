@@ -17,9 +17,9 @@ class DomainEventTest extends TestCase
     {
         Configuration::instance()->set('timezone', new DateTimeZone('UTC'));
 
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         // Evento Um
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         $eventOne = new PostRegistered(
             'Meu artigo',
@@ -44,9 +44,9 @@ class DomainEventTest extends TestCase
 
         $this->assertArrayHasKey('ocurredOn', $eventOne->toArray());
 
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         // Evento Dois
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         $eventTwo = PostRegistered::factory($eventOne->toArray());
 

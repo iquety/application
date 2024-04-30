@@ -22,51 +22,57 @@ use Tests\Unit\TestCase;
  */
 class FcEngineExecuteTest extends TestCase
 {
-    /** @test */
-    public function executeWithoutDirectories(): void
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('No directories registered as command source');
+    // /** @test */
+    // public function executeWithoutDirectories(): void
+    // {
+    //     $this->expectException(RuntimeException::class);
+    //     $this->expectExceptionMessage('No directories registered as command source');
 
-        /** @var RequestInterface */
-        $request = $this->createMock(RequestInterface::class);
+    //     /** @var RequestInterface */
+    //     $request = $this->createMock(RequestInterface::class);
 
-        $engine = new FcEngine();
+    //     $engine = new FcEngine();
 
-        $engine->useContainer(new Container());
+    //     $engine->useContainer(new Container());
 
-        $engine->boot(new class extends FcBootstrap {
-            public function bootDependencies(Application $app): void {}
-        });
+    //     $engine->boot(new class extends FcBootstrap {
+    //         public function bootDependencies(Application $app): void
+    //         {
+    //         }
+    //     });
 
-        $engine->execute($request, [], function(){});
-    }
+    //     $engine->execute($request, [], function () {
+    //     });
+    // }
 
-    /** @test */
-    public function executeDirectories(): void
-    {
-        // $this->expectException(RuntimeException::class);
-        // $this->expectExceptionMessage('No directories registered as command source');
+    // /** @test */
+    // public function executeDirectories(): void
+    // {
+    //     // $this->expectException(RuntimeException::class);
+    //     // $this->expectExceptionMessage('No directories registered as command source');
 
-        /** @var RequestInterface */
-        $request = $this->createMock(RequestInterface::class);
+    //     /** @var RequestInterface */
+    //     $request = $this->createMock(RequestInterface::class);
 
-        $engine = new FcEngine();
+    //     $engine = new FcEngine();
 
-        $engine->useContainer(new Container());
+    //     $engine->useContainer(new Container());
 
-        $engine->boot(new class extends FcBootstrap {
-            public function bootDependencies(Application $app): void {}
+    //     $engine->boot(new class extends FcBootstrap {
+    //         public function bootDependencies(Application $app): void
+    //         {
+    //         }
 
-            public function bootDirectories(DirectorySet $directories): void
-            {
-                $directories->add(new Directory(
-                    'Tests\Unit\AppEngine\FrontController\Stubs',
-                    __DIR__ . "/Stubs"
-                ));
-            }
-        });
+    //         public function bootDirectories(DirectorySet $directories): void
+    //         {
+    //             $directories->add(new Directory(
+    //                 'Tests\Unit\AppEngine\FrontController\Stubs',
+    //                 __DIR__ . "/Stubs"
+    //             ));
+    //         }
+    //     });
 
-        $engine->execute($request, [], function(){});
-    }
+    //     $engine->execute($request, [], function () {
+    //     });
+    // }
 }

@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Iquety\Application\AppEngine\FrontController;
+namespace Iquety\Application\AppEngine\FrontController\Command;
 
 use Iquety\Application\AppEngine\Action\Input;
-use Iquety\Application\AppEngine\FrontController\Command;
 use Iquety\Application\Http\HttpFactory;
 use Psr\Http\Message\ResponseInterface;
 
-class NotFoundCommand extends Command
+class ErrorCommand extends Command
 {
     public function __construct()
     {

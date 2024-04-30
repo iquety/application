@@ -9,7 +9,7 @@ use Iquety\PubSub\Event\Event;
 
 class UserSubscriber extends Subscriber
 {
-    /** 
+    /**
      * @param array<string,mixed> $eventData
      */
     public function eventFactory(string $eventLabel, array $eventData): ?Event
@@ -20,7 +20,7 @@ class UserSubscriber extends Subscriber
 
         return null;
     }
-    
+
     public function handleEvent(Event $event): void
     {
         // $file = new Filesystem(dirname(__DIR__, 2) . '/files');

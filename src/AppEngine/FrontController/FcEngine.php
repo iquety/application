@@ -9,10 +9,10 @@ use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Application\AppEngine\Action\MethodNotAllowedException;
 use Iquety\Application\Bootstrap;
 use Iquety\Application\AppEngine\AppEngine;
+use Iquety\Application\AppEngine\FrontController\Command\Command;
 use Iquety\Injection\InversionOfControl;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use RuntimeException;
 use Throwable;
 
 /** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
@@ -27,17 +27,19 @@ class FcEngine extends AppEngine
             return;
         }
 
-        // para verificar a existencia do container
+        // para forçar a presença do container
         $this->container();
 
         $directorySet = new DirectorySet($bootstrap::class);
 
+        // os diretórios são adicionados na implementação
+        // do bootstrap do módulo
         $bootstrap->bootDirectories($directorySet);
 
         $this->sourceHandler()
-            ->setErrorCommand($bootstrap->getErrorCommand())
-            ->setNotFoundCommand($bootstrap->getNotFoundCommand())
-            ->setRootCommand($bootstrap->getRootCommand())
+            ->setErrorCommandClass($bootstrap->getErrorCommandClass())
+            ->setNotFoundCommandClass($bootstrap->getNotFoundCommandClass())
+            ->setMainCommandClass($bootstrap->getMainCommandClass())
             ->addSources($directorySet);
     }
 

@@ -68,7 +68,7 @@ class HttpResponseFactory
 
         return $this->response($content, HttpStatus::INTERNAL_SERVER_ERROR);
     }
-    
+
     public function response(array|string $content, HttpStatus $status): ResponseInterface
     {
         $response = $this->factory->createResponse(
@@ -82,13 +82,13 @@ class HttpResponseFactory
             return $response;
         }
 
-        $resolvedContent = match($this->mimeType) {
+        $resolvedContent = match ($this->mimeType) {
             HttpMime::HTML => $this->makeHtmlResponse($content),
             HttpMime::JSON => $this->makeJsonResponse($content),
             HttpMime::TEXT => $this->makeTextResponse($content),
             HttpMime::XML  => $this->makeXmlResponse($content),
             default        => $this->makeHtmlResponse($content)
-        };     
+        };
 
         return $response->withBody(
             $this->factory->createStream($resolvedContent)
@@ -136,15 +136,15 @@ class HttpResponseFactory
     private function arrayToXml(array $content, ?SimpleXMLElement $element): string
     {
         foreach ($content as $tag => $value) {
-            if (is_array($value) === true) { 
+            if (is_array($value) === true) {
                 $this->arrayToXml($value, $element->addChild((string)$tag));
 
                 continue;
             }
-                 
+
             $element->addChild((string)$tag, (string)$value);
         }
-         
+
         return $element->asXML();
     }
 }

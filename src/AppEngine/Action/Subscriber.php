@@ -11,7 +11,7 @@ use Iquety\PubSub\Subscriber\EventSubscriber;
 
 abstract class Subscriber implements EventSubscriber
 {
-    /** 
+    /**
      * @param array<string,mixed> $eventData
      */
     abstract public function eventFactory(string $eventLabel, array $eventData): ?Event;

@@ -30,7 +30,7 @@ abstract class DomainEvent implements Event
         $event = new $className(...$arguments);
 
         $reflection = new ReflectionObject($event);
-        
+
         $property = $reflection->getProperty('ocurredOn');
         $property->setAccessible(true);
         $property->setValue($event, $values['ocurredOn']);
@@ -55,12 +55,12 @@ abstract class DomainEvent implements Event
     private static function makeConstructorArguments(string $className, array $values): array
     {
         $reflection = new ReflectionClass($className);
-        
+
         $argumentList = $reflection->getConstructor()->getParameters();
 
         $list = [];
 
-        foreach($argumentList as $argument) {
+        foreach ($argumentList as $argument) {
             $label = $argument->getName();
 
             $list[] = $values[$label];
@@ -100,12 +100,12 @@ abstract class DomainEvent implements Event
 
         $propertyList = [];
 
-        foreach($argumentList as $argument) {
+        foreach ($argumentList as $argument) {
             $label = $argument->getName();
 
             $property = $reflection->getProperty($label);
             $property->setAccessible(true);
-            
+
             $value = $property->getValue($this);
 
             $propertyList[$label] = $value;

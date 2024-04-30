@@ -191,7 +191,7 @@ class ApplicationRunTest extends TestCase
         $response = $app->run();
 
         $this->assertInstanceOf(Application::class, $app->make(Application::class));
-        
+
         $this->assertInstanceOf(HttpFactory::class, $app->make(HttpFactory::class));
 
         $this->assertInstanceOf(
@@ -217,7 +217,7 @@ class ApplicationRunTest extends TestCase
             HttpResponseFactory::class,
             $app->make(HttpResponseFactory::class)
         );
-        
+
         $this->assertSame(HttpStatus::OK, $response->getStatusCode());
     }
 

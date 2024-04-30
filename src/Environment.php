@@ -15,7 +15,7 @@ enum Environment: string
 
     public static function makeBy(string $enviromnent): Environment
     {
-        return match($enviromnent) {
+        return match ($enviromnent) {
             'production'  => self::PRODUCTION,
             'development' => self::DEVELOPMENT,
             'testint'     => self::TESTING,

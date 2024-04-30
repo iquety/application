@@ -15,7 +15,7 @@ class PostRegisteredPast extends PostRegistered
             '2022/01/10 10:10:10',
             Configuration::instance()->get('timezone')
         );
-        
+
         return $this->ocurredOn;
     }
 }

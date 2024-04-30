@@ -29,7 +29,7 @@ class Application
     private Container $container;
 
     private Environment $environment = Environment::PRODUCTION;
-    
+
     private static ?Application $instance = null;
 
     private ?Bootstrap $mainBootstrap = null;
@@ -104,7 +104,7 @@ class Application
     // {
     //     return SimpleEventPublisher::instance();
     // }
-    
+
     /** @SuppressWarnings(PHPMD.StaticAccess) */
     public function bootApplication(Bootstrap $bootstrap): void
     {
@@ -167,9 +167,7 @@ class Application
             // para o ioc fazer uso da aplicação
             $this->addSingleton(Application::class, fn() => Application::instance());
 
-            if ($this->mainBootstrap !== null) {
-                $this->bootIntoEngines($this->mainBootstrap);
-            }
+            $this->bootIntoEngines($this->mainBootstrap);
 
             foreach ($this->moduleList as $bootstrap) {
                 $this->bootIntoEngines($bootstrap);

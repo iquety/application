@@ -10,7 +10,10 @@ use Iquety\Routing\Router;
 
 abstract class MvcBootstrap implements Bootstrap
 {
-    abstract public function bootRoutes(Router $router): void;
+    public function bootRoutes(Router &$router): void
+    {
+        //...
+    }
 
     abstract public function bootDependencies(Application $app): void;
 }

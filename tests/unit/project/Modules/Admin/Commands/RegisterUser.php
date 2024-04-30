@@ -11,7 +11,6 @@ class RegisterUser extends Command
 {
     public function execute(Input $input): void
     {
-        $this->publish(User::eventLabel(), );
+        $this->publish(User::eventLabel(),);
     }
 }
-

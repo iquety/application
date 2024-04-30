@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Iquety\Application\AppEngine\FrontController;
 
 use InvalidArgumentException;
+use Iquety\Application\AppEngine\FrontController\Command\CommandDescriptor;
 
 class Directory
 {
@@ -50,7 +51,7 @@ class Directory
 
         $uri = implode('/', $nodeList);
 
-        $className = $this->namespace 
+        $className = $this->namespace
             . "\\"
             . $this->makeNamespaceFrom($uri);
 
@@ -85,7 +86,7 @@ class Directory
     {
         $nodeList = explode('/', $uri);
 
-        foreach($nodeList as $index => $nodePath) {
+        foreach ($nodeList as $index => $nodePath) {
             $nodeList[$index] = $this->makeCamelCase($nodePath);
         }
 

@@ -61,13 +61,22 @@
             "vendor/bin/docmap -s src/docs/en -d docs/en"
         ],
         "coverage": "vendor/bin/phpunit --coverage-html coverage",
-        "analyse": [
-            "phpcbf --standard=PSR1,PSR12 src tests",
-            "phpcs --standard=PSR1,PSR12 src tests",
+        "mess": [
             "phpmd ./src ansi cleancode,codesize,unusedcode,naming,design,controversial",
-            "phpmd ./tests ansi cleancode,codesize,unusedcode,naming,design,controversial",
-            "phpstan analyse --level=8 --xdebug src",
-            "phpstan analyse --level=8 --xdebug tests"
+            "phpmd ./tests ansi cleancode,codesize,unusedcode,naming,design,controversial"
+        ],
+        "stan": [
+            "phpstan analyse --level=8 src",
+            "phpstan analyse --level=8 tests"
+        ],
+        "psr": [
+            "phpcbf --standard=PSR1,PSR12 src tests",
+            "phpcs --standard=PSR1,PSR12 src tests"
+        ],
+        "analyse": [
+            "@psr",
+            "@mess",
+            "@stan"
         ]
     }
 }

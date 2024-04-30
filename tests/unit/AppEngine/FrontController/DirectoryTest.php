@@ -98,8 +98,8 @@ class DirectoryTest extends TestCase
         return $list;
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider uriProvider
      */
     public function getCommandToBars(string $uri, string $className): void
@@ -115,8 +115,8 @@ class DirectoryTest extends TestCase
         $this->assertSame([], $descriptor->params());
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider uriProvider
      */
     public function getCommandToSpaces(string $uri, string $className): void
@@ -168,8 +168,8 @@ class DirectoryTest extends TestCase
         return $list;
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider invalidCommandProvider
      */
     public function getInvalidCommand(string $uri): void
@@ -192,7 +192,7 @@ class DirectoryTest extends TestCase
         $list['one: 1 param float']  = [ 'one-command/1.0', [1.0] ];
         $list['one: 1 param int']    = [ 'one-command/11', [11] ];
         $list['one: 1 param string'] = [ 'one-command/identity', ['identity'] ];
-        
+
         $list['one: 2 params float']  = [ 'one-command/1.1/2.2', [1.1, 2.2] ];
         $list['one: 2 params int']    = [ 'one-command/11/22', [11, 22] ];
         $list['one: 2 params string'] = [ 'one-command/one/two', ['one', 'two'] ];
@@ -206,7 +206,7 @@ class DirectoryTest extends TestCase
         $list['two: 1 param float']  = [ 'sub-directory/two-command/1.0', [1.0] ];
         $list['two: 1 param int']    = [ 'sub-directory/two-command/11', [11] ];
         $list['two: 1 param string'] = [ 'sub-directory/two-command/identity', ['identity'] ];
-        
+
         $list['two: 2 params float']  = [ 'sub-directory/two-command/1.1/2.2', [1.1, 2.2] ];
         $list['two: 2 params int']    = [ 'sub-directory/two-command/11/22', [11, 22] ];
         $list['two: 2 params string'] = [ 'sub-directory/two-command/one/two', ['one', 'two'] ];
@@ -218,8 +218,8 @@ class DirectoryTest extends TestCase
         return $list;
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @dataProvider commandParamsProvider
      * @param array<int,string|int|float> $paramList
      */

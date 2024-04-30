@@ -24,9 +24,9 @@ class MvcResponse404Context implements Context
 
     private ?HttpFactory $httpFactory = null;
 
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // DADO
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     private function makeApplication(HttpFactory $httpFactory): void
     {
@@ -35,14 +35,15 @@ class MvcResponse404Context implements Context
         Application::instance()->reset();
 
         Application::instance()->bootApplication(
-            new class($httpFactory) implements Bootstrap {
+            new class ($httpFactory) implements Bootstrap {
                 public function __construct(private HttpFactory $httpFactory)
-                {}
+                {
+                }
 
                 public function bootDependencies(Application $app): void
                 {
                     // implementação de session
-                    $app->addSingleton(Session::class, MemorySession::class); 
+                    $app->addSingleton(Session::class, MemorySession::class);
 
                     // implementação de HttpFactory
                     $app->addSingleton(HttpFactory::class, fn() => $this->httpFactory);
@@ -55,19 +56,21 @@ class MvcResponse404Context implements Context
             {
                 public function bootRoutes(Router $router): void
                 {
-                    $router->get('/article/:id')->usingAction(function(){});
+                    $router->get('/article/:id')->usingAction(function () {
+                    });
                     // $router->post('/article/:id');
                 }
 
                 public function bootDependencies(Application $app): void
-                {}
+                {
+                }
             }
         );
     }
 
     private function attachCustomRequest(HttpMime $acceptHeader): void
     {
-        // Em Application, o código (new HttpDependencies())->attachTo($this) 
+        // Em Application, o código (new HttpDependencies())->attachTo($this)
         // registra uma ServerRequest usando as variáveis globais do servidor
 
         // O código abaixo irá registrar uma ServerRequest personalizada
@@ -135,12 +138,12 @@ class MvcResponse404Context implements Context
         $actualMessage = (string)$this->response->getBody();
 
         $expectedMessage = file_get_contents(__DIR__ . "/$expectedFile");
-        
+
         if (strpos($actualMessage, $expectedMessage) === false) {
             throw new Exception(
                 "Esperada mensagem contendo '$expectedMessage', mas recebida '$actualMessage'"
             );
-        }        
+        }
     }
 
     /**
@@ -155,7 +158,7 @@ class MvcResponse404Context implements Context
                 "Esperada resposta do tipo '%s', mas recebida '%s'",
                 HttpMime::HTML->value,
                 $actualMimeType
-            ));            
+            ));
         }
     }
 }

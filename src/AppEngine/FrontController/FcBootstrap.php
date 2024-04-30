@@ -4,32 +4,33 @@ declare(strict_types=1);
 
 namespace Iquety\Application\AppEngine\FrontController;
 
-use Directory;
+use Iquety\Application\AppEngine\FrontController\Command\ErrorCommand;
+use Iquety\Application\AppEngine\FrontController\Command\MainCommand;
+use Iquety\Application\AppEngine\FrontController\Command\NotFoundCommand;
 use Iquety\Application\Application;
 use Iquety\Application\Bootstrap;
-use Iquety\Application\Settings;
 
 abstract class FcBootstrap implements Bootstrap
 {
-    public function bootDirectories(DirectorySet &$directories): void
+    public function bootDirectories(DirectorySet &$directorySet): void
     {
         // ...
     }
 
-    public function getErrorCommand(): string
+    public function getErrorCommandClass(): string
     {
         return ErrorCommand::class;
     }
 
-    public function getNotFoundCommand(): string
+    public function getNotFoundCommandClass(): string
     {
         return NotFoundCommand::class;
     }
 
-    public function getRootCommand(): string
+    public function getMainCommandClass(): string
     {
-        return DefaultCommand::class;
+        return MainCommand::class;
     }
-    
+
     abstract public function bootDependencies(Application $app): void;
 }

@@ -13,7 +13,7 @@ enum HttpMime: string
 
     public static function makeBy(string $mimeType): HttpMime
     {
-        return match($mimeType) {
+        return match ($mimeType) {
             'text/html'        => self::HTML,
             'application/json' => self::JSON,
             'text/plain'       => self::TEXT,

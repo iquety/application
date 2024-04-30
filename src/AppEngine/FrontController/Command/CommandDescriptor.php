@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Iquety\Application\AppEngine\FrontController;
+namespace Iquety\Application\AppEngine\FrontController\Command;
 
 class CommandDescriptor
 {

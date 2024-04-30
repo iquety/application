@@ -30,9 +30,10 @@ class ApplicationContext implements Context
 
     private function makeBootstrap(Closure $bootCallback): Bootstrap
     {
-        return new class($bootCallback) implements Bootstrap {
+        return new class ($bootCallback) implements Bootstrap {
             public function __construct(private Closure $bootCallback)
-            {}
+            {
+            }
 
             public function bootDependencies(Application $app): void
             {
@@ -45,7 +46,7 @@ class ApplicationContext implements Context
 
     private function makeCustomRequest(HttpFactory $httpFactory): void
     {
-        // Em Application, o código (new HttpDependencies())->attachTo($this) 
+        // Em Application, o código (new HttpDependencies())->attachTo($this)
         // registra uma ServerRequest usando as variáveis globais do servidor
 
         // O código abaixo irá registrar uma ServerRequest personalizada
@@ -58,9 +59,8 @@ class ApplicationContext implements Context
         if (isset($this->requestParams['accept']) === true) {
             $request = $request->withAddedHeader('Accept', $this->requestParams['accept']);
         }
-        
+
         if (isset($this->requestParams['uri']) === true) {
-            
             $request = $request->withUri(
                 $httpFactory->createUri($this->requestParams['uri'])
             );
@@ -74,10 +74,11 @@ class ApplicationContext implements Context
     {
         if (isset($this->requestParams['engine-fc']) === true) {
             Application::instance()->bootModule(
-                new class($requestUri) extends FcBootstrap
+                new class ($requestUri) extends FcBootstrap
                 {
                     public function __construct(private string $uri)
-                    {}
+                    {
+                    }
 
                     public function bootDirectories(DirectorySet $directories): void
                     {
@@ -91,29 +92,31 @@ class ApplicationContext implements Context
                     {
                         return 'stubs/FcCommands';
                     }
-    
+
                     public function bootDependencies(Application $app): void
-                    {}
+                    {
+                    }
                 }
             );
         }
 
         if (isset($this->requestParams['engine-mvc']) === true) {
             Application::instance()->bootModule(
-                new class($requestUri) extends MvcBootstrap
+                new class ($requestUri) extends MvcBootstrap
                 {
                     public function __construct(private string $uri)
-                    {}
+                    {
+                    }
 
                     public function bootRoutes(Router $router): void
                     {
                         if ($this->uri === '/test/error') {
-                            $router->get($this->uri)->usingAction(function(){
+                            $router->get($this->uri)->usingAction(function () {
                                 throw new Exception('Exceção lançada na execução do recurso solicitado');
                             });
                         }
                     }
-    
+
                     public function bootDependencies(Application $app): void
                     {
                     }
@@ -122,9 +125,9 @@ class ApplicationContext implements Context
         }
     }
 
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // DADO
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     /**
      * @Given uma aplicação instanciada
@@ -199,7 +202,7 @@ class ApplicationContext implements Context
      */
     public function bootstrapComDependenciaSessionInvalida()
     {
-        Application::instance()->bootApplication($this->makeBootstrap(function(Application $app) {
+        Application::instance()->bootApplication($this->makeBootstrap(function (Application $app) {
             $app->addSingleton(Session::class, fn() => (object)[]);
         }));
     }
@@ -209,7 +212,7 @@ class ApplicationContext implements Context
      */
     public function bootstrapComDependenciaSession()
     {
-        Application::instance()->bootApplication($this->makeBootstrap(function(Application $app) {
+        Application::instance()->bootApplication($this->makeBootstrap(function (Application $app) {
             $app->addSingleton(Session::class, MemorySession::class);
         }));
     }
@@ -219,7 +222,7 @@ class ApplicationContext implements Context
      */
     public function bootstrapComDependenciaSessionEHttpfactoryInvalida()
     {
-        Application::instance()->bootApplication($this->makeBootstrap(function(Application $app) {
+        Application::instance()->bootApplication($this->makeBootstrap(function (Application $app) {
             $app->addSingleton(Session::class, MemorySession::class);
 
             $app->addSingleton(HttpFactory::class, fn() => (object)[]);
@@ -235,7 +238,7 @@ class ApplicationContext implements Context
 
         $this->requestParams['httpFactory'] = $httpFactory;
 
-        Application::instance()->bootApplication($this->makeBootstrap(function(Application $app) use($httpFactory) {
+        Application::instance()->bootApplication($this->makeBootstrap(function (Application $app) use ($httpFactory) {
             $app->addSingleton(Session::class, MemorySession::class);
 
             $app->addSingleton(HttpFactory::class, fn() => $httpFactory);
@@ -251,7 +254,7 @@ class ApplicationContext implements Context
 
         $this->requestParams['httpFactory'] = $httpFactory;
 
-        Application::instance()->bootApplication($this->makeBootstrap(function(Application $app) use($httpFactory) {
+        Application::instance()->bootApplication($this->makeBootstrap(function (Application $app) use ($httpFactory) {
             $app->addSingleton(Session::class, MemorySession::class);
 
             $app->addSingleton(HttpFactory::class, fn() => $httpFactory);
@@ -267,7 +270,7 @@ class ApplicationContext implements Context
 
         $this->requestParams['httpFactory'] = $httpFactory;
 
-        Application::instance()->bootApplication($this->makeBootstrap(function(Application $app) use($httpFactory) {
+        Application::instance()->bootApplication($this->makeBootstrap(function (Application $app) use ($httpFactory) {
             $app->addSingleton(Session::class, MemorySession::class);
 
             $app->addSingleton(HttpFactory::class, fn() => $httpFactory);
@@ -309,9 +312,9 @@ class ApplicationContext implements Context
         $this->requestParams['uri'] = $uri;
     }
 
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // QUANDO
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     /**
      * @When a aplicação for executada
@@ -322,20 +325,20 @@ class ApplicationContext implements Context
             if (isset($this->requestParams['httpFactory']) === true) {
                 $this->makeCustomRequest($this->requestParams['httpFactory']);
             }
-    
+
             if (isset($this->requestParams['uri']) === true) {
                 $this->startModules($this->requestParams['uri']);
             }
 
             $this->response = Application::instance()->run();
-        } catch(Throwable $exception) {
+        } catch (Throwable $exception) {
             $this->exception = $exception;
         }
     }
 
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // ENTÃO
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     /**
      * @Then será emitida uma exceção do tipo :expectClassType
@@ -419,7 +422,7 @@ class ApplicationContext implements Context
         if (Application::instance()->container()->has(ServerRequestInterface::class) === false) {
             throw new Exception("Esperada a dependência ServerRequestInterface, mas ela não foi declarada");
         }
-    }    
+    }
 
     /**
      * @Then a resposta terá status :expectedStatus
@@ -447,7 +450,7 @@ class ApplicationContext implements Context
         $expectedMessage = is_file($file) === true
             ? file_get_contents($file)
             : $expectedFileOrText;
-        
+
         if (strpos($actualMessage, $expectedMessage) === false) {
             throw new Exception(
                 "Esperada mensagem contendo '$expectedMessage', mas recebida '$actualMessage'"
@@ -466,7 +469,7 @@ class ApplicationContext implements Context
         if ($expectedMimeType !== $actualMimeType) {
             throw new Exception(
                 "Esperada resposta do tipo '$expectedMimeType', mas recebida '$actualMimeType'"
-            );            
+            );
         }
     }
 }
