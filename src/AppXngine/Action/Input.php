@@ -45,6 +45,6 @@ class Input
 
     public function __toString(): string
     {
-        return implode(',', $this->params);
+        return http_build_query($this->params);
     }
 }

@@ -16,7 +16,9 @@ class NotFoundCommand extends Command
 
     public function execute(Input $input): ResponseInterface
     {
-        /** @var ResponseInterface */
-        return $this->make(HttpFactory::class)->createResponse();
+        /** @var HttpFactory $factory */
+        $factory = $this->make(HttpFactory::class);
+
+        return $factory->createResponse(404);
     }
 }

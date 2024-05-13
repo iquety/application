@@ -9,6 +9,8 @@ use DateTimeZone;
 use Iquety\Application\Http\HttpDependencies;
 use InvalidArgumentException;
 use Iquety\Application\AppEngine\AppEngine;
+use Iquety\Application\AppEngine\EngineSet;
+use Iquety\Application\AppEngine\ModuleSet;
 use Iquety\Application\Http\HttpResponseFactory;
 use Iquety\Injection\Container;
 use Iquety\PubSub\Publisher\EventPublisher;
@@ -23,25 +25,27 @@ use Throwable;
  */
 class Application
 {
-    /** @var array<AppEngine> */
-    private array $appEngineList = [];
-
     private Container $container;
+    
+    private EngineSet $engineSet;
 
     private Environment $environment = Environment::PRODUCTION;
 
     private static ?Application $instance = null;
 
-    private ?Bootstrap $mainBootstrap = null;
+    private ?string $mainBootstrap = null;
 
-    /** @var array<string,Bootstrap> */
-    private array $moduleList = [];
+    private ModuleSet $moduleSet;
 
     private DateTimeZone $timezone;
 
     private function __construct()
     {
         $this->container = new Container();
+
+        $this->engineSet = new EngineSet();
+
+        $this->moduleSet = new ModuleSet();
 
         $this->useTimezone(new DateTimeZone('America/Sao_Paulo'));
     }
@@ -53,6 +57,38 @@ class Application
         }
 
         return static::$instance; // @phpstan-ignore-line
+    }
+
+    public function addFactory(string $identifier, Closure|string $factory): void
+    {
+        $this->container()->registerDependency($identifier, $factory);
+    }
+
+    public function addSingleton(string $identifier, Closure|string $factory): void
+    {
+        $this->container()->registerSingletonDependency($identifier, $factory);
+    }
+
+    public function bootApplication(Bootstrap $bootstrap): void
+    {
+        $this->moduleSet->add($bootstrap);
+
+        $this->mainBootstrap = $bootstrap::class;
+    }
+
+    public function bootEngine(AppEngine $engine): void
+    {
+        $this->engineSet->add($engine);
+    }
+
+    public function bootModule(Bootstrap $bootstrap): void
+    {
+        $this->moduleSet->add($bootstrap);
+    }
+
+    public function container(): Container
+    {
+        return $this->container;
     }
 
     public function runInDevelopmentMode(): void
@@ -80,21 +116,6 @@ class Application
         return $this->timezone;
     }
 
-    public function bootEngine(AppEngine $engine): void
-    {
-        $this->appEngineList[] = $engine;
-    }
-
-    public function addFactory(string $identifier, Closure|string $factory): void
-    {
-        $this->container()->registerDependency($identifier, $factory);
-    }
-
-    public function addSingleton(string $identifier, Closure|string $factory): void
-    {
-        $this->container()->registerSingletonDependency($identifier, $factory);
-    }
-
     // public function addSubscriber(string $channel, string $subscriberIdentifier): void
     // {
     //     $this->eventPublisher()->subscribe($channel, $subscriberIdentifier);
@@ -104,22 +125,6 @@ class Application
     // {
     //     return SimpleEventPublisher::instance();
     // }
-
-    /** @SuppressWarnings(PHPMD.StaticAccess) */
-    public function bootApplication(Bootstrap $bootstrap): void
-    {
-        $this->mainBootstrap = $bootstrap;
-    }
-
-    public function bootModule(Bootstrap $bootstrap): void
-    {
-        $this->moduleList[$bootstrap::class] = $bootstrap;
-    }
-
-    public function container(): Container
-    {
-        return $this->container;
-    }
 
     /** @param mixed ...$arguments */
     public function make(...$arguments): mixed
@@ -145,7 +150,7 @@ class Application
     /** @SuppressWarnings(PHPMD.StaticAccess) */
     public function run(): ResponseInterface
     {
-        if ($this->appEngineList === []) {
+        if ($this->engineSet->isEmpty() === true) {
             throw new RuntimeException('No web engine to handle the request');
         }
 
@@ -153,9 +158,10 @@ class Application
             throw new RuntimeException('No bootstrap specified for the application');
         }
 
+        $mainBootstrap = $this->moduleSet->findByClass($this->mainBootstrap);
+
         try {
-            // registra as dependências especificadas pelo usuário
-            $this->mainBootstrap->bootDependencies($this);
+            $mainBootstrap->bootDependencies($this);
         } catch (Throwable $exception) {
             throw new RuntimeException('The bootApplication method failed');
         }
@@ -167,44 +173,36 @@ class Application
             // para o ioc fazer uso da aplicação
             $this->addSingleton(Application::class, fn() => Application::instance());
 
-            $this->bootIntoEngines($this->mainBootstrap);
-
-            foreach ($this->moduleList as $bootstrap) {
-                $this->bootIntoEngines($bootstrap);
+            foreach ($this->moduleSet->toArray() as $bootstrap) {
+                $this->engineSet->bootAllEngines($this->container(), $bootstrap);
             }
 
-            return $this->executeAppEngine(
-                $this->make(ServerRequestInterface::class)
+            $response = $this->engineSet->resolveRequest(
+                $this->make(ServerRequestInterface::class),
+                $this->moduleSet,
+                $this
             );
+            
+            return $response 
+                ?? $this->make(HttpResponseFactory::class)->notFoundResponse();
+
         } catch (Throwable $exception) {
             return $this->make(HttpResponseFactory::class)->serverErrorResponse($exception);
         }
     }
 
-    private function bootIntoEngines(Bootstrap $bootstrap): void
-    {
-        foreach ($this->appEngineList as $engine) {
-            $engine->useContainer($this->container());
-            $engine->boot($bootstrap);
-        }
-    }
+    // private function executeAppEngine(ServerRequestInterface $request): ResponseInterface
+    // {
+    //     foreach ($this->engineSet->toArray() as $engine) {
+    //         $response = $engine->execute($request, $this->moduleSet, $this);
 
-    private function executeAppEngine(ServerRequestInterface $request): ResponseInterface
-    {
-        foreach ($this->appEngineList as $engine) {
-            $response = $engine->execute(
-                $request,
-                $this->moduleList,
-                fn($bootstrap) => $bootstrap->bootDependencies($this)
-            );
+    //         if ($response !== null) {
+    //             return $response;
+    //         }
+    //     }
 
-            if ($response !== null) {
-                return $response;
-            }
-        }
-
-        return $this->make(HttpResponseFactory::class)->notFoundResponse();
-    }
+    //     return $this->make(HttpResponseFactory::class)->notFoundResponse();
+    // }
 
     /**
      * @uses \header

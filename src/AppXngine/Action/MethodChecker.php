@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 trait MethodChecker
 {
-    public function forMethod(string $method = HttpMethod::ANY): void
+    public function forMethod(HttpMethod $method = HttpMethod::ANY): void
     {
         /** @var ServerRequestInterface */
         $request = $this->make(ServerRequestInterface::class);

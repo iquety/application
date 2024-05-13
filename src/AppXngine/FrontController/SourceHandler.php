@@ -42,36 +42,65 @@ class SourceHandler
             );
         }
 
-        $uri = trim(trim($uri), '/');
+        $uriData = parse_url($uri);
+        $path    = trim(trim($uriData['path']), '/');
+        $params  = $this->parseQuery($uriData['query'] ?? '');
 
-        if ($uri === '') {
-            return new CommandDescriptor('', $this->mainCommandClass, []);
+        if ($path === '') {
+            return $this->getMainDescriptor($params);
         }
 
         foreach ($this->getSourceList() as $directorySet) {
-            $descriptor = $directorySet->getDescriptorTo($uri);
+            $descriptor = $directorySet->getDescriptorTo($path);
 
             if ($descriptor !== null) {
                 return $descriptor;
             }
         }
 
-        return new CommandDescriptor('', $this->notFoundCommandClass, []);
+        var_dump($uriData['path'], explode('/', $uriData['path']));
+        exit;
+        
+        $params = array_merge(explode('/', $uriData['path']), $params);
+
+        return $this->getNotFoundDescriptor($params);
     }
 
-    public function getErrorDescriptor(): CommandDescriptor
+    private function parseQuery(string $queryString): array
     {
-        return new CommandDescriptor('', $this->errorCommandClass, []);
+        $paramList = [];
+
+        parse_str($queryString, $paramList);
+
+        foreach ($paramList as $index => $value) {
+            if (is_numeric($value) === false) {
+                continue;
+            }
+
+            if (is_int($value + 0) === true) {
+                $paramList[$index] = (int)$value;
+                continue;
+            }
+
+            $paramList[$index] = (float)$value;
+        }
+
+        return $paramList;
     }
 
-    public function getMainDescriptor(): CommandDescriptor
+    public function getErrorDescriptor(array $params): CommandDescriptor
     {
-        return new CommandDescriptor('', $this->mainCommandClass, []);
+        return new CommandDescriptor('error', $this->errorCommandClass, $params);
     }
 
-    public function getNotFoundDescriptor(): CommandDescriptor
+    public function getMainDescriptor(array $params): CommandDescriptor
     {
-        return new CommandDescriptor('', $this->notFoundCommandClass, []);
+        return new CommandDescriptor('main', $this->mainCommandClass, $params);
+    }
+
+    public function getNotFoundDescriptor(array $params): CommandDescriptor
+    {
+        return new CommandDescriptor('not-found', $this->notFoundCommandClass, $params);
     }
 
     /** @return array<int,DirectorySet> */

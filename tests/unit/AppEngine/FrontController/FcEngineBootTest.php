@@ -23,7 +23,7 @@ use Tests\Unit\TestCase;
 /**
  * @SuppressWarnings(PHPMD.StaticAccess)
  */
-class FcEngineTest extends TestCase
+class FcEngineBootTest extends TestCase
 {
     /** @test */
     public function bootEngineDefaults(): void

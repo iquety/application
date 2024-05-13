@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Iquety\Application\AppEngine\FrontController;
 
-use Closure;
+use DomainException;
 use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Application\AppEngine\Action\MethodNotAllowedException;
 use Iquety\Application\Bootstrap;
 use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Application\AppEngine\FrontController\Command\Command;
+use Iquety\Application\AppEngine\FrontController\Command\NotFoundCommand;
+use Iquety\Application\AppEngine\ModuleSet;
+use Iquety\Application\Application;
 use Iquety\Injection\InversionOfControl;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -46,8 +49,8 @@ class FcEngine extends AppEngine
     /** @param array<string,Bootstrap> $moduleList */
     public function execute(
         RequestInterface $request,
-        array $moduleList,
-        Closure $bootModuleDependencies
+        ModuleSet $moduleSet,
+        Application $application
     ): ?ResponseInterface {
         $descriptor = $this->sourceHandler()
             ->getDescriptorTo($request->getUri()->getPath());
@@ -56,35 +59,44 @@ class FcEngine extends AppEngine
             return null;
         }
 
+        $module = $descriptor->module();
+        $action = $descriptor->action();
+        $params = $descriptor->params();
+
+        $this->container()->registerSingletonDependency(
+            Input::class,
+            fn() => new Input($params)
+        );
+
         $control = new InversionOfControl($this->container());
 
         try {
-            $module = $descriptor->module();
-            $action = $descriptor->action();
-            $params = $descriptor->params();
-
-            $bootModuleDependencies($moduleList[$module]);
-
-            $this->container()->registerSingletonDependency(
-                Input::class,
-                fn() => new Input($params)
-            );
-
-            try {
+            if ($module === 'main') {
                 return $control->resolveTo(Command::class, $action);
-            } catch (MethodNotAllowedException) {
-                return null;
             }
+
+            $moduleBootstrap = $moduleSet->findByClass($module);
+
+            if ($moduleBootstrap === null) {
+                return $control->resolveTo(
+                    Command::class,
+                    $this->sourceHandler()->getNotFoundDescriptor([])->action()
+                );
+            }
+
+            $moduleBootstrap->bootDependencies($application);
+
+            return $control->resolveTo(Command::class, $action);
         } catch (Throwable $exception) {
             $this->container()->registerSingletonDependency(
                 Throwable::class,
                 fn() => $exception
             );
 
-            // TODO: faz sentido?? o Application também tem erro.
-            $descriptor = $this->sourceHandler()->getErrorDescriptor();
-
-            return $control->resolveTo(Command::class, $descriptor->action());
+            return $control->resolveTo(
+                Command::class,
+                $this->sourceHandler()->getErrorDescriptor([])->action()
+            );
         }
     }
 

@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace Iquety\Application\AppEngine;
 
-use Iquety\Application\Container;
+use Closure;
+use Iquety\Application\Application;
+use Iquety\Application\Bootstrap;
 use Iquety\Application\Http\HttpResponseFactory;
+use Iquety\Injection\Container;
 use OutOfBoundsException;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 abstract class AppEngine
 {
@@ -36,8 +41,9 @@ abstract class AppEngine
     abstract public function boot(Bootstrap $bootstrap): void;
 
     /** @param array<string,Bootstrap> $moduleList */
-    abstract public function resolve(
-        Input $input,
+    abstract public function execute(
+        RequestInterface $request,
         ModuleSet $moduleSet,
-    ): ResponseDescriptor;
+        Application $application
+    ): ?ResponseInterface;
 }

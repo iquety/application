@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Iquety\Application\AppEngine\FrontController\Command;
+namespace Tests\Unit\AppEngine\FrontController\Stubs\Commands;
 
+use Exception;
 use Iquety\Application\AppEngine\Action\Input;
-use Iquety\Application\Http\HttpFactory;
+use Iquety\Application\AppEngine\FrontController\Command\Command;
 use Psr\Http\Message\ResponseInterface;
 
-class MainCommand extends Command
+class ThreeCommand extends Command
 {
     public function __construct()
     {
@@ -16,7 +17,6 @@ class MainCommand extends Command
 
     public function execute(Input $input): ResponseInterface
     {
-        /** @var ResponseInterface */
-        return $this->make(HttpFactory::class)->createResponse();
+        throw new Exception('Erro proposital');
     }
 }

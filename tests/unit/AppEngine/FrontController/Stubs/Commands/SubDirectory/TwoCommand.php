@@ -17,7 +17,11 @@ class TwoCommand extends Command
 
     public function execute(Input $input): ResponseInterface
     {
-        /** @var ResponseInterface */
-        return $this->make(HttpFactory::class)->createResponse();
+        /** @var HttpFactory $factory */
+        $factory = $this->make(HttpFactory::class);
+
+        $response = $factory->createResponse(202);
+
+        return $response->withBody($factory->createStream((string)$input));
     }
 }
