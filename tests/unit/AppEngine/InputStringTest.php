@@ -7,7 +7,7 @@ namespace Tests\Unit\AppEngine;
 use Iquety\Application\AppEngine\Input;
 use Tests\Unit\TestCase;
 
-class InputTest extends TestCase
+class InputStringTest extends TestCase
 {
     /** @test */
     public function fromString(): void
@@ -154,7 +154,5 @@ class InputTest extends TestCase
             '0=one&1=two&2=three&x=four&y=1&z=1.1',
             (string)$input
         );
-        
-        $input->next(); // remove z
     }
 }

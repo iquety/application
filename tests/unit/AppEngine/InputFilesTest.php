@@ -6,13 +6,6 @@ namespace Tests\Unit\AppEngine;
 
 use Iquety\Application\AppEngine\FileSet;
 use Iquety\Application\AppEngine\Input;
-use Laminas\Diactoros\ServerRequest;
-use Laminas\Diactoros\ServerRequestFactory;
-use Laminas\Diactoros\UploadedFile;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\UploadedFileInterface;
-use Psr\Http\Message\UriInterface;
 use Tests\Unit\TestCase;
 
 class InputFilesTest extends TestCase
@@ -94,7 +87,7 @@ class InputFilesTest extends TestCase
     }
 
     /** @test */
-    public function fromRequest(): void
+    public function singleFile(): void
     {
         $request = (new RequestFactory())
             ->makeRequest('POST', '/one/two', 'x=1&y=2', ['name' => 'test'], $this->phpSingleFile());
@@ -106,6 +99,122 @@ class InputFilesTest extends TestCase
         $this->assertSame(1, $input->param('x'));
         $this->assertSame(2, $input->param('y'));
         $this->assertSame('test', $input->param('name'));
-        $this->assertInstanceOf(FileSet::class, $input->param('inputFile'));
+
+        /** @var FileSet */
+        $fileSetOne = $input->param('inputFile');
+        
+        $this->assertInstanceOf(FileSet::class, $fileSetOne);
+        $this->assertCount(1, $fileSetOne->toArray());
+
+        $this->assertSame('attachment.gif', $fileSetOne->toArray()[0]->getName());
+        $this->assertSame('image/gif', $fileSetOne->toArray()[0]->getMimeType());
+        $this->assertSame(173, $fileSetOne->toArray()[0]->getSize());
+        $this->assertSame(
+            'There is no error, the file uploaded with success',
+            $fileSetOne->toArray()[0]->getErrorMessage()
+        );
+        $this->assertFalse($fileSetOne->toArray()[0]->hasError());
+        $this->assertSame(
+            file_get_contents(__DIR__ . '/attachment.gif'),
+            $fileSetOne->toArray()[0]->getContent()
+        );
+
+        /** @var FileSet */
+        $fileSetTwo = $input->param('inputFile2');
+
+        $this->assertInstanceOf(FileSet::class, $fileSetTwo);
+        $this->assertCount(1, $fileSetTwo->toArray());
+
+        $this->assertSame('attachment.png', $fileSetTwo->toArray()[0]->getName());
+        $this->assertSame('image/png', $fileSetTwo->toArray()[0]->getMimeType());
+        $this->assertSame(222, $fileSetTwo->toArray()[0]->getSize());
+        $this->assertSame(
+            'There is no error, the file uploaded with success',
+            $fileSetTwo->toArray()[0]->getErrorMessage()
+        );
+        $this->assertFalse($fileSetTwo->toArray()[0]->hasError());
+        $this->assertSame(
+            file_get_contents(__DIR__ . '/attachment.png'),
+            $fileSetTwo->toArray()[0]->getContent()
+        );
+    }
+
+    /** @test */
+    public function multipleFiles(): void
+    {
+        $request = (new RequestFactory())
+            ->makeRequest('POST', '/one/two', 'x=1&y=2', ['name' => 'test'], $this->phpMultiFiles());
+
+        $input = Input::fromRequest($request);
+
+        $this->assertSame('one', $input->param(0));
+        $this->assertSame('two', $input->param(1));
+        $this->assertSame(1, $input->param('x'));
+        $this->assertSame(2, $input->param('y'));
+        $this->assertSame('test', $input->param('name'));
+
+        /** @var FileSet */
+        $fileSetOne = $input->param('inputFile');
+
+        $this->assertInstanceOf(FileSet::class, $fileSetOne);
+        $this->assertCount(3, $fileSetOne->toArray());
+
+        $this->assertSame('attachment.gif', $fileSetOne->toArray()[0]->getName());
+        $this->assertSame('image/gif', $fileSetOne->toArray()[0]->getMimeType());
+        $this->assertSame(173, $fileSetOne->toArray()[0]->getSize());
+        $this->assertSame(
+            'There is no error, the file uploaded with success',
+            $fileSetOne->toArray()[0]->getErrorMessage()
+        );
+        $this->assertFalse($fileSetOne->toArray()[0]->hasError());
+        $this->assertSame(
+            file_get_contents(__DIR__ . '/attachment.gif'),
+            $fileSetOne->toArray()[0]->getContent()
+        );
+
+        $this->assertSame('attachment.jpg', $fileSetOne->toArray()[1]->getName());
+        $this->assertSame('image/jpeg', $fileSetOne->toArray()[1]->getMimeType());
+        $this->assertSame(4710, $fileSetOne->toArray()[1]->getSize());
+        $this->assertSame(
+            'There is no error, the file uploaded with success',
+            $fileSetOne->toArray()[1]->getErrorMessage()
+        );
+        $this->assertFalse($fileSetOne->toArray()[1]->hasError());
+        $this->assertSame(
+            file_get_contents(__DIR__ . '/attachment.jpg'),
+            $fileSetOne->toArray()[1]->getContent()
+        );
+
+        $this->assertSame('attachment.png', $fileSetOne->toArray()[2]->getName());
+        $this->assertSame('image/png', $fileSetOne->toArray()[2]->getMimeType());
+        $this->assertSame(222, $fileSetOne->toArray()[2]->getSize());
+        $this->assertSame(
+            'There is no error, the file uploaded with success',
+            $fileSetOne->toArray()[2]->getErrorMessage()
+        );
+        $this->assertFalse($fileSetOne->toArray()[2]->hasError());
+        $this->assertSame(
+            file_get_contents(__DIR__ . '/attachment.png'),
+            $fileSetOne->toArray()[2]->getContent()
+        );
+
+        /** @var FileSet */
+        $fileSetTwo = $input->param('inputFile2');
+
+        $this->assertInstanceOf(FileSet::class, $fileSetTwo);
+        $this->assertCount(1, $fileSetTwo->toArray());
+
+        $this->assertSame('attachment.png', $fileSetTwo->toArray()[0]->getName());
+        $this->assertSame('image/png', $fileSetTwo->toArray()[0]->getMimeType());
+        $this->assertSame(222, $fileSetTwo->toArray()[0]->getSize());
+        $this->assertSame(
+            'There is no error, the file uploaded with success',
+            $fileSetTwo->toArray()[0]->getErrorMessage()
+        );
+        $this->assertFalse($fileSetTwo->toArray()[0]->hasError());
+        $this->assertSame(
+            file_get_contents(__DIR__ . '/attachment.png'),
+            $fileSetTwo->toArray()[0]->getContent()
+        );
     }
 }

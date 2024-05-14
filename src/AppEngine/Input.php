@@ -61,7 +61,7 @@ class Input
             $this->originalParamList[$name] = $value;
         }
 
-        $this->paramList = $originalParamList;
+        $this->paramList = $this->originalParamList;
     }
 
     public function next(): void
@@ -87,9 +87,10 @@ class Input
 
     public function __toString(): string
     {
-        return http_build_query(
-            array_map(fn($item) => $item, $this->paramList)
-        );
+        return http_build_query(array_map(
+            fn($item) => (string)$item,
+            $this->paramList
+        ));
     }
 
     private function makeFileSet(array $fileList): FileSet

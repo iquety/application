@@ -6,7 +6,7 @@ namespace Iquety\Application\AppEngine;
 
 class FileSet
 {
-    /** @var array<int,array<int,string>> */
+    /** @var array<int,File> */
     private array $fileList = [];
 
     /** @see https://www.php.net/manual/pt_BR/features.file-upload.post-method.php */
@@ -15,8 +15,19 @@ class FileSet
         $this->fileList[] = $file;
     }
 
+    /** @return array<int,File> */
     public function toArray(): array
     {
         return $this->fileList;
+    }
+
+    public function __toString(): string
+    {
+        $paramList = array_map(
+            fn(File $item) => $item->getName(),
+            $this->fileList
+        );
+
+        return implode(';', $paramList);
     }
 }
