@@ -13,7 +13,7 @@ use OutOfBoundsException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-abstract class AppEngine
+abstract class AppXEngine
 {
     private ?Container $container = null;
 

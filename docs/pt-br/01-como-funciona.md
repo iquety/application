@@ -1,11 +1,56 @@
-# Como funciona
+# Criando uma aplicação
 
 [◂ Índice da documentação](indice.md) | [Aplicação ▸](02-aplicacao.md)
 -- | --
 
 ## 1. Introdução
 
-A Freep Application
+A biblioteca Iquety Application fornece as funcionalidades necessárias para implementação de aplicações modulares.
+
+## 2. Aplicação Básica
+
+```php
+$app = Application::instance();
+
+$app->bootEngine(new MvcEngine());
+
+$app->bootApplication(/* Bootstrap */);
+
+$app->bootModule(/* Bootstrap */);
+
+$response = $app->run();
+
+$app->sendResponse($response);
+```
+
+### 1.1. Timezone
+
+useTimezone
+
+
+```php
+// Arquivo: public/index.php
+
+$app = Application::instance();
+
+$app->bootApplication(new class implements Bootstrap {
+    public function bootRoutes(Router $router): void
+    {
+    }
+    public function bootDependencies(Application $app): void
+    {
+    }
+});
+
+// o boot configura as rotas e as dependências
+// locais dos módulos
+$app->bootModule(new AdminBootstrap());
+$app->bootModule(new ArticlesBootstrap());
+
+$response = $app->run();
+
+$app->sendResponse($response);
+```
 
 ### 1.1. SOC
 
@@ -74,11 +119,11 @@ Isso é poderoso, pois apenas as dependências realmente necessárias estarão n
 
 ### 2.5. run()
 
-Este método executa efetivamente a aplicação devolve um objeto do tipo `Psr\Http\Message\ResponseInterface`.
+Este método executa efetivamente a aplicação devolve um objeto do tipo `Psr\Http\Message\ResponseInterface`. 
 
 ### 2.6. sendResponse()
 
-Este método recebe um objeto do tipo `Psr\Http\Message\ResponseInterface` e libera o seu conteúdo para o cliente, que efetuou a requisição à rota correspondente.
+Este método recebe um objeto do tipo `Psr\Http\Message\ResponseInterface` e libera o seu conteúdo para o cliente, que efetuou a requisição à rota correspondente. 
 
 [◂ Índice da documentação](indice.md) | [Aplicação ▸](02-aplicacao.md)
 -- | --

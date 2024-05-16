@@ -59,16 +59,6 @@ class Application
         return static::$instance; // @phpstan-ignore-line
     }
 
-    public function addFactory(string $identifier, Closure|string $factory): void
-    {
-        $this->container()->registerDependency($identifier, $factory);
-    }
-
-    public function addSingleton(string $identifier, Closure|string $factory): void
-    {
-        $this->container()->registerSingletonDependency($identifier, $factory);
-    }
-
     public function bootApplication(Bootstrap $bootstrap): void
     {
         $this->moduleSet->add($bootstrap);

@@ -4,25 +4,42 @@ declare(strict_types=1);
 
 namespace Iquety\Application\AppEngine;
 
+/**
+ * Transforma um URI em parâmetros de entrada normalizados
+ */
 class UriParser
 {
     /** @var array<int|string,float|int|string> */
     private array $paramList = [];
 
+    /** @var array<int,string> */
+    private array $path;
+
     public function __construct(string $string)
     {
         $uriData = parse_url($string);
 
-        $pathParams = $this->parsePath($uriData['path']);
+        $pathParams = $this->parsePath($uriData['path'] ?? '');
+
+        $this->path = $pathParams;
 
         $queryParams = $this->parseQuery($uriData['query'] ?? '');
 
         $this->paramList = array_merge($pathParams, $queryParams);
     }
 
+    /** @return array<int,string> */
+    public function getPath(): array
+    {
+        return $this->path;
+    }
+
     public function toArray(): array
     {
-        return $this->paramList;
+        return array_map(
+            fn($value) => $this->fixTypes($value),
+            $this->paramList
+        );
     }
 
     /** @return array<int,float|int|string> */
@@ -36,7 +53,7 @@ class UriParser
             return [];
         }
 
-        return $this->fixTypes(explode('/', $cleanedPath));
+        return explode('/', $cleanedPath);
     }
 
     /** @return array<string,float|int|string> */
@@ -46,29 +63,19 @@ class UriParser
 
         parse_str($queryString, $queryParamList);
 
-        return $this->fixTypes($queryParamList);
+        return $queryParamList;
     }
 
-    /** 
-     * @param array<int|string,float|int|string> $paramList 
-     * @return array<int|string,float|int|string>
-     */
-    private function fixTypes(array $paramList): array
+    private function fixTypes(string $value): float|int|string
     {
-        foreach ($paramList as $index => $value) {
-            if (is_numeric($value) === false) {
-                continue;
-            }
-
-            if (is_int($value + 0) === true) {
-                $paramList[$index] = (int)$value;
-                continue;
-            }
-
-            $paramList[$index] = (float)$value;
+        if (is_numeric($value) === false) {
+            return $value;
         }
 
-        return $paramList;
+        if (is_int($value + 0) === true) {
+            return (int)$value;
+        }
+
+        return (float)$value;
     }
 }
-

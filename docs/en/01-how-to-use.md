@@ -59,18 +59,18 @@ In the `composer.json` file, you can create a routine to remove the current docu
 // composer.json
 
 {
-"require": {
-"php": "^8.0.0",
-"ricardopedias/freep-docmap": "dev-main"
-},
-"scripts" : {
-"docmap" : [
-"rm -Rf docs/pt-br/*",
-"vendor/bin/docmap -s assets/docs/pt-br -d docs/pt-br -r leiame.md -l pt-br",
-"rm -Rf docs/en/*",
-"vendor/bin/docmap -s assets/docs/en -d docs/en"
-]
-}
+    "require": {
+        "php": "^8.0.0",
+        "ricardopedias/freep-docmap": "dev-main"
+    },
+    "scripts" : {
+        "docmap" : [
+            "rm -Rf docs/pt-br/*",
+            "vendor/bin/docmap -s assets/docs/pt-br -d docs/pt-br -r leiame.md -l pt-br",
+            "rm -Rf docs/en/*",
+            "vendor/bin/docmap -s assets/docs/en -d docs/en"
+        ]
+    }
 }
 ```
 

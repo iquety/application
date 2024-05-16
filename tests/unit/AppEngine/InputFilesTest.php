@@ -94,8 +94,9 @@ class InputFilesTest extends TestCase
 
         $input = Input::fromRequest($request);
 
-        $this->assertSame('one', $input->param(0));
-        $this->assertSame('two', $input->param(1));
+        $this->assertSame(['one', 'two'], $input->getPath());
+        $this->assertSame(['one'], $input->getTarget());
+        $this->assertSame('two', $input->param(0));
         $this->assertSame(1, $input->param('x'));
         $this->assertSame(2, $input->param('y'));
         $this->assertSame('test', $input->param('name'));
@@ -147,8 +148,9 @@ class InputFilesTest extends TestCase
 
         $input = Input::fromRequest($request);
 
-        $this->assertSame('one', $input->param(0));
-        $this->assertSame('two', $input->param(1));
+        $this->assertSame(['one', 'two'], $input->getPath());
+        $this->assertSame(['one'], $input->getTarget());
+        $this->assertSame('two', $input->param(0));
         $this->assertSame(1, $input->param('x'));
         $this->assertSame(2, $input->param('y'));
         $this->assertSame('test', $input->param('name'));

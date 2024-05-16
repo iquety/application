@@ -10,11 +10,11 @@
 
 ## Sinopse
 
-O **Freep Aplication** é uma biblioteca para a criação de aplicações modulares usando
-padrões arquiteturais MVC e Hexagonal (Ports and Adapters).
+O **Iquety Aplication** é uma biblioteca para a criação de aplicações modulares usando 
+padrões arquiteturais MVC, FrontController e Arquitetura Hexagonal (Ports and Adapters).
 
 ```bash
-composer require ricardopedias/freep-application
+composer require iquety/application
 ```
 
 ### Aplicação
@@ -34,7 +34,7 @@ Para informações detalhadas, consulte o [Sumário da Documentação](indice.md
 
 ## Características
 
-- Feito para o PHP 8.0 ou superior;
+- Feito para o PHP 8.3 ou superior;
 - Codificado com boas práticas e máxima qualidade;
 - Bem documentado e amigável para IDEs;
 - Feito com TDD (Test Driven Development);

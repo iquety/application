@@ -33,7 +33,7 @@ class InputRequestTest extends TestCase
     {
         $request = (new RequestFactory())->makeRequest(
             'POST',
-            '/one/two/three',
+            '/one/two/3',
             'x=four&y=five&z=six',
             ['name' => 'test'],
             $this->phpSingleFile()
@@ -41,10 +41,13 @@ class InputRequestTest extends TestCase
 
         $input = Input::fromRequest($request);
 
-        $this->assertCount(8, $input->toArray());
-        $this->assertSame('one', $input->param(0));
-        $this->assertSame('two', $input->param(1));
-        $this->assertSame('three', $input->param(2));
+        $this->assertSame('one/two/3', $input->getPathString());
+        $this->assertSame(['one', 'two', '3'], $input->getPath());
+        $this->assertSame(['one'], $input->getTarget());
+
+        $this->assertCount(7, $input->toArray());
+        $this->assertSame('two', $input->param(0));
+        $this->assertSame(3, $input->param(1));
         $this->assertSame('four', $input->param('x'));
         $this->assertSame('five', $input->param('y'));
         $this->assertSame('six', $input->param('z'));
@@ -57,7 +60,7 @@ class InputRequestTest extends TestCase
     {
         $request = (new RequestFactory())->makeRequest(
             'GET',
-            '/one/two/three',
+            '/one/two/3',
             'x=four&y=five&z=six',
             ['name' => 'test'],
             $this->phpSingleFile()
@@ -65,10 +68,13 @@ class InputRequestTest extends TestCase
 
         $input = Input::fromRequest($request);
 
-        $this->assertCount(8, $input->toArray());
-        $this->assertSame('one', $input->param(0));
-        $this->assertSame('two', $input->param(1));
-        $this->assertSame('three', $input->param(2));
+        $this->assertSame('one/two/3', $input->getPathString());
+        $this->assertSame(['one', 'two', '3'], $input->getPath());
+        $this->assertSame(['one'], $input->getTarget());
+
+        $this->assertCount(7, $input->toArray());
+        $this->assertSame('two', $input->param(0));
+        $this->assertSame(3, $input->param(1));
         $this->assertSame('four', $input->param('x'));
         $this->assertSame('five', $input->param('y'));
         $this->assertSame('six', $input->param('z'));
@@ -89,10 +95,9 @@ class InputRequestTest extends TestCase
 
         $input = Input::fromRequest($request);
 
-        $this->assertCount(8, $input->toArray());
-        $this->assertSame('one', $input->param(0));
-        $this->assertSame('two', $input->param(1));
-        $this->assertSame('three', $input->param(2));
+        $this->assertCount(7, $input->toArray());
+        $this->assertSame('two', $input->param(0));
+        $this->assertSame('three', $input->param(1));
         $this->assertSame('four', $input->param('x'));
         $this->assertSame(1, $input->param('y'));
         $this->assertSame(1.1, $input->param('z'));
@@ -100,7 +105,7 @@ class InputRequestTest extends TestCase
         $this->assertInstanceOf(FileSet::class, $input->param('inputFile'));
 
         $this->assertSame(
-            '0=one&1=two&2=three&x=four&y=1&z=1.1&name=test&inputFile=attachment.gif',
+            '0=two&1=three&x=four&y=1&z=1.1&name=test&inputFile=attachment.gif',
             (string)$input
         );
     }
@@ -118,10 +123,9 @@ class InputRequestTest extends TestCase
 
         $input = Input::fromRequest($request);
 
-        $this->assertCount(8, $input->toArray());
-        $this->assertSame('one', $input->param(0));
-        $this->assertSame('two', $input->param(1));
-        $this->assertSame('three', $input->param(2));
+        $this->assertCount(7, $input->toArray());
+        $this->assertSame('two', $input->param(0));
+        $this->assertSame('three', $input->param(1));
         $this->assertSame('four', $input->param('x'));
         $this->assertSame(1, $input->param('y'));
         $this->assertSame(1.1, $input->param('z'));
@@ -129,7 +133,7 @@ class InputRequestTest extends TestCase
         $this->assertInstanceOf(FileSet::class, $input->param('inputFile'));
 
         $this->assertSame(
-            '0=one&1=two&2=three&x=four&y=1&z=1.1&name=test&inputFile=attachment.gif',
+            '0=two&1=three&x=four&y=1&z=1.1&name=test&inputFile=attachment.gif',
             (string)$input
         );
     }

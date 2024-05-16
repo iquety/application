@@ -7,7 +7,6 @@ namespace Tests\Unit\AppEngine\FrontController;
 use InvalidArgumentException;
 use Iquety\Application\AppEngine\FrontController\Directory;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
-use Iquety\Application\AppEngine\Input;
 use Tests\Unit\AppEngine\FrontController\Stubs\Commands\OneCommand;
 use Tests\Unit\AppEngine\FrontController\Stubs\Commands\SubDirectory\TwoCommand;
 use Tests\Unit\TestCase;
@@ -59,9 +58,10 @@ class DirectoryTest extends TestCase
             __DIR__ . "/Stubs"
         );
 
-        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString('one-command'));
+        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, 'one-command');
 
         $this->assertSame(OneCommand::class . "::execute", $descriptor->action());
+        $this->assertSame([], $descriptor->params());
     }
 
     /** @test */
@@ -72,9 +72,10 @@ class DirectoryTest extends TestCase
             __DIR__ . "/Stubs"
         );
 
-        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString('sub-directory/two-command'));
+        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, 'sub-directory/two-command');
 
         $this->assertSame(TwoCommand::class . "::execute", $descriptor->action());
+        $this->assertSame([], $descriptor->params());
     }
 
     /** @return array<string,array<int,mixed>> */
@@ -108,9 +109,10 @@ class DirectoryTest extends TestCase
             __DIR__ . "/Stubs"
         );
 
-        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString($uri));
+        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, $uri);
 
         $this->assertSame($className . "::execute", $descriptor->action());
+        $this->assertSame([], $descriptor->params());
     }
 
     /**
@@ -124,14 +126,17 @@ class DirectoryTest extends TestCase
             __DIR__ . "/Stubs"
         );
 
-        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString(" $uri"));
+        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, " $uri");
         $this->assertSame($className . "::execute", $descriptor->action());
+        $this->assertSame([], $descriptor->params());
 
-        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString(" $uri "));
+        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, " $uri ");
         $this->assertSame($className . "::execute", $descriptor->action());
+        $this->assertSame([], $descriptor->params());
 
-        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString("$uri "));
+        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, "$uri ");
         $this->assertSame($className . "::execute", $descriptor->action());
+        $this->assertSame([], $descriptor->params());
     }
 
     /** @test */
@@ -142,8 +147,9 @@ class DirectoryTest extends TestCase
             __DIR__ . "/Stubs"
         );
 
-        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString('sub-diRECtory/two-coMMand'));
+        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, 'sub-diRECtory/two-coMMand');
         $this->assertSame(TwoCommand::class . "::execute", $descriptor->action());
+        $this->assertSame([], $descriptor->params());
     }
 
     /** @return array<string,array<int,mixed>> */
@@ -151,9 +157,13 @@ class DirectoryTest extends TestCase
     {
         $list = [];
 
-        $list['empty']       = [ '' ];
-        $list['one bar']     = [ '/' ];
-        $list['nonexistent'] = [ 'not-exists-command' ];
+        $list['empty']               = [ '' ];
+        $list['empty space']         = [ ' ' ];
+        $list['one bar']             = [ '/' ];
+        $list['one bar left space']  = [ ' /' ];
+        $list['one bar right space'] = [ ' /' ];
+        $list['one bar both spaces'] = [ ' / ' ];
+        $list['nonexistent']         = [ 'not-exists-command' ];
 
         return $list;
     }
@@ -169,6 +179,59 @@ class DirectoryTest extends TestCase
             __DIR__ . "/Stubs"
         );
 
-        $this->assertNull($directory->getDescriptorTo(FcBootstrap::class, Input::fromString($uri)));
+        $this->assertNull($directory->getDescriptorTo(FcBootstrap::class, $uri));
+    }
+
+    /** @return array<string,array<int,mixed>> */
+    public function commandParamsProvider(): array
+    {
+        $list = [];
+
+        $list['one: no params']      = [ 'one-command', [] ];
+
+        $list['one: 1 param float']  = [ 'one-command/1.0', [1.0] ];
+        $list['one: 1 param int']    = [ 'one-command/11', [11] ];
+        $list['one: 1 param string'] = [ 'one-command/identity', ['identity'] ];
+
+        $list['one: 2 params float']  = [ 'one-command/1.1/2.2', [1.1, 2.2] ];
+        $list['one: 2 params int']    = [ 'one-command/11/22', [11, 22] ];
+        $list['one: 2 params string'] = [ 'one-command/one/two', ['one', 'two'] ];
+
+        $list['one: 3 params float']  = [ 'one-command/1.1/2.2/3.3', [1.1, 2.2, 3.3] ];
+        $list['one: 3 params int']    = [ 'one-command/11/22/33', [11, 22, 33] ];
+        $list['one: 3 params string'] = [ 'one-command/one/two/three', ['one', 'two', 'three'] ];
+
+        $list['two: no params']      = [ 'sub-directory/two-command', [] ];
+
+        $list['two: 1 param float']  = [ 'sub-directory/two-command/1.0', [1.0] ];
+        $list['two: 1 param int']    = [ 'sub-directory/two-command/11', [11] ];
+        $list['two: 1 param string'] = [ 'sub-directory/two-command/identity', ['identity'] ];
+
+        $list['two: 2 params float']  = [ 'sub-directory/two-command/1.1/2.2', [1.1, 2.2] ];
+        $list['two: 2 params int']    = [ 'sub-directory/two-command/11/22', [11, 22] ];
+        $list['two: 2 params string'] = [ 'sub-directory/two-command/one/two', ['one', 'two'] ];
+
+        $list['two: 3 params float']  = [ 'sub-directory/two-command/1.1/2.2/3.3', [1.1, 2.2, 3.3] ];
+        $list['two: 3 params int']    = [ 'sub-directory/two-command/11/22/33', [11, 22, 33] ];
+        $list['two: 3 params string'] = [ 'sub-directory/two-command/one/two/three', ['one', 'two', 'three'] ];
+
+        return $list;
+    }
+
+    /**
+     * @test
+     * @dataProvider commandParamsProvider
+     * @param array<int,string|int|float> $paramList
+     */
+    public function commandParams(string $uri, array $paramList): void
+    {
+        $directory = new Directory(
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
+            __DIR__ . "/Stubs"
+        );
+
+        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, $uri);
+
+        $this->assertSame($paramList, $descriptor->params());
     }
 }

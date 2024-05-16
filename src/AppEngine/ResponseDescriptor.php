@@ -6,8 +6,10 @@ namespace Iquety\Application\AppEngine;
 
 class ResponseDescriptor
 {
-    public function __construct(private int $statusCode, private string $content)
-    {
+    public function __construct(
+        private int $statusCode,
+        private string $content
+    ) {
     }
 
     public function getStatus(): int

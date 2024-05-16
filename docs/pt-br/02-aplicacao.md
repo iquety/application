@@ -1,6 +1,6 @@
 # Aplicação
 
-[◂ Como funciona](01-como-funciona.md) | [Índice da documentação](indice.md) | [Inicialização ▸](03-modulo.md)
+[◂ Criando uma aplicação](01-como-funciona.md) | [Índice da documentação](indice.md) | [Inicialização ▸](03-modulo.md)
 -- | -- | --
 
 ## 1. Conceitos importantes
@@ -72,11 +72,11 @@ Isso é poderoso, pois apenas as dependências realmente necessárias estarão n
 
 ### 2.5. run()
 
-Este método executa efetivamente a aplicação devolve um objeto do tipo `Psr\Http\Message\ResponseInterface`.
+Este método executa efetivamente a aplicação devolve um objeto do tipo `Psr\Http\Message\ResponseInterface`. 
 
 ### 2.6. sendResponse()
 
-Este método recebe um objeto do tipo `Psr\Http\Message\ResponseInterface` e libera o seu conteúdo para o cliente, que efetuou a requisição à rota correspondente.
+Este método recebe um objeto do tipo `Psr\Http\Message\ResponseInterface` e libera o seu conteúdo para o cliente, que efetuou a requisição à rota correspondente. 
 
-[◂ Como funciona](01-como-funciona.md) | [Índice da documentação](indice.md) | [Inicialização ▸](03-modulo.md)
+[◂ Criando uma aplicação](01-como-funciona.md) | [Índice da documentação](indice.md) | [Inicialização ▸](03-modulo.md)
 -- | -- | --

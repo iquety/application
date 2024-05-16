@@ -5,73 +5,122 @@ declare(strict_types=1);
 namespace Iquety\Application\AppEngine;
 
 use InvalidArgumentException;
-use PhpParser\Node\Expr\Instanceof_;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 
+/** Contém os parâmetros de entrada do usuário */
 class Input
 {
     /** @var array<int|string,float|int|string|FileSet> */
+    private array $originalParamList = [];
+    
+    /** @var array<int|string,float|int|string|FileSet> */
     private array $paramList = [];
 
-    /** @var array<int|string,float|int|string|FileSet> */
-    private array $originalParamList = [];
+    /** @var array<int,string> */
+    private array $path = [];
+
+    /** @var array<int,float|int|string> */
+    private array $target = [];
+
+    private bool $hasNext = true;
 
     public static function fromString(string $string): self
     {
-        return new self((new UriParser($string))->toArray());
+        $parser = new UriParser($string);
+
+        return new self($parser->getPath(), $parser->toArray());
     }
 
     public static function fromRequest(ServerRequestInterface $request): self
     {
-        $paramList = (new UriParser($request->getRequestTarget()))->toArray();
+        $parser = new UriParser($request->getRequestTarget());
 
         $paramList = array_merge(
-            $paramList,
+            $parser->toArray(),
             $request->getParsedBody(),
             $request->getUploadedFiles()
         );
 
-        return new self($paramList);
+        return new self($parser->getPath(), $paramList);
     }
 
-    public static function fromInput(Input $input): self
+    /**
+     * @param array<int,string> $path 
+     * @param array<int|string,float|int|string|array<string,int|string>> $originalParamList
+     */
+    private function __construct(array $originalPath, array $originalParamList)
     {
-        $paramList = array_map(fn($item) => $item->value(), $input->toArray());
-
-        return new self($paramList);
-    }
-
-    /** @param array<int|string,float|int|string|array<string,int|string>> $originalParamList */
-    private function __construct(array $originalParamList)
-    {
+        $this->path = $originalPath;
+        
         foreach($originalParamList as $name => $value) {
             if ($value instanceof UploadedFileInterface) {
-                $this->originalParamList[$name] = $this->makeFileSet([ $value ]);
+                $this->paramList[$name] = $this->makeFileSet([ $value ]);
 
                 continue;
             }
 
             if (is_array($value) === true) {
-                $this->originalParamList[$name] = $this->makeFileSet($value);
+                $this->paramList[$name] = $this->makeFileSet($value);
 
                 continue;
             }
 
-            $this->originalParamList[$name] = $value;
+            $this->paramList[$name] = $value;
         }
 
-        $this->paramList = $this->originalParamList;
+        $this->originalParamList = $this->paramList;
+
+        $this->reset();
+    }
+
+    public function getPath(): array
+    {
+        return $this->path;
+    }
+
+    public function getPathString(): string
+    {
+        return implode('/', $this->path);
+    }
+
+    public function getTarget(): array
+    {
+        return $this->target;
+    }
+
+    public function hasNext(): bool
+    {
+        return $this->hasNext;
     }
 
     public function next(): void
     {
-        array_pop($this->paramList);
+        if (count($this->target) === count($this->path)) {
+            $this->hasNext = false;
+
+            return;
+        }
+        
+        $this->target[] = current($this->paramList);
+
+        array_shift($this->paramList);
     }
 
     public function reset(): void
     {
         $this->paramList = $this->originalParamList;
+
+        $this->target = [];
+
+        $this->next();
+    }
+
+    public function apply(): void
+    {
+        $this->paramList = $this->originalParamList;
+
+        $this->target = [];
     }
 
     public function param(int|string $param): float|int|string|FileSet|null

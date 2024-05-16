@@ -12,12 +12,31 @@ class InputStringTest extends TestCase
     /** @test */
     public function fromString(): void
     {
-        $input = Input::fromString('/one/two/three?x=four&y=five&z=six');
+        $input = Input::fromString('/one/two/3?x=four&y=five&z=six');
 
-        $this->assertEquals([
-            0 => 'one',
-            1 => 'two',
-            2 => 'three',
+        $this->assertSame('one/two/3', $input->getPathString());
+        $this->assertSame(['one', 'two', '3'], $input->getPath());
+        $this->assertSame(['one'], $input->getTarget());
+
+        $this->assertSame([
+            0 => 'two',
+            1 => 3,
+            'x' => 'four',
+            'y' => 'five',
+            'z' => 'six'
+        ], $input->toArray());
+    }
+
+    /** @test */
+    public function fromEmptyPath(): void
+    {
+        $input = Input::fromString('?x=four&y=five&z=six');
+
+        $this->assertSame('', $input->getPathString());
+        $this->assertSame([], $input->getPath());
+        $this->assertSame([], $input->getTarget());
+
+        $this->assertSame([
             'x' => 'four',
             'y' => 'five',
             'z' => 'six'
@@ -27,77 +46,94 @@ class InputStringTest extends TestCase
     /** @test */
     public function next(): void
     {
-        $input = Input::fromString('/one/two/three?x=four&y=five&z=six');
+        $input = Input::fromString('/one/two/3?x=four&y=five&z=six');
 
-        $this->assertEquals([
-            0 => 'one',
-            1 => 'two',
-            2 => 'three',
+        $this->assertSame('one/two/3', $input->getPathString());
+        $this->assertSame(['one', 'two', '3'], $input->getPath());
+        $this->assertSame(['one'], $input->getTarget());
+        $this->assertTrue($input->hasNext());
+        $this->assertSame([
+            0 => 'two',
+            1 => 3,
             'x' => 'four',
             'y' => 'five',
             'z' => 'six'
         ], $input->toArray());
 
-        $input->next(); // remove z
+        // - - - - - - - - - - - - - - - - - - - - - - -
 
-        $this->assertEquals([
-            0 => 'one',
-            1 => 'two',
-            2 => 'three',
+        $input->next(); // adiciona two
+
+        $this->assertSame('one/two/3', $input->getPathString());
+        $this->assertSame(['one', 'two', '3'], $input->getPath());
+        $this->assertSame(['one', 'two'], $input->getTarget());
+        $this->assertTrue($input->hasNext());
+        $this->assertSame([
+            0 => 3,
             'x' => 'four',
             'y' => 'five',
+            'z' => 'six'
         ], $input->toArray());
 
-        $input->next(); // remove y
-        $input->next(); // remove x
+        // - - - - - - - - - - - - - - - - - - - - - - -
 
-        $this->assertEquals([
-            0 => 'one',
-            1 => 'two',
-            2 => 'three',
+        $input->next(); // adiciona 3
+
+        $this->assertSame('one/two/3', $input->getPathString());
+        $this->assertSame(['one', 'two', '3'], $input->getPath());
+        $this->assertSame(['one', 'two', 3], $input->getTarget());
+        $this->assertTrue($input->hasNext());
+        $this->assertSame([
+            'x' => 'four',
+            'y' => 'five',
+            'z' => 'six'
         ], $input->toArray());
 
-        $input->next(); // remove 2
-        $input->next(); // remove 1
-        $input->next(); // remove 0
+        // - - - - - - - - - - - - - - - - - - - - - - -
 
-        $this->assertEquals([], $input->toArray());
+        $input->next(); // não há mais o que adicionar
 
-        $input->next(); // remove nada
-
-        $this->assertEquals([], $input->toArray());
+        $this->assertSame('one/two/3', $input->getPathString());
+        $this->assertSame(['one', 'two', '3'], $input->getPath());
+        $this->assertSame(['one', 'two', 3], $input->getTarget());
+        $this->assertFalse($input->hasNext());
+        $this->assertSame([
+            'x' => 'four',
+            'y' => 'five',
+            'z' => 'six'
+        ], $input->toArray());
     }
 
     /** @test */
     public function reset(): void
     {
-        $input = Input::fromString('/one/two/three?x=four&y=five&z=six');
+        $input = Input::fromString('/one/two/3?x=four&y=five&z=six');
 
-        $this->assertEquals([
-            0 => 'one',
-            1 => 'two',
-            2 => 'three',
+        $this->assertSame(['one'], $input->getTarget());
+        $this->assertSame([
+            0 => 'two',
+            1 => 3,
             'x' => 'four',
             'y' => 'five',
             'z' => 'six'
         ], $input->toArray());
 
-        $input->next(); // remove z
-        $input->next(); // remove y
-        $input->next(); // remove z
+        $input->next(); // adiciona two
+        $input->next(); // adiciona 3
 
-        $this->assertEquals([
-            0 => 'one',
-            1 => 'two',
-            2 => 'three'
+        $this->assertSame(['one', 'two', 3], $input->getTarget());
+        $this->assertSame([
+            'x' => 'four',
+            'y' => 'five',
+            'z' => 'six'
         ], $input->toArray());
 
         $input->reset(); // restaura todos
  
-        $this->assertEquals([
-            0 => 'one',
-            1 => 'two',
-            2 => 'three',
+        $this->assertSame(['one'], $input->getTarget());
+        $this->assertSame([
+            0 => 'two',
+            1 => 3,
             'x' => 'four',
             'y' => 'five',
             'z' => 'six'
@@ -107,33 +143,60 @@ class InputStringTest extends TestCase
     /** @test */
     public function getParam(): void
     {
-        $input = Input::fromString('/one/two/three?x=four&y=1&z=1.1');
+        $input = Input::fromString('/one/two/3?x=four&y=1&z=1.1');
 
-        $this->assertEquals([
-            0 => 'one',
-            1 => 'two',
-            2 => 'three',
+        $this->assertSame([
+            0 => 'two',
+            1 => 3,
             'x' => 'four',
             'y' => 1,
             'z' => 1.1
         ], $input->toArray());
 
-        $this->assertSame('one', $input->param(0));
-        $this->assertSame('two', $input->param(1));
-        $this->assertSame('three', $input->param(2));
+        $this->assertSame('two', $input->param(0));
+        $this->assertSame(3, $input->param(1));
         $this->assertSame('four', $input->param('x'));
         $this->assertSame(1, $input->param('y'));
         $this->assertSame(1.1, $input->param('z'));
 
-        $input->next(); // remove z
+        $input->next();
 
-        $this->assertNull($input->param('z'));
+        $this->assertSame([
+            0 => 3,
+            'x' => 'four',
+            'y' => 1,
+            'z' => 1.1
+        ], $input->toArray());
 
-        $input->next(); // remove y
-        $input->next(); // remove x
-        $input->next(); // remove 2
+        $this->assertSame(3, $input->param(0));
+        $this->assertSame('four', $input->param('x'));
+        $this->assertSame(1, $input->param('y'));
+        $this->assertSame(1.1, $input->param('z'));
 
-        $this->assertNull($input->param(2));
+        $input->next();
+
+        $this->assertSame([
+            'x' => 'four',
+            'y' => 1,
+            'z' => 1.1
+        ], $input->toArray());
+        $this->assertNull($input->param(0));
+        $this->assertSame('four', $input->param('x'));
+        $this->assertSame(1, $input->param('y'));
+        $this->assertSame(1.1, $input->param('z'));
+
+        // não muda nada
+        $input->next();
+
+        $this->assertSame([
+            'x' => 'four',
+            'y' => 1,
+            'z' => 1.1
+        ], $input->toArray());
+        $this->assertNull($input->param(0));
+        $this->assertSame('four', $input->param('x'));
+        $this->assertSame(1, $input->param('y'));
+        $this->assertSame(1.1, $input->param('z'));
     }
 
     /** @test */
@@ -141,17 +204,35 @@ class InputStringTest extends TestCase
     {
         $input = Input::fromString('/one/two/three?x=four&y=1&z=1.1');
 
-        $this->assertEquals([
-            0 => 'one',
-            1 => 'two',
-            2 => 'three',
+        $this->assertSame('one/two/three', $input->getPathString());
+
+        $this->assertSame(['one'], $input->getTarget());
+
+        // assume que o alvo é 'one'
+        $this->assertSame([
+            0 => 'two',
+            1 => 'three',
             'x' => 'four',
             'y' => 1,
             'z' => 1.1
         ], $input->toArray());
 
         $this->assertSame(
-            '0=one&1=two&2=three&x=four&y=1&z=1.1',
+            '0=two&1=three&x=four&y=1&z=1.1',
+            (string)$input
+        );
+
+        $input->next();
+
+        $this->assertSame([
+            0 => 'three',
+            'x' => 'four',
+            'y' => 1,
+            'z' => 1.1
+        ], $input->toArray());
+
+        $this->assertSame(
+            '0=three&x=four&y=1&z=1.1',
             (string)$input
         );
     }

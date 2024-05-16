@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Iquety\Application\AppEngine;
 
-use Iquety\Application\Container;
-use Iquety\Application\Http\HttpResponseFactory;
+use Iquety\Injection\Container;
 use OutOfBoundsException;
 
 abstract class AppEngine
 {
     private ?Container $container = null;
 
-    public function useContainer(Container $container): void
-    {
-        $this->container = $container;
-    }
+    private ?ModuleSet $moduleSet = null;
+
+    abstract public function boot(Bootstrap $bootstrap): void;
 
     protected function container(): Container
     {
@@ -28,16 +26,36 @@ abstract class AppEngine
         return $this->container;
     }
 
-    protected function responseFactory(): HttpResponseFactory
+    public function moduleSet(): ModuleSet
     {
-        return $this->container()->get(HttpResponseFactory::class);
+        if ($this->moduleSet === null) {
+            throw new OutOfBoundsException(
+                'The module set was not made available with the useModuleSet method'
+            );
+        }
+
+        return $this->moduleSet;
     }
 
-    abstract public function boot(Bootstrap $bootstrap): void;
+    /** 
+     * Tenta resolver a solicitação do usuário usando este mecanismo.
+     * Se for retornada uma resposta, EngineSet irá enviá-la para o usuário,
+     * se for retornado null, EngineSet irá solicitar ao próximo mecanismo.
+     */
+    abstract public function resolve(Input $input): ?ResponseDescriptor;
 
-    /** @param array<string,Bootstrap> $moduleList */
-    abstract public function resolve(
-        Input $input,
-        ModuleSet $moduleSet,
-    ): ResponseDescriptor;
+    public function useContainer(Container $container): void
+    {
+        $this->container = $container;
+    }
+
+    public function useModuleSet(ModuleSet $moduleSet): void
+    {
+        $this->moduleSet = $moduleSet;
+    }
+
+    // protected function responseFactory(): HttpResponseFactory
+    // {
+    //     return $this->container()->get(HttpResponseFactory::class);
+    // }
 }

@@ -4,13 +4,19 @@ declare(strict_types=1);
 
 namespace Iquety\Application\AppEngine;
 
-use Iquety\Application\Container;
+use InvalidArgumentException;
+use Iquety\Injection\Container;
 use Throwable;
 
+/**
+ * Armazena o conjunto de mecanismos disponíveis para responder às solicitações 
+ * mediante as entradas do usuário
+ */
 class EngineSet
 {
     private ModuleSet $moduleSet;
 
+    /** @var array<string,AppEngine> */
     private array $engineList = [];
 
     public function __construct(private Container $container)
@@ -22,7 +28,13 @@ class EngineSet
     {
         $engine->useContainer($this->container);
 
-        $this->engineList[] = $engine;
+        if (isset($this->engineList[$engine::class]) === true) {
+            throw new InvalidArgumentException(
+                'The same engine cannot be added twice'
+            );
+        }
+
+        $this->engineList[$engine::class] = $engine;
     }
 
     public function resolve(Input $input): ResponseDescriptor
@@ -38,7 +50,6 @@ class EngineSet
         } catch (Throwable $exception) {
             return new ResponseDescriptor(500, '');
         }
-        
 
         return new ResponseDescriptor(404, '');
     }

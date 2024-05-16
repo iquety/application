@@ -56,9 +56,9 @@
         ],
         "docmap" : [
             "rm -Rf docs/pt-br/*",
-            "vendor/bin/docmap -s src/docs/pt-br -d docs/pt-br -r leiame.md -l pt-br",
+            "vendor/bin/docmap -s docs-src/pt-br -d docs/pt-br -r leiame.md -l pt-br",
             "rm -Rf docs/en/*",
-            "vendor/bin/docmap -s src/docs/en -d docs/en"
+            "vendor/bin/docmap -s docs-src/en -d docs/en"
         ],
         "coverage": "vendor/bin/phpunit --coverage-html coverage",
         "mess": [
