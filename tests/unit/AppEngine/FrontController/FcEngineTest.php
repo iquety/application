@@ -4,19 +4,57 @@ declare(strict_types=1);
 
 namespace Tests\Unit\AppEngine\FrontController;
 
+use Exception;
+use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
+use Iquety\Application\AppEngine\FrontController\Command\MainCommand;
 use Iquety\Application\AppEngine\FrontController\Directory;
 use Iquety\Application\AppEngine\FrontController\DirectorySet;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\FcEngine;
 use Iquety\Application\AppEngine\Input;
 use Iquety\Application\AppEngine\ModuleSet;
+use Iquety\Application\Application;
+use Iquety\Application\Http\HttpFactory;
 use Iquety\Injection\Container;
+use RuntimeException;
+use Tests\Unit\AppEngine\FrontController\Stubs\Commands\FailCommand;
+use Tests\Unit\AppEngine\FrontController\Stubs\Commands\SubDirectory\TwoCommand;
 use Tests\Unit\TestCase;
 
 class FcEngineTest extends TestCase
 {
     /** @test */
-    public function bootEngine(): void
+    public function resolveException(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('No directories registered as command source');
+
+        $container = new Container();
+        $moduleSet = new ModuleSet();
+
+        $engine = new FcEngine();
+        $engine->useContainer($container);
+        $engine->useModuleSet($moduleSet);
+
+        $bootstrap = new class extends FcBootstrap {
+            public function bootDependencies(Container $container): void
+            {
+                $container->addSingleton('signature-test', fn() => 'teste');
+            }
+
+            public function bootDirectories(DirectorySet &$directorySet): void
+            {
+                // nenhum diretório setado
+            }
+        };
+
+        $engine->boot($bootstrap);
+
+        $engine->resolve(Input::fromString(''));
+    }
+
+    /** @test */
+    public function resolveMain(): void
     {
         $container = new Container();
         $moduleSet = new ModuleSet();
@@ -34,58 +72,77 @@ class FcEngineTest extends TestCase
             public function bootDirectories(DirectorySet &$directorySet): void
             {
                 $directorySet->add(new Directory(
-                    'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-                    __DIR__ . "/Stubs/Commands"
+                    'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
                 ));
             }
         };
 
         $engine->boot($bootstrap);
 
-        $responseDescriptor = $engine->resolve(Input::fromString('/one/two'));
+        $descriptor = $engine->resolve(Input::fromString(''));
 
-        var_dump($responseDescriptor);
-        exit;
-
-        // var_dump($engine->moduleSet()->findByClass($bootstrap::class));
-        exit;
-
-        var_dump($container->get('signature-test'));
-        exit;
+        $this->assertSame('main', $descriptor->module());
+        $this->assertSame(MainCommand::class . '::execute', $descriptor->action());
     }
 
-    // /** @test */
-    // public function duplicatedEngine(): void
-    // {
-    //     $this->expectException(InvalidArgumentException::class);
-    //     $this->expectExceptionMessage('The same engine cannot be added twice');
+    /** @test */
+    public function resolveNotFound(): void
+    {
+        $container = new Container();
+        $moduleSet = new ModuleSet();
 
-    //     $container = new Container();
+        $engine = new FcEngine();
+        $engine->useContainer($container);
+        $engine->useModuleSet($moduleSet);
 
-    //     $engineSet = new EngineSet($container);
+        $bootstrap = new class extends FcBootstrap {
+            public function bootDependencies(Container $container): void
+            {
+                $container->addSingleton('signature-test', fn() => 'teste');
+            }
 
-    //     $engine = $this->createMock(AppEngine::class);
+            public function bootDirectories(DirectorySet &$directorySet): void
+            {
+                $directorySet->add(new Directory(
+                    'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
+                ));
+            }
+        };
 
-    //     $engineSet->add($engine);
-    //     $engineSet->add($engine);
-    // }
+        $engine->boot($bootstrap);
 
-    // /** @test */
-    // public function addEngines(): void
-    // {
-    //     $this->expectException(InvalidArgumentException::class);
-    //     $this->expectExceptionMessage('The same engine cannot be added twice');
-        
-    //     $container = new Container();
+        $this->assertNull($engine->resolve(Input::fromString('not-found')));
+    }
 
-    //     $engineSet = new EngineSet($container);
+    /** @test */
+    public function resolveCommand(): void
+    {
+        $container = new Container();
+        $moduleSet = new ModuleSet();
 
-    //     $engineOne = $this->createMock(AppEngine::class);
-    //     $engineTwo = $this->createMock(AppEngine::class);
+        $engine = new FcEngine();
+        $engine->useContainer($container);
+        $engine->useModuleSet($moduleSet);
 
-    //     $engineSet->add($engineOne);
-    //     $engineSet->add($engineTwo);
+        $bootstrap = new class extends FcBootstrap {
+            public function bootDependencies(Container $container): void
+            {
+                $container->addSingleton('signature-test', fn() => 'teste');
+            }
 
-    //     $this->assertCount(2, $engineSet->toArray());
-    // }
+            public function bootDirectories(DirectorySet &$directorySet): void
+            {
+                $directorySet->add(new Directory(
+                    'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
+                ));
+            }
+        };
+
+        $engine->boot($bootstrap);
+
+        $descriptor = $engine->resolve(Input::fromString('sub-directory/two-command'));
+
+        $this->assertSame($bootstrap::class, $descriptor->module());
+        $this->assertSame(TwoCommand::class . '::execute', $descriptor->action());
+    }
 }

@@ -9,6 +9,7 @@ use DateTimeZone;
 use Iquety\Application\Http\HttpDependencies;
 use InvalidArgumentException;
 use Iquety\Application\AppEngine\AppEngine;
+use Iquety\Application\AppEngine\Bootstrap;
 use Iquety\Application\AppEngine\EngineSet;
 use Iquety\Application\AppEngine\ModuleSet;
 use Iquety\Application\Http\HttpResponseFactory;
@@ -43,7 +44,7 @@ class Application
     {
         $this->container = new Container();
 
-        $this->engineSet = new EngineSet();
+        $this->engineSet = new EngineSet($this->container());
 
         $this->moduleSet = new ModuleSet();
 
@@ -151,7 +152,7 @@ class Application
         $mainBootstrap = $this->moduleSet->findByClass($this->mainBootstrap);
 
         try {
-            $mainBootstrap->bootDependencies($this);
+            $mainBootstrap->bootDependencies($this->container());
         } catch (Throwable $exception) {
             throw new RuntimeException('The bootApplication method failed');
         }
@@ -161,7 +162,7 @@ class Application
 
         try {
             // para o ioc fazer uso da aplicação
-            $this->addSingleton(Application::class, fn() => Application::instance());
+            $this->container->addSingleton(Application::class, Application::instance());
 
             foreach ($this->moduleSet->toArray() as $bootstrap) {
                 $this->engineSet->bootAllEngines($this->container(), $bootstrap);

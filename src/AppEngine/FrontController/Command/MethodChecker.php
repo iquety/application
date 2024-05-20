@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Iquety\Application\AppEngine\Action;
+namespace Iquety\Application\AppEngine\FrontController\Command;
 
 use Iquety\Application\Http\HttpMethod;
 use Psr\Http\Message\ServerRequestInterface;

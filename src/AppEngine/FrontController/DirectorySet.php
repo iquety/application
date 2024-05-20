@@ -43,6 +43,11 @@ class DirectorySet
         return null;
     }
 
+    public function hasDirectories(): bool
+    {
+        return $this->directoryList !== [];
+    }
+
     /** @var array<string,Directory> */
     public function toArray(): array
     {

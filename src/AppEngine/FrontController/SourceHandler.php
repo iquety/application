@@ -31,18 +31,24 @@ class SourceHandler
 
     public function hasSources(): bool
     {
-        return $this->sourceList !== [];
+        foreach($this->sourceList as $directorySet) {
+            if ($directorySet->hasDirectories() === true) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     public function getDescriptorTo(Input $input): ?CommandDescriptor
     {
-        if ($this->hasSources === false) {
+        if ($this->hasSources() === false) {
             throw new RuntimeException(
                 'No directories registered as command source'
             );
         }
 
-        if ($input->getPath() === '') {
+        if ($input->getPath() === []) {
             return $this->getMainDescriptor($input);
         }
 
@@ -80,11 +86,7 @@ class SourceHandler
 
     public function setErrorCommandClass(string $commandClass): self
     {
-        if ($this->errorCommandClass === $commandClass) {
-            return $this;
-        }
-
-        $this->assertCommand($commandClass);
+        $this->assertCommand($this->errorCommandClass, $commandClass);
 
         $this->errorCommandClass = $commandClass;
 
@@ -93,10 +95,6 @@ class SourceHandler
 
     public function setMainCommandClass(string $commandClass): self
     {
-        if ($this->mainCommandClass === $commandClass) {
-            return $this;
-        }
-
         $this->assertCommand($commandClass);
 
         $this->mainCommandClass = $commandClass;
@@ -106,10 +104,6 @@ class SourceHandler
 
     public function setNotFoundCommandClass(string $commandClass): self
     {
-        if ($this->notFoundCommandClass === $commandClass) {
-            return $this;
-        }
-
         $this->assertCommand($commandClass);
         
         $this->notFoundCommandClass = $commandClass;
@@ -117,10 +111,10 @@ class SourceHandler
         return $this;
     }
 
-    private function assertCommand(string $commandClass): void
+    private function assertCommand(string $newCommandClass): void
     {
-        if (is_subclass_of($commandClass, Command::class) === false) {
-            throw new InvalidArgumentException("Class $commandClass is not a valid command");
+        if (is_subclass_of($newCommandClass, Command::class) === false) {
+            throw new InvalidArgumentException("Class $newCommandClass is not a valid command");
         }
     }
 }
