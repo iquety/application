@@ -19,22 +19,10 @@ class DirectoryTest extends TestCase
     {
         new Directory(
             'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/Stubs"
+            __DIR__ . "/Stubs/Commands"
         );
 
         $this->assertTrue(true);
-    }
-
-    /** @test */
-    public function constructionError(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The directory specified for commands does not exist');
-
-        new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/NotExists"
-        );
     }
 
     /** @test */
@@ -42,11 +30,11 @@ class DirectoryTest extends TestCase
     {
         $directory = new Directory(
             'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/Stubs"
+            __DIR__ . "/Stubs/Commands"
         );
 
         $this->assertSame(
-            md5('Tests\Unit\AppEngine\FrontController\Stubs\Commands' . __DIR__ . "/Stubs"),
+            md5('Tests\Unit\AppEngine\FrontController\Stubs\Commands'),
             $directory->getIdentity()
         );
     }
@@ -56,7 +44,7 @@ class DirectoryTest extends TestCase
     {
         $directory = new Directory(
             'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/Stubs"
+            __DIR__ . "/Stubs/Commands"
         );
 
         $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString('one-command'));
@@ -72,7 +60,10 @@ class DirectoryTest extends TestCase
             __DIR__ . "/Stubs"
         );
 
-        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString('sub-directory/two-command'));
+        $descriptor = $directory->getDescriptorTo(
+            FcBootstrap::class,
+            Input::fromString('sub-directory/two-command')
+        );
 
         $this->assertSame(TwoCommand::class . "::execute", $descriptor->action());
     }
@@ -104,8 +95,7 @@ class DirectoryTest extends TestCase
     public function getCommandToBars(string $uri, string $className): void
     {
         $directory = new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/Stubs"
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         );
 
         $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString($uri));
@@ -120,8 +110,7 @@ class DirectoryTest extends TestCase
     public function getCommandToSpaces(string $uri, string $className): void
     {
         $directory = new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/Stubs"
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         );
 
         $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString(" $uri"));
@@ -138,11 +127,14 @@ class DirectoryTest extends TestCase
     public function getCommandFixCase(): void
     {
         $directory = new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/Stubs"
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         );
 
-        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString('sub-diRECtory/two-coMMand'));
+        $descriptor = $directory->getDescriptorTo(
+            FcBootstrap::class,
+            Input::fromString('sub-diRECtory/two-coMMand')
+        );
+
         $this->assertSame(TwoCommand::class . "::execute", $descriptor->action());
     }
 
@@ -166,9 +158,23 @@ class DirectoryTest extends TestCase
     {
         $directory = new Directory(
             'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/Stubs"
         );
 
-        $this->assertNull($directory->getDescriptorTo(FcBootstrap::class, Input::fromString($uri)));
+        $this->assertNull($directory->getDescriptorTo(
+            FcBootstrap::class,
+            Input::fromString($uri)
+        ));
+    }
+
+    public function notExists(): void
+    {
+        $directory = new Directory(
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
+        );
+
+        $this->assertNull($directory->getDescriptorTo(
+            FcBootstrap::class,
+            Input::fromString('xxxxx')
+        ));
     }
 }

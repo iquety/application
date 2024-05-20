@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Iquety\Application\AppEngine\FrontController\Directory;
 use Iquety\Application\AppEngine\FrontController\DirectorySet;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
+use Iquety\Application\AppEngine\Input;
 use Tests\Unit\AppEngine\FrontController\Stubs\Commands\OneCommand;
 use Tests\Unit\AppEngine\FrontController\Stubs\Commands\SubDirectory\TwoCommand;
 use Tests\Unit\TestCase;
@@ -69,7 +70,7 @@ class DirectorySetTest extends TestCase
     {
         $directorySet = new DirectorySet(FcBootstrap::class);
 
-        $this->assertNull($directorySet->getDescriptorTo('one-command'));
+        $this->assertNull($directorySet->getDescriptorTo(Input::fromString('one-command')));
     }
 
     /** @test */
@@ -78,22 +79,19 @@ class DirectorySetTest extends TestCase
         $directorySet = new DirectorySet(FcBootstrap::class);
 
         $directorySet->add(new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/Stubs/Commands"
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         ));
 
         $directorySet->add(new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\Commands\SubDirectory',
-            __DIR__ . "/Stubs/Commands/SubDirectory"
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands\SubDirectory'
         ));
 
-        $descriptor = $directorySet->getDescriptorTo('one-command');
+        $descriptor = $directorySet->getDescriptorTo(Input::fromString('one-command'));
         $this->assertSame(OneCommand::class . "::execute", $descriptor->action());
-        $this->assertSame([], $descriptor->params());
 
-        $descriptor = $directorySet->getDescriptorTo('two-command');
+        $descriptor = $directorySet->getDescriptorTo(Input::fromString('two-command/param/add'));
+        $this->assertNotNull($descriptor);
         $this->assertSame(TwoCommand::class . "::execute", $descriptor->action());
-        $this->assertSame([], $descriptor->params());
     }
 
     /** @test */
@@ -106,13 +104,11 @@ class DirectorySetTest extends TestCase
             __DIR__ . "/Stubs/Commands"
         ));
 
-        $descriptor = $directorySet->getDescriptorTo('one-command');
+        $descriptor = $directorySet->getDescriptorTo(Input::fromString('one-command'));
         $this->assertSame(OneCommand::class . "::execute", $descriptor->action());
-        $this->assertSame([], $descriptor->params());
 
-        $descriptor = $directorySet->getDescriptorTo('sub-directory/two-command');
+        $descriptor = $directorySet->getDescriptorTo(Input::fromString('sub-directory/two-command'));
         $this->assertSame(TwoCommand::class . "::execute", $descriptor->action());
-        $this->assertSame([], $descriptor->params());
     }
 
     /** @test */
@@ -125,6 +121,6 @@ class DirectorySetTest extends TestCase
             __DIR__ . "/Stubs/Commands"
         ));
 
-        $this->assertNull($directorySet->getDescriptorTo('not-exists'));
+        $this->assertNull($directorySet->getDescriptorTo(Input::fromString('not-exists')));
     }
 }

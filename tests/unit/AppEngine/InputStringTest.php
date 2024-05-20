@@ -17,6 +17,7 @@ class InputStringTest extends TestCase
         $this->assertSame('one/two/3', $input->getPathString());
         $this->assertSame(['one', 'two', '3'], $input->getPath());
         $this->assertSame(['one'], $input->getTarget());
+        $this->assertTrue($input->hasNext()); // two é o próximo
 
         $this->assertSame([
             0 => 'two',
@@ -35,6 +36,7 @@ class InputStringTest extends TestCase
         $this->assertSame('', $input->getPathString());
         $this->assertSame([], $input->getPath());
         $this->assertSame([], $input->getTarget());
+        $this->assertFalse($input->hasNext()); // não há path, não há próximo
 
         $this->assertSame([
             'x' => 'four',
@@ -51,7 +53,7 @@ class InputStringTest extends TestCase
         $this->assertSame('one/two/3', $input->getPathString());
         $this->assertSame(['one', 'two', '3'], $input->getPath());
         $this->assertSame(['one'], $input->getTarget());
-        $this->assertTrue($input->hasNext());
+        $this->assertTrue($input->hasNext()); // two é o próximo
         $this->assertSame([
             0 => 'two',
             1 => 3,
@@ -67,7 +69,7 @@ class InputStringTest extends TestCase
         $this->assertSame('one/two/3', $input->getPathString());
         $this->assertSame(['one', 'two', '3'], $input->getPath());
         $this->assertSame(['one', 'two'], $input->getTarget());
-        $this->assertTrue($input->hasNext());
+        $this->assertTrue($input->hasNext()); // 3 é o próximo
         $this->assertSame([
             0 => 3,
             'x' => 'four',
@@ -82,7 +84,7 @@ class InputStringTest extends TestCase
         $this->assertSame('one/two/3', $input->getPathString());
         $this->assertSame(['one', 'two', '3'], $input->getPath());
         $this->assertSame(['one', 'two', 3], $input->getTarget());
-        $this->assertTrue($input->hasNext());
+        $this->assertFalse($input->hasNext()); // não há próximo
         $this->assertSame([
             'x' => 'four',
             'y' => 'five',
@@ -96,7 +98,7 @@ class InputStringTest extends TestCase
         $this->assertSame('one/two/3', $input->getPathString());
         $this->assertSame(['one', 'two', '3'], $input->getPath());
         $this->assertSame(['one', 'two', 3], $input->getTarget());
-        $this->assertFalse($input->hasNext());
+        $this->assertFalse($input->hasNext()); // não há próximo
         $this->assertSame([
             'x' => 'four',
             'y' => 'five',
@@ -109,7 +111,6 @@ class InputStringTest extends TestCase
     {
         $input = Input::fromString('/one/two/3?x=four&y=five&z=six');
 
-        $this->assertSame(['one'], $input->getTarget());
         $this->assertSame([
             0 => 'two',
             1 => 3,
@@ -117,20 +118,24 @@ class InputStringTest extends TestCase
             'y' => 'five',
             'z' => 'six'
         ], $input->toArray());
+        $this->assertSame(['one', 'two', '3'], $input->getPath());
+        $this->assertSame(['one'], $input->getTarget());
+        $this->assertTrue($input->hasNext()); // two é o próximo
 
         $input->next(); // adiciona two
         $input->next(); // adiciona 3
 
-        $this->assertSame(['one', 'two', 3], $input->getTarget());
         $this->assertSame([
             'x' => 'four',
             'y' => 'five',
             'z' => 'six'
         ], $input->toArray());
+        $this->assertSame(['one', 'two', '3'], $input->getPath());
+        $this->assertSame(['one', 'two', 3], $input->getTarget());
+        $this->assertFalse($input->hasNext()); // não há próximo
 
         $input->reset(); // restaura todos
  
-        $this->assertSame(['one'], $input->getTarget());
         $this->assertSame([
             0 => 'two',
             1 => 3,
@@ -138,6 +143,9 @@ class InputStringTest extends TestCase
             'y' => 'five',
             'z' => 'six'
         ], $input->toArray());
+        $this->assertSame(['one', 'two', '3'], $input->getPath());
+        $this->assertSame(['one'], $input->getTarget());
+        $this->assertTrue($input->hasNext()); // two é o próximo
     }
 
     /** @test */

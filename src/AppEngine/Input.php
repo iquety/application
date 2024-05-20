@@ -23,7 +23,7 @@ class Input
     /** @var array<int,float|int|string> */
     private array $target = [];
 
-    private bool $hasNext = true;
+    private bool $hasNext;
 
     public static function fromString(string $string): self
     {
@@ -96,19 +96,25 @@ class Input
 
     public function next(): void
     {
-        if (count($this->target) === count($this->path)) {
-            $this->hasNext = false;
-
+        if ($this->hasNext === false) {
             return;
         }
-        
+
         $this->target[] = current($this->paramList);
 
         array_shift($this->paramList);
+
+        if (count($this->target) === count($this->path)) {
+            $this->hasNext = false;
+        }
     }
 
     public function reset(): void
     {
+        $this->hasNext = count($this->path) > 0
+            ? true
+            : false;
+
         $this->paramList = $this->originalParamList;
 
         $this->target = [];

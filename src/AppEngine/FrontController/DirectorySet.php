@@ -6,6 +6,7 @@ namespace Iquety\Application\AppEngine\FrontController;
 
 use InvalidArgumentException;
 use Iquety\Application\AppEngine\FrontController\Command\CommandDescriptor;
+use Iquety\Application\AppEngine\Input;
 
 class DirectorySet
 {
@@ -29,10 +30,10 @@ class DirectorySet
         $this->directoryList[$index] = $directory;
     }
 
-    public function getDescriptorTo(string $uri): ?CommandDescriptor
+    public function getDescriptorTo(Input $input): ?CommandDescriptor
     {
         foreach ($this->directoryList as $directory) {
-            $descriptor = $directory->getDescriptorTo($this->bootstrapClass, $uri);
+            $descriptor = $directory->getDescriptorTo($this->bootstrapClass, $input);
 
             if ($descriptor !== null) {
                 return $descriptor;
