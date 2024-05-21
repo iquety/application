@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Iquety\Application\AppEngine\Mvc;
+namespace Iquety\Application\AppEngine\Mvc\Controller;
 
 use Iquety\Application\AppEngine\Action\Makeable;
 use Iquety\Application\AppEngine\Action\MethodChecker;
@@ -12,6 +12,5 @@ abstract class Controller
 {
     use Makeable;
     use MethodChecker;
-
     // use Publisher;
 }

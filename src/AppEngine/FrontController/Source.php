@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Iquety\Application\AppEngine\FrontController;
 
-use Iquety\Application\AppEngine\FrontController\Command\CommandDescriptor;
+use Iquety\Application\AppEngine\ActionDescriptor;
 use Iquety\Application\AppEngine\Input;
 
-class Directory
+class Source
 {
     public function __construct(private string $namespace)
     {
@@ -23,7 +23,7 @@ class Directory
         return $this->namespace;
     }
 
-    public function getDescriptorTo(string $bootstrapClass, Input $input): ?CommandDescriptor
+    public function getDescriptorTo(string $bootstrapClass, Input $input): ?ActionDescriptor
     {
         $input->reset();
 
@@ -33,17 +33,17 @@ class Directory
         );
     }
 
-    private function processUriLevel(string $bootstrapClass, Input $input): ?CommandDescriptor
+    private function processUriLevel(string $bootstrapClass, Input $input): ?ActionDescriptor
     {
         $className = $this->namespace
             . "\\"
             . $this->makeNamespaceFrom($input);
 
         if (class_exists($className) === true) {
-            return new CommandDescriptor(
+            return new ActionDescriptor(
                 $bootstrapClass,
                 $className,
-                $input
+                'execute'
             );
         }
 

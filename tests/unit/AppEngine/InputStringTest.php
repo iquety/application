@@ -14,6 +14,7 @@ class InputStringTest extends TestCase
     {
         $input = Input::fromString('/one/two/3?x=four&y=five&z=six');
 
+        $this->assertSame('GET', $input->getMethod());
         $this->assertSame('one/two/3', $input->getPathString());
         $this->assertSame(['one', 'two', '3'], $input->getPath());
         $this->assertSame(['one'], $input->getTarget());
@@ -33,6 +34,7 @@ class InputStringTest extends TestCase
     {
         $input = Input::fromString('?x=four&y=five&z=six');
 
+        $this->assertSame('GET', $input->getMethod());
         $this->assertSame('', $input->getPathString());
         $this->assertSame([], $input->getPath());
         $this->assertSame([], $input->getTarget());
@@ -50,6 +52,7 @@ class InputStringTest extends TestCase
     {
         $input = Input::fromString('/one/two/3?x=four&y=five&z=six');
 
+        $this->assertSame('GET', $input->getMethod());
         $this->assertSame('one/two/3', $input->getPathString());
         $this->assertSame(['one', 'two', '3'], $input->getPath());
         $this->assertSame(['one'], $input->getTarget());
@@ -66,6 +69,7 @@ class InputStringTest extends TestCase
 
         $input->next(); // adiciona two
 
+        $this->assertSame('GET', $input->getMethod());
         $this->assertSame('one/two/3', $input->getPathString());
         $this->assertSame(['one', 'two', '3'], $input->getPath());
         $this->assertSame(['one', 'two'], $input->getTarget());
@@ -81,6 +85,7 @@ class InputStringTest extends TestCase
 
         $input->next(); // adiciona 3
 
+        $this->assertSame('GET', $input->getMethod());
         $this->assertSame('one/two/3', $input->getPathString());
         $this->assertSame(['one', 'two', '3'], $input->getPath());
         $this->assertSame(['one', 'two', 3], $input->getTarget());
@@ -95,6 +100,7 @@ class InputStringTest extends TestCase
 
         $input->next(); // não há mais o que adicionar
 
+        $this->assertSame('GET', $input->getMethod());
         $this->assertSame('one/two/3', $input->getPathString());
         $this->assertSame(['one', 'two', '3'], $input->getPath());
         $this->assertSame(['one', 'two', 3], $input->getTarget());
@@ -111,6 +117,7 @@ class InputStringTest extends TestCase
     {
         $input = Input::fromString('/one/two/3?x=four&y=five&z=six');
 
+        $this->assertSame('GET', $input->getMethod());
         $this->assertSame([
             0 => 'two',
             1 => 3,
@@ -125,6 +132,7 @@ class InputStringTest extends TestCase
         $input->next(); // adiciona two
         $input->next(); // adiciona 3
 
+        $this->assertSame('GET', $input->getMethod());
         $this->assertSame([
             'x' => 'four',
             'y' => 'five',
@@ -136,6 +144,7 @@ class InputStringTest extends TestCase
 
         $input->reset(); // restaura todos
  
+        $this->assertSame('GET', $input->getMethod());
         $this->assertSame([
             0 => 'two',
             1 => 3,
@@ -243,5 +252,37 @@ class InputStringTest extends TestCase
             '0=three&x=four&y=1&z=1.1',
             (string)$input
         );
+    }
+
+    /** @test */
+    public function appendParams(): void
+    {
+        $input = Input::fromString('/one/two/3?x=four&y=five&z=six');
+
+        $this->assertSame('GET', $input->getMethod());
+        $this->assertSame('one/two/3', $input->getPathString());
+        $this->assertSame(['one', 'two', '3'], $input->getPath());
+        $this->assertSame(['one'], $input->getTarget());
+        $this->assertTrue($input->hasNext()); // two é o próximo
+
+        $this->assertSame([
+            0 => 'two',
+            1 => 3,
+            'x' => 'four',
+            'y' => 'five',
+            'z' => 'six'
+        ], $input->toArray());
+
+        $input->appendParams(['id' => 99, 'name' => 'Teste']);
+
+        $this->assertSame([
+            0 => 'two',
+            1 => 3,
+            'x' => 'four',
+            'y' => 'five',
+            'z' => 'six',
+            'id' => 99,
+            'name' => 'Teste'
+        ], $input->toArray());
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Iquety\Application\AppEngine;
 
-use Iquety\Application\AppEngine\FrontController\Command\CommandDescriptor;
 use Iquety\Injection\Container;
 use OutOfBoundsException;
 
@@ -43,7 +42,9 @@ abstract class AppEngine
      * Se for retornada uma resposta, EngineSet irá enviá-la para o usuário,
      * se for retornado null, EngineSet irá solicitar ao próximo mecanismo.
      */
-    abstract public function resolve(Input $input): ?CommandDescriptor;
+    abstract public function resolve(Input $input): ?ActionDescriptor;
+
+    abstract public function sourceHandler(): SourceHandler;
 
     public function useContainer(Container $container): void
     {
@@ -54,9 +55,4 @@ abstract class AppEngine
     {
         $this->moduleSet = $moduleSet;
     }
-
-    // protected function responseFactory(): HttpResponseFactory
-    // {
-    //     return $this->container()->get(HttpResponseFactory::class);
-    // }
 }

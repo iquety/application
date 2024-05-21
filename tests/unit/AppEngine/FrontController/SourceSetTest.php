@@ -5,24 +5,23 @@ declare(strict_types=1);
 namespace Tests\Unit\AppEngine\FrontController;
 
 use InvalidArgumentException;
-use Iquety\Application\AppEngine\FrontController\Directory;
-use Iquety\Application\AppEngine\FrontController\DirectorySet;
+use Iquety\Application\AppEngine\FrontController\SourceSet;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
+use Iquety\Application\AppEngine\FrontController\Source;
 use Iquety\Application\AppEngine\Input;
 use Tests\Unit\AppEngine\FrontController\Stubs\Commands\OneCommand;
 use Tests\Unit\AppEngine\FrontController\Stubs\Commands\SubDirectory\TwoCommand;
 use Tests\Unit\TestCase;
 
-class DirectorySetTest extends TestCase
+class SourceSetTest extends TestCase
 {
     /** @test */
     public function addDirectory(): void
     {
-        $directorySet = new DirectorySet(FcBootstrap::class);
+        $directorySet = new SourceSet(FcBootstrap::class);
 
-        $directorySet->add(new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs',
-            __DIR__ . "/Stubs"
+        $directorySet->add(new Source(
+            'Tests\Unit\AppEngine\FrontController\Stubs'
         ));
 
         $this->assertCount(1, $directorySet->toArray());
@@ -32,34 +31,30 @@ class DirectorySetTest extends TestCase
     public function addSameDirectory(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The specified directory already exists');
+        $this->expectExceptionMessage('The specified source already exists');
 
-        $directorySet = new DirectorySet(FcBootstrap::class);
+        $directorySet = new SourceSet(FcBootstrap::class);
 
-        $directorySet->add(new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/Stubs"
+        $directorySet->add(new Source(
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         ));
 
-        $directorySet->add(new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/Stubs"
+        $directorySet->add(new Source(
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         ));
     }
 
     /** @test */
     public function addTwoDirectories(): void
     {
-        $directorySet = new DirectorySet(FcBootstrap::class);
+        $directorySet = new SourceSet(FcBootstrap::class);
 
-        $directorySet->add(new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/Stubs/Commands"
+        $directorySet->add(new Source(
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         ));
 
-        $directorySet->add(new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\Commands\SubDirectory',
-            __DIR__ . "/Stubs/Commands/SubDirectory"
+        $directorySet->add(new Source(
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands\SubDirectory'
         ));
 
         $this->assertCount(2, $directorySet->toArray());
@@ -68,7 +63,7 @@ class DirectorySetTest extends TestCase
     /** @test */
     public function getCommandWithoutDirectories(): void
     {
-        $directorySet = new DirectorySet(FcBootstrap::class);
+        $directorySet = new SourceSet(FcBootstrap::class);
 
         $this->assertNull($directorySet->getDescriptorTo(Input::fromString('one-command')));
     }
@@ -76,13 +71,13 @@ class DirectorySetTest extends TestCase
     /** @test */
     public function getCommandToLevelOne(): void
     {
-        $directorySet = new DirectorySet(FcBootstrap::class);
+        $directorySet = new SourceSet(FcBootstrap::class);
 
-        $directorySet->add(new Directory(
+        $directorySet->add(new Source(
             'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         ));
 
-        $directorySet->add(new Directory(
+        $directorySet->add(new Source(
             'Tests\Unit\AppEngine\FrontController\Stubs\Commands\SubDirectory'
         ));
 
@@ -97,11 +92,10 @@ class DirectorySetTest extends TestCase
     /** @test */
     public function getCommandToLevelTwo(): void
     {
-        $directorySet = new DirectorySet(FcBootstrap::class);
+        $directorySet = new SourceSet(FcBootstrap::class);
 
-        $directorySet->add(new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/Stubs/Commands"
+        $directorySet->add(new Source(
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         ));
 
         $descriptor = $directorySet->getDescriptorTo(Input::fromString('one-command'));
@@ -114,11 +108,10 @@ class DirectorySetTest extends TestCase
     /** @test */
     public function getCommandInexistent(): void
     {
-        $directorySet = new DirectorySet(FcBootstrap::class);
+        $directorySet = new SourceSet(FcBootstrap::class);
 
-        $directorySet->add(new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/Stubs/Commands"
+        $directorySet->add(new Source(
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         ));
 
         $this->assertNull($directorySet->getDescriptorTo(Input::fromString('not-exists')));

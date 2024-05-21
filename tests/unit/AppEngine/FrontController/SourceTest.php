@@ -5,21 +5,20 @@ declare(strict_types=1);
 namespace Tests\Unit\AppEngine\FrontController;
 
 use InvalidArgumentException;
-use Iquety\Application\AppEngine\FrontController\Directory;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
+use Iquety\Application\AppEngine\FrontController\Source;
 use Iquety\Application\AppEngine\Input;
 use Tests\Unit\AppEngine\FrontController\Stubs\Commands\OneCommand;
 use Tests\Unit\AppEngine\FrontController\Stubs\Commands\SubDirectory\TwoCommand;
 use Tests\Unit\TestCase;
 
-class DirectoryTest extends TestCase
+class SourceTest extends TestCase
 {
     /** @test */
     public function objectConstruction(): void
     {
-        new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/Stubs/Commands"
+        new Source(
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         );
 
         $this->assertTrue(true);
@@ -28,9 +27,8 @@ class DirectoryTest extends TestCase
     /** @test */
     public function getIdentity(): void
     {
-        $directory = new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/Stubs/Commands"
+        $directory = new Source(
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         );
 
         $this->assertSame(
@@ -42,9 +40,8 @@ class DirectoryTest extends TestCase
     /** @test */
     public function getDescriptorLevelOne(): void
     {
-        $directory = new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/Stubs/Commands"
+        $directory = new Source(
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         );
 
         $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString('one-command'));
@@ -55,9 +52,8 @@ class DirectoryTest extends TestCase
     /** @test */
     public function getCommandLevelTwo(): void
     {
-        $directory = new Directory(
-            'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
-            __DIR__ . "/Stubs"
+        $directory = new Source(
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         );
 
         $descriptor = $directory->getDescriptorTo(
@@ -94,7 +90,7 @@ class DirectoryTest extends TestCase
      */
     public function getCommandToBars(string $uri, string $className): void
     {
-        $directory = new Directory(
+        $directory = new Source(
             'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         );
 
@@ -109,7 +105,7 @@ class DirectoryTest extends TestCase
      */
     public function getCommandToSpaces(string $uri, string $className): void
     {
-        $directory = new Directory(
+        $directory = new Source(
             'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         );
 
@@ -126,7 +122,7 @@ class DirectoryTest extends TestCase
     /** @test */
     public function getCommandFixCase(): void
     {
-        $directory = new Directory(
+        $directory = new Source(
             'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         );
 
@@ -156,7 +152,7 @@ class DirectoryTest extends TestCase
      */
     public function getInvalidCommand(string $uri): void
     {
-        $directory = new Directory(
+        $directory = new Source(
             'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
         );
 
@@ -168,7 +164,7 @@ class DirectoryTest extends TestCase
 
     public function notExists(): void
     {
-        $directory = new Directory(
+        $directory = new Source(
             'Tests\Unit\AppEngine\FrontController\Stubs\Commands',
         );
 

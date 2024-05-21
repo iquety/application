@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Iquety\Application\AppEngine\FrontController\Command;
+namespace Iquety\Application\AppEngine;
 
-class CommandDescriptor
+class ActionDescriptor
 {
     /** @param array<int,string|int|float> $params */
     public function __construct(
         private string $bootstrapClass,
-        private string $commandClass
+        private string $actionClass,
+        private string $actionMethod
     ) {
     }
 
@@ -20,6 +21,6 @@ class CommandDescriptor
 
     public function action(): string
     {
-        return $this->commandClass . '::execute';
+        return $this->actionClass . '::' . $this->actionMethod;
     }
 }

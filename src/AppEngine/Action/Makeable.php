@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Iquety\Application\AppEngine;
+namespace Iquety\Application\AppEngine\Action;
 
 use Iquety\Application\Application;
 

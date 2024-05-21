@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace Iquety\Application\AppEngine\FrontController;
 
+use Iquety\Application\AppEngine\ActionDescriptor;
 use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Application\AppEngine\Bootstrap;
-use Iquety\Application\AppEngine\FrontController\Command\Command;
-use Iquety\Application\AppEngine\FrontController\Command\CommandDescriptor;
 use Iquety\Application\AppEngine\Input;
-use Iquety\Application\AppEngine\ModuleSet;
-use Iquety\Application\AppEngine\ResponseDescriptor;
-use Iquety\Injection\InversionOfControl;
+use Iquety\Application\AppEngine\SourceHandler;
 use RuntimeException;
-use Throwable;
 
 /** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class FcEngine extends AppEngine
@@ -28,71 +24,51 @@ class FcEngine extends AppEngine
 
         $this->moduleSet()->add($bootstrap);
 
-        $directorySet = new DirectorySet($bootstrap::class);
+        $sourceSet = new SourceSet($bootstrap::class);
 
         // o dev irá adicionar os diretórios na implementação do módulo
-        $bootstrap->bootDirectories($directorySet);
+        $bootstrap->bootNamespaces($sourceSet);
 
         $this->sourceHandler()
-            ->setErrorCommandClass($bootstrap->getErrorCommandClass())
-            ->setMainCommandClass($bootstrap->getMainCommandClass())
-            ->setNotFoundCommandClass($bootstrap->getNotFoundCommandClass())
-            ->addSources($directorySet);
+            ->setErrorActionClass($bootstrap->getErrorCommandClass())
+            ->setMainActionClass($bootstrap->getMainCommandClass())
+            ->setNotFoundActionClass($bootstrap->getNotFoundCommandClass())
+            ->addSources($sourceSet);
     }
 
-    public function resolve(Input $input): ?CommandDescriptor
+    public function resolve(Input $input): ?ActionDescriptor
     {
-        // try {
-            if ($this->sourceHandler()->hasSources() === false) {
-                throw new RuntimeException(
-                    'No directories registered as command source'
-                );
-            }
+        $this->container()->addSingleton(Input::class, $input);
+    
+        $actionDescriptor = $this->sourceHandler()->getDescriptorTo($input);
 
-            $this->container()->addSingleton(Input::class, $input);
-        
-            $commandDescriptor = $this->sourceHandler()->getDescriptorTo($input);
+        if ($actionDescriptor === null) {
+            // o descritor NotFound será definido pelo EngineSet
+            return null;
+        }
 
-            if ($commandDescriptor === null) {
-                // resposta será definida pelo EngineSet
-                return null;
-            }
+        $module = $actionDescriptor->module();
+    
+        if ($module === 'main') {
+            return $actionDescriptor;
+        }
 
-            $module = $commandDescriptor->module();
-            // $action = $commandDescriptor->action();
+        $moduleBootstrap = $this->moduleSet()->findByClass($module);
 
-            // $control = new InversionOfControl($this->container());
-        
-            if ($module === 'main') {
-                return $commandDescriptor;
-                // return $control->resolveTo(Command::class, $action);
-            }
+        if ($moduleBootstrap === null) {
+            throw new RuntimeException('At least one engine must be provided');
+        }
 
-            $moduleBootstrap = $this->moduleSet()->findByClass($module);
+        $moduleBootstrap->bootDependencies($this->container());
 
-            if ($moduleBootstrap === null) {
-                return $this->sourceHandler()->getNotFoundDescriptor($input)->action();
-
-                // return $control->resolveTo(Command::class, $action);
-            }
-
-            $moduleBootstrap->bootDependencies($this->container());
-
-            return $commandDescriptor;
-            // return $control->resolveTo(Command::class, $action);
-        // } catch (Throwable $exception) {
-        //     $this->container()->addSingleton(Throwable::class, $exception);
-
-        //     return $this->sourceHandler()->getErrorDescriptor($input);
-
-        //     // return $control->resolveTo(Command::class, $action);
-        // }
+        return $actionDescriptor;
     }
 
+    /** @return FcSourceHandler */
     public function sourceHandler(): SourceHandler
     {
         if ($this->container()->has(SourceHandler::class) === false) {
-            $this->container()->addSingleton(SourceHandler::class);
+            $this->container()->addSingleton(SourceHandler::class, FcSourceHandler::class);
         }
 
         return $this->container()->get(SourceHandler::class);

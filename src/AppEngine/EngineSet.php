@@ -6,6 +6,7 @@ namespace Iquety\Application\AppEngine;
 
 use InvalidArgumentException;
 use Iquety\Injection\Container;
+use RuntimeException;
 use Throwable;
 
 /**
@@ -18,6 +19,8 @@ class EngineSet
 
     /** @var array<string,AppEngine> */
     private array $engineList = [];
+
+    private ?AppEngine $mainEngine = null;
 
     public function __construct(private Container $container)
     {
@@ -35,23 +38,34 @@ class EngineSet
         }
 
         $this->engineList[$engine::class] = $engine;
+
+        if ($this->mainEngine === null) {
+            $this->mainEngine = $engine;
+        }
     }
 
-    public function resolve(Input $input): ResponseDescriptor
+    public function sourceHandler(): SourceHandler
     {
-        try {
-            foreach ($this->engineList as $engine) {
-                $response = $engine->resolve($input, $this->moduleSet);
-    
-                if ($response !== null) {
-                    return $response;
-                }
-            }
-        } catch (Throwable $exception) {
-            return new ResponseDescriptor(500, '');
+        if ($this->mainEngine === null) {
+            throw new RuntimeException(
+                'To return the handler, you must add at least one engine'
+            );
         }
 
-        return new ResponseDescriptor(404, '');
+        return $this->mainEngine->sourceHandler();
+    }
+
+    public function resolve(Input $input): ActionDescriptor
+    {
+        foreach ($this->engineList as $engine) {
+            $response = $engine->resolve($input, $this->moduleSet);
+
+            if ($response !== null) {
+                return $response;
+            }
+        }
+
+        return $this->sourceHandler()->getNotFoundDescriptor();
     }
 
     public function toArray(): array

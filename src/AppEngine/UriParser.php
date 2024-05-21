@@ -66,7 +66,7 @@ class UriParser
         return $queryParamList;
     }
 
-    private function fixTypes(string $value): float|int|string
+    public function fixTypes(string $value): float|int|string
     {
         if (is_numeric($value) === false) {
             return $value;

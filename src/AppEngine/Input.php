@@ -11,25 +11,27 @@ use Psr\Http\Message\UploadedFileInterface;
 /** Contém os parâmetros de entrada do usuário */
 class Input
 {
-    /** @var array<int|string,float|int|string|FileSet> */
-    private array $originalParamList = [];
-    
+    private bool $hasNext;
+
+    private string $method = 'GET';
+
     /** @var array<int|string,float|int|string|FileSet> */
     private array $paramList = [];
 
     /** @var array<int,string> */
     private array $path = [];
 
+    /** @var array<int|string,float|int|string|FileSet> */
+    private array $originalParamList = [];
+
     /** @var array<int,float|int|string> */
     private array $target = [];
-
-    private bool $hasNext;
 
     public static function fromString(string $string): self
     {
         $parser = new UriParser($string);
 
-        return new self($parser->getPath(), $parser->toArray());
+        return new self($parser->getPath(), $parser->toArray(), 'GET');
     }
 
     public static function fromRequest(ServerRequestInterface $request): self
@@ -42,15 +44,17 @@ class Input
             $request->getUploadedFiles()
         );
 
-        return new self($parser->getPath(), $paramList);
+        return new self($parser->getPath(), $paramList, $request->getMethod());
     }
 
     /**
      * @param array<int,string> $path 
      * @param array<int|string,float|int|string|array<string,int|string>> $originalParamList
      */
-    private function __construct(array $originalPath, array $originalParamList)
+    private function __construct(array $originalPath, array $originalParamList, string $method)
     {
+        $this->method = mb_strtoupper($method);
+
         $this->path = $originalPath;
         
         foreach($originalParamList as $name => $value) {
@@ -72,6 +76,21 @@ class Input
         $this->originalParamList = $this->paramList;
 
         $this->reset();
+    }
+
+    public function appendParams(array $paramList): void
+    {
+        $this->originalParamList = array_merge(
+            $this->originalParamList,
+            $paramList
+        );
+
+        $this->reset();
+    }
+
+    public function getMethod(): string
+    {
+        return $this->method;
     }
 
     public function getPath(): array
@@ -120,13 +139,6 @@ class Input
         $this->target = [];
 
         $this->next();
-    }
-
-    public function apply(): void
-    {
-        $this->paramList = $this->originalParamList;
-
-        $this->target = [];
     }
 
     public function param(int|string $param): float|int|string|FileSet|null

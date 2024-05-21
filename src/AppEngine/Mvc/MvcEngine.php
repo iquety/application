@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace Iquety\Application\AppEngine\Mvc;
 
-use Closure;
-use Iquety\Application\AppEngine\Action\MethodNotAllowedException;
+use Iquety\Application\AppEngine\ActionDescriptor;
 use Iquety\Application\AppEngine\AppEngine;
+use Iquety\Application\AppEngine\Bootstrap;
 use Iquety\Application\AppEngine\Input;
-use Iquety\Application\AppEngine\ModuleSet;
-use Iquety\Application\AppEngine\ResponseDescriptor;
-use Iquety\Application\Bootstrap;
-use Iquety\Injection\InversionOfControl;
-use Iquety\Routing\Route;
+use Iquety\Application\AppEngine\SourceHandler;
 use Iquety\Routing\Router;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
-use Throwable;
 
 /** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class MvcEngine extends AppEngine
@@ -26,101 +19,79 @@ class MvcEngine extends AppEngine
 
     public function boot(Bootstrap $bootstrap): void
     {
+        // bootstraps diferentes serão ignorados
+        // isso facilita a atribuição em massa
         if (! $bootstrap instanceof MvcBootstrap) {
-            // TODO lançar exceção
             return;
         }
 
-        $moduleIdentifier = $bootstrap::class;
+        $this->moduleSet()->add($bootstrap);
 
-        $this->router()->forModule($moduleIdentifier);
-
-        $bootstrap->bootRoutes($this->router());
-    }
-
-    public function resolve(
-        Input $input,
-        ModuleSet $moduleSet,
-    ): ?ResponseDescriptor {
-        
-    }
-
-    /** @param array<string,Bootstrap> $moduleList */
-    public function execute(
-        RequestInterface $request,
-        array $moduleList,
-        Closure $bootDependencies
-    ): ?ResponseInterface {
         $router = $this->router();
 
-        if ($router->routes() === []) {
-            throw new RuntimeException('There are no registered routes');
-        }
+        $router->forModule($bootstrap::class);
 
-        $router->process($request->getMethod(), $request->getUri()->getPath());
+        // o dev irá adicionar rotas na implementação do módulo
+        $bootstrap->bootRoutes($router);
 
-        if ($router->routeNotFound()) {
-            return $this->responseFactory()->notFoundResponse('The requested uri was not found');
-        }
-
-        try {
-            /** @var Route $route */
-            $route = $router->currentRoute();
-
-            $module = $route->module();
-            $action = $route->action();
-            $params = $route->params();
-
-            if ($action === '') {
-                throw new RuntimeException('The route found does not have a action');
-            }
-
-            $bootDependencies($moduleList[$module]);
-
-            if ($action instanceof Closure) {
-                return $this->resolveClosure($action);
-            }
-
-            $this->container()->registerSingletonDependency(
-                Input::class,
-                fn() => new Input($params)
-            );
-
-            $control = new InversionOfControl($this->container());
-
-            try {
-                return $control->resolveTo(Controller::class, $action, $params);
-            } catch (MethodNotAllowedException) {
-                return null;
-            }
-        } catch (Throwable $exception) {
-            return $this->responseFactory()->serverErrorResponse($exception);
-        }
+        $this->sourceHandler()
+            ->setErrorActionClass($bootstrap->getErrorControllerClass())
+            ->setMainActionClass($bootstrap->getMainControllerClass())
+            ->setNotFoundActionClass($bootstrap->getNotFoundControllerClass())
+            ->addRouter($this->router);
     }
 
-    private function resolveClosure(Closure $routeAction): ResponseInterface
+    public function resolve(Input $input): ?ActionDescriptor
     {
-        $result = call_user_func($routeAction);
+        $this->container()->addSingleton(Input::class, $input);
 
-        $factory = $this->responseFactory();
+        $actionDescriptor = $this->sourceHandler()->getDescriptorTo($input);
 
-        if ($result === null) {
-            return $factory->response('');
+        if ($actionDescriptor === null) {
+            // o descritor NotFound será definido pelo EngineSet
+            return null;
         }
 
-        if ($result instanceof ResponseInterface) {
-            return $result;
+        $module = $actionDescriptor->module();
+    
+        if ($module === 'main') {
+            return $actionDescriptor;
         }
 
-        return is_string($result)
-            ? $factory->response($result)
-            : $factory->jsonResponse((array)$result);
+        $moduleBootstrap = $this->moduleSet()->findByClass($module);
+
+        if ($moduleBootstrap === null) {
+            throw new RuntimeException('At least one engine must be provided');
+        }
+
+        $moduleBootstrap->bootDependencies($this->container());
+
+        return $actionDescriptor;
     }
+
+    // private function resolveClosure(Closure $routeAction): ResponseInterface
+    // {
+    //     $result = call_user_func($routeAction);
+
+    //     $factory = $this->responseFactory();
+
+    //     if ($result === null) {
+    //         return $factory->response('');
+    //     }
+
+    //     if ($result instanceof ResponseInterface) {
+    //         return $result;
+    //     }
+
+    //     return is_string($result)
+    //         ? $factory->response($result)
+    //         : $factory->jsonResponse((array)$result);
+    // }
 
     private function router(): Router
     {
         if ($this->container()->has(Router::class) === false) {
-            $this->container()->registerSingletonDependency(Router::class, Router::class);
+            $this->container()->addSingleton(Router::class, Router::class);
         }
 
         if ($this->router !== null) {
@@ -131,5 +102,15 @@ class MvcEngine extends AppEngine
         $this->router->resetModuleInfo();
 
         return $this->router;
+    }
+
+    /** @return MvcSourceHandler */
+    public function sourceHandler(): SourceHandler
+    {
+        if ($this->container()->has(SourceHandler::class) === false) {
+            $this->container()->addSingleton(SourceHandler::class, MvcSourceHandler::class);
+        }
+
+        return $this->container()->get(SourceHandler::class);
     }
 }

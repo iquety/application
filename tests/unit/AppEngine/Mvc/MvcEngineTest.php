@@ -4,48 +4,41 @@ declare(strict_types=1);
 
 namespace Tests\Unit\AppEngine\FrontController;
 
-use Exception;
-use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
-use Iquety\Application\AppEngine\FrontController\Command\MainCommand;
-use Iquety\Application\AppEngine\FrontController\Directory;
-use Iquety\Application\AppEngine\FrontController\SourceSet;
-use Iquety\Application\AppEngine\FrontController\FcBootstrap;
-use Iquety\Application\AppEngine\FrontController\FcEngine;
-use Iquety\Application\AppEngine\FrontController\Source;
 use Iquety\Application\AppEngine\Input;
 use Iquety\Application\AppEngine\ModuleSet;
-use Iquety\Application\Application;
-use Iquety\Application\Http\HttpFactory;
+use Iquety\Application\AppEngine\Mvc\Controller\MainController;
+use Iquety\Application\AppEngine\Mvc\MvcBootstrap;
+use Iquety\Application\AppEngine\Mvc\MvcEngine;
 use Iquety\Injection\Container;
+use Iquety\Routing\Router;
 use RuntimeException;
-use Tests\Unit\AppEngine\FrontController\Stubs\Commands\FailCommand;
-use Tests\Unit\AppEngine\FrontController\Stubs\Commands\SubDirectory\TwoCommand;
+use Tests\Unit\AppEngine\Mvc\Stubs\OneController;
 use Tests\Unit\TestCase;
 
-class FcEngineTest extends TestCase
+class MvcEngineTest extends TestCase
 {
     /** @test */
     public function resolveException(): void
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('No registered sources for getting commands');
+        $this->expectExceptionMessage('There are no registered routes');
 
         $container = new Container();
         $moduleSet = new ModuleSet();
 
-        $engine = new FcEngine();
+        $engine = new MvcEngine();
         $engine->useContainer($container);
         $engine->useModuleSet($moduleSet);
 
-        $bootstrap = new class extends FcBootstrap {
+        $bootstrap = new class extends MvcBootstrap {
             public function bootDependencies(Container $container): void
             {
                 $container->addSingleton('signature-test', fn() => 'teste');
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootRoutes(Router &$router): void
             {
-                // nenhum diretório setado
+                // nenhuma rota setada
             }
         };
 
@@ -60,21 +53,19 @@ class FcEngineTest extends TestCase
         $container = new Container();
         $moduleSet = new ModuleSet();
 
-        $engine = new FcEngine();
+        $engine = new MvcEngine();
         $engine->useContainer($container);
         $engine->useModuleSet($moduleSet);
 
-        $bootstrap = new class extends FcBootstrap {
+        $bootstrap = new class extends MvcBootstrap {
             public function bootDependencies(Container $container): void
             {
                 $container->addSingleton('signature-test', fn() => 'teste');
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootRoutes(Router &$router): void
             {
-                $sourceSet->add(new Source(
-                    'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
-                ));
+                $router->get('/user/:id')->usingAction(OneController::class, 'action');
             }
         };
 
@@ -83,7 +74,7 @@ class FcEngineTest extends TestCase
         $descriptor = $engine->resolve(Input::fromString(''));
 
         $this->assertSame('main', $descriptor->module());
-        $this->assertSame(MainCommand::class . '::execute', $descriptor->action());
+        $this->assertSame(MainController::class . '::execute', $descriptor->action());
     }
 
     /** @test */
@@ -92,21 +83,19 @@ class FcEngineTest extends TestCase
         $container = new Container();
         $moduleSet = new ModuleSet();
 
-        $engine = new FcEngine();
+        $engine = new MvcEngine();
         $engine->useContainer($container);
         $engine->useModuleSet($moduleSet);
 
-        $bootstrap = new class extends FcBootstrap {
+        $bootstrap = new class extends MvcBootstrap {
             public function bootDependencies(Container $container): void
             {
                 $container->addSingleton('signature-test', fn() => 'teste');
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootRoutes(Router &$router): void
             {
-                $sourceSet->add(new Source(
-                    'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
-                ));
+                $router->get('/user/:id')->usingAction(OneController::class, 'action');
             }
         };
 
@@ -116,34 +105,46 @@ class FcEngineTest extends TestCase
     }
 
     /** @test */
-    public function resolveCommand(): void
+    public function resolveController(): void
     {
         $container = new Container();
         $moduleSet = new ModuleSet();
 
-        $engine = new FcEngine();
+        $engine = new MvcEngine();
         $engine->useContainer($container);
         $engine->useModuleSet($moduleSet);
 
-        $bootstrap = new class extends FcBootstrap {
+        $bootstrap = new class extends MvcBootstrap {
             public function bootDependencies(Container $container): void
             {
                 $container->addSingleton('signature-test', fn() => 'teste');
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootRoutes(Router &$router): void
             {
-                $sourceSet->add(new Source(
-                    'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
-                ));
+                $router->get('/user/:id/edit')->usingAction(OneController::class, 'action');
             }
         };
 
         $engine->boot($bootstrap);
 
-        $descriptor = $engine->resolve(Input::fromString('sub-directory/two-command'));
+        $input = Input::fromString('user/22/edit');
+
+        $this->assertSame([
+            0 => 22,
+            1 => 'edit'
+        ], $input->toArray());
+
+        $descriptor = $engine->resolve($input);
 
         $this->assertSame($bootstrap::class, $descriptor->module());
-        $this->assertSame(TwoCommand::class . '::execute', $descriptor->action());
+        $this->assertSame(OneController::class . '::action', $descriptor->action());
+
+        // input recebe os parâmetros do roteador na resolução
+        $this->assertSame([
+            0 => 22,
+            1 => 'edit',
+            'id' => 22
+        ], $input->toArray());
     }
 }

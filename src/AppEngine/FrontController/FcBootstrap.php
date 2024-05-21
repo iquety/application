@@ -14,7 +14,7 @@ abstract class FcBootstrap implements Bootstrap
 {
     abstract public function bootDependencies(Container $container): void;
 
-    public function bootDirectories(DirectorySet &$directorySet): void
+    public function bootNamespaces(SourceSet &$sourceSet): void
     {
         // ...
     }

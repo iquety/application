@@ -41,6 +41,7 @@ class InputRequestTest extends TestCase
 
         $input = Input::fromRequest($request);
 
+        $this->assertSame('POST', $input->getMethod());
         $this->assertSame('one/two/3', $input->getPathString());
         $this->assertSame(['one', 'two', '3'], $input->getPath());
         $this->assertSame(['one'], $input->getTarget());
@@ -68,6 +69,7 @@ class InputRequestTest extends TestCase
 
         $input = Input::fromRequest($request);
 
+        $this->assertSame('GET', $input->getMethod());
         $this->assertSame('one/two/3', $input->getPathString());
         $this->assertSame(['one', 'two', '3'], $input->getPath());
         $this->assertSame(['one'], $input->getTarget());
@@ -95,6 +97,7 @@ class InputRequestTest extends TestCase
 
         $input = Input::fromRequest($request);
 
+        $this->assertSame('GET', $input->getMethod());
         $this->assertCount(7, $input->toArray());
         $this->assertSame('two', $input->param(0));
         $this->assertSame('three', $input->param(1));
@@ -123,6 +126,7 @@ class InputRequestTest extends TestCase
 
         $input = Input::fromRequest($request);
 
+        $this->assertSame('POST', $input->getMethod());
         $this->assertCount(7, $input->toArray());
         $this->assertSame('two', $input->param(0));
         $this->assertSame('three', $input->param(1));
@@ -136,5 +140,46 @@ class InputRequestTest extends TestCase
             '0=two&1=three&x=four&y=1&z=1.1&name=test&inputFile=attachment.gif',
             (string)$input
         );
+    }
+
+    /** @test */
+    public function appendParams(): void
+    {
+        $request = (new RequestFactory())->makeRequest(
+            'POST',
+            '/one/two/3',
+            'x=four&y=five&z=six',
+            ['name' => 'test'],
+            $this->phpSingleFile()
+        );
+
+        $input = Input::fromRequest($request);
+
+        $this->assertSame('POST', $input->getMethod());
+        $this->assertSame('one/two/3', $input->getPathString());
+        $this->assertSame(['one', 'two', '3'], $input->getPath());
+        $this->assertSame(['one'], $input->getTarget());
+
+        $this->assertCount(7, $input->toArray());
+        $this->assertSame('two', $input->param(0));
+        $this->assertSame(3, $input->param(1));
+        $this->assertSame('four', $input->param('x'));
+        $this->assertSame('five', $input->param('y'));
+        $this->assertSame('six', $input->param('z'));
+        $this->assertSame('test', $input->param('name'));
+        $this->assertInstanceOf(FileSet::class, $input->param('inputFile'));
+
+        $input->appendParams(['id' => 99, 'nine' => 'Teste']);
+
+        $this->assertCount(9, $input->toArray());
+        $this->assertSame('two', $input->param(0));
+        $this->assertSame(3, $input->param(1));
+        $this->assertSame('four', $input->param('x'));
+        $this->assertSame('five', $input->param('y'));
+        $this->assertSame('six', $input->param('z'));
+        $this->assertSame('test', $input->param('name'));
+        $this->assertInstanceOf(FileSet::class, $input->param('inputFile'));
+        $this->assertSame(99, $input->param('id'));
+        $this->assertSame('Teste', $input->param('nine'));
     }
 }
