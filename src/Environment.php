@@ -18,7 +18,7 @@ enum Environment: string
         return match ($enviromnent) {
             'production'  => self::PRODUCTION,
             'development' => self::DEVELOPMENT,
-            'testint'     => self::TESTING,
+            'testing'     => self::TESTING,
             default       => self::PRODUCTION
         };
     }

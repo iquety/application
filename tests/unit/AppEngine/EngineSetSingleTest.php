@@ -18,7 +18,7 @@ use Iquety\Injection\Container;
 use Tests\Unit\AppEngine\FrontController\Stubs\Commands\SubDirectory\TwoCommand;
 use Tests\Unit\TestCase;
 
-class EngineSetTest extends TestCase
+class EngineSetSingleTest extends TestCase
 {
     /** @test */
     public function duplicatedEngine(): void

@@ -107,10 +107,10 @@ class MvcEngine extends AppEngine
     /** @return MvcSourceHandler */
     public function sourceHandler(): SourceHandler
     {
-        if ($this->container()->has(SourceHandler::class) === false) {
-            $this->container()->addSingleton(SourceHandler::class, MvcSourceHandler::class);
+        if ($this->container()->has(MvcSourceHandler::class) === false) {
+            $this->container()->addSingleton(MvcSourceHandler::class);
         }
 
-        return $this->container()->get(SourceHandler::class);
+        return $this->container()->get(MvcSourceHandler::class);
     }
 }

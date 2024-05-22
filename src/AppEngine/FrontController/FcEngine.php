@@ -67,10 +67,10 @@ class FcEngine extends AppEngine
     /** @return FcSourceHandler */
     public function sourceHandler(): SourceHandler
     {
-        if ($this->container()->has(SourceHandler::class) === false) {
-            $this->container()->addSingleton(SourceHandler::class, FcSourceHandler::class);
+        if ($this->container()->has(FcSourceHandler::class) === false) {
+            $this->container()->addSingleton(FcSourceHandler::class);
         }
 
-        return $this->container()->get(SourceHandler::class);
+        return $this->container()->get(FcSourceHandler::class);
     }
 }

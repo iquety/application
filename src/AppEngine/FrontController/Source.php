@@ -61,7 +61,7 @@ class Source
         $nodeList = [];
 
         foreach ($input->getTarget() as $index => $nodePath) {
-            $nodeList[$index] = $this->makeCamelCase($nodePath);
+            $nodeList[$index] = $this->makeCamelCase((string)$nodePath);
         }
 
         return implode("\\", $nodeList);

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\AppEngine\FrontController;
 
-use InvalidArgumentException;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\Source;
 use Iquety\Application\AppEngine\Input;
@@ -93,6 +92,23 @@ class SourceTest extends TestCase
         $directory = new Source(
             'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
         );
+
+        $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString($uri));
+
+        $this->assertSame($className . "::execute", $descriptor->action());
+    }
+
+    /**
+     * @test
+     * @dataProvider uriProvider
+     */
+    public function getCommandToBarsNumeric(string $uri, string $className): void
+    {
+        $directory = new Source(
+            'Tests\Unit\AppEngine\FrontController\Stubs\Commands'
+        );
+
+        $uri = rtrim($uri, '/') . '/22';
 
         $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString($uri));
 
