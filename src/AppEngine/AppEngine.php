@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Iquety\Application\AppEngine;
 
+use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Injection\Container;
 use OutOfBoundsException;
 

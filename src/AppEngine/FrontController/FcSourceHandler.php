@@ -10,7 +10,7 @@ use Iquety\Application\AppEngine\FrontController\Command\Command;
 use Iquety\Application\AppEngine\FrontController\Command\ErrorCommand;
 use Iquety\Application\AppEngine\FrontController\Command\MainCommand;
 use Iquety\Application\AppEngine\FrontController\Command\NotFoundCommand;
-use Iquety\Application\AppEngine\Input;
+use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Application\AppEngine\SourceHandler;
 use RuntimeException;
 
@@ -66,17 +66,17 @@ class FcSourceHandler implements SourceHandler
 
     public function getErrorDescriptor(): ActionDescriptor
     {
-        return new ActionDescriptor('error', $this->errorCommandClass, 'execute');
+        return $this->makeDescriptor('error', $this->errorCommandClass, 'execute');
     }
 
     public function getMainDescriptor(): ActionDescriptor
     {
-        return new ActionDescriptor('main', $this->mainCommandClass, 'execute');
+        return $this->makeDescriptor('main', $this->mainCommandClass, 'execute');
     }
 
     public function getNotFoundDescriptor(): ActionDescriptor
     {
-        return new ActionDescriptor('not-found', $this->notFoundCommandClass, 'execute');
+        return $this->makeDescriptor('not-found', $this->notFoundCommandClass, 'execute');
     }
 
     /** @return array<int,SourceSet> */
@@ -117,5 +117,18 @@ class FcSourceHandler implements SourceHandler
         if (is_subclass_of($actionClass, Command::class) === false) {
             throw new InvalidArgumentException("Class $actionClass is not a valid command");
         }
+    }
+
+    private function makeDescriptor(
+        string $bootstrapClass,
+        string $className,
+        $actionName
+    ): ActionDescriptor {
+        return new ActionDescriptor(
+            Command::class,
+            $bootstrapClass,
+            $className,
+            'execute'
+        );
     }
 }

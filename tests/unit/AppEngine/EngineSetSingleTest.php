@@ -12,7 +12,7 @@ use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\FcEngine;
 use Iquety\Application\AppEngine\FrontController\Source;
 use Iquety\Application\AppEngine\FrontController\SourceSet;
-use Iquety\Application\AppEngine\Input;
+use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Application\AppEngine\ModuleSet;
 use Iquety\Injection\Container;
 use Tests\Unit\AppEngine\FrontController\Stubs\Commands\SubDirectory\TwoCommand;
@@ -28,7 +28,7 @@ class EngineSetSingleTest extends TestCase
 
         $container = new Container();
 
-        $engineSet = new EngineSet($container);
+        $engineSet = new EngineSet($container, new ModuleSet());
 
         $engine = $this->createMock(AppEngine::class);
 
@@ -44,7 +44,7 @@ class EngineSetSingleTest extends TestCase
         
         $container = new Container();
 
-        $engineSet = new EngineSet($container);
+        $engineSet = new EngineSet($container, new ModuleSet());
 
         $engineOne = $this->createMock(AppEngine::class);
         $engineTwo = $this->createMock(AppEngine::class);
@@ -62,7 +62,6 @@ class EngineSetSingleTest extends TestCase
         $moduleSet = new ModuleSet();
 
         $engine = new FcEngine();
-        $engine->useContainer($container);
         $engine->useModuleSet($moduleSet);
 
         $bootstrap = new class extends FcBootstrap {
@@ -79,10 +78,11 @@ class EngineSetSingleTest extends TestCase
             }
         };
 
-        $engine->boot($bootstrap);
-
-        $engineSet = new EngineSet($container);
+        $engineSet = new EngineSet($container, $moduleSet);
         $engineSet->add($engine);
+        
+        $moduleSet->add($bootstrap);
+        $engine->boot($bootstrap);
 
         $descriptor = $engineSet->resolve(Input::fromString('sub-directory/two-command'));
 
@@ -97,7 +97,6 @@ class EngineSetSingleTest extends TestCase
         $moduleSet = new ModuleSet();
 
         $engine = new FcEngine();
-        $engine->useContainer($container);
         $engine->useModuleSet($moduleSet);
 
         $bootstrap = new class extends FcBootstrap {
@@ -114,10 +113,11 @@ class EngineSetSingleTest extends TestCase
             }
         };
 
-        $engine->boot($bootstrap);
-
-        $engineSet = new EngineSet($container);
+        $engineSet = new EngineSet($container, $moduleSet);
         $engineSet->add($engine);
+
+        $moduleSet->add($bootstrap);
+        $engine->boot($bootstrap);
 
         $descriptor = $engineSet->resolve(Input::fromString('invalid'));
 

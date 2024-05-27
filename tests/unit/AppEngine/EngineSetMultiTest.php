@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Unit\AppEngine;
 
+use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Application\AppEngine\EngineSet;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\FcEngine;
 use Iquety\Application\AppEngine\FrontController\Source;
 use Iquety\Application\AppEngine\FrontController\SourceSet;
-use Iquety\Application\AppEngine\Input;
 use Iquety\Application\AppEngine\ModuleSet;
 use Iquety\Application\AppEngine\Mvc\MvcBootstrap;
 use Iquety\Application\AppEngine\Mvc\MvcEngine;
@@ -72,7 +72,7 @@ class EngineSetMultiTest extends TestCase
 
     private function makeEngineSet(Container $container, ModuleSet $moduleSet): object
     {
-        $engineSet = new EngineSet($container);
+        $engineSet = new EngineSet($container, $moduleSet);
 
         $engineOne = $this->makeFcEngine($container, $moduleSet, [
             $fcBootstrapOne = $this->makeFcBootstrapOne(),
@@ -103,6 +103,8 @@ class EngineSetMultiTest extends TestCase
         $engine->useModuleSet($moduleSet);
 
         foreach($modulesBootstrap as $bootstrap) {
+            $moduleSet->add($bootstrap);
+            
             $engine->boot($bootstrap);
         }
 
@@ -116,6 +118,8 @@ class EngineSetMultiTest extends TestCase
         $engine->useModuleSet($moduleSet);
 
         foreach($modulesBootstrap as $bootstrap) {
+            $moduleSet->add($bootstrap);
+
             $engine->boot($bootstrap);
         }
         

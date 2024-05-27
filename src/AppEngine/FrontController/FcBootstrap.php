@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Iquety\Application\AppEngine\FrontController;
 
 use Iquety\Application\AppEngine\Bootstrap;
+use Iquety\Application\AppEngine\FrontController\Command\Command;
 use Iquety\Application\AppEngine\FrontController\Command\ErrorCommand;
 use Iquety\Application\AppEngine\FrontController\Command\MainCommand;
 use Iquety\Application\AppEngine\FrontController\Command\NotFoundCommand;
@@ -19,17 +20,22 @@ abstract class FcBootstrap implements Bootstrap
         // ...
     }
 
-    public function getErrorCommandClass(): string
+    public function getActionType(): string
+    {
+        return Command::class;
+    }
+
+    public function getErrorActionClass(): string
     {
         return ErrorCommand::class;
     }
 
-    public function getNotFoundCommandClass(): string
+    public function getNotFoundActionClass(): string
     {
         return NotFoundCommand::class;
     }
 
-    public function getMainCommandClass(): string
+    public function getMainActionClass(): string
     {
         return MainCommand::class;
     }

@@ -6,7 +6,7 @@ namespace Tests\Unit\AppEngine\FrontController;
 
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\Source;
-use Iquety\Application\AppEngine\Input;
+use Iquety\Application\AppEngine\Action\Input;
 use Tests\Unit\AppEngine\FrontController\Stubs\Commands\OneCommand;
 use Tests\Unit\AppEngine\FrontController\Stubs\Commands\SubDirectory\TwoCommand;
 use Tests\Unit\TestCase;

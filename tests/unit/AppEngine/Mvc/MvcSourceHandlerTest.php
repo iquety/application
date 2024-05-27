@@ -6,8 +6,9 @@ namespace Tests\Unit\AppEngine\Mvc;
 
 use ArrayObject;
 use InvalidArgumentException;
+use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Application\AppEngine\ActionDescriptor;
-use Iquety\Application\AppEngine\Input;
+use Iquety\Application\AppEngine\Mvc\Controller\Controller;
 use Iquety\Application\AppEngine\Mvc\Controller\ErrorController;
 use Iquety\Application\AppEngine\Mvc\Controller\MainController;
 use Iquety\Application\AppEngine\Mvc\Controller\NotFoundController;
@@ -29,17 +30,17 @@ class MvcSourceHandlerTest extends TestCase
         $handler = new MvcSourceHandler();
 
         $this->assertEquals(
-            new ActionDescriptor('error', ErrorController::class, 'execute'),
+            new ActionDescriptor(Controller::class, 'error', ErrorController::class, 'execute'),
             $handler->getErrorDescriptor()
         );
 
         $this->assertEquals(
-            new ActionDescriptor('main', MainController::class, 'execute'),
+            new ActionDescriptor(Controller::class, 'main', MainController::class, 'execute'),
             $handler->getMainDescriptor()
         );
 
         $this->assertEquals(
-            new ActionDescriptor('not-found', NotFoundController::class, 'execute'),
+            new ActionDescriptor(Controller::class, 'not-found', NotFoundController::class, 'execute'),
             $handler->getNotFoundDescriptor()
         );
     }
@@ -54,17 +55,17 @@ class MvcSourceHandlerTest extends TestCase
         $handler->setNotFoundActionClass(OneController::class);
 
         $this->assertEquals(
-            new ActionDescriptor('error', OneController::class, 'execute'),
+            new ActionDescriptor(Controller::class, 'error', OneController::class, 'execute'),
             $handler->getErrorDescriptor()
         );
 
         $this->assertEquals(
-            new ActionDescriptor('main', OneController::class, 'execute'),
+            new ActionDescriptor(Controller::class, 'main', OneController::class, 'execute'),
             $handler->getMainDescriptor()
         );
 
         $this->assertEquals(
-            new ActionDescriptor('not-found', OneController::class, 'execute'),
+            new ActionDescriptor(Controller::class, 'not-found', OneController::class, 'execute'),
             $handler->getNotFoundDescriptor()
         );
     }
@@ -178,7 +179,7 @@ class MvcSourceHandlerTest extends TestCase
         $handler->addRouter($router);
 
         $this->assertEquals(
-            new ActionDescriptor('main', MainController::class, 'execute'),
+            new ActionDescriptor(Controller::class, 'main', MainController::class, 'execute'),
             $handler->getDescriptorTo(Input::fromString($uri))
         );
     }
@@ -213,7 +214,7 @@ class MvcSourceHandlerTest extends TestCase
         $handler->addRouter($router);
 
         $this->assertEquals(
-            new ActionDescriptor(MvcBootstrap::class, OneController::class, 'action'),
+            new ActionDescriptor(Controller::class, MvcBootstrap::class, OneController::class, 'action'),
             $handler->getDescriptorTo(Input::fromString('user/22'))
         );
     }

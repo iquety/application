@@ -27,132 +27,132 @@ use ReflectionObject;
  */
 abstract class TestCase extends FrameworkTestCase
 {
-    private ?Container $appContainer = null;
+    // private ?Container $appContainer = null;
 
     // factories
 
-    protected function requestFactory(
-        HttpFactory $httpFactory,
-        string $path = '',
-        string $method = HttpMethod::ANY
-    ): ServerRequestInterface {
-        $request = $httpFactory->createRequestFromGlobals();
+    // protected function requestFactory(
+    //     HttpFactory $httpFactory,
+    //     string $path = '',
+    //     string $method = HttpMethod::ANY
+    // ): ServerRequestInterface {
+    //     $request = $httpFactory->createRequestFromGlobals();
 
-        if ($path === '') {
-            return $request;
-        }
+    //     if ($path === '') {
+    //         return $request;
+    //     }
 
-        if ($method !== HttpMethod::ANY) {
-            $request = $request->withMethod($method);
-        }
+    //     if ($method !== HttpMethod::ANY) {
+    //         $request = $request->withMethod($method);
+    //     }
 
-        return $request->withUri(
-            $httpFactory->createUri("http://localhost/" . trim($path, '/'))
-        );
-    }
+    //     return $request->withUri(
+    //         $httpFactory->createUri("http://localhost/" . trim($path, '/'))
+    //     );
+    // }
 
-    protected function httpFactory(string $httpFactoryContract): HttpFactory
-    {
-        /** @var HttpFactory */
-        return new $httpFactoryContract();
-    }
+    // protected function httpFactory(string $httpFactoryContract): HttpFactory
+    // {
+    //     /** @var HttpFactory */
+    //     return new $httpFactoryContract();
+    // }
 
-    protected function httpResponseFactory(HttpFactory $httpFactory): HttpResponseFactory
-    {
-        return new HttpResponseFactory($httpFactory);
-    }
+    // protected function httpResponseFactory(HttpFactory $httpFactory): HttpResponseFactory
+    // {
+    //     return new HttpResponseFactory($httpFactory);
+    // }
 
-    /** @param class-string<AppEngine> $engineContract */
-    protected function appEngineFactory(HttpFactory $httpFactory, string $engineContract): AppEngine
-    {
-        $this->appContainer = new Container();
+    // /** @param class-string<AppEngine> $engineContract */
+    // protected function appEngineFactory(HttpFactory $httpFactory, string $engineContract): AppEngine
+    // {
+    //     $this->appContainer = new Container();
 
-        $this->appContainer->registerSingletonDependency(
-            HttpResponseFactory::class,
-            fn() => $this->httpResponseFactory($httpFactory)
-        );
+    //     $this->appContainer->registerSingletonDependency(
+    //         HttpResponseFactory::class,
+    //         fn() => $this->httpResponseFactory($httpFactory)
+    //     );
 
-        // FcEngine | MvcEngine
-        $engine = new $engineContract();
+    //     // FcEngine | MvcEngine
+    //     $engine = new $engineContract();
 
-        $engine->useContainer($this->appContainer);
+    //     $engine->useContainer($this->appContainer);
 
-        return $engine;
-    }
+    //     return $engine;
+    // }
 
-    protected function appEngineContainer(): Container
-    {
-        if ($this->appContainer === null) {
-            throw new OutOfBoundsException(
-                'The container will only be available after invoking the appEngineFactory method'
-            );
-        }
+    // protected function appEngineContainer(): Container
+    // {
+    //     if ($this->appContainer === null) {
+    //         throw new OutOfBoundsException(
+    //             'The container will only be available after invoking the appEngineFactory method'
+    //         );
+    //     }
 
-        return $this->appContainer;
-    }
+    //     return $this->appContainer;
+    // }
 
-    /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     * @SuppressWarnings(PHPMD.Superglobals)
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @SuppressWarnings(PHPMD.UndefinedVariable)
-     */
-    public static function appBootstrapFactory(?Closure $dependencies = null): Bootstrap
-    {
-        $bootstrap = new class implements Bootstrap
-        {
-            private ?Closure $setup = null;
+    // /**
+    //  * @SuppressWarnings(PHPMD.StaticAccess)
+    //  * @SuppressWarnings(PHPMD.Superglobals)
+    //  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+    //  * @SuppressWarnings(PHPMD.UndefinedVariable)
+    //  */
+    // public static function appBootstrapFactory(?Closure $dependencies = null): Bootstrap
+    // {
+    //     $bootstrap = new class implements Bootstrap
+    //     {
+    //         private ?Closure $setup = null;
 
-            public function setupDependencies(Closure $routine): void
-            {
-                $this->setup = $routine;
-            }
+    //         public function setupDependencies(Closure $routine): void
+    //         {
+    //             $this->setup = $routine;
+    //         }
 
-            public function bootDependencies(Application $app): void
-            {
-                $routine = $this->setup ?? fn() => null;
-                $routine($app);
-            }
-        };
+    //         public function bootDependencies(Application $app): void
+    //         {
+    //             $routine = $this->setup ?? fn() => null;
+    //             $routine($app);
+    //         }
+    //     };
 
-        $bootstrap->setupDependencies($dependencies ?? fn() => null);
+    //     $bootstrap->setupDependencies($dependencies ?? fn() => null);
 
-        return $bootstrap;
-    }
+    //     return $bootstrap;
+    // }
 
-    // tools
+    // // tools
 
-    /** @param class-string<object> $signature */
-    protected function extractNamespace(string $signature, string $addNode = ''): string
-    {
-        $namespace = (new ReflectionClass($signature))->getNamespaceName();
+    // /** @param class-string<object> $signature */
+    // protected function extractNamespace(string $signature, string $addNode = ''): string
+    // {
+    //     $namespace = (new ReflectionClass($signature))->getNamespaceName();
 
-        if ($addNode !== '') {
-            $namespace .= "\\$addNode";
-        }
+    //     if ($addNode !== '') {
+    //         $namespace .= "\\$addNode";
+    //     }
 
-        return $namespace;
-    }
+    //     return $namespace;
+    // }
 
-    protected function getPropertyValue(object $instance, string $name): mixed
-    {
-        $reflection = new ReflectionObject($instance);
-        $property = $reflection->getProperty($name);
-        $property->setAccessible(true);
+    // protected function getPropertyValue(object $instance, string $name): mixed
+    // {
+    //     $reflection = new ReflectionObject($instance);
+    //     $property = $reflection->getProperty($name);
+    //     $property->setAccessible(true);
 
-        return $property->getValue($instance);
-    }
+    //     return $property->getValue($instance);
+    // }
 
-    // - - - - - - - - - - - - - - - - - - - -
-    // data providers
+    // // - - - - - - - - - - - - - - - - - - - -
+    // // data providers
 
-    /** @return array<string,array<class-string>> */
-    public function httpFactoryProvider(): array
-    {
-        return [
-            'Diactoros' => [ DiactorosHttpFactory::class ],
-            'Guzzle'    => [ GuzzleHttpFactory::class ],
-            'NyHolm'    => [ NyHolmHttpFactory::class ],
-        ];
-    }
+    // /** @return array<string,array<class-string>> */
+    // public function httpFactoryProvider(): array
+    // {
+    //     return [
+    //         'Diactoros' => [ DiactorosHttpFactory::class ],
+    //         'Guzzle'    => [ GuzzleHttpFactory::class ],
+    //         'NyHolm'    => [ NyHolmHttpFactory::class ],
+    //     ];
+    // }
 }

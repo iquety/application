@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\AppEngine;
 
 use Iquety\Application\AppEngine\FileSet;
-use Iquety\Application\AppEngine\Input;
+use Iquety\Application\AppEngine\Action\Input;
 use Tests\Unit\TestCase;
 
 class InputFilesTest extends TestCase

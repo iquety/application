@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Iquety\Application\AppEngine\Mvc;
 
 use Iquety\Application\AppEngine\Bootstrap;
+use Iquety\Application\AppEngine\Mvc\Controller\Controller;
 use Iquety\Application\AppEngine\Mvc\Controller\ErrorController;
 use Iquety\Application\AppEngine\Mvc\Controller\MainController;
 use Iquety\Application\AppEngine\Mvc\Controller\NotFoundController;
@@ -20,17 +21,22 @@ abstract class MvcBootstrap implements Bootstrap
         //...
     }
 
-    public function getErrorControllerClass(): string
+    public function getActionType(): string
+    {
+        return Controller::class;
+    }
+
+    public function getErrorActionClass(): string
     {
         return ErrorController::class;
     }
 
-    public function getMainControllerClass(): string
+    public function getMainActionClass(): string
     {
         return MainController::class;
     }
 
-    public function getNotFoundControllerClass(): string
+    public function getNotFoundActionClass(): string
     {
         return NotFoundController::class;
     }

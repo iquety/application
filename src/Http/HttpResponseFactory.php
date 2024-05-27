@@ -30,12 +30,12 @@ class HttpResponseFactory
         );
     }
 
-    public function notFoundResponse(array|string $content = ''): ResponseInterface
+    public function notFoundResponse(array|string|ResponseInterface $content = ''): ResponseInterface
     {
         return $this->response($content, HttpStatus::NOT_FOUND);
     }
 
-    public function accessDeniedResponse(array|string $content = ''): ResponseInterface
+    public function accessDeniedResponse(array|string|ResponseInterface $content = ''): ResponseInterface
     {
         return $this->response($content, HttpStatus::FORBIDDEN);
     }
@@ -69,8 +69,12 @@ class HttpResponseFactory
         return $this->response($content, HttpStatus::INTERNAL_SERVER_ERROR);
     }
 
-    public function response(array|string $content, HttpStatus $status): ResponseInterface
+    public function response(array|string|ResponseInterface $content, HttpStatus $status): ResponseInterface
     {
+        if ($content instanceof ResponseInterface) {
+            return $content;
+        }
+
         $response = $this->factory->createResponse(
             $status->value,
             HttpStatus::reason($status->value)
@@ -98,7 +102,9 @@ class HttpResponseFactory
     private function makeHtmlResponse(array|string $content): string
     {
         if (is_array($content) === true) {
-            throw new InvalidArgumentException('An Html response must be textual content');
+            throw new InvalidArgumentException(
+                'An HTML response must be textual content'
+            );
         }
 
         return $content;
@@ -116,7 +122,9 @@ class HttpResponseFactory
     private function makeTextResponse(array|string $content): string
     {
         if (is_array($content) === true) {
-            throw new InvalidArgumentException('An text response must be textual content');
+            throw new InvalidArgumentException(
+                'An text response must be textual content'
+            );
         }
 
         return $content;
@@ -136,13 +144,20 @@ class HttpResponseFactory
     private function arrayToXml(array $content, ?SimpleXMLElement $element): string
     {
         foreach ($content as $tag => $value) {
+            if(is_numeric($tag) === true) {
+                $tag = 'item';
+            }
+
             if (is_array($value) === true) {
                 $this->arrayToXml($value, $element->addChild((string)$tag));
 
                 continue;
             }
 
-            $element->addChild((string)$tag, (string)$value);
+            $element->addChild(
+                (string)$tag,
+                (string)htmlentities((string)$value)
+            );
         }
 
         return $element->asXML();

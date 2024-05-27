@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace Iquety\Application;
 
-use Closure;
 use DateTimeZone;
-use Iquety\Application\Http\HttpDependencies;
 use InvalidArgumentException;
+use Iquety\Application\AppEngine\Action\Input;
+use Iquety\Application\AppEngine\Action\MethodNotAllowedException;
+use Iquety\Application\AppEngine\ActionDescriptor;
 use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Application\AppEngine\Bootstrap;
 use Iquety\Application\AppEngine\EngineSet;
 use Iquety\Application\AppEngine\ModuleSet;
+use Iquety\Application\Http\HttpDependencies;
 use Iquety\Application\Http\HttpResponseFactory;
 use Iquety\Injection\Container;
+use Iquety\Injection\InversionOfControl;
 use Iquety\PubSub\Publisher\EventPublisher;
 use Iquety\PubSub\Publisher\SimpleEventPublisher;
 use Psr\Http\Message\ResponseInterface;
@@ -34,7 +37,7 @@ class Application
 
     private static ?Application $instance = null;
 
-    private ?string $mainBootstrap = null;
+    private ?Bootstrap $mainBootstrap = null;
 
     private ModuleSet $moduleSet;
 
@@ -44,9 +47,12 @@ class Application
     {
         $this->container = new Container();
 
-        $this->engineSet = new EngineSet($this->container());
-
         $this->moduleSet = new ModuleSet();
+        
+        $this->engineSet = new EngineSet(
+            $this->container,
+            $this->moduleSet()
+        );
 
         $this->useTimezone(new DateTimeZone('America/Sao_Paulo'));
     }
@@ -60,15 +66,22 @@ class Application
         return static::$instance; // @phpstan-ignore-line
     }
 
+    public function reset(): void
+    {
+        static::$instance = new self(); // @phpstan-ignore-line
+    }
+
     public function bootApplication(Bootstrap $bootstrap): void
     {
         $this->moduleSet->add($bootstrap);
 
-        $this->mainBootstrap = $bootstrap::class;
+        $this->mainBootstrap = $bootstrap;
     }
 
     public function bootEngine(AppEngine $engine): void
     {
+        $engine->useModuleSet($this->moduleSet);
+
         $this->engineSet->add($engine);
     }
 
@@ -77,21 +90,13 @@ class Application
         $this->moduleSet->add($bootstrap);
     }
 
-    public function container(): Container
-    {
-        return $this->container;
-    }
+    // setters
 
-    public function runInDevelopmentMode(): void
+    public function runIn(Environment $environment): void
     {
-        $this->environment = Environment::DEVELOPMENT;
+        $this->environment = $environment;
     }
-
-    public function runInTestMode(): void
-    {
-        $this->environment = Environment::TESTING;
-    }
-
+    
     public function runningMode(): Environment
     {
         return $this->environment;
@@ -100,6 +105,23 @@ class Application
     public function useTimezone(DateTimeZone $timezone): void
     {
         $this->timezone = $timezone;
+    }
+
+    // getters
+
+    public function container(): Container
+    {
+        return $this->container;
+    }
+    
+    public function engineSet(): EngineSet
+    {
+        return $this->engineSet;
+    }
+
+    public function moduleSet(): ModuleSet
+    {
+        return $this->moduleSet;
     }
 
     public function timezone(): DateTimeZone
@@ -133,67 +155,47 @@ class Application
         );
     }
 
-    public function reset(): void
-    {
-        static::$instance = new self(); // @phpstan-ignore-line
-    }
-
     /** @SuppressWarnings(PHPMD.StaticAccess) */
     public function run(): ResponseInterface
     {
-        if ($this->engineSet->isEmpty() === true) {
-            throw new RuntimeException('No web engine to handle the request');
+        if ($this->engineSet->hasEngines() === false) {
+            throw new RuntimeException('No engine to handle the request');
         }
 
         if ($this->mainBootstrap === null) {
             throw new RuntimeException('No bootstrap specified for the application');
         }
-
-        $mainBootstrap = $this->moduleSet->findByClass($this->mainBootstrap);
-
+        
         try {
-            $mainBootstrap->bootDependencies($this->container());
-        } catch (Throwable $exception) {
+            $this->mainBootstrap->bootDependencies($this->container);
+        } catch (Throwable) {
             throw new RuntimeException('The bootApplication method failed');
         }
 
         // certifica que as dependências HTTP estejam todas injetadas
-        (new HttpDependencies())->attachTo($this);
+        (new HttpDependencies($this->runningMode()))->attachTo($this->container());
 
         try {
-            // para o ioc fazer uso da aplicação
-            $this->container->addSingleton(Application::class, Application::instance());
-
             foreach ($this->moduleSet->toArray() as $bootstrap) {
-                $this->engineSet->bootAllEngines($this->container(), $bootstrap);
+                $this->engineSet->bootEnginesWith($bootstrap);
             }
-
-            $response = $this->engineSet->resolveRequest(
-                $this->make(ServerRequestInterface::class),
-                $this->moduleSet,
-                $this
-            );
-            
-            return $response 
-                ?? $this->make(HttpResponseFactory::class)->notFoundResponse();
-
-        } catch (Throwable $exception) {
-            return $this->make(HttpResponseFactory::class)->serverErrorResponse($exception);
+        } catch (Throwable) {
+            throw new RuntimeException('The bootModule method failed');
         }
+
+        $input = Input::fromRequest($this->make(ServerRequestInterface::class));
+            
+        // para o ioc fazer uso
+        $this->container->addSingleton(Application::class, Application::instance());
+        $this->container->addSingleton(Input::class, $input);
+
+        $executor = new ActionExecutor($this->container(), $this->mainBootstrap);
+
+        return $executor->makeResponseBy(
+            $this->engineSet->resolve($input),
+            $input
+        );
     }
-
-    // private function executeAppEngine(ServerRequestInterface $request): ResponseInterface
-    // {
-    //     foreach ($this->engineSet->toArray() as $engine) {
-    //         $response = $engine->execute($request, $this->moduleSet, $this);
-
-    //         if ($response !== null) {
-    //             return $response;
-    //         }
-    //     }
-
-    //     return $this->make(HttpResponseFactory::class)->notFoundResponse();
-    // }
 
     /**
      * @uses \header

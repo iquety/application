@@ -7,7 +7,7 @@ namespace Iquety\Application\AppEngine\Mvc;
 use Iquety\Application\AppEngine\ActionDescriptor;
 use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Application\AppEngine\Bootstrap;
-use Iquety\Application\AppEngine\Input;
+use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Application\AppEngine\SourceHandler;
 use Iquety\Routing\Router;
 use RuntimeException;
@@ -25,8 +25,6 @@ class MvcEngine extends AppEngine
             return;
         }
 
-        $this->moduleSet()->add($bootstrap);
-
         $router = $this->router();
 
         $router->forModule($bootstrap::class);
@@ -35,9 +33,9 @@ class MvcEngine extends AppEngine
         $bootstrap->bootRoutes($router);
 
         $this->sourceHandler()
-            ->setErrorActionClass($bootstrap->getErrorControllerClass())
-            ->setMainActionClass($bootstrap->getMainControllerClass())
-            ->setNotFoundActionClass($bootstrap->getNotFoundControllerClass())
+            ->setErrorActionClass($bootstrap->getErrorActionClass())
+            ->setMainActionClass($bootstrap->getMainActionClass())
+            ->setNotFoundActionClass($bootstrap->getNotFoundActionClass())
             ->addRouter($this->router);
     }
 

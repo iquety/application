@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Iquety\Application\AppEngine;
 
 use InvalidArgumentException;
+use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Injection\Container;
 use RuntimeException;
-use Throwable;
 
 /**
  * Armazena o conjunto de mecanismos disponíveis para responder às solicitações 
@@ -15,16 +15,15 @@ use Throwable;
  */
 class EngineSet
 {
-    private ModuleSet $moduleSet;
-
     /** @var array<string,AppEngine> */
     private array $engineList = [];
 
     private ?AppEngine $mainEngine = null;
 
-    public function __construct(private Container $container)
-    {
-        $this->moduleSet = new ModuleSet();
+    public function __construct(
+        private Container $container,
+        private ModuleSet $moduleSet
+    ) {
     }
 
     public function add(AppEngine $engine): void
@@ -41,6 +40,13 @@ class EngineSet
 
         if ($this->mainEngine === null) {
             $this->mainEngine = $engine;
+        }
+    }
+
+    public function bootEnginesWith(Bootstrap $bootstrap): void
+    {
+        foreach ($this->engineList as $engine) {
+            $engine->boot($bootstrap);
         }
     }
 
@@ -66,6 +72,11 @@ class EngineSet
         }
 
         return $this->sourceHandler()->getNotFoundDescriptor();
+    }
+
+    public function hasEngines(): bool
+    {
+        return $this->engineList !== []; 
     }
 
     public function toArray(): array

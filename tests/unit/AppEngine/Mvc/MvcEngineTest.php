@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\AppEngine\FrontController;
+namespace Tests\Unit\AppEngine\Mvc;
 
-use Iquety\Application\AppEngine\Input;
+use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Application\AppEngine\ModuleSet;
 use Iquety\Application\AppEngine\Mvc\Controller\MainController;
 use Iquety\Application\AppEngine\Mvc\MvcBootstrap;
@@ -126,6 +126,7 @@ class MvcEngineTest extends TestCase
             }
         };
 
+        $moduleSet->add($bootstrap);
         $engine->boot($bootstrap);
 
         $input = Input::fromString('user/22/edit');

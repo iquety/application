@@ -6,8 +6,7 @@ namespace Iquety\Application\AppEngine\Mvc;
 
 use InvalidArgumentException;
 use Iquety\Application\AppEngine\ActionDescriptor;
-use Iquety\Application\AppEngine\FrontController\SourceSet;
-use Iquety\Application\AppEngine\Input;
+use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Application\AppEngine\Mvc\Controller\Controller;
 use Iquety\Application\AppEngine\Mvc\Controller\ErrorController;
 use Iquety\Application\AppEngine\Mvc\Controller\MainController;
@@ -75,6 +74,7 @@ class MvcSourceHandler implements SourceHandler
         }
 
         return new ActionDescriptor(
+            Controller::class,
             $bootstrapClass,
             $className,
             $classMethod
@@ -83,17 +83,17 @@ class MvcSourceHandler implements SourceHandler
 
     public function getErrorDescriptor(): ActionDescriptor
     {
-        return new ActionDescriptor('error', $this->errorControllerClass, 'execute');
+        return $this->makeDescriptor('error', $this->errorControllerClass, 'execute');
     }
 
     public function getMainDescriptor(): ActionDescriptor
     {
-        return new ActionDescriptor('main', $this->mainControllerClass, 'execute');
+        return $this->makeDescriptor('main', $this->mainControllerClass, 'execute');
     }
 
     public function getNotFoundDescriptor(): ActionDescriptor
     {
-        return new ActionDescriptor('not-found', $this->notFoundControllerClass, 'execute');
+        return $this->makeDescriptor('not-found', $this->notFoundControllerClass, 'execute');
     }
 
     public function setErrorActionClass(string $actionClass): self
@@ -128,5 +128,18 @@ class MvcSourceHandler implements SourceHandler
         if (is_subclass_of($actionClass, Controller::class) === false) {
             throw new InvalidArgumentException("Class $actionClass is not a valid controller");
         }
+    }
+
+    private function makeDescriptor(
+        string $bootstrapClass,
+        string $className,
+        $actionName
+    ): ActionDescriptor {
+        return new ActionDescriptor(
+            Controller::class,
+            $bootstrapClass,
+            $className,
+            'execute'
+        );
     }
 }

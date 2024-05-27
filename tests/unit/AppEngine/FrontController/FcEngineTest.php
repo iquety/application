@@ -12,7 +12,7 @@ use Iquety\Application\AppEngine\FrontController\SourceSet;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\FcEngine;
 use Iquety\Application\AppEngine\FrontController\Source;
-use Iquety\Application\AppEngine\Input;
+use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Application\AppEngine\ModuleSet;
 use Iquety\Application\Application;
 use Iquety\Application\Http\HttpFactory;
@@ -139,6 +139,7 @@ class FcEngineTest extends TestCase
             }
         };
 
+        $moduleSet->add($bootstrap);
         $engine->boot($bootstrap);
 
         $descriptor = $engine->resolve(Input::fromString('sub-directory/two-command'));

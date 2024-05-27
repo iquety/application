@@ -7,6 +7,7 @@ namespace Tests\Unit\AppEngine\FrontController;
 use ArrayObject;
 use InvalidArgumentException;
 use Iquety\Application\AppEngine\ActionDescriptor;
+use Iquety\Application\AppEngine\FrontController\Command\Command;
 use Iquety\Application\AppEngine\FrontController\Command\ErrorCommand;
 use Iquety\Application\AppEngine\FrontController\Command\MainCommand;
 use Iquety\Application\AppEngine\FrontController\Command\NotFoundCommand;
@@ -14,7 +15,7 @@ use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\FcSourceHandler;
 use Iquety\Application\AppEngine\FrontController\Source;
 use Iquety\Application\AppEngine\FrontController\SourceSet;
-use Iquety\Application\AppEngine\Input;
+use Iquety\Application\AppEngine\Action\Input;
 use RuntimeException;
 use Tests\Unit\AppEngine\FrontController\Stubs\Commands\OneCommand;
 use Tests\Unit\TestCase;
@@ -30,17 +31,17 @@ class FcSourceHandlerTest extends TestCase
         $handler = new FcSourceHandler();
 
         $this->assertEquals(
-            new ActionDescriptor('error', ErrorCommand::class, 'execute'),
+            new ActionDescriptor(Command::class, 'error', ErrorCommand::class, 'execute'),
             $handler->getErrorDescriptor()
         );
 
         $this->assertEquals(
-            new ActionDescriptor('main', MainCommand::class, 'execute'),
+            new ActionDescriptor(Command::class, 'main', MainCommand::class, 'execute'),
             $handler->getMainDescriptor()
         );
 
         $this->assertEquals(
-            new ActionDescriptor('not-found', NotFoundCommand::class, 'execute'),
+            new ActionDescriptor(Command::class, 'not-found', NotFoundCommand::class, 'execute'),
             $handler->getNotFoundDescriptor()
         );
     }
@@ -55,17 +56,17 @@ class FcSourceHandlerTest extends TestCase
         $handler->setNotFoundActionClass(OneCommand::class);
 
         $this->assertEquals(
-            new ActionDescriptor('error', OneCommand::class, 'execute'),
+            new ActionDescriptor(Command::class, 'error', OneCommand::class, 'execute'),
             $handler->getErrorDescriptor()
         );
 
         $this->assertEquals(
-            new ActionDescriptor('main', OneCommand::class, 'execute'),
+            new ActionDescriptor(Command::class, 'main', OneCommand::class, 'execute'),
             $handler->getMainDescriptor()
         );
 
         $this->assertEquals(
-            new ActionDescriptor('not-found', OneCommand::class, 'execute'),
+            new ActionDescriptor(Command::class, 'not-found', OneCommand::class, 'execute'),
             $handler->getNotFoundDescriptor()
         );
     }
@@ -184,7 +185,7 @@ class FcSourceHandlerTest extends TestCase
         $handler->addSources($directorySet);
 
         $this->assertEquals(
-            new ActionDescriptor('main', MainCommand::class, 'execute'),
+            new ActionDescriptor(Command::class, 'main', MainCommand::class, 'execute'),
             $handler->getDescriptorTo(Input::fromString($uri))
         );
     }
@@ -203,7 +204,7 @@ class FcSourceHandlerTest extends TestCase
         $handler->addSources($directorySet);
 
         $this->assertEquals(
-            new ActionDescriptor(FcBootstrap::class, OneCommand::class, 'execute'),
+            new ActionDescriptor(Command::class,FcBootstrap::class, OneCommand::class, 'execute'),
             $handler->getDescriptorTo(Input::fromString('one-command/22'))
         );
     }

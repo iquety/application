@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Iquety\Application\AppEngine\FrontController;
 
 use Iquety\Application\AppEngine\ActionDescriptor;
-use Iquety\Application\AppEngine\Input;
+use Iquety\Application\AppEngine\FrontController\Command\Command;
+use Iquety\Application\AppEngine\Action\Input;
 
 class Source
 {
@@ -41,6 +42,7 @@ class Source
 
         if (class_exists($className) === true) {
             return new ActionDescriptor(
+                Command::class,
                 $bootstrapClass,
                 $className,
                 'execute'
@@ -61,7 +63,7 @@ class Source
         $nodeList = [];
 
         foreach ($input->getTarget() as $index => $nodePath) {
-            $nodeList[$index] = $this->makeCamelCase((string)$nodePath);
+            $nodeList[$index] = $this->makeCamelCase($nodePath);
         }
 
         return implode("\\", $nodeList);

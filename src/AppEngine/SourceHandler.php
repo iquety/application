@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Iquety\Application\AppEngine;
 
+use Iquety\Application\AppEngine\Action\Input;
+
 interface SourceHandler
 {
     public function getDescriptorTo(Input $input): ?ActionDescriptor;

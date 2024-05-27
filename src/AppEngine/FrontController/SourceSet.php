@@ -6,7 +6,7 @@ namespace Iquety\Application\AppEngine\FrontController;
 
 use InvalidArgumentException;
 use Iquety\Application\AppEngine\ActionDescriptor;
-use Iquety\Application\AppEngine\Input;
+use Iquety\Application\AppEngine\Action\Input;
 
 class SourceSet
 {

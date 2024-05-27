@@ -16,7 +16,7 @@ trait MethodChecker
 
         $requestMethod = $request->getMethod();
 
-        if ($method === HttpMethod::ANY || $method === $requestMethod) {
+        if ($method === HttpMethod::ANY || $method->value === $requestMethod) {
             return;
         }
 

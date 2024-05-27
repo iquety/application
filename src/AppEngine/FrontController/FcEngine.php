@@ -7,7 +7,7 @@ namespace Iquety\Application\AppEngine\FrontController;
 use Iquety\Application\AppEngine\ActionDescriptor;
 use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Application\AppEngine\Bootstrap;
-use Iquety\Application\AppEngine\Input;
+use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Application\AppEngine\SourceHandler;
 use RuntimeException;
 
@@ -22,17 +22,15 @@ class FcEngine extends AppEngine
             return;
         }
 
-        $this->moduleSet()->add($bootstrap);
-
         $sourceSet = new SourceSet($bootstrap::class);
 
         // o dev irá adicionar os diretórios na implementação do módulo
         $bootstrap->bootNamespaces($sourceSet);
 
         $this->sourceHandler()
-            ->setErrorActionClass($bootstrap->getErrorCommandClass())
-            ->setMainActionClass($bootstrap->getMainCommandClass())
-            ->setNotFoundActionClass($bootstrap->getNotFoundCommandClass())
+            ->setErrorActionClass($bootstrap->getErrorActionClass())
+            ->setMainActionClass($bootstrap->getMainActionClass())
+            ->setNotFoundActionClass($bootstrap->getNotFoundActionClass())
             ->addSources($sourceSet);
     }
 
