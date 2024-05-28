@@ -13,7 +13,7 @@ enum HttpMethod: string
     case POST   = 'POST';
     case PUT    = 'PUT';
 
-    /** @return array<int,string> */
+    /** @return array<int,HttpMethod> */
     public static function all(): array
     {
         return [

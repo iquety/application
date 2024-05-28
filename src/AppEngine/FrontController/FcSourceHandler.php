@@ -32,12 +32,12 @@ class FcSourceHandler implements SourceHandler
 
     public function hasSources(): bool
     {
-        foreach($this->sourceList as $sourceSet) {
+        foreach ($this->sourceList as $sourceSet) {
             if ($sourceSet->hasSources() === true) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -106,7 +106,7 @@ class FcSourceHandler implements SourceHandler
     public function setNotFoundActionClass(string $actionClass): self
     {
         $this->assertCommand($actionClass);
-        
+
         $this->notFoundCommandClass = $actionClass;
 
         return $this;
@@ -128,7 +128,7 @@ class FcSourceHandler implements SourceHandler
             Command::class,
             $bootstrapClass,
             $className,
-            'execute'
+            $actionName
         );
     }
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Iquety\Application\AppEngine;
 
 use Closure;
-use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileInterface;
 
 class File
@@ -58,10 +57,11 @@ class File
 
     public function getErrorMessage(): string
     {
-        return match($this->error) {
+        return match ($this->error) {
             UPLOAD_ERR_OK         => 'There is no error, the file uploaded with success',
             UPLOAD_ERR_INI_SIZE   => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
-            UPLOAD_ERR_FORM_SIZE  => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
+            UPLOAD_ERR_FORM_SIZE  => 'The uploaded file exceeds the MAX_FILE_SIZE ' .
+                                     'directive that was specified in the HTML form',
             UPLOAD_ERR_PARTIAL    => 'The uploaded file was only partially uploaded',
             UPLOAD_ERR_NO_FILE    => 'No file was uploaded',
             UPLOAD_ERR_NO_TMP_DIR => 'Missing a temporary folder',

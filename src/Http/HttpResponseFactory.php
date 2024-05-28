@@ -17,6 +17,7 @@ class HttpResponseFactory
 
     private Environment $environment;
 
+    /** @SuppressWarnings(PHPMD.StaticAccess) */
     public function __construct(
         private HttpFactory $factory,
         private ServerRequestInterface $serverRequest
@@ -30,11 +31,13 @@ class HttpResponseFactory
         );
     }
 
+    /** @param array<int|string,mixed>|string|ResponseInterface $content */
     public function notFoundResponse(array|string|ResponseInterface $content = ''): ResponseInterface
     {
         return $this->response($content, HttpStatus::NOT_FOUND);
     }
 
+    /** @param array<int|string,mixed>|string|ResponseInterface $content */
     public function accessDeniedResponse(array|string|ResponseInterface $content = ''): ResponseInterface
     {
         return $this->response($content, HttpStatus::FORBIDDEN);
@@ -69,6 +72,10 @@ class HttpResponseFactory
         return $this->response($content, HttpStatus::INTERNAL_SERVER_ERROR);
     }
 
+    /** 
+     * @SuppressWarnings(PHPMD.StaticAccess) 
+     * @param array<int|string,mixed>|string|ResponseInterface $content
+     */
     public function response(array|string|ResponseInterface $content, HttpStatus $status): ResponseInterface
     {
         if ($content instanceof ResponseInterface) {
@@ -91,7 +98,7 @@ class HttpResponseFactory
             HttpMime::JSON => $this->makeJsonResponse($content),
             HttpMime::TEXT => $this->makeTextResponse($content),
             HttpMime::XML  => $this->makeXmlResponse($content),
-            default        => $this->makeHtmlResponse($content)
+            // default        => $this->makeHtmlResponse($content)
         };
 
         return $response->withBody(
@@ -99,6 +106,7 @@ class HttpResponseFactory
         );
     }
 
+    /** @param array<int|string,mixed>|string $content */
     private function makeHtmlResponse(array|string $content): string
     {
         if (is_array($content) === true) {
@@ -110,6 +118,7 @@ class HttpResponseFactory
         return $content;
     }
 
+    /** @param array<int|string,mixed>|string $content */
     private function makeJsonResponse(array|string $content): string
     {
         if (is_string($content) === true) {
@@ -119,6 +128,7 @@ class HttpResponseFactory
         return (string)json_encode($content, JSON_FORCE_OBJECT);
     }
 
+    /** @param array<int|string,mixed>|string $content */
     private function makeTextResponse(array|string $content): string
     {
         if (is_array($content) === true) {
@@ -130,6 +140,7 @@ class HttpResponseFactory
         return $content;
     }
 
+    /** @param array<int|string,mixed>|string $content */
     private function makeXmlResponse(array|string $content): string
     {
         if (is_string($content) === true) {
@@ -141,10 +152,11 @@ class HttpResponseFactory
         return $this->arrayToXml($content, $mainElement);
     }
 
-    private function arrayToXml(array $content, ?SimpleXMLElement $element): string
+    /** @param array<int|string,mixed> $content */
+    private function arrayToXml(array $content, SimpleXMLElement $element): string
     {
         foreach ($content as $tag => $value) {
-            if(is_numeric($tag) === true) {
+            if (is_numeric($tag) === true) {
                 $tag = 'item';
             }
 
@@ -160,6 +172,6 @@ class HttpResponseFactory
             );
         }
 
-        return $element->asXML();
+        return (string)$element->asXML();
     }
 }

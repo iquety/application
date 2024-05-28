@@ -51,7 +51,7 @@ class MvcEngine extends AppEngine
         }
 
         $module = $actionDescriptor->module();
-    
+
         if ($module === 'main') {
             return $actionDescriptor;
         }

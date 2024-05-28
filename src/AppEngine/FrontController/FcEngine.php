@@ -37,7 +37,7 @@ class FcEngine extends AppEngine
     public function resolve(Input $input): ?ActionDescriptor
     {
         $this->container()->addSingleton(Input::class, $input);
-    
+
         $actionDescriptor = $this->sourceHandler()->getDescriptorTo($input);
 
         if ($actionDescriptor === null) {
@@ -46,7 +46,7 @@ class FcEngine extends AppEngine
         }
 
         $module = $actionDescriptor->module();
-    
+
         if ($module === 'main') {
             return $actionDescriptor;
         }

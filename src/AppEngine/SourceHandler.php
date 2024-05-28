@@ -21,5 +21,4 @@ interface SourceHandler
     public function setMainActionClass(string $actionClass): self;
 
     public function setNotFoundActionClass(string $actionClass): self;
-
 }

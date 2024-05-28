@@ -9,9 +9,8 @@ use Psr\Http\Message\ResponseInterface;
 
 class ErrorController extends Controller
 {
-    public function execute(Input $input): ResponseInterface
+    public function execute(): ResponseInterface
     {
         return $this->make('ErrorResponse');
     }
 }
-

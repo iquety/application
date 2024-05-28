@@ -19,11 +19,11 @@ use RuntimeException;
 
 class MvcSourceHandler implements SourceHandler
 {
-    private string $errorControllerClass = ErrorController::class;
+    private string $errorCtrlClass = ErrorController::class;
 
-    private string $mainControllerClass = MainController::class;
+    private string $mainCtrlClass = MainController::class;
 
-    private string $notFoundControllerClass = NotFoundController::class;
+    private string $notFoundCtrlClass = NotFoundController::class;
 
     private ?Router $router = null;
 
@@ -63,7 +63,7 @@ class MvcSourceHandler implements SourceHandler
         $classMethod = $route->actionMethod();
         $paramList = $route->params();
 
-        foreach($paramList as $name => $value) {
+        foreach ($paramList as $name => $value) {
             $paramList[$name] = (new UriParser(''))->fixTypes($value);
         }
 
@@ -83,24 +83,24 @@ class MvcSourceHandler implements SourceHandler
 
     public function getErrorDescriptor(): ActionDescriptor
     {
-        return $this->makeDescriptor('error', $this->errorControllerClass, 'execute');
+        return $this->makeDescriptor('error', $this->errorCtrlClass, 'execute');
     }
 
     public function getMainDescriptor(): ActionDescriptor
     {
-        return $this->makeDescriptor('main', $this->mainControllerClass, 'execute');
+        return $this->makeDescriptor('main', $this->mainCtrlClass, 'execute');
     }
 
     public function getNotFoundDescriptor(): ActionDescriptor
     {
-        return $this->makeDescriptor('not-found', $this->notFoundControllerClass, 'execute');
+        return $this->makeDescriptor('not-found', $this->notFoundCtrlClass, 'execute');
     }
 
     public function setErrorActionClass(string $actionClass): self
     {
         $this->assertController($actionClass);
 
-        $this->errorControllerClass = $actionClass;
+        $this->errorCtrlClass = $actionClass;
 
         return $this;
     }
@@ -109,7 +109,7 @@ class MvcSourceHandler implements SourceHandler
     {
         $this->assertController($actionClass);
 
-        $this->mainControllerClass = $actionClass;
+        $this->mainCtrlClass = $actionClass;
 
         return $this;
     }
@@ -117,8 +117,8 @@ class MvcSourceHandler implements SourceHandler
     public function setNotFoundActionClass(string $actionClass): self
     {
         $this->assertController($actionClass);
-        
-        $this->notFoundControllerClass = $actionClass;
+
+        $this->notFoundCtrlClass = $actionClass;
 
         return $this;
     }
@@ -139,7 +139,7 @@ class MvcSourceHandler implements SourceHandler
             Controller::class,
             $bootstrapClass,
             $className,
-            'execute'
+            $actionName
         );
     }
 }

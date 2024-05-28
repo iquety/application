@@ -38,7 +38,7 @@ abstract class AppEngine
         return $this->moduleSet;
     }
 
-    /** 
+    /**
      * Tenta resolver a solicitação do usuário usando este mecanismo.
      * Se for retornada uma resposta, EngineSet irá enviá-la para o usuário,
      * se for retornado null, EngineSet irá solicitar ao próximo mecanismo.

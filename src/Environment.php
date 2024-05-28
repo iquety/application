@@ -9,7 +9,7 @@ namespace Iquety\Application;
  */
 enum Environment: string
 {
-    /** 
+    /**
      * Usado pelos desenvolvedores, para a versão instável do sofware.
      * - Criatividade flui livremente neste ambiente;
      * - Iteração rápida, feedbacks e aprendizado com os erros;
@@ -31,13 +31,13 @@ enum Environment: string
      * Após a fase de desenvolvimento atingir um ponto estável,
      * o software entre em modo de "preparação".
      * Este ambiente possui uma configuração mais próxima
-     * possível do ambiente de produção, para um exame 
-     * minucioso do comportamento do software em um 
-     * ambiente controlado. 
+     * possível do ambiente de produção, para um exame
+     * minucioso do comportamento do software em um
+     * ambiente controlado.
      * - Testes completos e rigorosos simulam condições do mundo real;
      * - Garantia de qualidade conforme as expectativas dos usuários;
      * - Controle de Versão para ajudar a rastrear as alterações.
-     */ 
+     */
     case STAGE = 'stage';
 
     /**

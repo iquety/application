@@ -1,2 +1,0 @@
-<?xml version="1.0"?>
-<root><message>No directories registered as command source</message><file>/application/src/AppEngine/FrontController/FcEngine.php</file><line>52</line><trace><0>

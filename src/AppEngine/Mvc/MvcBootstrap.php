@@ -16,6 +16,7 @@ abstract class MvcBootstrap implements Bootstrap
 {
     abstract public function bootDependencies(Container $container): void;
 
+    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
     public function bootRoutes(Router &$router): void
     {
         //...

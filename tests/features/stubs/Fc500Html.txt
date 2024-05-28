@@ -1,3 +1,0 @@
-Error: No directories registered as command source on file /application/src/AppEngine/FrontController/FcEngine.php in line 52
-#0 /application/src/Application.php(197): Iquety\Application\AppEngine\FrontController\FcEngine->execute()
-#1 /application/src/Application.php(178): Iquety\Application\Application->executeAppEngine()

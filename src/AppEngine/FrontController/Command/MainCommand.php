@@ -14,7 +14,7 @@ class MainCommand extends Command
     {
     }
 
-    public function execute(Input $input): ResponseInterface
+    public function execute(): ResponseInterface
     {
         /** @var HttpFactory $factory */
         $factory = $this->make(HttpFactory::class);

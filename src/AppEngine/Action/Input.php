@@ -51,7 +51,7 @@ class Input
     }
 
     /**
-     * @param array<int,string> $path 
+     * @param array<int,string> $path
      * @param array<int|string,float|int|string|array<string,int|string>> $originalParamList
      */
     private function __construct(array $originalPath, array $originalParamList, string $method)
@@ -59,8 +59,8 @@ class Input
         $this->method = mb_strtoupper($method);
 
         $this->path = $originalPath;
-        
-        foreach($originalParamList as $name => $value) {
+
+        foreach ($originalParamList as $name => $value) {
             if ($value instanceof UploadedFileInterface) {
                 $this->paramList[$name] = $this->makeFileSet([ $value ]);
 
@@ -170,7 +170,7 @@ class Input
         $fileSet = new FileSet();
 
         // validar as informações dos arquivos
-        foreach($fileList as $uploadedFile) {
+        foreach ($fileList as $uploadedFile) {
             if (! $uploadedFile instanceof UploadedFileInterface) {
                 throw new InvalidArgumentException('File structure is invalid');
             }

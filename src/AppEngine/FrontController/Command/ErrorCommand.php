@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class ErrorCommand extends Command
 {
-    public function execute(Input $input): ResponseInterface
+    public function execute(): ResponseInterface
     {
         return $this->make('ErrorResponse');
     }

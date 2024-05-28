@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class NotFoundController extends Controller
 {
-    public function execute(Input $input): ResponseInterface
+    public function execute(): ResponseInterface
     {
         /** @var HttpFactory $factory */
         $factory = $this->make(HttpFactory::class);
@@ -18,4 +18,3 @@ class NotFoundController extends Controller
         return $factory->createResponse(404);
     }
 }
-

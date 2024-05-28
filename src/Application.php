@@ -7,18 +7,12 @@ namespace Iquety\Application;
 use DateTimeZone;
 use InvalidArgumentException;
 use Iquety\Application\AppEngine\Action\Input;
-use Iquety\Application\AppEngine\Action\MethodNotAllowedException;
-use Iquety\Application\AppEngine\ActionDescriptor;
 use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Application\AppEngine\Bootstrap;
 use Iquety\Application\AppEngine\EngineSet;
 use Iquety\Application\AppEngine\ModuleSet;
 use Iquety\Application\Http\HttpDependencies;
-use Iquety\Application\Http\HttpResponseFactory;
 use Iquety\Injection\Container;
-use Iquety\Injection\InversionOfControl;
-use Iquety\PubSub\Publisher\EventPublisher;
-use Iquety\PubSub\Publisher\SimpleEventPublisher;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
@@ -26,11 +20,12 @@ use Throwable;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Application
 {
     private Container $container;
-    
+
     private EngineSet $engineSet;
 
     private Environment $environment = Environment::PRODUCTION;
@@ -48,7 +43,7 @@ class Application
         $this->container = new Container();
 
         $this->moduleSet = new ModuleSet();
-        
+
         $this->engineSet = new EngineSet(
             $this->container,
             $this->moduleSet()
@@ -96,7 +91,7 @@ class Application
     {
         $this->environment = $environment;
     }
-    
+
     public function runningMode(): Environment
     {
         return $this->environment;
@@ -113,7 +108,7 @@ class Application
     {
         return $this->container;
     }
-    
+
     public function engineSet(): EngineSet
     {
         return $this->engineSet;
@@ -165,7 +160,7 @@ class Application
         if ($this->mainBootstrap === null) {
             throw new RuntimeException('No bootstrap specified for the application');
         }
-        
+
         try {
             $this->mainBootstrap->bootDependencies($this->container);
         } catch (Throwable) {
@@ -184,7 +179,7 @@ class Application
         }
 
         $input = Input::fromRequest($this->make(ServerRequestInterface::class));
-            
+
         // para o ioc fazer uso
         $this->container->addSingleton(Application::class, Application::instance());
         $this->container->addSingleton(Input::class, $input);

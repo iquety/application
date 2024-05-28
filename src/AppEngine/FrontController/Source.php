@@ -51,7 +51,7 @@ class Source
 
         if ($input->hasNext() === true) {
             $input->next();
-    
+
             return $this->processUriLevel($bootstrapClass, $input);
         }
 

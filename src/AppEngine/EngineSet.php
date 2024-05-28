@@ -10,7 +10,7 @@ use Iquety\Injection\Container;
 use RuntimeException;
 
 /**
- * Armazena o conjunto de mecanismos disponíveis para responder às solicitações 
+ * Armazena o conjunto de mecanismos disponíveis para responder às solicitações
  * mediante as entradas do usuário
  */
 class EngineSet
@@ -76,7 +76,7 @@ class EngineSet
 
     public function hasEngines(): bool
     {
-        return $this->engineList !== []; 
+        return $this->engineList !== [];
     }
 
     public function toArray(): array
