@@ -26,6 +26,7 @@ class ControllerHttpMethodTest extends TestCase
         Application::instance()->reset();
     }
 
+    /** @return array<string,array<int,mixed>> */
     public function httpMethodProvider(): array
     {
         $list = [];
@@ -59,6 +60,7 @@ class ControllerHttpMethodTest extends TestCase
         );
     }
 
+    /** @return array<string,array<int,mixed>> */
     public function anyHttpMethodProvider(): array
     {
         $list = [];
@@ -92,6 +94,7 @@ class ControllerHttpMethodTest extends TestCase
         );
     }
 
+    /** @return array<string,array<int,mixed>> */
     public function invalidHttpMethodProvider(): array
     {
         $list = [];

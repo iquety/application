@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory;
 
+use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Application\AppEngine\FrontController\Command\Command;
-use Iquety\Application\AppEngine\Input;
 use Iquety\Application\Http\HttpFactory;
 use Psr\Http\Message\ResponseInterface;
 

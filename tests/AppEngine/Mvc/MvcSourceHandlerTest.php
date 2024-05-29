@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\AppEngine\Mvc;
 
 use ArrayObject;
+use Closure;
 use InvalidArgumentException;
 use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Application\AppEngine\ActionDescriptor;
@@ -86,7 +87,7 @@ class MvcSourceHandlerTest extends TestCase
     }
 
     /** @test */
-    public function commandSetInvalidMain(): void
+    public function controllerSetInvalidMain(): void
     {
         $className = ArrayObject::class;
 
@@ -115,7 +116,7 @@ class MvcSourceHandlerTest extends TestCase
     public function descriptorWithoutRouter(): void
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('There are no registered routes');
+        $this->expectExceptionMessage('No router specified');
 
         $handler = new MvcSourceHandler();
 
@@ -150,6 +151,7 @@ class MvcSourceHandlerTest extends TestCase
         );
     }
 
+    /** @return array<string,array<int,mixed>> */
     public function mainUriProvider(): array
     {
         $list = [];
@@ -219,5 +221,28 @@ class MvcSourceHandlerTest extends TestCase
             new ActionDescriptor(Controller::class, MvcBootstrap::class, OneController::class, 'action'),
             $handler->getDescriptorTo(Input::fromString('user/22'))
         );
+    }
+
+    /** @test */
+    public function descriptorClosure(): void
+    {
+        $router = new Router();
+        $router->forModule(MvcBootstrap::class);
+
+        $router->get('/user/:id')->usingAction(fn() => 'execute closure');
+
+        $handler = new MvcSourceHandler();
+
+        $handler->addRouter($router);
+
+        $descriptor = $handler->getDescriptorTo(Input::fromString('user/22'));
+
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
+
+        $callable = $descriptor->action();
+
+        $this->assertInstanceOf(Closure::class, $callable);
+
+        $this->assertSame('execute closure', $callable());
     }
 }

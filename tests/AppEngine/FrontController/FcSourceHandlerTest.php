@@ -154,6 +154,7 @@ class FcSourceHandlerTest extends TestCase
         );
     }
 
+    /** @return array<string,array<int,mixed>> */
     public function mainUriProvider(): array
     {
         $list = [];

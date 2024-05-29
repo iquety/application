@@ -7,6 +7,7 @@ namespace Tests\AppEngine\FrontController;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\Source;
 use Iquety\Application\AppEngine\Action\Input;
+use Iquety\Application\AppEngine\ActionDescriptor;
 use Tests\AppEngine\FrontController\Stubs\Commands\OneCommand;
 use Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory\TwoCommand;
 use Tests\TestCase;
@@ -46,6 +47,7 @@ class SourceTest extends TestCase
 
         $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString('one-command'));
 
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
         $this->assertSame(OneCommand::class . "::execute", $descriptor->action());
     }
 
@@ -61,6 +63,7 @@ class SourceTest extends TestCase
             Input::fromString('sub-directory/two-command')
         );
 
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
         $this->assertSame(TwoCommand::class . "::execute", $descriptor->action());
     }
 
@@ -96,6 +99,7 @@ class SourceTest extends TestCase
 
         $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString($uri));
 
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
         $this->assertSame($className . "::execute", $descriptor->action());
     }
 
@@ -113,6 +117,7 @@ class SourceTest extends TestCase
 
         $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString($uri));
 
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
         $this->assertSame($className . "::execute", $descriptor->action());
     }
 
@@ -127,12 +132,15 @@ class SourceTest extends TestCase
         );
 
         $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString(" $uri"));
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
         $this->assertSame($className . "::execute", $descriptor->action());
 
         $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString(" $uri "));
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
         $this->assertSame($className . "::execute", $descriptor->action());
 
         $descriptor = $directory->getDescriptorTo(FcBootstrap::class, Input::fromString("$uri "));
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
         $this->assertSame($className . "::execute", $descriptor->action());
     }
 
@@ -148,6 +156,7 @@ class SourceTest extends TestCase
             Input::fromString('sub-diRECtory/two-coMMand')
         );
 
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
         $this->assertSame(TwoCommand::class . "::execute", $descriptor->action());
     }
 

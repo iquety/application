@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\AppEngine\Mvc;
 
 use Iquety\Application\AppEngine\Action\Input;
+use Iquety\Application\AppEngine\ActionDescriptor;
 use Iquety\Application\AppEngine\ModuleSet;
 use Iquety\Application\AppEngine\Mvc\Controller\MainController;
 use Iquety\Application\AppEngine\Mvc\MvcBootstrap;
@@ -80,6 +81,8 @@ class MvcEngineTest extends TestCase
 
         $descriptor = $engine->resolve(Input::fromString(''));
 
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
+
         $this->assertSame('main', $descriptor->module());
         $this->assertSame(MainController::class . '::execute', $descriptor->action());
     }
@@ -151,6 +154,7 @@ class MvcEngineTest extends TestCase
 
         $descriptor = $engine->resolve($input);
 
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
         $this->assertSame($bootstrap::class, $descriptor->module());
         $this->assertSame(OneController::class . '::action', $descriptor->action());
 

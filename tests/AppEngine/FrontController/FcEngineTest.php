@@ -10,6 +10,7 @@ use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\FcEngine;
 use Iquety\Application\AppEngine\FrontController\Source;
 use Iquety\Application\AppEngine\Action\Input;
+use Iquety\Application\AppEngine\ActionDescriptor;
 use Iquety\Application\AppEngine\ModuleSet;
 use Iquety\Injection\Container;
 use RuntimeException;
@@ -80,6 +81,7 @@ class FcEngineTest extends TestCase
 
         $descriptor = $engine->resolve(Input::fromString(''));
 
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
         $this->assertSame('main', $descriptor->module());
         $this->assertSame(MainCommand::class . '::execute', $descriptor->action());
     }
@@ -142,6 +144,7 @@ class FcEngineTest extends TestCase
 
         $descriptor = $engine->resolve(Input::fromString('sub-directory/two-command'));
 
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
         $this->assertSame($bootstrap::class, $descriptor->module());
         $this->assertSame(TwoCommand::class . '::execute', $descriptor->action());
     }

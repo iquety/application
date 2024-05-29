@@ -13,12 +13,16 @@ use Iquety\Application\AppEngine\FrontController\FcEngine;
 use Iquety\Application\AppEngine\FrontController\Source;
 use Iquety\Application\AppEngine\FrontController\SourceSet;
 use Iquety\Application\AppEngine\Action\Input;
+use Iquety\Application\AppEngine\ActionDescriptor;
 use Iquety\Application\AppEngine\ModuleSet;
 use Iquety\Injection\Container;
 use Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory\TwoCommand;
 use Tests\TestCase;
 
-/** @SuppressWarnings(PHPMD.StaticAccess) */
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class EngineSetSingleTest extends TestCase
 {
     /** @test */
@@ -29,7 +33,7 @@ class EngineSetSingleTest extends TestCase
 
         $container = new Container();
 
-        $engineSet = new EngineSet($container, new ModuleSet());
+        $engineSet = new EngineSet($container);
 
         $engine = $this->createMock(AppEngine::class);
 
@@ -45,7 +49,7 @@ class EngineSetSingleTest extends TestCase
 
         $container = new Container();
 
-        $engineSet = new EngineSet($container, new ModuleSet());
+        $engineSet = new EngineSet($container);
 
         $engineOne = $this->createMock(AppEngine::class);
         $engineTwo = $this->createMock(AppEngine::class);
@@ -79,7 +83,7 @@ class EngineSetSingleTest extends TestCase
             }
         };
 
-        $engineSet = new EngineSet($container, $moduleSet);
+        $engineSet = new EngineSet($container);
         $engineSet->add($engine);
 
         $moduleSet->add($bootstrap);
@@ -114,7 +118,7 @@ class EngineSetSingleTest extends TestCase
             }
         };
 
-        $engineSet = new EngineSet($container, $moduleSet);
+        $engineSet = new EngineSet($container);
         $engineSet->add($engine);
 
         $moduleSet->add($bootstrap);
@@ -122,6 +126,7 @@ class EngineSetSingleTest extends TestCase
 
         $descriptor = $engineSet->resolve(Input::fromString('invalid'));
 
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
         $this->assertSame('not-found', $descriptor->module());
         $this->assertSame(NotFoundCommand::class . '::execute', $descriptor->action());
     }

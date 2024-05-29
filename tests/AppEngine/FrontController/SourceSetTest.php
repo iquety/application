@@ -9,6 +9,7 @@ use Iquety\Application\AppEngine\FrontController\SourceSet;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\Source;
 use Iquety\Application\AppEngine\Action\Input;
+use Iquety\Application\AppEngine\ActionDescriptor;
 use Tests\AppEngine\FrontController\Stubs\Commands\OneCommand;
 use Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory\TwoCommand;
 use Tests\TestCase;
@@ -83,10 +84,12 @@ class SourceSetTest extends TestCase
         ));
 
         $descriptor = $directorySet->getDescriptorTo(Input::fromString('one-command'));
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
         $this->assertSame(OneCommand::class . "::execute", $descriptor->action());
 
         $descriptor = $directorySet->getDescriptorTo(Input::fromString('two-command/param/add'));
         $this->assertNotNull($descriptor);
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
         $this->assertSame(TwoCommand::class . "::execute", $descriptor->action());
     }
 
@@ -100,9 +103,11 @@ class SourceSetTest extends TestCase
         ));
 
         $descriptor = $directorySet->getDescriptorTo(Input::fromString('one-command'));
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
         $this->assertSame(OneCommand::class . "::execute", $descriptor->action());
 
         $descriptor = $directorySet->getDescriptorTo(Input::fromString('sub-directory/two-command'));
+        $this->assertInstanceOf(ActionDescriptor::class, $descriptor);
         $this->assertSame(TwoCommand::class . "::execute", $descriptor->action());
     }
 

@@ -14,6 +14,7 @@ class InputRequestTest extends TestCase
     /**
      * Devolve uma estrutura com 1 arquivo no formato que o PHP recebe
      * os uploads enviados via HTTP
+     * @return array<string,array<string,int|string>>
      */
     private function phpSingleFile(): array
     {

@@ -13,7 +13,10 @@ class ArrayController extends Controller
     {
     }
 
-    /** @SuppressWarnings(PHPMD.ShortVariable) */
+    /**
+     * @SuppressWarnings(PHPMD.ShortVariable)
+     * @return array<int,string>
+     */
     public function execute(Input $input, int $id): array
     {
         return [

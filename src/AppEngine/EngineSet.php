@@ -20,10 +20,8 @@ class EngineSet
 
     private ?AppEngine $mainEngine = null;
 
-    public function __construct(
-        private Container $container,
-        private ModuleSet $moduleSet
-    ) {
+    public function __construct(private Container $container)
+    {
     }
 
     public function add(AppEngine $engine): void
@@ -64,7 +62,7 @@ class EngineSet
     public function resolve(Input $input): ActionDescriptor
     {
         foreach ($this->engineList as $engine) {
-            $response = $engine->resolve($input, $this->moduleSet);
+            $response = $engine->resolve($input);
 
             if ($response !== null) {
                 return $response;
@@ -79,6 +77,7 @@ class EngineSet
         return $this->engineList !== [];
     }
 
+    /** @return array<string,AppEngine> */
     public function toArray(): array
     {
         return $this->engineList;

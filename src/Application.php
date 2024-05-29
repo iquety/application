@@ -44,10 +44,7 @@ class Application
 
         $this->moduleSet = new ModuleSet();
 
-        $this->engineSet = new EngineSet(
-            $this->container,
-            $this->moduleSet()
-        );
+        $this->engineSet = new EngineSet($this->container);
 
         $this->useTimezone(new DateTimeZone('America/Sao_Paulo'));
     }

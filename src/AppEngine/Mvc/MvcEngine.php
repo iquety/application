@@ -36,7 +36,7 @@ class MvcEngine extends AppEngine
             ->setErrorActionClass($bootstrap->getErrorActionClass())
             ->setMainActionClass($bootstrap->getMainActionClass())
             ->setNotFoundActionClass($bootstrap->getNotFoundActionClass())
-            ->addRouter($this->router);
+            ->addRouter($router);
     }
 
     public function resolve(Input $input): ?ActionDescriptor
@@ -89,7 +89,7 @@ class MvcEngine extends AppEngine
     private function router(): Router
     {
         if ($this->container()->has(Router::class) === false) {
-            $this->container()->addSingleton(Router::class, Router::class);
+            $this->container()->addSingleton(Router::class);
         }
 
         if ($this->router !== null) {

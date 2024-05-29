@@ -13,6 +13,7 @@ use Iquety\Injection\Container;
 
 class ApplicationSettersTest extends ApplicationCase
 {
+    /** @return array<string,array<int,mixed>> */
     public function environmentProvider(): array
     {
         $list = [];

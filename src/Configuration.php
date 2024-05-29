@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Iquety\Application;
 
-class Configuration
+final class Configuration
 {
     private static ?Configuration $instance = null;
 

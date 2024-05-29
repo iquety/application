@@ -35,7 +35,7 @@ class ActionExecutor
             $rawResponse = $control->resolveTo(
                 $descriptor->type(),
                 $descriptor->action(),
-                $input->toArray()
+                $this->onlyIocArguments($input)
             );
 
             return $responseFactory->response($rawResponse, HttpStatus::OK);
@@ -46,7 +46,7 @@ class ActionExecutor
             $rawResponse = $control->resolveTo(
                 $this->bootstrap->getActionType(),
                 $action,
-                $input->toArray()
+                $this->onlyIocArguments($input)
             );
 
             return $responseFactory->notFoundResponse($rawResponse);
@@ -62,8 +62,18 @@ class ActionExecutor
             return $control->resolveTo(
                 $this->bootstrap->getActionType(),
                 $action,
-                $input->toArray()
+                $this->onlyIocArguments($input)
             );
         }
+    }
+
+    /** @return array<string,mixed> */
+    private function onlyIocArguments(Input $input): array
+    {
+        return array_filter(
+            $input->toArray(),
+            fn($key) => is_numeric($key) === false,
+            ARRAY_FILTER_USE_KEY
+        );
     }
 }

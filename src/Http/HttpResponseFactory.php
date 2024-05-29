@@ -72,8 +72,8 @@ class HttpResponseFactory
         return $this->response($content, HttpStatus::INTERNAL_SERVER_ERROR);
     }
 
-    /** 
-     * @SuppressWarnings(PHPMD.StaticAccess) 
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
      * @param array<int|string,mixed>|string|ResponseInterface $content
      */
     public function response(array|string|ResponseInterface $content, HttpStatus $status): ResponseInterface

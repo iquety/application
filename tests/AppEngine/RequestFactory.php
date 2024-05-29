@@ -4,15 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\AppEngine;
 
-use Iquety\Application\AppEngine\Input;
-use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\Diactoros\UploadedFile;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\UploadedFileInterface;
-use Psr\Http\Message\UriInterface;
-use Tests\TestCase;
 
 class RequestFactory
 {
@@ -51,6 +45,8 @@ class RequestFactory
      *         'type' => 'image/jpeg'
      *     ],
      * ]
+     * @param array<int|string,mixed> $phpFiles
+     * @return array<string,array<string,mixed>|array<int,array<string,mixed>>>
      */
     private function normalizedFiles(array $phpFiles): array
     {
@@ -61,6 +57,10 @@ class RequestFactory
         return $phpFiles;
     }
 
+    /**
+     * @param array<int|string,mixed> $fileList
+     * @return array<int,array<string,mixed>>
+     */
     private function normalizedInput(array $fileList): array
     {
         $normalizedList = [];
@@ -82,6 +82,10 @@ class RequestFactory
         return $normalizedList;
     }
 
+    /**
+     * @param array<string,mixed> $payload
+     * @param array<int|string,mixed> $uploadedFiles
+     */
     public function makeRequest(
         string $method,
         string $path,
@@ -107,6 +111,10 @@ class RequestFactory
         );
     }
 
+    /**
+     * @param array<string,array<string,mixed>|array<int,array<string,mixed>>> $uploadedFiles
+     * @return array<string,array<int,UploadedFile>>
+     */
     private function makeUploadedFiles(array $uploadedFiles): array
     {
         $structure = [];
@@ -118,6 +126,10 @@ class RequestFactory
         return $structure;
     }
 
+    /**
+     * @param array<string,mixed>|array<int,array<string,mixed>> $fileSet
+     * @return array<int,UploadedFile>
+     */
     private function makeUploadedInput(array $fileSet): array
     {
         $fileList = [];

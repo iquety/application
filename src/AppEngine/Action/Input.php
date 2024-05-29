@@ -27,7 +27,7 @@ class Input
     /** @var array<int|string,float|int|string|FileSet> */
     private array $originalParamList = [];
 
-    /** @var array<int,float|int|string> */
+    /** @var array<int,string> */
     private array $target = [];
 
     public static function fromString(string $string): self
@@ -43,7 +43,7 @@ class Input
 
         $paramList = array_merge(
             $parser->toArray(),
-            $request->getParsedBody(),
+            (array)$request->getParsedBody(),
             $request->getUploadedFiles()
         );
 
@@ -51,8 +51,8 @@ class Input
     }
 
     /**
-     * @param array<int,string> $path
-     * @param array<int|string,float|int|string|array<string,int|string>> $originalParamList
+     * @param array<int,string> $originalPath
+     * @param array<int|string,mixed> $originalParamList
      */
     private function __construct(array $originalPath, array $originalParamList, string $method)
     {
@@ -81,6 +81,7 @@ class Input
         $this->reset();
     }
 
+    /** @param array<int|string,mixed> $paramList */
     public function appendParams(array $paramList): void
     {
         $this->originalParamList = array_merge(
@@ -96,6 +97,7 @@ class Input
         return $this->method;
     }
 
+    /** @return array<int,string> */
     public function getPath(): array
     {
         return $this->path;
@@ -106,6 +108,7 @@ class Input
         return implode('/', $this->path);
     }
 
+    /** @return array<int,string> */
     public function getTarget(): array
     {
         return $this->target;
@@ -151,7 +154,7 @@ class Input
         return $this->paramList[$param] ?? null;
     }
 
-    /** @return array<int|string,Param> */
+    /** @return array<int|string,mixed> */
     public function toArray(): array
     {
         return $this->paramList;
@@ -165,6 +168,7 @@ class Input
         ));
     }
 
+    /** @param array<int,UploadedFileInterface> $fileList */
     private function makeFileSet(array $fileList): FileSet
     {
         $fileSet = new FileSet();

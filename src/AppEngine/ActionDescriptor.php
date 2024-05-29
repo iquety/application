@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Iquety\Application\AppEngine;
 
+use Closure;
+
 class ActionDescriptor
 {
-    /** @param array<int,string|int|float> $params */
     public function __construct(
         private string $actionType,
         private string $bootstrapClass,
-        private string $actionClass,
-        private string $actionMethod
+        private Closure|string $actionClass,
+        private string $actionMethod = ''
     ) {
     }
 
@@ -25,8 +26,12 @@ class ActionDescriptor
         return $this->bootstrapClass;
     }
 
-    public function action(): string
+    public function action(): Closure|string
     {
+        if ($this->actionClass instanceof Closure) {
+            return $this->actionClass;
+        }
+
         return $this->actionClass . '::' . $this->actionMethod;
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Iquety\Application\AppEngine\Mvc;
 
+use Closure;
 use InvalidArgumentException;
 use Iquety\Application\AppEngine\ActionDescriptor;
 use Iquety\Application\AppEngine\Action\Input;
@@ -39,6 +40,12 @@ class MvcSourceHandler implements SourceHandler
 
     public function getDescriptorTo(Input $input): ?ActionDescriptor
     {
+        if ($this->router === null) {
+            throw new RuntimeException(
+                'No router specified'
+            );
+        }
+
         if ($this->hasRoutes() === false) {
             throw new RuntimeException(
                 'There are no registered routes'
@@ -46,7 +53,7 @@ class MvcSourceHandler implements SourceHandler
         }
 
         if ($input->getPath() === []) {
-            return $this->getMainDescriptor($input);
+            return $this->getMainDescriptor();
         }
 
         $this->router->process($input->getMethod(), $input->getPathString());
@@ -132,8 +139,8 @@ class MvcSourceHandler implements SourceHandler
 
     private function makeDescriptor(
         string $bootstrapClass,
-        string $className,
-        $actionName
+        Closure|string $className,
+        string $actionName
     ): ActionDescriptor {
         return new ActionDescriptor(
             Controller::class,

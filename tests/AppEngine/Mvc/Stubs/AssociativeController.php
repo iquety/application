@@ -13,7 +13,10 @@ class AssociativeController extends Controller
     {
     }
 
-    /** @SuppressWarnings(PHPMD.ShortVariable) */
+    /**
+     * @SuppressWarnings(PHPMD.ShortVariable)
+     * @return array<string,mixed>
+     */
     public function execute(Input $input, int $id): array
     {
         return [

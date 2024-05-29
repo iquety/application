@@ -9,7 +9,7 @@ namespace Iquety\Application\AppEngine;
  */
 class UriParser
 {
-    /** @var array<int|string,float|int|string> */
+    /** @var array<int|string,array<int|string,mixed>|float|int|string> */
     private array $paramList = [];
 
     /** @var array<int,string> */
@@ -19,13 +19,12 @@ class UriParser
     {
         $uriData = parse_url($string);
 
-        $pathParams = $this->parsePath($uriData['path'] ?? '');
+        $this->path = $this->parsePath($uriData['path'] ?? '');
 
-        $this->path = $pathParams;
-
-        $queryParams = $this->parseQuery($uriData['query'] ?? '');
-
-        $this->paramList = array_merge($pathParams, $queryParams);
+        $this->paramList = array_merge(
+            $this->path,
+            $this->parseQuery($uriData['query'] ?? '')
+        );
     }
 
     /** @return array<int,string> */
@@ -34,6 +33,7 @@ class UriParser
         return $this->path;
     }
 
+    /** @return array<int|string,array<mixed>|float|int|string> */
     public function toArray(): array
     {
         return array_map(
@@ -42,7 +42,7 @@ class UriParser
         );
     }
 
-    /** @return array<int,float|int|string> */
+    /** @return array<int,string> */
     private function parsePath(string $path): array
     {
         $cleanedPath = trim($path);
@@ -56,7 +56,7 @@ class UriParser
         return explode('/', $cleanedPath);
     }
 
-    /** @return array<string,float|int|string> */
+    /** @return array<int|string,array<int|string,mixed>|string> */
     private function parseQuery(string $queryString): array
     {
         $queryParamList = [];
@@ -66,8 +66,20 @@ class UriParser
         return $queryParamList;
     }
 
-    public function fixTypes(string $value): float|int|string
+    /**
+     * @param array<mixed>|float|int|string $value
+     * @return array<mixed>|float|int|string
+     */
+    public function fixTypes(array|float|int|string $value): array|float|int|string
     {
+        if (is_array($value) === true) {
+            foreach ($value as $key => $subValue) {
+                $value[$key] = $this->fixTypes($subValue);
+            }
+
+            return $value;
+        }
+
         if (is_numeric($value) === false) {
             return $value;
         }

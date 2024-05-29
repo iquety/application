@@ -14,7 +14,10 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ApplicationResponseTest extends ApplicationCase
 {
-    /** @SuppressWarnings(PHPMD.ExcessiveMethodLength) */
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @return array<string,array<int,mixed>>
+     */
     public function makeResponseProvider(HttpMethod $httpMethod): array
     {
         $list = [];
@@ -189,6 +192,7 @@ class ApplicationResponseTest extends ApplicationCase
         return $list;
     }
 
+    /** @return array<string,array<int,mixed>> */
     public function responseProvider(): array
     {
         return array_merge(

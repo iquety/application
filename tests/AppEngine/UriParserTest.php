@@ -9,6 +9,7 @@ use Tests\TestCase;
 
 class UriParserTest extends TestCase
 {
+    /** @return array<float|int|string,array<int,mixed>> */
     public function fromStringProvider(): array
     {
         $list = [];
@@ -93,5 +94,20 @@ class UriParserTest extends TestCase
         $this->assertEquals($paramList, $parser->toArray());
 
         $this->assertEquals($path, implode('/', $parser->getPath()));
+    }
+
+    /** @test */
+    public function fromStringArray(): void
+    {
+        $parser = new UriParser('/test?name[]=one&name[]=1&name[]=1.0');
+
+        $this->assertSame([
+            0 => 'test',
+            'name' => [
+                0 => 'one',
+                1 => 1,
+                2 => 1.0
+            ]
+        ], $parser->toArray());
     }
 }

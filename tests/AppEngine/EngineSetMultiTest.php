@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\AppEngine;
 
 use Iquety\Application\AppEngine\Action\Input;
+use Iquety\Application\AppEngine\Bootstrap;
 use Iquety\Application\AppEngine\EngineSet;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\FcEngine;
@@ -25,6 +26,7 @@ use Tests\TestCase;
  */
 class EngineSetMultiTest extends TestCase
 {
+    /** @return array<string,array<int,mixed>> */
     public function requestToMultiProvider(): array
     {
         $list = [];
@@ -74,9 +76,18 @@ class EngineSetMultiTest extends TestCase
 
     // toolset
 
+    /**
+     * @return object{
+     *   'engineSet':EngineSet,
+     *   'fcBootstrapOne':Bootstrap,
+     *   'fcBootstrapTwo':Bootstrap,
+     *   'mvcBootstrapOne':Bootstrap,
+     *   'mvcBootstrapTwo':Bootstrap
+     * }
+     */
     private function makeEngineSet(Container $container, ModuleSet $moduleSet): object
     {
-        $engineSet = new EngineSet($container, $moduleSet);
+        $engineSet = new EngineSet($container);
 
         $engineOne = $this->makeFcEngine($container, $moduleSet, [
             $fcBootstrapOne = $this->makeFcBootstrapOne(),
@@ -100,6 +111,7 @@ class EngineSetMultiTest extends TestCase
         ];
     }
 
+    /** @param array<int,Bootstrap> $modulesBootstrap */
     private function makeFcEngine(Container $container, ModuleSet $moduleSet, array $modulesBootstrap): FcEngine
     {
         $engine = new FcEngine();
@@ -115,6 +127,7 @@ class EngineSetMultiTest extends TestCase
         return $engine;
     }
 
+    /** @param array<int,Bootstrap> $modulesBootstrap */
     private function makeMvcEngine(Container $container, ModuleSet $moduleSet, array $modulesBootstrap): MvcEngine
     {
         $engine = new MvcEngine();

@@ -107,6 +107,7 @@ class ApplicationFcDepsTest extends ApplicationCase
         $instance->run();
     }
 
+    /** @return array<string,array<int,mixed>> */
     public function bootstrapHttpFactoryProvider(): array
     {
         $list = [];

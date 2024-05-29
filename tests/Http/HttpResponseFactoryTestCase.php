@@ -39,7 +39,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
         $this->assertSame(HttpStatus::OK->value, $response->getStatusCode());
     }
 
-    /** @return array<string,array<HttpStatus|string>> */
+    /** @return array<string,array<int,mixed>> */
     public function contentProvider(): array
     {
         $statusList = [
@@ -176,6 +176,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
         $this->assertSame('text/html', $response->getHeaderLine('Content-type'));
     }
 
+    /** @return array<string,array<int,mixed>> */
     public function contentAcceptProvider(): array
     {
         $list = [];
@@ -251,6 +252,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
         $this->assertSame($responseBody, (string)$response->getBody());
     }
 
+    /** @return array<string,array<int,mixed>> */
     public function contentNotFoundProvider(): array
     {
         $list = [];
@@ -322,6 +324,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
         $this->assertSame($responseBody, (string)$response->getBody());
     }
 
+    /** @return array<string,array<int,mixed>> */
     public function contentErrorProvider(): array
     {
         $list = [];

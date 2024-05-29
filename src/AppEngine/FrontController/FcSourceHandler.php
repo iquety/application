@@ -50,7 +50,7 @@ class FcSourceHandler implements SourceHandler
         }
 
         if ($input->getPath() === []) {
-            return $this->getMainDescriptor($input);
+            return $this->getMainDescriptor();
         }
 
         foreach ($this->getSourceList() as $sourceSet) {
@@ -122,7 +122,7 @@ class FcSourceHandler implements SourceHandler
     private function makeDescriptor(
         string $bootstrapClass,
         string $className,
-        $actionName
+        string $actionName
     ): ActionDescriptor {
         return new ActionDescriptor(
             Command::class,

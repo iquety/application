@@ -6,6 +6,7 @@ namespace Iquety\Application\AppEngine;
 
 class ModuleSet
 {
+    /** @var array<string,Bootstrap> */
     private array $moduleList = [];
 
     public function add(Bootstrap $moduleBootstrap): void
@@ -18,6 +19,7 @@ class ModuleSet
         return $this->moduleList[$moduleBootstrapClass] ?? null;
     }
 
+    /** @return array<string,Bootstrap> */
     public function toArray(): array
     {
         return $this->moduleList;

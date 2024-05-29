@@ -48,7 +48,7 @@ class SourceSet
         return $this->sourceList !== [];
     }
 
-    /** @var array<string,namespace> */
+    /** @return array<string,Source> */
     public function toArray(): array
     {
         return $this->sourceList;
