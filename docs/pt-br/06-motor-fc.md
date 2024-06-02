@@ -1,6 +1,6 @@
-# Mecanismo FrontController
+# Motor FrontController
 
-[◂ Mecanismo MVC](05-motor-mvc.md) | [Índice da documentação](indice.md) | [Implementando módulos ▸](07-modulos.md)
+[◂ Motor MVC](05-motor-mvc.md) | [Índice da documentação](indice.md) | [Implementando módulos ▸](07-modulos.md)
 -- | -- | --
 
 ## 1. Bootstrap
@@ -117,5 +117,5 @@ Outra diferença é que, como não existe um roteador, será necessário especif
 qual verbo HTTP estará habilitado a executar o comando. Isso é feito na implementação
 do comando, usando o método `forMethod` para definir o verbo adequado.
 
-[◂ Mecanismo MVC](05-motor-mvc.md) | [Índice da documentação](indice.md) | [Implementando módulos ▸](07-modulos.md)
+[◂ Motor MVC](05-motor-mvc.md) | [Índice da documentação](indice.md) | [Implementando módulos ▸](07-modulos.md)
 -- | -- | --

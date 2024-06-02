@@ -1,6 +1,6 @@
-# Mecanismo MVC
+# Motor MVC
 
-[◂ Mecanismos](04-motores.md) | [Índice da documentação](indice.md) | [Mecanismo FrontController ▸](06-motor-fc.md)
+[◂ Motores](04-motores.md) | [Índice da documentação](indice.md) | [Motor FrontController ▸](06-motor-fc.md)
 -- | -- | --
 
 ## 1. Bootstrap
@@ -143,5 +143,5 @@ public function execute(Input $input, int $id, HttpFactory $factory): ResponseIn
 }
 ```
 
-[◂ Mecanismos](04-motores.md) | [Índice da documentação](indice.md) | [Mecanismo FrontController ▸](06-motor-fc.md)
+[◂ Motores](04-motores.md) | [Índice da documentação](indice.md) | [Motor FrontController ▸](06-motor-fc.md)
 -- | -- | --

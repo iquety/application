@@ -1,6 +1,6 @@
-# Mecanismos
+# Motores
 
-[◂ O timezone](03-timezone.md) | [Índice da documentação](indice.md) | [Mecanismo MVC ▸](05-motor-mvc.md)
+[◂ O timezone](03-timezone.md) | [Índice da documentação](indice.md) | [Motor MVC ▸](05-motor-mvc.md)
 -- | -- | --
 
 Nesta biblioteca, chamamos de **"motor"** a forma como as requisições do
@@ -27,5 +27,5 @@ $app->sendResponse($response);
 O **Bootstrap** conterá a implementação necessária para que o motor desejado
 encontre os Controladores (Mvc) e os Comandos (FrontController).
 
-[◂ O timezone](03-timezone.md) | [Índice da documentação](indice.md) | [Mecanismo MVC ▸](05-motor-mvc.md)
+[◂ O timezone](03-timezone.md) | [Índice da documentação](indice.md) | [Motor MVC ▸](05-motor-mvc.md)
 -- | -- | --

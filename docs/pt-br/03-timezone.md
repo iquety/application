@@ -1,6 +1,6 @@
 # O timezone
 
-[◂ Modo de execução](02-modo-de-execucao.md) | [Índice da documentação](indice.md) | [Mecanismos ▸](04-motores.md)
+[◂ Modo de execução](02-modo-de-execucao.md) | [Índice da documentação](indice.md) | [Motores ▸](04-motores.md)
 -- | -- | --
 
 O timezone é usado para controlar a forma como o tempo será calculado na aplicação.
@@ -16,5 +16,5 @@ $app = Application::instance();
 $app->useTimezone(new DateTimeZone('America/Vancouver'));
 ```
 
-[◂ Modo de execução](02-modo-de-execucao.md) | [Índice da documentação](indice.md) | [Mecanismos ▸](04-motores.md)
+[◂ Modo de execução](02-modo-de-execucao.md) | [Índice da documentação](indice.md) | [Motores ▸](04-motores.md)
 -- | -- | --

@@ -6,7 +6,7 @@
 ## 1. Registering dependencies
 
 The library was implemented to favor the use of Dependency Injection.
-The ideal place to inject all dependencies is in the [application bootstrap (in the `index.php` file)](01-instanciando.md).
+The ideal place to inject all dependencies is in the [application bootstrap (in the `index.php` file)](01-instantiating.md).
 
 Good use of dependencies should follow the principle of "programming for interfaces 
 and not for implementations". Therefore, a good practice is to link an implementation 
@@ -34,7 +34,7 @@ manufactured when `HttpFactory` is invoked.
 
 ## 2. Using Dependency Injection
 
-Both the [MVC](05-mecanismo-mvc.md) and [FrontController](06-mecanismo-fc.md) engines
+Both the [MVC](05-mvc-engine.md) and [FrontController](06-fc-engine.md) engines
 have Inversion of Control in Controllers and Commands, respectively. This means 
 that adding an argument whose type corresponds to an interface, registered in a 
 bootstrap, will be automatically resolved and available for use when executing 
@@ -57,8 +57,8 @@ method.
 
 ## 3. Invoking manually
 
-Just like Inversion of Control, the [MVC](05-mecanismo-mvc.md) and 
-[FrontController](06-mecanismo-fc.md) mechanisms allow manual invocation of 
+Just like Inversion of Control, the [MVC](05-mvc-engine.md) and 
+[FrontController](06-fc-engine.md) mechanisms allow manual invocation of 
 dependencies. This can be done through the `make` method, present in Controllers 
 and Commands, respectively:
 

@@ -1,6 +1,6 @@
 # Implementando módulos
 
-[◂ Mecanismo FrontController](06-motor-fc.md) | [Índice da documentação](indice.md) | [Arquitetura Hexagonal ▸](09-arquitetura-hexagonal.md)
+[◂ Motor FrontController](06-motor-fc.md) | [Índice da documentação](indice.md) | [Arquitetura Hexagonal ▸](09-arquitetura-hexagonal.md)
 -- | -- | --
 
 Além do bootstrap principal, definido com `bootApplication`, é possível 
@@ -30,5 +30,5 @@ O bootstrap deverá ser implementado com base em um motor previamente inicializa
 com `bootEngine`. No caso acima, ambos `MvcEngine` e `FcEngine` foram inicializados,
 possibilitando adicionar módulos dos tipos `MvcBootstrap` e `FcBootstrap`.
 
-[◂ Mecanismo FrontController](06-motor-fc.md) | [Índice da documentação](indice.md) | [Arquitetura Hexagonal ▸](09-arquitetura-hexagonal.md)
+[◂ Motor FrontController](06-motor-fc.md) | [Índice da documentação](indice.md) | [Arquitetura Hexagonal ▸](09-arquitetura-hexagonal.md)
 -- | -- | --
