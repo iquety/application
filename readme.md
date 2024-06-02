@@ -10,32 +10,34 @@
 
 ## Synopsis
 
-**Freep Application** is a library for creating modular applications using MVC and Hexagonal (Ports and Adapters) architectural patterns.
+**Iquety Application** is a library for creating modular applications using
+MVC, FrontController and Hexagonal Architecture (Ports and Adapters) architectural patterns.
 
 ```bash
-composer require ricardopedias/freep-application
+composer require iquety/application
 ```
 
-### Application
+### About the Application
 
-* Provides separation of concerns (SOC), using bootable modules;
-* Based on the MVC architectural pattern;
-* Extremely flexible dependencies, using Hexagonal architecture (Ports and Adapters).
+- Separation of concerns, using bootable modules;
+- Extremely flexible dependencies, using Hexagonal architecture (Ports and Adapters);
+- Multiple mechanisms to manage user inputs (MVC or FrontController).
 
-### Module
+### About each Module
 
-- Can define your own routes;
-- Can define your own dependencies;
-- Its dependencies are fabricated only if a module route is accessed;
-- Loads Controllers and Policies using the Inversion of Control pattern.
+- May have the most appropriate mechanism (MVC or FrontController);
+- You can define your own routes;
+- You can define your own dependencies;
+- Its dependencies are only manufactured if a module route is accessed;
+- The invocation of actions (Controller/Command) is done using Inversion of Control.
 
 For detailed information, see [Documentation Summary](docs/en/index.md).
 
-## Characteristics
+## Library Features
 
-- Made for PHP 8.0 or higher;
-- Codified with best practices and maximum quality;
-- Well documented and IDE friendly;
+- Made for PHP 8.3 or higher;
+- Coded with good practices and maximum quality;
+- Well documented and friendly to IDEs;
 - Made with TDD (Test Driven Development);
 - Implemented with unit tests using PHPUnit;
 - Made with :heart: &amp; :coffee:.

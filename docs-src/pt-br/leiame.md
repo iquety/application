@@ -1,4 +1,4 @@
-# Freep Application
+# Iquety Application
 
 ![PHP Version](https://img.shields.io/badge/php-%5E8.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-blue)
@@ -10,29 +10,30 @@
 
 ## Sinopse
 
-O **Iquety Aplication** é uma biblioteca para a criação de aplicações modulares usando 
+O **Iquety Application** é uma biblioteca para a criação de aplicações modulares usando 
 padrões arquiteturais MVC, FrontController e Arquitetura Hexagonal (Ports and Adapters).
 
 ```bash
 composer require iquety/application
 ```
 
-### Aplicação
+### Sobre a Aplicação
 
-* Proporciona a separação de interesses, usando módulos bootáveis;
-* Baseada no padrão arquitetural MVC;
-* Dependências extremamente flexíveis, usando arquitetura Hexagonal (Ports and Adapters).
+- Separação de interesses, usando módulos bootáveis;
+- Dependências extremamente flexíveis, usando arquitetura Hexagonal (Ports and Adapters);
+- Múltiplos mecanismos para gerir entradas do usuário (MVC ou FrontController).
 
-### Módulo
+### Sobre cada Módulo
 
+- Pode possuir o mecanismo mais adequado (MVC ou FrontController);
 - Pode definir suas próprias rotas;
 - Pode definir suas próprias dependências;
 - Suas dependências são fabricadas apenas se uma rota do módulo for acessada;
-- Carrega Controladores e Policies usando o padrão de Inversão de Controle.
+- A invocação das ações (Controller/Command) é feita usando Inversão de Controle.
 
 Para informações detalhadas, consulte o [Sumário da Documentação](indice.md).
 
-## Características
+## Características da Biblioteca
 
 - Feito para o PHP 8.3 ou superior;
 - Codificado com boas práticas e máxima qualidade;

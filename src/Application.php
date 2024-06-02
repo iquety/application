@@ -94,6 +94,7 @@ class Application
         return $this->environment;
     }
 
+    /** @see https://www.php.net/manual/en/timezones.php */
     public function useTimezone(DateTimeZone $timezone): void
     {
         $this->timezone = $timezone;
