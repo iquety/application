@@ -9,7 +9,7 @@ PHP_CONTAINER='iquety-app'
 
 docker-compose up -d
 
-if [ "$1" == "analyse" ]; then
+if [ "$1" == "analyse" ] || [ "$1" == "lint" ]; then
     docker run \
         -e RUN_LOCAL=true \
         -e VALIDATE_MARKDOWN=true \
@@ -18,6 +18,10 @@ if [ "$1" == "analyse" ]; then
         -v "$(pwd)/docs/.lint.yml":"/action/lib/.automation/docs/.lint.yml" \
         -v "$(pwd)":"/tmp/lint" github/super-linter
 fi
+
+if [ "$1" == "lint" ]; then
+    exit;
+fi 
 
 if [ "$1" == "bash" ]; then
     docker exec -it $PHP_CONTAINER bash

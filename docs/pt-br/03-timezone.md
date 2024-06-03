@@ -8,7 +8,7 @@ Muito útil para diversos fins, principalmente para armazenar dados no banco ou
 enviar aventos para implementações de rotinas que façam uso de mensagens.
 
 Quando uma nova aplicação é instanciada, o timezone padrão é **'America/Sao_Paulo'**.
-Mas é possível mudar isso através do método `useTimezone`: 
+Mas é possível mudar isso através do método `useTimezone`:
 
 ```php
 $app = Application::instance();

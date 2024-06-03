@@ -5,18 +5,18 @@
 
 ## 1. Infrastructure
 
-If [Docker](https://www.docker.com/) is installed on your computer, you do not 
+If [Docker](https://www.docker.com/) is installed on your computer, you do not
 need to have Composer or PHP installed.
 
-To use Composer and the code quality libraries, use the `./composer` script, 
-located in the root of this repository. This script is actually a bridge to all 
+To use Composer and the code quality libraries, use the `./composer` script,
+located in the root of this repository. This script is actually a bridge to all
 Composer commands, running them through Docker.
 
 ## 2. Quality control
 
 ### 2.1. Tools
 
-For development, tools for unit testing and static analysis were used. 
+For development, tools for unit testing and static analysis were used.
 All configured to the maximum level of demand.
 
 These are the following tools:
@@ -34,7 +34,7 @@ To analyze the implemented code and collect feedback from the tools, use:
 ./composer analyse
 ```
 
-The above command runs all static analysis tools at the same time. If necessary, 
+The above command runs all static analysis tools at the same time. If necessary,
 they can be carried out individually:
 
 ```bash
@@ -62,12 +62,12 @@ To run the unit tests, use:
 
 ## 3. Documentation
 
-Good navigation is essential for documentation to be easy to use. With this in 
-mind, the tool [Iquety Docmap](https://github.com/iquety/docmap) was used to 
+Good navigation is essential for documentation to be easy to use. With this in
+mind, the tool [Iquety Docmap](https://github.com/iquety/docmap) was used to
 generate a pleasant navigation menu on all documentation pages.
 
-Editable documents are located in the `docs-src` directory. After adding or 
-editing any documents contained there, simply run the command below to generate 
+Editable documents are located in the `docs-src` directory. After adding or
+editing any documents contained there, simply run the command below to generate
 browsable documentation in the `docs` directory:
 
 ```bash

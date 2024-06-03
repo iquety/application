@@ -24,7 +24,7 @@ $response = $app->run();
 $app->sendResponse($response);
 ```
 
-**Bootstrap** will contain the necessary implementation for the desired engine 
+**Bootstrap** will contain the necessary implementation for the desired engine
 to find the Controllers (Mvc) and Commands (FrontController).
 
 [◂ The timezone](03-timezone.md) | [Documentation index](index.md) | [MVC engine ▸](05-mvc-engine.md)

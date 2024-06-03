@@ -5,8 +5,8 @@
 ## 1. Bootstrap
 
 Basicamente o Front Controller é composto por um Manipulador Web (um controlador
-único) que recebe todas as solicitações do usuário. Também existe uma hierarquia 
-de classes onde cada uma delas representa uma ação a ser executada (objetos de comando). 
+único) que recebe todas as solicitações do usuário. Também existe uma hierarquia
+de classes onde cada uma delas representa uma ação a ser executada (objetos de comando).
 
 Quando o usuário faz uma solicitação `/usuario/editar/22`, por exemplo, o Manipulador Web
 irá procurar na hierarquia de comandos. Se a classe Usuario/Editar for encontrada,
@@ -53,8 +53,8 @@ $app->sendResponse($response);
 
 ## 2. Adicionando dependências
 
-No método `bootDependencies` deve-se configurar as dependências que estarão 
-disponíveis para a execução dos controladores. 
+No método `bootDependencies` deve-se configurar as dependências que estarão
+disponíveis para a execução dos controladores.
 
 ```php
 public function bootDependencies(Container $container): void
@@ -65,7 +65,7 @@ public function bootDependencies(Container $container): void
 }
 ```
 
-Tudo o que for declarado aqui estará disponível para a Inversão de Controle, e 
+Tudo o que for declarado aqui estará disponível para a Inversão de Controle, e
 poderá ser invocado como argumento no método `execute` dos comandos.
 
 ```php
@@ -84,7 +84,7 @@ class UserCommand extends Command
 
 ### 3.1. Executando Comandos
 
-No método `bootNamespaces`, deve-se configurar os namespaces liberados para 
+No método `bootNamespaces`, deve-se configurar os namespaces liberados para
 o Manipulador Web procurar por comandos.
 
 ```php
@@ -94,8 +94,8 @@ public function bootNamespaces(SourceSet &$sourceSet): void
 }
 ```
 
-No exemplo acima, todos os comandos cujo namespace comece com 
-'MyCommands\SubDirectory' serão considerados aptos para ser executados como 
+No exemplo acima, todos os comandos cujo namespace comece com
+'MyCommands\SubDirectory' serão considerados aptos para ser executados como
 comandos do FrontController.
 
 ### 3.2. Anatomia de um comando

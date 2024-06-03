@@ -4,17 +4,17 @@
 
 ## 1. Dependências fornecidas
 
-Além de possibilitar que o desenvolvedor implemente suas próprias dependências, 
+Além de possibilitar que o desenvolvedor implemente suas próprias dependências,
 é possível usar os adaptadores fornecidos pela própria biblioteca, disponíveis no
 namespace `Iquety\Application\Adapter`.
 
-As dependências fornecidas pela biblioteca são implementadas conforme as 
-[interfaces da PSR](https://www.php-fig.org/) para manter o máximo possível de 
+As dependências fornecidas pela biblioteca são implementadas conforme as
+[interfaces da PSR](https://www.php-fig.org/) para manter o máximo possível de
 interoperabilidade e flexibilidade.
 
 ## 2. Mensagens Http
 
-No namespace `Iquety\Application\Adapter\HttpFactory`, encontram-se adaptadores 
+No namespace `Iquety\Application\Adapter\HttpFactory`, encontram-se adaptadores
 para usar implementações da PSR 7 e 17.
 
 Atualmente, são disponibilizadas as 3 implementações mais famosas:
@@ -25,7 +25,7 @@ Atualmente, são disponibilizadas as 3 implementações mais famosas:
 
 ## 3. Gerenciamento de Sessões
 
-No namespace `Iquety\Application\Adapter\Session`, encontram-se adaptadores 
+No namespace `Iquety\Application\Adapter\Session`, encontram-se adaptadores
 para gerenciamento de sessões.
 
 - MemorySession (Gerenciador falso para implementar testes);

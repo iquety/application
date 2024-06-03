@@ -23,7 +23,7 @@ $response = $app->run();
 $app->sendResponse($response);
 ```
 
-**Bootstrap** will contain the necessary implementation for the desired engine 
+**Bootstrap** will contain the necessary implementation for the desired engine
 to find the Controllers (Mvc) and Commands (FrontController).
 
 --page-nav--

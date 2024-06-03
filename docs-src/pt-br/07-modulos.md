@@ -2,7 +2,7 @@
 
 --page-nav--
 
-Além do bootstrap principal, definido com `bootApplication`, é possível 
+Além do bootstrap principal, definido com `bootApplication`, é possível
 inicializar módulos adicionais usando `bootModule`:
 
 ```php
@@ -22,7 +22,7 @@ $response = $app->run();
 $app->sendResponse($response);
 ```
 
-Separar a aplicação em módulos fornece uma forma poderosa de Separação de Preocupações 
+Separar a aplicação em módulos fornece uma forma poderosa de Separação de Preocupações
 (SOC), bem como favorece o uso de Contextos Delimitados como sugere o Domain-Driven Design.
 
 O bootstrap deverá ser implementado com base em um motor previamente inicializado
