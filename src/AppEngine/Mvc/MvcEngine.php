@@ -67,25 +67,6 @@ class MvcEngine extends AppEngine
         return $actionDescriptor;
     }
 
-    // private function resolveClosure(Closure $routeAction): ResponseInterface
-    // {
-    //     $result = call_user_func($routeAction);
-
-    //     $factory = $this->responseFactory();
-
-    //     if ($result === null) {
-    //         return $factory->response('');
-    //     }
-
-    //     if ($result instanceof ResponseInterface) {
-    //         return $result;
-    //     }
-
-    //     return is_string($result)
-    //         ? $factory->response($result)
-    //         : $factory->jsonResponse((array)$result);
-    // }
-
     private function router(): Router
     {
         if ($this->container()->has(Router::class) === false) {

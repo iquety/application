@@ -46,7 +46,7 @@ class MvcSourceHandler implements SourceHandler
             );
         }
 
-        if ($this->hasRoutes() === false) {
+        if ($input->getPathString() !== '' && $this->hasRoutes() === false) {
             throw new RuntimeException(
                 'There are no registered routes'
             );

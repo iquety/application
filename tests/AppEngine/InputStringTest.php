@@ -10,6 +10,31 @@ use Tests\TestCase;
 /** @SuppressWarnings(PHPMD.StaticAccess) */
 class InputStringTest extends TestCase
 {
+    public function homePathProvider(): array
+    {
+        $list = [];
+
+        $list['empty'] = [''];
+        $list['one space'] = [' '];
+        $list['any spaces'] = ['   '];
+        $list['bar'] = ['/'];
+        $list['two bars'] = ['//'];
+
+        return $list;
+    }
+
+    /**
+     * @test
+     * @dataProvider homePathProvider
+     */
+    public function fromEmpty(string $path): void
+    {
+        $input = Input::fromString($path);
+
+        $this->assertSame('', $input->getPathString());
+        $this->assertSame([], $input->getPath());
+    }
+
     /** @test */
     public function fromString(): void
     {

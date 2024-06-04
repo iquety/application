@@ -23,6 +23,39 @@ class MvcEngineTest extends TestCase
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
+    public function resolveHome(): void
+    {
+        $container = new Container();
+        $moduleSet = new ModuleSet();
+
+        $engine = new MvcEngine();
+        $engine->useContainer($container);
+        $engine->useModuleSet($moduleSet);
+
+        $bootstrap = new class extends MvcBootstrap {
+            public function bootDependencies(Container $container): void
+            {
+                $container->addSingleton('signature-test', fn() => 'teste');
+            }
+
+            public function bootRoutes(Router &$router): void
+            {
+                // nenhuma rota setada
+            }
+        };
+
+        $engine->boot($bootstrap);
+
+        $descriptor = $engine->resolve(Input::fromString(''));
+
+        $this->assertSame(MainController::class . '::execute', $descriptor->action());
+    }
+
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function resolveException(): void
     {
         $this->expectException(RuntimeException::class);
@@ -49,7 +82,7 @@ class MvcEngineTest extends TestCase
 
         $engine->boot($bootstrap);
 
-        $engine->resolve(Input::fromString(''));
+        $engine->resolve(Input::fromString('xxxxxx'));
     }
 
     /**
