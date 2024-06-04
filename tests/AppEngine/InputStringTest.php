@@ -10,6 +10,7 @@ use Tests\TestCase;
 /** @SuppressWarnings(PHPMD.StaticAccess) */
 class InputStringTest extends TestCase
 {
+    /** @return array<string,array<int,mixed>> */
     public function homePathProvider(): array
     {
         $list = [];

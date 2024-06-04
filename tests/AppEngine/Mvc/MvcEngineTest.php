@@ -48,6 +48,7 @@ class MvcEngineTest extends TestCase
 
         $descriptor = $engine->resolve(Input::fromString(''));
 
+        $this->assertNotNull($descriptor);
         $this->assertSame(MainController::class . '::execute', $descriptor->action());
     }
 
