@@ -6,5 +6,8 @@ namespace Iquety\Application\AppEngine\Mvc\Controller;
 
 class MainController extends Controller
 {
-    # code...
+    public function execute(): string
+    {
+        return 'Iquety Framework';
+    }
 }
