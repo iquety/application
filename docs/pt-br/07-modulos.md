@@ -15,8 +15,8 @@ $app->bootEngine(new FcEngine());
 $app->bootApplication(new MainMvcBootstrap());
 
 $app->bootModule(new ModuleOneMvcBootstrap());
-$app->bootModule(new ModulaTwoMvcBootstrap());
-$app->bootModule(new ModularThreeFcBootstrap());
+$app->bootModule(new ModuleTwoMvcBootstrap());
+$app->bootModule(new ModuleThreeFcBootstrap());
 
 $response = $app->run();
 
