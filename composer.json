@@ -7,9 +7,8 @@
     "require": {
         "php": "^8.3.0",
         "guzzlehttp/guzzle": "^7.5",
-        "iquety/console": "dev-main",
+        "iquety/console": "2.0.0",
         "iquety/injection": "dev-main",
-        "iquety/prospection": "dev-main",
         "iquety/routing": "dev-main",
         "laminas/laminas-diactoros": "^2.17",
         "nyholm/psr7-server": "^1.0",
@@ -22,7 +21,7 @@
     "require-dev": {
         "behat/behat": "^3.14",
         "codacy/coverage": "dev-master",
-        "iquety/docmap": "dev-main",
+        "iquety/docmap": "2.*",
         "phpmd/phpmd": "@stable",
         "phpstan/phpstan": "^1.8",
         "phpunit/phpunit": "^9",

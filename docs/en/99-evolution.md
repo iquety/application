@@ -25,6 +25,7 @@ These are the following tools:
 - [PHP Stan](https://phpstan.org)
 - [PHP Code Sniffer](https://github.com/squizlabs/PHP_CodeSniffer)
 - [PHP MD](https://phpmd.org)
+- [Super Linter](https://github.com/super-linter/super-linter)
 
 ### 2.2. Static analysis
 
@@ -36,6 +37,11 @@ To analyze the implemented code and collect feedback from the tools, use:
 
 The above command runs all static analysis tools at the same time. If necessary,
 they can be carried out individually:
+
+```bash
+# Run documentation analysis
+./composer lint
+```
 
 ```bash
 # Run the Mess Detector

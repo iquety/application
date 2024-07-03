@@ -25,6 +25,7 @@ São as seguintes ferramentas:
 - [PHP Stan](https://phpstan.org)
 - [PHP Code Sniffer](https://github.com/squizlabs/PHP_CodeSniffer)
 - [PHP MD](https://phpmd.org)
+- [Super Linter](https://github.com/super-linter/super-linter)
 
 ### 2.2. Análise estática
 
@@ -36,6 +37,11 @@ Para fazer a análise do código implementado e colher feedback das ferramentas,
 
 O comando acima executa todas as ferramentas de análise estática ao mesmo tempo.
 Caso seja necessário, é possível executá-las de forma individual:
+
+```bash
+# Executa a análise da documentação
+./composer lint
+```
 
 ```bash
 # Executa o Mess Detector
