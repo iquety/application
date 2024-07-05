@@ -98,13 +98,12 @@ instância de `DateTimeImmutable`, a data será aplicada no evento que será cri
 > **Importante:** O valor de retorno sempre deve ser um evento do mesmo tipo,
 sendo que a impossibilidade de se fabricar um novo evento deve disparar uma exceção.
 
-> **Mais importante ainda:** Este método pode ser sobrescrito para favorecer
-retrocompatibilidades de eventos. Caso a implementação dos valores de um evento
-existente precisem mudar, seja por uma evolução no sistema ou por uma correção
-necessária, este método deverá garantir o máximo possível de retrocompatibilidade
-com os dados implementados em versões anteriores. Isso é necessário para garantir
-que módulos ou subsistemas que ainda não se atualizaram, possam continuar enviando
-eventos, mesmo que incompletos.
+Este método pode ser sobrescrito para favorecer retrocompatibilidades de eventos.
+Caso a implementação dos valores de um evento existente precisem mudar, seja por
+uma evolução no sistema ou por uma correção necessária, este método deverá garantir
+o máximo possível de retrocompatibilidade com os dados implementados em versões
+anteriores. Isso é necessário para garantir que módulos ou subsistemas que ainda
+não se atualizaram, possam continuar enviando eventos, mesmo que incompletos.
 
 ```php
 /** @param array<string,mixed> $values */

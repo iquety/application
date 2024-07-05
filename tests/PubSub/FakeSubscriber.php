@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\PubSub;
 
-use Iquety\Application\AppEngine\PubSub\Subscriber;
+use Iquety\Application\PubSub\Subscriber;
 use Iquety\PubSub\Event\Event;
 
 /** @SuppressWarnings(PHPMD.StaticAccess) */

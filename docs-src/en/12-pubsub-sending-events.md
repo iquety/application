@@ -98,12 +98,12 @@ that will be created.
 > **Important:** The return value must always be an event of the same type, and
 the impossibility of creating a new event must trigger an exception.
 
-> **Most importantly:** This method can be overridden to favor event backward
-compatibility. If the implementation of the values ​​of an existing event needs to
-change, whether due to an evolution in the system or a necessary correction,
-this method must guarantee the maximum possible backward compatibility with data
-implemented in previous versions. This is necessary to ensure that modules or
-subsystems that have not yet updated can continue sending events, even if incomplete.
+This method can be overridden to favor event backward compatibility. If the
+implementation of the values ​​of an existing event needs to change, whether due
+to an evolution in the system or a necessary correction, this method must guarantee
+the maximum possible backward compatibility with data implemented in previous
+versions. This is necessary to ensure that modules or subsystems that have not
+yet updated can continue sending events, even if incomplete.
 
 ```php
 /** @param array<string,mixed> $values */
@@ -204,8 +204,7 @@ class UserRegistered implements Event
 
 Both implementations, both [Command (FcEngine)](06-fc-engine.md) and
 [Controller (MvcEngine)](05-mvc-engine.md) have the `publish` method to send
-events to the [ registered subscribers](13-pubsub-receiving-events.md).
-
+events to the [registered subscribers](13-pubsub-receiving-events.md).
 
 ```php
 // UserController.php

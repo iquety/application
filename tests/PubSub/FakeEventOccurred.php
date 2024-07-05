@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests\PubSub;
 
 use DateTimeImmutable;
-use Iquety\PubSub\Event\Event;
+use Iquety\Application\PubSub\DomainEvent;
 
-class FakeEventOccurred extends Event
+class FakeEventOccurred extends DomainEvent
 {
     public function __construct(
         private string $title,
