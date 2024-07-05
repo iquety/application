@@ -11,8 +11,10 @@ use Iquety\Application\AppEngine\AppEngine;
 use Iquety\Application\AppEngine\Bootstrap;
 use Iquety\Application\AppEngine\EngineSet;
 use Iquety\Application\AppEngine\ModuleSet;
+use Iquety\Application\AppEngine\PublisherSet;
 use Iquety\Application\Http\HttpDependencies;
 use Iquety\Injection\Container;
+use Iquety\PubSub\Publisher\EventPublisher;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
@@ -36,6 +38,8 @@ class Application
 
     private ModuleSet $moduleSet;
 
+    private PublisherSet $publisherSet;
+
     private DateTimeZone $timezone;
 
     private function __construct()
@@ -43,6 +47,8 @@ class Application
         $this->container = new Container();
 
         $this->moduleSet = new ModuleSet();
+
+        $this->publisherSet = new PublisherSet();
 
         $this->engineSet = new EngineSet($this->container);
 
@@ -63,6 +69,11 @@ class Application
         static::$instance = new self(); // @phpstan-ignore-line
     }
 
+    public function addSubscriber(string $channel, string $subscriberIdentifier): void
+    {
+        $this->publisherSet->subscribe($channel, $subscriberIdentifier);
+    }
+
     public function bootApplication(Bootstrap $bootstrap): void
     {
         $this->moduleSet->add($bootstrap);
@@ -75,6 +86,11 @@ class Application
         $engine->useModuleSet($this->moduleSet);
 
         $this->engineSet->add($engine);
+    }
+
+    public function bootEventPublisher(EventPublisher $publisher): void
+    {
+        $this->publisherSet->add($publisher);
     }
 
     public function bootModule(Bootstrap $bootstrap): void
@@ -112,25 +128,15 @@ class Application
         return $this->engineSet;
     }
 
+    public function eventPublishers(): PublisherSet
+    {
+        return $this->publisherSet;
+    }
+
     public function moduleSet(): ModuleSet
     {
         return $this->moduleSet;
     }
-
-    public function timezone(): DateTimeZone
-    {
-        return $this->timezone;
-    }
-
-    // public function addSubscriber(string $channel, string $subscriberIdentifier): void
-    // {
-    //     $this->eventPublisher()->subscribe($channel, $subscriberIdentifier);
-    // }
-
-    // public function eventPublisher(): EventPublisher
-    // {
-    //     return SimpleEventPublisher::instance();
-    // }
 
     /** @param mixed ...$arguments */
     public function make(...$arguments): mixed
@@ -204,5 +210,10 @@ class Application
         }
 
         echo (string)$response->getBody();
+    }
+
+    public function timezone(): DateTimeZone
+    {
+        return $this->timezone;
     }
 }

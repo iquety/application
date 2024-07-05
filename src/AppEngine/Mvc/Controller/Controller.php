@@ -6,12 +6,11 @@ namespace Iquety\Application\AppEngine\Mvc\Controller;
 
 use Iquety\Application\AppEngine\Action\Makeable;
 use Iquety\Application\AppEngine\Action\MethodChecker;
-use Iquety\Application\AppEngine\Action\Publisher;
+use Iquety\Application\PubSub\Publisher;
 
 abstract class Controller
 {
     use Makeable;
     use MethodChecker;
-
-    // use Publisher;
+    use Publisher;
 }
