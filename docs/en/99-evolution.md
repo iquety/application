@@ -1,6 +1,6 @@
 # Evolving the library
 
-[◂ Existing dependencies](10-existing-dependencies.md) | [Documentation index ▸](index.md)
+[◂ PubSub: receiving events](13-pubsub-receiving-events.md) | [Documentation index ▸](index.md)
 -- | --
 
 ## 1. Infrastructure
@@ -80,5 +80,5 @@ browsable documentation in the `docs` directory:
 composer docmap
 ```
 
-[◂ Existing dependencies](10-existing-dependencies.md) | [Documentation index ▸](index.md)
+[◂ PubSub: receiving events](13-pubsub-receiving-events.md) | [Documentation index ▸](index.md)
 -- | --

@@ -18,4 +18,7 @@ Welcome to the **Iquety Application** documentation. Here you will find the nece
 - [Implementing modules](07-modules.md)
 - [Hexagonal Architecture](09-hexagonal-architecture.md)
 - [Existing dependencies](10-existing-dependencies.md)
+- [Publish/Subscribe pattern](11-pubsub.md)
+- [PubSub: sending events](12-pubsub-sending-events.md)
+- [PubSub: receiving events](13-pubsub-receiving-events.md)
 - [Evolving the library](99-evolution.md)

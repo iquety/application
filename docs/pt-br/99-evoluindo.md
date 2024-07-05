@@ -1,6 +1,6 @@
 # Evoluindo a biblioteca
 
-[◂ Dependências existentes](10-dependencias-existentes.md) | [Índice da documentação ▸](indice.md)
+[◂ PubSub: recebendo eventos](13-pubsub-recebendo-eventos.md) | [Índice da documentação ▸](indice.md)
 -- | --
 
 ## 1. Infraestrutura
@@ -80,5 +80,5 @@ gerar a documentação navegável no diretório `docs`:
 composer docmap
 ```
 
-[◂ Dependências existentes](10-dependencias-existentes.md) | [Índice da documentação ▸](indice.md)
+[◂ PubSub: recebendo eventos](13-pubsub-recebendo-eventos.md) | [Índice da documentação ▸](indice.md)
 -- | --

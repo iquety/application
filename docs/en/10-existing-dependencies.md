@@ -1,6 +1,6 @@
 # Existing dependencies
 
-[◂ Hexagonal Architecture](09-hexagonal-architecture.md) | [Documentation index](index.md) | [Evolving the library ▸](99-evolution.md)
+[◂ Hexagonal Architecture](09-hexagonal-architecture.md) | [Documentation index](index.md) | [Publish/Subscribe pattern ▸](11-pubsub.md)
 -- | -- | --
 
 ## 1. Provided dependencies
@@ -32,5 +32,5 @@ session management.
 - MemorySession (Fake manager to implement tests);
 - [SynfonyNativeSession](https://github.com/symfony/http-foundation).
 
-[◂ Hexagonal Architecture](09-hexagonal-architecture.md) | [Documentation index](index.md) | [Evolving the library ▸](99-evolution.md)
+[◂ Hexagonal Architecture](09-hexagonal-architecture.md) | [Documentation index](index.md) | [Publish/Subscribe pattern ▸](11-pubsub.md)
 -- | -- | --
