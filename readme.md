@@ -22,7 +22,8 @@ composer require iquety/application
 
 - Separation of concerns, using bootable modules;
 - Extremely flexible dependencies, using Hexagonal architecture (Ports and Adapters);
-- Multiple mechanisms to manage user inputs (MVC or FrontController).
+- Multiple mechanisms to manage user inputs (MVC or FrontController);
+- Publish/Subscribe pattern for event-based architecture.
 
 ### About each Module
 
