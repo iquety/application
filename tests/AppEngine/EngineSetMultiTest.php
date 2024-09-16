@@ -9,8 +9,8 @@ use Iquety\Application\AppEngine\Bootstrap;
 use Iquety\Application\AppEngine\EngineSet;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\FcEngine;
-use Iquety\Application\AppEngine\FrontController\Source;
-use Iquety\Application\AppEngine\FrontController\SourceSet;
+use Iquety\Application\AppEngine\FrontController\CommandSource;
+use Iquety\Application\AppEngine\FrontController\CommandSourceSet;
 use Iquety\Application\AppEngine\ModuleSet;
 use Iquety\Application\AppEngine\Mvc\MvcBootstrap;
 use Iquety\Application\AppEngine\Mvc\MvcEngine;
@@ -151,9 +151,9 @@ class EngineSetMultiTest extends TestCase
                 $container->addSingleton('fc-dep-one', fn() => 'one');
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
-                $sourceSet->add(new Source(
+                $sourceSet->add(new CommandSource(
                     'Tests\AppEngine\FrontController\Stubs\Commands'
                 ));
             }
@@ -168,9 +168,9 @@ class EngineSetMultiTest extends TestCase
                 $container->addSingleton('fc-dep-two', fn() => 'two');
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
-                $sourceSet->add(new Source(
+                $sourceSet->add(new CommandSource(
                     'Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory'
                 ));
             }

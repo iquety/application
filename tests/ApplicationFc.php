@@ -8,9 +8,9 @@ use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\Adapter\HttpFactory\GuzzleHttpFactory;
 use Iquety\Application\Adapter\HttpFactory\NyHolmHttpFactory;
 use Iquety\Application\Adapter\Session\MemorySession;
+use Iquety\Application\AppEngine\FrontController\CommandSource;
+use Iquety\Application\AppEngine\FrontController\CommandSourceSet;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
-use Iquety\Application\AppEngine\FrontController\Source;
-use Iquety\Application\AppEngine\FrontController\SourceSet;
 use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\Session;
 use Iquety\Injection\Container;
@@ -25,9 +25,9 @@ trait ApplicationFc
                 $container->addSingleton('fc-dep-one', fn() => 'one');
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
-                $sourceSet->add(new Source(
+                $sourceSet->add(new CommandSource(
                     'Tests\AppEngine\FrontController\Stubs\Commands'
                 ));
             }
@@ -42,9 +42,9 @@ trait ApplicationFc
                 $container->addSingleton('fc-dep-two', fn() => 'two');
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
-                $sourceSet->add(new Source(
+                $sourceSet->add(new CommandSource(
                     'Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory'
                 ));
             }
@@ -60,9 +60,9 @@ trait ApplicationFc
                 //...
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
-                $sourceSet->add(new Source(
+                $sourceSet->add(new CommandSource(
                     'Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory'
                 ));
             }
@@ -77,9 +77,9 @@ trait ApplicationFc
                 $container->addSingleton(Session::class, fn() => (object)[]);
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
-                $sourceSet->add(new Source(
+                $sourceSet->add(new CommandSource(
                     'Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory'
                 ));
             }
@@ -94,9 +94,9 @@ trait ApplicationFc
                 $container->addSingleton(Session::class, MemorySession::class);
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
-                $sourceSet->add(new Source(
+                $sourceSet->add(new CommandSource(
                     'Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory'
                 ));
             }
@@ -112,9 +112,9 @@ trait ApplicationFc
                 $container->addSingleton(HttpFactory::class, fn() => (object)[]);
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
-                $sourceSet->add(new Source(
+                $sourceSet->add(new CommandSource(
                     'Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory'
                 ));
             }
@@ -130,9 +130,9 @@ trait ApplicationFc
                 $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
-                $sourceSet->add(new Source(
+                $sourceSet->add(new CommandSource(
                     'Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory'
                 ));
             }
@@ -148,9 +148,9 @@ trait ApplicationFc
                 $container->addSingleton(HttpFactory::class, new GuzzleHttpFactory());
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
-                $sourceSet->add(new Source(
+                $sourceSet->add(new CommandSource(
                     'Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory'
                 ));
             }
@@ -166,9 +166,9 @@ trait ApplicationFc
                 $container->addSingleton(HttpFactory::class, new NyHolmHttpFactory());
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
-                $sourceSet->add(new Source(
+                $sourceSet->add(new CommandSource(
                     'Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory'
                 ));
             }

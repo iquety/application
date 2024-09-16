@@ -10,8 +10,8 @@ use Iquety\Application\AppEngine\EngineSet;
 use Iquety\Application\AppEngine\FrontController\Command\NotFoundCommand;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\FcEngine;
-use Iquety\Application\AppEngine\FrontController\Source;
-use Iquety\Application\AppEngine\FrontController\SourceSet;
+use Iquety\Application\AppEngine\FrontController\CommandSource;
+use Iquety\Application\AppEngine\FrontController\CommandSourceSet;
 use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Application\AppEngine\ActionDescriptor;
 use Iquety\Application\AppEngine\ModuleSet;
@@ -35,6 +35,7 @@ class EngineSetSingleTest extends TestCase
 
         $engineSet = new EngineSet($container);
 
+        /** @var AppEngine $engine */
         $engine = $this->createMock(AppEngine::class);
 
         $engineSet->add($engine);
@@ -51,7 +52,10 @@ class EngineSetSingleTest extends TestCase
 
         $engineSet = new EngineSet($container);
 
+        /** @var AppEngine $engineOne */
         $engineOne = $this->createMock(AppEngine::class);
+
+        /** @var AppEngine $engineTwo */
         $engineTwo = $this->createMock(AppEngine::class);
 
         $engineSet->add($engineOne);
@@ -75,9 +79,9 @@ class EngineSetSingleTest extends TestCase
                 $container->addSingleton('signature-test', fn() => 'teste');
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
-                $sourceSet->add(new Source(
+                $sourceSet->add(new CommandSource(
                     'Tests\AppEngine\FrontController\Stubs\Commands'
                 ));
             }
@@ -110,9 +114,9 @@ class EngineSetSingleTest extends TestCase
                 $container->addSingleton('signature-test', fn() => 'teste');
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
-                $sourceSet->add(new Source(
+                $sourceSet->add(new CommandSource(
                     'Tests\AppEngine\FrontController\Stubs\Commands'
                 ));
             }
