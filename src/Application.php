@@ -13,6 +13,8 @@ use Iquety\Application\AppEngine\EngineSet;
 use Iquety\Application\AppEngine\ModuleSet;
 use Iquety\Application\AppEngine\PublisherSet;
 use Iquety\Application\Http\HttpDependencies;
+use Iquety\Application\Http\HttpResponseFactory;
+use Iquety\Application\Http\HttpStatus;
 use Iquety\Injection\Container;
 use Iquety\PubSub\Publisher\EventPublisher;
 use Psr\Http\Message\ResponseInterface;
@@ -53,6 +55,8 @@ class Application
         $this->engineSet = new EngineSet($this->container);
 
         $this->useTimezone(new DateTimeZone('America/Sao_Paulo'));
+
+        //TODO identificar se estamos em CLI para mudar o ambiente padrão
     }
 
     public static function instance(): self
@@ -182,6 +186,36 @@ class Application
             throw new RuntimeException('The bootModule method failed');
         }
 
+        return match($this->runningMode()) {
+            Environment::CONSOLE => $this->runCli(),
+            default => $this->runWeb()
+        };
+    }
+
+    /** @SuppressWarnings(PHPMD.StaticAccess) */
+    public function runCli(): ResponseInterface
+    {
+        global $argv;
+
+        $input = Input::fromConsoleArguments($argv);
+
+        // para o ioc fazer uso
+        $this->container->addSingleton(Application::class, Application::instance());
+        $this->container->addSingleton(Input::class, $input);
+        
+        $this->engineSet->resolve($input); // o terminal encerra aqui
+
+        // TODO melhorar isso para não precisar devolver uma resposta HTTP 
+        // inútil no terminal
+        /** @var HttpResponseFactory */
+        $responseFactory = $this->container->get(HttpResponseFactory::class);
+
+        return $responseFactory->response('', HttpStatus::OK);
+    }
+
+    /** @SuppressWarnings(PHPMD.StaticAccess) */
+    public function runWeb(): ResponseInterface
+    {
         $input = Input::fromRequest($this->make(ServerRequestInterface::class));
 
         // para o ioc fazer uso

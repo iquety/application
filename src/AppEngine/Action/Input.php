@@ -10,6 +10,7 @@ use Iquety\Application\AppEngine\FileSet;
 use Iquety\Application\AppEngine\UriParser;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use RuntimeException;
 
 /** Contém os parâmetros de entrada do usuário */
 class Input
@@ -29,6 +30,17 @@ class Input
 
     /** @var array<int,string> */
     private array $target = [];
+
+    public static function fromConsoleArguments(array $argumentList): self
+    {
+        if (isset($argumentList[0]) === false || trim($argumentList[0]) === '') {
+            throw new RuntimeException(
+                'The argument list is corrupt. It does not contain the script name'
+            );
+        }
+
+        return new self([], $argumentList, 'CLI');
+    }
 
     public static function fromString(string $string): self
     {
