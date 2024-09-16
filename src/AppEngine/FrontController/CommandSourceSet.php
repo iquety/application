@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use Iquety\Application\AppEngine\ActionDescriptor;
 use Iquety\Application\AppEngine\Action\Input;
 
-class SourceSet
+class CommandSourceSet
 {
     /** @var array<string,Source> */
     private array $sourceList = [];
@@ -17,7 +17,7 @@ class SourceSet
     {
     }
 
-    public function add(Source $source): void
+    public function add(CommandSource $source): void
     {
         $index = $source->getIdentity();
 

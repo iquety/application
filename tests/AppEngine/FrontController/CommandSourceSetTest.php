@@ -5,24 +5,24 @@ declare(strict_types=1);
 namespace Tests\AppEngine\FrontController;
 
 use InvalidArgumentException;
-use Iquety\Application\AppEngine\FrontController\SourceSet;
+use Iquety\Application\AppEngine\FrontController\CommandSourceSet;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
-use Iquety\Application\AppEngine\FrontController\Source;
 use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Application\AppEngine\ActionDescriptor;
+use Iquety\Application\AppEngine\FrontController\CommandSource;
 use Tests\AppEngine\FrontController\Stubs\Commands\OneCommand;
 use Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory\TwoCommand;
 use Tests\TestCase;
 
 /** @SuppressWarnings(PHPMD.StaticAccess) */
-class SourceSetTest extends TestCase
+class CommandSourceSetTest extends TestCase
 {
     /** @test */
     public function addDirectory(): void
     {
-        $directorySet = new SourceSet(FcBootstrap::class);
+        $directorySet = new CommandSourceSet(FcBootstrap::class);
 
-        $directorySet->add(new Source(
+        $directorySet->add(new CommandSource(
             'Tests\AppEngine\FrontController\Stubs'
         ));
 
@@ -35,13 +35,13 @@ class SourceSetTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The specified source already exists');
 
-        $directorySet = new SourceSet(FcBootstrap::class);
+        $directorySet = new CommandSourceSet(FcBootstrap::class);
 
-        $directorySet->add(new Source(
+        $directorySet->add(new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands'
         ));
 
-        $directorySet->add(new Source(
+        $directorySet->add(new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands'
         ));
     }
@@ -49,13 +49,13 @@ class SourceSetTest extends TestCase
     /** @test */
     public function addTwoDirectories(): void
     {
-        $directorySet = new SourceSet(FcBootstrap::class);
+        $directorySet = new CommandSourceSet(FcBootstrap::class);
 
-        $directorySet->add(new Source(
+        $directorySet->add(new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands'
         ));
 
-        $directorySet->add(new Source(
+        $directorySet->add(new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory'
         ));
 
@@ -65,7 +65,7 @@ class SourceSetTest extends TestCase
     /** @test */
     public function getCommandWithoutDirectories(): void
     {
-        $directorySet = new SourceSet(FcBootstrap::class);
+        $directorySet = new CommandSourceSet(FcBootstrap::class);
 
         $this->assertNull($directorySet->getDescriptorTo(Input::fromString('one-command')));
     }
@@ -73,13 +73,13 @@ class SourceSetTest extends TestCase
     /** @test */
     public function getCommandToLevelOne(): void
     {
-        $directorySet = new SourceSet(FcBootstrap::class);
+        $directorySet = new CommandSourceSet(FcBootstrap::class);
 
-        $directorySet->add(new Source(
+        $directorySet->add(new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands'
         ));
 
-        $directorySet->add(new Source(
+        $directorySet->add(new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory'
         ));
 
@@ -96,9 +96,9 @@ class SourceSetTest extends TestCase
     /** @test */
     public function getCommandToLevelTwo(): void
     {
-        $directorySet = new SourceSet(FcBootstrap::class);
+        $directorySet = new CommandSourceSet(FcBootstrap::class);
 
-        $directorySet->add(new Source(
+        $directorySet->add(new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands'
         ));
 
@@ -114,9 +114,9 @@ class SourceSetTest extends TestCase
     /** @test */
     public function getCommandInexistent(): void
     {
-        $directorySet = new SourceSet(FcBootstrap::class);
+        $directorySet = new CommandSourceSet(FcBootstrap::class);
 
-        $directorySet->add(new Source(
+        $directorySet->add(new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands'
         ));
 

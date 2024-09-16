@@ -16,7 +16,7 @@ abstract class FcBootstrap implements Bootstrap
     abstract public function bootDependencies(Container $container): void;
 
     /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
-    public function bootNamespaces(SourceSet &$sourceSet): void
+    public function bootNamespaces(CommandSourceSet &$sourceSet): void
     {
         // ...
     }

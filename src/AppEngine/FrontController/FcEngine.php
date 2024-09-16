@@ -22,7 +22,7 @@ class FcEngine extends AppEngine
             return;
         }
 
-        $sourceSet = new SourceSet($bootstrap::class);
+        $sourceSet = new CommandSourceSet($bootstrap::class);
 
         // o dev irá adicionar os diretórios na implementação do módulo
         $bootstrap->bootNamespaces($sourceSet);

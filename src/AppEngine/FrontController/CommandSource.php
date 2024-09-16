@@ -8,7 +8,7 @@ use Iquety\Application\AppEngine\ActionDescriptor;
 use Iquety\Application\AppEngine\FrontController\Command\Command;
 use Iquety\Application\AppEngine\Action\Input;
 
-class Source
+class CommandSource
 {
     public function __construct(private string $namespace)
     {

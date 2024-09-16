@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace Tests\AppEngine\FrontController;
 
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
-use Iquety\Application\AppEngine\FrontController\Source;
 use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Application\AppEngine\ActionDescriptor;
+use Iquety\Application\AppEngine\FrontController\CommandSource;
 use Tests\AppEngine\FrontController\Stubs\Commands\OneCommand;
 use Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory\TwoCommand;
 use Tests\TestCase;
 
 /** @SuppressWarnings(PHPMD.StaticAccess) */
-class SourceTest extends TestCase
+class CommandSourceTest extends TestCase
 {
     /** @test */
     public function objectConstruction(): void
     {
-        new Source(
+        new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands'
         );
 
@@ -28,7 +28,7 @@ class SourceTest extends TestCase
     /** @test */
     public function getIdentity(): void
     {
-        $directory = new Source(
+        $directory = new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands'
         );
 
@@ -41,7 +41,7 @@ class SourceTest extends TestCase
     /** @test */
     public function getDescriptorLevelOne(): void
     {
-        $directory = new Source(
+        $directory = new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands'
         );
 
@@ -54,7 +54,7 @@ class SourceTest extends TestCase
     /** @test */
     public function getCommandLevelTwo(): void
     {
-        $directory = new Source(
+        $directory = new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands'
         );
 
@@ -93,7 +93,7 @@ class SourceTest extends TestCase
      */
     public function getCommandToBars(string $uri, string $className): void
     {
-        $directory = new Source(
+        $directory = new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands'
         );
 
@@ -109,7 +109,7 @@ class SourceTest extends TestCase
      */
     public function getCommandToBarsNumeric(string $uri, string $className): void
     {
-        $directory = new Source(
+        $directory = new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands'
         );
 
@@ -127,7 +127,7 @@ class SourceTest extends TestCase
      */
     public function getCommandToSpaces(string $uri, string $className): void
     {
-        $directory = new Source(
+        $directory = new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands'
         );
 
@@ -147,7 +147,7 @@ class SourceTest extends TestCase
     /** @test */
     public function getCommandFixCase(): void
     {
-        $directory = new Source(
+        $directory = new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands'
         );
 
@@ -178,7 +178,7 @@ class SourceTest extends TestCase
      */
     public function getInvalidCommand(string $uri): void
     {
-        $directory = new Source(
+        $directory = new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands',
         );
 
@@ -188,9 +188,10 @@ class SourceTest extends TestCase
         ));
     }
 
+
     public function notExists(): void
     {
-        $directory = new Source(
+        $directory = new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands',
         );
 

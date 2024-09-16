@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tests\AppEngine\FrontController;
 
 use Iquety\Application\AppEngine\FrontController\Command\MainCommand;
-use Iquety\Application\AppEngine\FrontController\SourceSet;
+use Iquety\Application\AppEngine\FrontController\CommandSourceSet;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\FcEngine;
-use Iquety\Application\AppEngine\FrontController\Source;
+use Iquety\Application\AppEngine\FrontController\CommandSource;
 use Iquety\Application\AppEngine\Action\Input;
 use Iquety\Application\AppEngine\ActionDescriptor;
 use Iquety\Application\AppEngine\ModuleSet;
@@ -42,7 +42,7 @@ class FcEngineTest extends TestCase
                 $container->addSingleton('signature-test', fn() => 'teste');
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
                 // nenhum diretório setado
             }
@@ -69,9 +69,9 @@ class FcEngineTest extends TestCase
                 $container->addSingleton('signature-test', fn() => 'teste');
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
-                $sourceSet->add(new Source(
+                $sourceSet->add(new CommandSource(
                     'Tests\AppEngine\FrontController\Stubs\Commands'
                 ));
             }
@@ -102,9 +102,9 @@ class FcEngineTest extends TestCase
                 $container->addSingleton('signature-test', fn() => 'teste');
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
-                $sourceSet->add(new Source(
+                $sourceSet->add(new CommandSource(
                     'Tests\AppEngine\FrontController\Stubs\Commands'
                 ));
             }
@@ -131,9 +131,9 @@ class FcEngineTest extends TestCase
                 $container->addSingleton('signature-test', fn() => 'teste');
             }
 
-            public function bootNamespaces(SourceSet &$sourceSet): void
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
-                $sourceSet->add(new Source(
+                $sourceSet->add(new CommandSource(
                     'Tests\AppEngine\FrontController\Stubs\Commands'
                 ));
             }

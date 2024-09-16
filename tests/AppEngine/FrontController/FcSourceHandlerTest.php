@@ -13,9 +13,9 @@ use Iquety\Application\AppEngine\FrontController\Command\MainCommand;
 use Iquety\Application\AppEngine\FrontController\Command\NotFoundCommand;
 use Iquety\Application\AppEngine\FrontController\FcBootstrap;
 use Iquety\Application\AppEngine\FrontController\FcSourceHandler;
-use Iquety\Application\AppEngine\FrontController\Source;
-use Iquety\Application\AppEngine\FrontController\SourceSet;
 use Iquety\Application\AppEngine\Action\Input;
+use Iquety\Application\AppEngine\FrontController\CommandSource;
+use Iquety\Application\AppEngine\FrontController\CommandSourceSet;
 use RuntimeException;
 use Tests\AppEngine\FrontController\Stubs\Commands\OneCommand;
 use Tests\TestCase;
@@ -131,7 +131,7 @@ class FcSourceHandlerTest extends TestCase
 
         $handler = new FcSourceHandler();
 
-        $handler->addSources(new SourceSet(FcBootstrap::class));
+        $handler->addSources(new CommandSourceSet(FcBootstrap::class));
 
         $handler->getDescriptorTo(Input::fromString('uri/do/comando'));
     }
@@ -139,9 +139,9 @@ class FcSourceHandlerTest extends TestCase
     /** @test */
     public function descriptorNotFound(): void
     {
-        $directorySet = new SourceSet(FcBootstrap::class);
+        $directorySet = new CommandSourceSet(FcBootstrap::class);
 
-        $directorySet->add(new Source(
+        $directorySet->add(new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands'
         ));
 
@@ -177,9 +177,9 @@ class FcSourceHandlerTest extends TestCase
      */
     public function descriptorMain(string $uri): void
     {
-        $directorySet = new SourceSet(FcBootstrap::class);
+        $directorySet = new CommandSourceSet(FcBootstrap::class);
 
-        $directorySet->add(new Source(
+        $directorySet->add(new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands',
         ));
 
@@ -196,9 +196,9 @@ class FcSourceHandlerTest extends TestCase
     /** @test */
     public function descriptorCommand(): void
     {
-        $directorySet = new SourceSet(FcBootstrap::class);
+        $directorySet = new CommandSourceSet(FcBootstrap::class);
 
-        $directorySet->add(new Source(
+        $directorySet->add(new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands',
         ));
 

@@ -25,7 +25,7 @@ class FcSourceHandler implements SourceHandler
     /** @var array<int,SourceSet> */
     private array $sourceList = [];
 
-    public function addSources(SourceSet $sourceSet): void
+    public function addSources(CommandSourceSet $sourceSet): void
     {
         $this->sourceList[] = $sourceSet;
     }
