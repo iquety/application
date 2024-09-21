@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Iquety\Application\AppEngine\Console\ConsoleEngine;
 use Iquety\Application\AppEngine\FrontController\FcEngine;
 use Iquety\Application\AppEngine\Mvc\MvcEngine;
 use Iquety\Application\Application;
@@ -27,14 +28,18 @@ class ApplicationBootTest extends ApplicationCase
 
         $fcEngine = new FcEngine();
         $mvcEngine = new MvcEngine();
+        $consoleEngine = new ConsoleEngine();
 
         $instance->bootEngine($fcEngine);
         $instance->bootEngine($mvcEngine);
+        $instance->bootEngine($consoleEngine);
+
 
         $engineList = $instance->engineSet()->toArray();
-        $this->assertCount(2, $engineList);
+        $this->assertCount(3, $engineList);
         $this->assertInstanceOf($fcEngine::class, $engineList[$fcEngine::class]);
         $this->assertInstanceOf($mvcEngine::class, $engineList[$mvcEngine::class]);
+        $this->assertInstanceOf($consoleEngine::class, $engineList[$consoleEngine::class]);
     }
 
     /** @test */
@@ -77,5 +82,14 @@ class ApplicationBootTest extends ApplicationCase
         $moduleList = $instance->moduleSet()->toArray();
         $this->assertCount(4, $moduleList);
         $this->assertInstanceOf($bootstrapFour::class, $moduleList[$bootstrapFour::class]);
+
+        // modulo adicional 4
+
+        $bootstrapFive = $this->makeConsoleBootstrapTwo();
+        $instance->bootModule($bootstrapFive);
+
+        $moduleList = $instance->moduleSet()->toArray();
+        $this->assertCount(5, $moduleList);
+        $this->assertInstanceOf($bootstrapFive::class, $moduleList[$bootstrapFive::class]);
     }
 }

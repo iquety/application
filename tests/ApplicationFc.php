@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Exception;
 use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\Adapter\HttpFactory\GuzzleHttpFactory;
 use Iquety\Application\Adapter\HttpFactory\NyHolmHttpFactory;
@@ -171,6 +172,29 @@ trait ApplicationFc
                 $sourceSet->add(new CommandSource(
                     'Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory'
                 ));
+            }
+        };
+    }
+
+    protected function makeFcBootstrapException(): FcBootstrap
+    {
+        return new class extends FcBootstrap {
+            public function bootDependencies(Container $container): void
+            {
+                $container->addSingleton(Session::class, MemorySession::class);
+                $container->addSingleton(HttpFactory::class, new NyHolmHttpFactory());
+            }
+
+            public function bootNamespaces(CommandSourceSet &$sourceSet): void
+            {
+                $sourceSet->add(new CommandSource(
+                    'Tests\AppEngine\FrontController\Stubs\Commands\SubDirectory'
+                ));
+            }
+
+            public function getErrorActionClass(): string
+            {
+                throw new Exception('Proposital exception');
             }
         };
     }

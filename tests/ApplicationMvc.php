@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Exception;
 use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\Adapter\HttpFactory\GuzzleHttpFactory;
 use Iquety\Application\Adapter\HttpFactory\NyHolmHttpFactory;
@@ -197,6 +198,27 @@ trait ApplicationMvc
             public function bootRoutes(Router &$router): void
             {
                 $router->get('/mvc-one/:id')->usingAction(OneController::class, 'execute');
+            }
+        };
+    }
+
+    protected function makeMvcBootstrapException(): MvcBootstrap
+    {
+        return new class extends MvcBootstrap {
+            public function bootDependencies(Container $container): void
+            {
+                $container->addSingleton(Session::class, MemorySession::class);
+                $container->addSingleton(HttpFactory::class, new NyHolmHttpFactory());
+            }
+
+            public function bootRoutes(Router &$router): void
+            {
+                $router->get('/mvc-one/:id')->usingAction(OneController::class, 'execute');
+            }
+
+            public function getErrorActionClass(): string
+            {
+                throw new Exception('Proposital exception');
             }
         };
     }

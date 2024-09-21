@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use Exception;
+use Iquety\Application\AppEngine\FrontController\FcEngine;
 use Iquety\Application\AppEngine\Mvc\MvcBootstrap;
 use Iquety\Application\AppEngine\Mvc\MvcEngine;
 use Iquety\Application\Application;
@@ -66,6 +67,50 @@ class ApplicationRunTest extends ApplicationCase
             {
             }
         });
+
+        $instance->run();
+    }
+
+    /** @test */
+    public function runBootMvcModuleFailed(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('The bootModule method failed');
+
+        $instance = Application::instance();
+
+        $instance->container()->addSingleton(
+            ServerRequestInterface::class,
+            $this->makeServerRequest('/mvc-one/22', HttpMethod::ANY)
+        );
+
+        $instance->bootEngine(new MvcEngine());
+
+        $instance->bootApplication($this->makeMvcBootstrapSessionDiactoros());
+
+        $instance->bootModule($this->makeMvcBootstrapException());
+
+        $instance->run();
+    }
+
+    /** @test */
+    public function runBootFcModuleFailed(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('The bootModule method failed');
+
+        $instance = Application::instance();
+
+        $instance->container()->addSingleton(
+            ServerRequestInterface::class,
+            $this->makeServerRequest('/mvc-one/22', HttpMethod::ANY)
+        );
+
+        $instance->bootEngine(new FcEngine());
+
+        $instance->bootApplication($this->makeFcBootstrapSessionDiactoros());
+
+        $instance->bootModule($this->makeFcBootstrapException());
 
         $instance->run();
     }

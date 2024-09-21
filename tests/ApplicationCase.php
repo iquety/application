@@ -16,6 +16,7 @@ class ApplicationCase extends TestCase
 {
     use ApplicationFc;
     use ApplicationMvc;
+    use ApplicationConsole;
 
     public function setUp(): void
     {

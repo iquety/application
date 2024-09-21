@@ -26,7 +26,7 @@ class CommandSourceTest extends TestCase
     }
 
     /** @test */
-    public function getIdentity(): void
+    public function getNamespace(): void
     {
         $directory = new CommandSource(
             'Tests\AppEngine\FrontController\Stubs\Commands'
@@ -35,6 +35,11 @@ class CommandSourceTest extends TestCase
         $this->assertSame(
             md5('Tests\AppEngine\FrontController\Stubs\Commands'),
             $directory->getIdentity()
+        );
+
+        $this->assertSame(
+            'Tests\AppEngine\FrontController\Stubs\Commands',
+            $directory->getNamespace()
         );
     }
 

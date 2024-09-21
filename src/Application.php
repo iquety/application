@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace Iquety\Application;
 
 use DateTimeZone;
+use Exception;
 use InvalidArgumentException;
-use Iquety\Application\AppEngine\Action\Input;
-use Iquety\Application\AppEngine\AppEngine;
-use Iquety\Application\AppEngine\Bootstrap;
-use Iquety\Application\AppEngine\EngineSet;
-use Iquety\Application\AppEngine\ModuleSet;
-use Iquety\Application\AppEngine\PublisherSet;
 use Iquety\Application\Http\HttpDependencies;
 use Iquety\Application\Http\HttpResponseFactory;
 use Iquety\Application\Http\HttpStatus;
+use Iquety\Application\IoEngine\Action\Input;
+use Iquety\Application\IoEngine\EngineSet;
+use Iquety\Application\IoEngine\IoEngine;
+use Iquety\Application\IoEngine\Module;
+use Iquety\Application\IoEngine\ModuleSet;
+use Iquety\Application\IoEngine\PublisherSet;
 use Iquety\Injection\Container;
 use Iquety\PubSub\Publisher\EventPublisher;
 use Psr\Http\Message\ResponseInterface;
@@ -36,13 +37,17 @@ class Application
 
     private static ?Application $instance = null;
 
-    private ?Bootstrap $mainBootstrap = null;
+    /**
+     * O módulo principal é usado para fabricar as respostas
+     * de Erro e NotFound para a execução das ações da aplicação
+     */
+    private ?Module $mainModule = null;
 
     private ModuleSet $moduleSet;
 
     private PublisherSet $publisherSet;
 
-    private DateTimeZone $timezone;
+    private DateTimeZone $timeZone;
 
     private function __construct()
     {
@@ -56,7 +61,7 @@ class Application
 
         $this->useTimezone(new DateTimeZone('America/Sao_Paulo'));
 
-        //TODO identificar se estamos em CLI para mudar o ambiente padrão
+        $this->runIn(Environment::DEVELOPMENT);
     }
 
     public static function instance(): self
@@ -73,23 +78,38 @@ class Application
         static::$instance = new self(); // @phpstan-ignore-line
     }
 
-    public function addSubscriber(string $channel, string $subscriberIdentifier): void
+    public function bootApplication(Module $module): void
     {
-        $this->publisherSet->subscribe($channel, $subscriberIdentifier);
+        $this->mainModule = $module;
+
+        $this->bootModule($module);
     }
 
-    public function bootApplication(Bootstrap $bootstrap): void
+    public function bootModule(Module $module): void
     {
-        $this->moduleSet->add($bootstrap);
-
-        $this->mainBootstrap = $bootstrap;
+        $this->moduleSet->add($module);
     }
 
-    public function bootEngine(AppEngine $engine): void
+    public function mainModule(): Module
+    {
+        return $this->mainModule;
+    }
+
+    public function moduleSet(): ModuleSet
+    {
+        return $this->moduleSet;
+    }
+
+    public function bootEngine(IoEngine $engine): void
     {
         $engine->useModuleSet($this->moduleSet);
 
         $this->engineSet->add($engine);
+    }
+
+    public function engineSet(): EngineSet
+    {
+        return $this->engineSet;
     }
 
     public function bootEventPublisher(EventPublisher $publisher): void
@@ -97,13 +117,16 @@ class Application
         $this->publisherSet->add($publisher);
     }
 
-    public function bootModule(Bootstrap $bootstrap): void
+    public function addSubscriber(string $channel, string $subscriberIdentifier): void
     {
-        $this->moduleSet->add($bootstrap);
+        $this->publisherSet->subscribe($channel, $subscriberIdentifier);
     }
 
-    // setters
-
+    public function eventPublisherSet(): PublisherSet
+    {
+        return $this->publisherSet;
+    }
+    
     public function runIn(Environment $environment): void
     {
         $this->environment = $environment;
@@ -115,9 +138,14 @@ class Application
     }
 
     /** @see https://www.php.net/manual/en/timezones.php */
-    public function useTimezone(DateTimeZone $timezone): void
+    public function useTimeZone(DateTimeZone $timeZone): void
     {
-        $this->timezone = $timezone;
+        $this->timeZone = $timeZone;
+    }
+
+    public function timeZone(): DateTimeZone
+    {
+        return $this->timeZone;
     }
 
     // getters
@@ -125,21 +153,6 @@ class Application
     public function container(): Container
     {
         return $this->container;
-    }
-
-    public function engineSet(): EngineSet
-    {
-        return $this->engineSet;
-    }
-
-    public function eventPublishers(): PublisherSet
-    {
-        return $this->publisherSet;
-    }
-
-    public function moduleSet(): ModuleSet
-    {
-        return $this->moduleSet;
     }
 
     /** @param mixed ...$arguments */
@@ -165,12 +178,12 @@ class Application
             throw new RuntimeException('No engine to handle the request');
         }
 
-        if ($this->mainBootstrap === null) {
+        if ($this->mainModule === null) {
             throw new RuntimeException('No bootstrap specified for the application');
         }
 
         try {
-            $this->mainBootstrap->bootDependencies($this->container);
+            $this->mainModule()->bootDependencies($this->container);
         } catch (Throwable) {
             throw new RuntimeException('The bootApplication method failed');
         }
@@ -179,8 +192,8 @@ class Application
         (new HttpDependencies($this->runningMode()))->attachTo($this->container());
 
         try {
-            foreach ($this->moduleSet->toArray() as $bootstrap) {
-                $this->engineSet->bootEnginesWith($bootstrap);
+            foreach ($this->moduleSet->toArray() as $module) {
+                $this->engineSet->bootEnginesWith($module);
             }
         } catch (Throwable) {
             throw new RuntimeException('The bootModule method failed');
@@ -222,12 +235,15 @@ class Application
         $this->container->addSingleton(Application::class, Application::instance());
         $this->container->addSingleton(Input::class, $input);
 
-        $executor = new ActionExecutor($this->container(), $this->mainBootstrap);
+        $executor = new ActionExecutor($this->container(), $this->mainModule());
 
-        return $executor->makeResponseBy(
-            $this->engineSet->resolve($input),
-            $input
-        );
+        try {
+            $descriptor = $this->engineSet->resolve($input);
+        } catch (Exception) { // NotFoundException
+            $descriptor = $this->mainModule()->getNotFoundActionClass();
+        }
+
+        return $executor->makeResponseBy($descriptor, $input);
     }
 
     /**
@@ -244,10 +260,5 @@ class Application
         }
 
         echo (string)$response->getBody();
-    }
-
-    public function timezone(): DateTimeZone
-    {
-        return $this->timezone;
     }
 }

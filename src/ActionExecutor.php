@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Iquety\Application;
 
-use Iquety\Application\AppEngine\Action\Input;
-use Iquety\Application\AppEngine\Action\MethodNotAllowedException;
-use Iquety\Application\AppEngine\ActionDescriptor;
-use Iquety\Application\AppEngine\Bootstrap;
+use Exception;
+use Iquety\Application\IoEngine\Action\Input;
+use Iquety\Application\IoEngine\Action\MethodNotAllowedException;
+use Iquety\Application\IoEngine\ActionDescriptor;
+use Iquety\Application\IoEngine\Bootstrap;
 use Iquety\Application\Http\HttpResponseFactory;
 use Iquety\Application\Http\HttpStatus;
 use Iquety\Injection\Container;
@@ -19,15 +20,18 @@ class ActionExecutor
 {
     public function __construct(
         private Container $container,
-        private Bootstrap $bootstrap
-    ) {
+        private Bootstrap $mainBootstrap
+    ){
     }
 
     /** @SuppressWarnings(PHPMD.StaticAccess) */
-    public function makeResponseBy(ActionDescriptor $descriptor, Input $input): ResponseInterface
+    public function makeResponseBy(ActionDescriptor $descriptor): ResponseInterface
     {
         /** @var HttpResponseFactory */
         $responseFactory = $this->container->get(HttpResponseFactory::class);
+        
+        /** @var Input */
+        $input = $this->container->get(Input::class);
 
         $control = new InversionOfControl($this->container);
 
@@ -40,30 +44,25 @@ class ActionExecutor
 
             return $responseFactory->response($rawResponse, HttpStatus::OK);
         } catch (MethodNotAllowedException) {
-            $action = $this->bootstrap->getNotFoundActionClass()
-                . '::execute';
+            $action = $this->mainBootstrap->getNotFoundActionClass() . '::execute';
 
             $rawResponse = $control->resolveTo(
-                $this->bootstrap->getActionType(),
+                $this->mainBootstrap->getActionType(),
                 $action,
                 $this->onlyIocArguments($input)
             );
 
             return $responseFactory->notFoundResponse($rawResponse);
         } catch (Throwable $exception) {
-            $this->container->addSingleton(
-                'ErrorResponse',
-                $responseFactory->serverErrorResponse($exception)
-            );
+            $this->container->addSingleton(Throwable::class, $exception);
 
-            $action = $this->bootstrap->getErrorActionClass()
-                . '::execute';
-
-            return $control->resolveTo(
-                $this->bootstrap->getActionType(),
-                $action,
+            $rawResponse = $control->resolveTo(
+                $this->mainBootstrap->getActionType(),
+                $this->mainBootstrap->getErrorActionClass() . '::execute',
                 $this->onlyIocArguments($input)
             );
+
+            return $responseFactory->response($rawResponse, HttpStatus::INTERNAL_SERVER_ERROR);
         }
     }
 

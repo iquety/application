@@ -45,7 +45,7 @@ class HttpResponseFactory
 
     public function serverErrorResponse(Throwable $exception): ResponseInterface
     {
-        if ($this->environment === Environment::DEVELOPMENT) {
+        if ($this->environment === Environment::PRODUCTION) {
             return $this->response(
                 'An error occurred on the server side',
                 HttpStatus::INTERNAL_SERVER_ERROR
