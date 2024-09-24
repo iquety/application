@@ -6,6 +6,7 @@ namespace Tests\Http;
 
 use Exception;
 use Iquety\Application\Application;
+use Iquety\Application\Environment;
 use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\HttpMime;
 use Iquety\Application\Http\HttpResponseFactory;
@@ -341,11 +342,12 @@ abstract class HttpResponseFactoryTestCase extends TestCase
      * @test
      * @dataProvider contentErrorProvider
      */
-    public function serverErrorResponse(HttpMime $acceptMime): void
+    public function serverErrorResponseDevelopment(HttpMime $acceptMime): void
     {
         $serverRequest = $this->adapterFactory()
             ->createRequestFromGlobals()
-            ->withAddedHeader('Accept', $acceptMime->value);
+            ->withAddedHeader('Accept', $acceptMime->value)
+            ->withAddedHeader('Environment', Environment::DEVELOPMENT->value);
 
         $responseFactory = new HttpResponseFactory(
             $this->adapterFactory(),
@@ -358,6 +360,32 @@ abstract class HttpResponseFactoryTestCase extends TestCase
 
         $this->assertEquals(500, $response->getStatusCode());
         $this->assertStringContainsString("monomo", (string)$response->getBody());
+        $this->assertTrue($response->hasHeader('Content-type'));
+        $this->assertSame($acceptMime->value, $response->getHeaderLine('Content-type'));
+    }
+
+    /**
+     * @test
+     * @dataProvider contentErrorProvider
+     */
+    public function serverErrorResponseProduction(HttpMime $acceptMime): void
+    {
+        $serverRequest = $this->adapterFactory()
+            ->createRequestFromGlobals()
+            ->withAddedHeader('Accept', $acceptMime->value)
+            ->withAddedHeader('Environment', Environment::PRODUCTION->value);
+
+        $responseFactory = new HttpResponseFactory(
+            $this->adapterFactory(),
+            $serverRequest
+        );
+
+        $response = $responseFactory->serverErrorResponse(new Exception('monomo'));
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+
+        $this->assertEquals(500, $response->getStatusCode());
+        $this->assertStringContainsString("An error occurred on the server side", (string)$response->getBody());
         $this->assertTrue($response->hasHeader('Content-type'));
         $this->assertSame($acceptMime->value, $response->getHeaderLine('Content-type'));
     }

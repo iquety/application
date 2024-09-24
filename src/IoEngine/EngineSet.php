@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Injection\Container;
 use RuntimeException;
+use Throwable;
 
 /**
  * Armazena o conjunto de mecanismos disponíveis para responder às solicitações
@@ -45,7 +46,14 @@ class EngineSet
     public function bootEnginesWith(Module $module): void
     {
         foreach ($this->engineList as $engine) {
-            $engine->boot($module);
+            try {
+                $engine->boot($module);
+            } catch (Throwable) {
+                throw new RuntimeException(sprintf(
+                    'Method boot failed for engine %s',
+                    $engine::class
+                ));
+            }
         }
     }
 

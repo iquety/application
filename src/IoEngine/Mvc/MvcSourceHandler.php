@@ -52,11 +52,11 @@ class MvcSourceHandler implements SourceHandler
             );
         }
 
-        if ($input->getPath() === []) {
+        $this->router->process($input->getMethod(), $input->getPathString());
+
+        if ($this->router->routeNotFound() === true && $input->getPath() === []) {
             return $this->getMainDescriptor();
         }
-
-        $this->router->process($input->getMethod(), $input->getPathString());
 
         if ($this->router->routeNotFound() === true) {
             return null;

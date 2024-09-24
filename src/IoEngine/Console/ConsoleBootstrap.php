@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Iquety\Application\IoEngine\Console;
 
-use Iquety\Application\IoEngine\Bootstrap;
+use Iquety\Application\IoEngine\Module;
 use Iquety\Injection\Container;
 
-abstract class ConsoleBootstrap implements Bootstrap
+abstract class ConsoleBootstrap implements Module
 {
     abstract public function bootDependencies(Container $container): void;
 

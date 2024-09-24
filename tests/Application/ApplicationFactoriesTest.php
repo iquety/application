@@ -39,6 +39,17 @@ class ApplicationFactoriesTest extends TestCase
     }
 
     /** @test */
+    public function makeInvalid(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Dependency id was not specified');
+
+        $application = Application::instance();
+
+        $application->make();
+    }
+
+    /** @test */
     public function factories(): void
     {
         $application = Application::instance();

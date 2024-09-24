@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Iquety\Application;
 
-use Exception;
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\Action\MethodNotAllowedException;
 use Iquety\Application\IoEngine\ActionDescriptor;
-use Iquety\Application\IoEngine\Bootstrap;
 use Iquety\Application\Http\HttpResponseFactory;
 use Iquety\Application\Http\HttpStatus;
+use Iquety\Application\IoEngine\Module;
 use Iquety\Injection\Container;
 use Iquety\Injection\InversionOfControl;
 use Psr\Http\Message\ResponseInterface;
@@ -20,7 +19,7 @@ class ActionExecutor
 {
     public function __construct(
         private Container $container,
-        private Bootstrap $mainBootstrap
+        private Module $mainModule
     ){
     }
 
@@ -29,7 +28,7 @@ class ActionExecutor
     {
         /** @var HttpResponseFactory */
         $responseFactory = $this->container->get(HttpResponseFactory::class);
-        
+
         /** @var Input */
         $input = $this->container->get(Input::class);
 
@@ -44,10 +43,10 @@ class ActionExecutor
 
             return $responseFactory->response($rawResponse, HttpStatus::OK);
         } catch (MethodNotAllowedException) {
-            $action = $this->mainBootstrap->getNotFoundActionClass() . '::execute';
+            $action = $this->mainModule->getNotFoundActionClass() . '::execute';
 
             $rawResponse = $control->resolveTo(
-                $this->mainBootstrap->getActionType(),
+                $this->mainModule->getActionType(),
                 $action,
                 $this->onlyIocArguments($input)
             );
@@ -57,8 +56,8 @@ class ActionExecutor
             $this->container->addSingleton(Throwable::class, $exception);
 
             $rawResponse = $control->resolveTo(
-                $this->mainBootstrap->getActionType(),
-                $this->mainBootstrap->getErrorActionClass() . '::execute',
+                $this->mainModule->getActionType(),
+                $this->mainModule->getErrorActionClass() . '::execute',
                 $this->onlyIocArguments($input)
             );
 

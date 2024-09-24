@@ -50,8 +50,6 @@ class MvcEngine extends IoEngine
 
     public function resolve(Input $input): ?ActionDescriptor
     {
-        $this->container()->addSingleton(Input::class, $input);
-
         $actionDescriptor = $this->sourceHandler()->getDescriptorTo($input);
 
         if ($actionDescriptor === null) {

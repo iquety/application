@@ -22,7 +22,7 @@ class MainCommand extends Command
         $response = $factory->createResponse(200);
 
         return $response->withBody($factory->createStream(
-            'Iquety Framework'
+            'Iquety Framework - Home Page'
         ));
     }
 }

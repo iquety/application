@@ -14,25 +14,5 @@ class ErrorController extends Controller
     public function execute(Throwable $exception): string
     {
         return $exception->getMessage();
-
-
-        // return $exception->getMessage();
-
-        // $content = sprintf(
-        //     "Error: %s on file %s in line %d\n%s",
-        //     $exception->getMessage(),
-        //     $exception->getFile(),
-        //     $exception->getLine(),
-        //     $exception->getTraceAsString()
-        // );
-
-        // if (in_array($this->mimeType, [HttpMime::JSON, HttpMime::XML]) === true) {
-        //     $content = [
-        //         'message' => $exception->getMessage(),
-        //         'file'    => $exception->getFile(),
-        //         'line'    => $exception->getLine(),
-        //         'trace'   => $exception->getTrace(),
-        //     ];
-        // }
     }
 }

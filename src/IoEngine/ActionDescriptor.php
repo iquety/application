@@ -10,7 +10,7 @@ class ActionDescriptor
 {
     public function __construct(
         private string $actionType,
-        private string $bootstrapClass,
+        private string $moduleClass,
         private Closure|string $actionClass,
         private string $actionMethod = ''
     ) {
@@ -23,7 +23,7 @@ class ActionDescriptor
 
     public function module(): string
     {
-        return $this->bootstrapClass;
+        return $this->moduleClass;
     }
 
     public function action(): Closure|string

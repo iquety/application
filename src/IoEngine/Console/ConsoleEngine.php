@@ -6,8 +6,8 @@ namespace Iquety\Application\IoEngine\Console;
 
 use Iquety\Application\IoEngine\ActionDescriptor;
 use Iquety\Application\IoEngine\IoEngine;
-use Iquety\Application\IoEngine\Bootstrap;
 use Iquety\Application\IoEngine\Action\Input;
+use Iquety\Application\IoEngine\Module;
 use Iquety\Application\IoEngine\SourceHandler;
 use Iquety\Console\Terminal;
 use RuntimeException;
@@ -17,22 +17,22 @@ class ConsoleEngine extends IoEngine
 {
     private bool $booted = false;
 
-    public function boot(Bootstrap $bootstrap): void
+    public function boot(Module $module): void
     {
         // bootstraps diferentes serão ignorados
         // isso facilita a atribuição em massa
-        if (! $bootstrap instanceof ConsoleBootstrap || PHP_SAPI !== 'cli') {
+        if (! $module instanceof ConsoleBootstrap || PHP_SAPI !== 'cli') {
             return;
         }
 
-        $sourceSet = new RoutineSourceSet($bootstrap::class);
+        $sourceSet = new RoutineSourceSet($module::class);
 
         // o dev irá adicionar os diretórios na implementação do módulo
-        $bootstrap->bootRoutineDirectories($sourceSet);
+        $module->bootRoutineDirectories($sourceSet);
 
         $this->sourceHandler()
-            ->setCommandName($bootstrap->getCommandName())
-            ->setCommandPath($bootstrap->getCommandPath())
+            ->setCommandName($module->getCommandName())
+            ->setCommandPath($module->getCommandPath())
             ->addSources($sourceSet);
 
         $this->booted = true;
@@ -45,7 +45,8 @@ class ConsoleEngine extends IoEngine
 
     public function resolve(Input $input): ?ActionDescriptor
     {
-        $this->container()->addSingleton(Input::class, $input);
+        var_dump($input);
+        exit;
 
         $commandName = $this->sourceHandler()->getCommandName();
         $commandPath = $this->sourceHandler()->getCommandPath();
