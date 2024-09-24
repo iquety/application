@@ -110,9 +110,7 @@ class HttpResponseFactory
     private function makeHtmlResponse(array|string $content): string
     {
         if (is_array($content) === true) {
-            throw new InvalidArgumentException(
-                'An HTML response must be textual content'
-            );
+            return $this->makeTextResponse($content);
         }
 
         return $content;
@@ -129,15 +127,26 @@ class HttpResponseFactory
     }
 
     /** @param array<int|string,mixed>|string $content */
-    private function makeTextResponse(array|string $content): string
+    private function makeTextResponse(array|string $content, int $level = 0): string
     {
-        if (is_array($content) === true) {
-            throw new InvalidArgumentException(
-                'An text response must be textual content'
-            );
+        if (is_array($content) === false) {
+            return $content;
         }
 
-        return $content;
+        $padding = str_repeat('  ', $level);
+
+        $textualContent = '';
+
+        foreach($content as $name => $value) {
+            if (is_array($value) === true) {
+                $textualContent .= $this->makeTextResponse($value, $level+1);
+                continue;
+            }
+
+            $textualContent .= "$padding$name=$value\n";
+        }
+
+        return $textualContent;
     }
 
     /** @param array<int|string,mixed>|string $content */

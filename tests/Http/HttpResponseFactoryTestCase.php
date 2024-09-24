@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Http;
 
 use Exception;
+use InvalidArgumentException;
 use Iquety\Application\Application;
 use Iquety\Application\Environment;
 use Iquety\Application\Http\HttpFactory;
@@ -23,6 +24,170 @@ abstract class HttpResponseFactoryTestCase extends TestCase
     }
 
     abstract public function adapterFactory(): HttpFactory;
+
+    /** @test */
+    public function htmlResponseFromString(): void
+    {
+        $request = $this->adapterFactory()->createRequestFromGlobals();
+
+        $responseFactory = new HttpResponseFactory(
+            $this->adapterFactory(),
+            $request->withAddedHeader('Accept', HttpMime::HTML->value)
+        );
+
+        $response = $responseFactory->response('name-value', HttpStatus::OK);
+
+        $this->assertSame('name-value', (string)$response->getBody());
+        $this->assertSame(HttpStatus::OK->value, $response->getStatusCode());
+        $this->assertTrue($response->hasHeader('Content-type'));
+        $this->assertSame(HttpMime::HTML->value, $response->getHeaderLine('Content-type'));
+    }
+
+    /** @test */
+    public function htmlResponseFromArray(): void
+    {
+        $request = $this->adapterFactory()->createRequestFromGlobals();
+
+        $responseFactory = new HttpResponseFactory(
+            $this->adapterFactory(),
+            $request->withAddedHeader('Accept', HttpMime::HTML->value)
+        );
+
+        $response = $responseFactory->response([
+            'name' => 'value',
+            'name2' => 'value2',
+            'name3' => [ 'item' => 'value']
+        ], HttpStatus::OK);
+
+        $this->assertSame(
+            "name=value\nname2=value2\n  item=value\n",
+            (string)$response->getBody()
+        );
+        $this->assertSame(HttpStatus::OK->value, $response->getStatusCode());
+        $this->assertTrue($response->hasHeader('Content-type'));
+        $this->assertSame(HttpMime::HTML->value, $response->getHeaderLine('Content-type'));
+    }
+
+    /** @test */
+    public function jsonResponseFromArray(): void
+    {
+        $request = $this->adapterFactory()->createRequestFromGlobals();
+
+        $responseFactory = new HttpResponseFactory(
+            $this->adapterFactory(),
+            $request->withAddedHeader('Accept', HttpMime::JSON->value)
+        );
+
+        $response = $responseFactory->response(['name' => 'value'], HttpStatus::OK);
+
+        $this->assertSame('{"name":"value"}', (string)$response->getBody());
+        $this->assertSame(HttpStatus::OK->value, $response->getStatusCode());
+        $this->assertTrue($response->hasHeader('Content-type'));
+        $this->assertSame(HttpMime::JSON->value, $response->getHeaderLine('Content-type'));
+    }
+
+    /** @test */
+    public function jsonResponseFromString(): void
+    {
+        $request = $this->adapterFactory()->createRequestFromGlobals();
+
+        $responseFactory = new HttpResponseFactory(
+            $this->adapterFactory(),
+            $request->withAddedHeader('Accept', HttpMime::JSON->value)
+        );
+
+        $response = $responseFactory->response('name-value', HttpStatus::OK);
+
+        $this->assertSame('{"content":"name-value"}', (string)$response->getBody());
+        $this->assertSame(HttpStatus::OK->value, $response->getStatusCode());
+        $this->assertTrue($response->hasHeader('Content-type'));
+        $this->assertSame(HttpMime::JSON->value, $response->getHeaderLine('Content-type'));
+    }
+
+    /** @test */
+    public function xmlResponseFromArray(): void
+    {
+        $request = $this->adapterFactory()->createRequestFromGlobals();
+
+        $responseFactory = new HttpResponseFactory(
+            $this->adapterFactory(),
+            $request->withAddedHeader('Accept', HttpMime::XML->value)
+        );
+
+        $response = $responseFactory->response(['name' => 'value'], HttpStatus::OK);
+
+        $this->assertSame(
+            "<?xml version=\"1.0\"?>\n<root><name>value</name></root>\n",
+            (string)$response->getBody()
+        );
+        $this->assertSame(HttpStatus::OK->value, $response->getStatusCode());
+        $this->assertTrue($response->hasHeader('Content-type'));
+        $this->assertSame(HttpMime::XML->value, $response->getHeaderLine('Content-type'));
+    }
+
+    /** @test */
+    public function xmlResponseFromString(): void
+    {
+        $request = $this->adapterFactory()->createRequestFromGlobals();
+
+        $responseFactory = new HttpResponseFactory(
+            $this->adapterFactory(),
+            $request->withAddedHeader('Accept', HttpMime::XML->value)
+        );
+
+        $response = $responseFactory->response('name-value', HttpStatus::OK);
+
+        $this->assertSame(
+            "<?xml version=\"1.0\"?>\n<root><content>name-value</content></root>\n",
+            (string)$response->getBody()
+        );
+        $this->assertSame(HttpStatus::OK->value, $response->getStatusCode());
+        $this->assertTrue($response->hasHeader('Content-type'));
+        $this->assertSame(HttpMime::XML->value, $response->getHeaderLine('Content-type'));
+    }
+
+    /** @test */
+    public function textResponseFromArray(): void
+    {
+        $request = $this->adapterFactory()->createRequestFromGlobals();
+
+        $responseFactory = new HttpResponseFactory(
+            $this->adapterFactory(),
+            $request->withAddedHeader('Accept', HttpMime::TEXT->value)
+        );
+
+        $response = $responseFactory->response([
+            'name' => 'value',
+            'name2' => 'value2',
+            'name3' => [ 'item' => 'value']
+        ], HttpStatus::OK);
+
+        $this->assertSame(
+            "name=value\nname2=value2\n  item=value\n",
+            (string)$response->getBody()
+        );
+        $this->assertSame(HttpStatus::OK->value, $response->getStatusCode());
+        $this->assertTrue($response->hasHeader('Content-type'));
+        $this->assertSame(HttpMime::TEXT->value, $response->getHeaderLine('Content-type'));
+    }
+
+    /** @test */
+    public function textResponseFromString(): void
+    {
+        $request = $this->adapterFactory()->createRequestFromGlobals();
+
+        $responseFactory = new HttpResponseFactory(
+            $this->adapterFactory(),
+            $request->withAddedHeader('Accept', HttpMime::TEXT->value)
+        );
+
+        $response = $responseFactory->response('name-value', HttpStatus::OK);
+
+        $this->assertSame("name-value", (string)$response->getBody());
+        $this->assertSame(HttpStatus::OK->value, $response->getStatusCode());
+        $this->assertTrue($response->hasHeader('Content-type'));
+        $this->assertSame(HttpMime::TEXT->value, $response->getHeaderLine('Content-type'));
+    }
 
     /** @test */
     public function withoutArguments(): void
@@ -124,7 +289,7 @@ abstract class HttpResponseFactoryTestCase extends TestCase
      * @test
      * @dataProvider contentProvider
      */
-    public function withEmptyArgumens(HttpStatus $httpStatus, string $body): void
+    public function withEmptyArguments(HttpStatus $httpStatus, string $body): void
     {
         $responseFactory = new HttpResponseFactory(
             $this->adapterFactory(),
