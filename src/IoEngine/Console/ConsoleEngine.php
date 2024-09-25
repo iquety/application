@@ -21,7 +21,7 @@ class ConsoleEngine extends IoEngine
     {
         // bootstraps diferentes serão ignorados
         // isso facilita a atribuição em massa
-        if (! $module instanceof ConsoleBootstrap || PHP_SAPI !== 'cli') {
+        if (! $module instanceof ConsoleModule || $this->isTerminalExecution() === false) {
             return;
         }
 
@@ -45,9 +45,6 @@ class ConsoleEngine extends IoEngine
 
     public function resolve(Input $input): ?ActionDescriptor
     {
-        var_dump($input);
-        exit;
-
         $commandName = $this->sourceHandler()->getCommandName();
         $commandPath = $this->sourceHandler()->getCommandPath();
 
@@ -60,6 +57,7 @@ class ConsoleEngine extends IoEngine
             $terminal->loadRoutinesFrom($directory);
         }
 
+        /** @var ConsoleDescriptor $actionDescriptor */
         $actionDescriptor = $this->sourceHandler()->getDescriptorTo($input);
 
         $module = $actionDescriptor->module();
@@ -76,7 +74,10 @@ class ConsoleEngine extends IoEngine
 
         $terminal->run($input->toArray());
 
-        return ConsoleDescriptor::factory($module, ob_get_clean(), $terminal->executedStatus());
+        return $actionDescriptor->withOutput(
+            ob_get_clean(),
+            $terminal->executedStatus()
+        );
     }
 
     /** @return ConsoleSourceHandler */
@@ -90,5 +91,10 @@ class ConsoleEngine extends IoEngine
         }
 
         return $this->container()->get(ConsoleSourceHandler::class);
+    }
+
+    public function isTerminalExecution(): bool
+    {
+        return PHP_SAPI === 'cli';
     }
 }

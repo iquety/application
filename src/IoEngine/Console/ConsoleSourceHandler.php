@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Iquety\Application\IoEngine\Console;
 
-use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\ActionDescriptor;
 use Iquety\Application\IoEngine\SourceHandler;
-use Iquety\Console\Routine;
-use Iquety\Injection\Container;
 
 class ConsoleSourceHandler implements SourceHandler
 {
@@ -20,7 +17,7 @@ class ConsoleSourceHandler implements SourceHandler
     /** @var array<int,string> */
     private array $directoryList = [];
 
-    private string $bootstrapClass = '';
+    private string $moduleClass = '';
 
     public function addSources(RoutineSourceSet $sourceSet): void
     {
@@ -29,7 +26,7 @@ class ConsoleSourceHandler implements SourceHandler
             $this->directoryList[] = $source->getDirectory();
         }
 
-        $this->bootstrapClass = $sourceSet->getBootstrapClass();
+        $this->moduleClass = $sourceSet->getModuleClass();
     }
 
     public function hasSources(): bool
@@ -49,12 +46,7 @@ class ConsoleSourceHandler implements SourceHandler
 
     public function getDescriptorTo(Input $input): ?ActionDescriptor
     {
-        return new ActionDescriptor(
-            Routine::class,
-            $this->bootstrapClass,
-            '',
-            ''
-        );
+        return ConsoleDescriptor::factory($this->moduleClass, '', 0);
     }
 
     /** @return array<int,string> */
@@ -79,28 +71,28 @@ class ConsoleSourceHandler implements SourceHandler
 
     public function getErrorDescriptor(): ActionDescriptor
     {
-        throw new InvalidArgumentException(
+        throw new NotImplementedException(
             'The Console engine does not use this method'
         );
     }
 
     public function getMainDescriptor(): ActionDescriptor
     {
-        throw new InvalidArgumentException(
+        throw new NotImplementedException(
             'The Console engine does not use this method'
         );
     }
 
     public function getNotFoundDescriptor(): ActionDescriptor
     {
-        throw new InvalidArgumentException(
+        throw new NotImplementedException(
             'The Console engine does not use this method'
         );
     }
 
     public function setErrorActionClass(string $actionClass): self
     {
-        throw new InvalidArgumentException(
+        throw new NotImplementedException(
             'The Console engine does not use this method'
         );
 
@@ -109,19 +101,15 @@ class ConsoleSourceHandler implements SourceHandler
 
     public function setMainActionClass(string $actionClass): self
     {
-        throw new InvalidArgumentException(
+        throw new NotImplementedException(
             'The Console engine does not use this method'
         );
-        
-        return $this;
     }
 
     public function setNotFoundActionClass(string $actionClass): self
     {
-        throw new InvalidArgumentException(
+        throw new NotImplementedException(
             'The Console engine does not use this method'
         );
-        
-        return $this;
     }
 }

@@ -28,6 +28,11 @@ class ConsoleDescriptor extends ActionDescriptor
         return $descriptor;
     }
 
+    public function withOutput(string $output, int $status): ConsoleDescriptor
+    {
+        return ConsoleDescriptor::factory($this->module(), $output, $status);
+    }
+
     public function setOutput(string $output): void
     {
         $this->output = $output;

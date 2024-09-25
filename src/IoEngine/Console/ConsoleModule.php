@@ -7,7 +7,7 @@ namespace Iquety\Application\IoEngine\Console;
 use Iquety\Application\IoEngine\Module;
 use Iquety\Injection\Container;
 
-abstract class ConsoleBootstrap implements Module
+abstract class ConsoleModule implements Module
 {
     abstract public function bootDependencies(Container $container): void;
 
@@ -31,29 +31,33 @@ abstract class ConsoleBootstrap implements Module
 
     public function getActionType(): string
     {
-        // O mecanismo Console não usa Actions
-
-        return '';
+        throw new NotImplementedException(
+            'The ConsoleModule module does not have an implementation ' .
+            'for this method, as it does not use Actions.'
+        );
     }
 
     public function getErrorActionClass(): string
     {
-        // O mecanismo Console não usa Actions
-
-        return '';
+        throw new NotImplementedException(
+            'The ConsoleModule module does not have an implementation ' .
+            'for this method, as it does not use Actions.'
+        );
     }
 
     public function getNotFoundActionClass(): string
     {
-        // O mecanismo Console não usa Actions
-
-        return '';
+        throw new NotImplementedException(
+            'The ConsoleModule module does not have an implementation ' .
+            'for this method, as it does not use Actions.'
+        );
     }
 
     public function getMainActionClass(): string
     {
-        // O mecanismo Console não usa Actions
-
-        return '';
+        throw new NotImplementedException(
+            'The ConsoleModule module does not have an implementation ' .
+            'for this method, as it does not use Actions.'
+        );
     }
 }
