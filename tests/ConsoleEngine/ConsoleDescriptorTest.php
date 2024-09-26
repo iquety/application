@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Run;
+namespace Tests\ConsoleEngine;
 
 use Iquety\Application\IoEngine\Console\ConsoleDescriptor;
 use Iquety\Application\IoEngine\Console\ConsoleModule;
 use Iquety\Application\IoEngine\Console\Script;
-use Tests\IoEngine\Stubs\FrontController\GetCommand;
 use Tests\TestCase;
 
 class ConsoleDescriptorTest extends TestCase

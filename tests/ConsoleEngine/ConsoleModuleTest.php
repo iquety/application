@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Tests\Run;
+namespace Tests\ConsoleEngine;
 
-use Iquety\Application\Application;
 use Iquety\Application\IoEngine\Console\ConsoleModule;
 use Iquety\Application\IoEngine\Console\NotImplementedException;
 use Iquety\Injection\Container;
@@ -61,5 +60,4 @@ class ConsoleModuleTest extends TestCase
             }
         };
     }
-    
 }

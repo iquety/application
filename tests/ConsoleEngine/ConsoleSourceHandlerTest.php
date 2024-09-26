@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Run;
+namespace Tests\ConsoleEngine;
 
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\Console\ConsoleDescriptor;

@@ -65,7 +65,7 @@ class MvcSourceHandler implements SourceHandler
         /** @var Route $route */
         $route = $this->router->currentRoute();
 
-        $bootstrapClass = $route->module();
+        $moduleClass = $route->module();
         $className = $route->action();
         $classMethod = $route->actionMethod();
         $paramList = $route->params();
@@ -82,7 +82,7 @@ class MvcSourceHandler implements SourceHandler
 
         return new ActionDescriptor(
             Controller::class,
-            $bootstrapClass,
+            $moduleClass,
             $className,
             $classMethod
         );
@@ -138,13 +138,13 @@ class MvcSourceHandler implements SourceHandler
     }
 
     private function makeDescriptor(
-        string $bootstrapClass,
+        string $moduleClass,
         Closure|string $className,
         string $actionName
     ): ActionDescriptor {
         return new ActionDescriptor(
             Controller::class,
-            $bootstrapClass,
+            $moduleClass,
             $className,
             $actionName
         );

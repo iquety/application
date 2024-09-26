@@ -58,7 +58,6 @@ class MvcEngine extends IoEngine
         }
 
         $module = $actionDescriptor->module();
-
         if ($module === 'main') {
             return $actionDescriptor;
         }
@@ -66,7 +65,7 @@ class MvcEngine extends IoEngine
         $moduleBootstrap = $this->moduleSet()->findByClass($module);
 
         if ($moduleBootstrap === null) {
-            throw new RuntimeException('At least one engine must be provided');
+            throw new RuntimeException('At least one module must be provided');
         }
 
         $moduleBootstrap->bootDependencies($this->container());

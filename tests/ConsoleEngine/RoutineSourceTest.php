@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Run;
+namespace Tests\ConsoleEngine;
 
-use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\Console\RoutineSource;
-use Iquety\Application\IoEngine\Module;
 use Tests\TestCase;
 
 class RoutineSourceTest extends TestCase

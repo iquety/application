@@ -13,7 +13,7 @@ class CommandSourceSet
     /** @var array<string,Source> */
     private array $sourceList = [];
 
-    public function __construct(private string $bootstrapClass)
+    public function __construct(private string $moduleClass)
     {
     }
 
@@ -33,7 +33,7 @@ class CommandSourceSet
     public function getDescriptorTo(Input $input): ?ActionDescriptor
     {
         foreach ($this->sourceList as $source) {
-            $descriptor = $source->getDescriptorTo($this->bootstrapClass, $input);
+            $descriptor = $source->getDescriptorTo($this->moduleClass, $input);
 
             if ($descriptor !== null) {
                 return $descriptor;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Run;
+namespace Tests\ConsoleEngine;
 
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\Console\ConsoleEngine;
@@ -17,7 +17,7 @@ class ConsoleEngineResolveTest extends TestCase
     public function resolve(): void
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('At least one engine must be provided');
+        $this->expectExceptionMessage('At least one module must be provided');
 
         $engine = new ConsoleEngine();
 

@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Tests\ConsoleEngine;
+namespace Tests\MvcEngine;
 
-use Iquety\Application\IoEngine\Console\ConsoleEngine;
 use Iquety\Application\IoEngine\ModuleSet;
+use Iquety\Application\IoEngine\Mvc\MvcEngine;
 use Iquety\Injection\Container;
 use Tests\TestCase;
 
-class ConsoleEngineSourceTest extends TestCase
+class MvcEngineSourceTest extends TestCase
 {
     /** @test */
     public function singleton(): void
     {
-        $engine = new ConsoleEngine();
+        $engine = new MvcEngine();
 
         $engine->useContainer(new Container());
 

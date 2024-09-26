@@ -2,36 +2,40 @@
 
 declare(strict_types=1);
 
-namespace Tests\ConsoleEngine;
+namespace Tests\FcEngine;
 
-use Iquety\Application\IoEngine\Console\ConsoleEngine;
 use Iquety\Application\IoEngine\Console\ConsoleModule;
 use Iquety\Application\IoEngine\Console\RoutineSource;
 use Iquety\Application\IoEngine\Console\RoutineSourceSet;
 use Iquety\Application\IoEngine\FrontController\CommandSource;
 use Iquety\Application\IoEngine\FrontController\CommandSourceSet;
+use Iquety\Application\IoEngine\FrontController\FcEngine;
 use Iquety\Application\IoEngine\FrontController\FcModule;
 use Iquety\Application\IoEngine\ModuleSet;
+use Iquety\Application\IoEngine\Mvc\MvcEngine;
 use Iquety\Application\IoEngine\Mvc\MvcModule;
 use Iquety\Injection\Container;
 use Iquety\Routing\Router;
 use Tests\TestCase;
 
-class ConsoleEngineBootTest extends TestCase
+class FcEngineBootTest extends TestCase
 {
     /** @test */
-    public function bootConsoleNotTerminal(): void
+    public function bootFcModule(): void
     {
-        $engine = $this->createMock(ConsoleEngine::class);
+        $engine = $this->makeEngine(new Container());
 
-        $engine->method('isTerminalExecution')
-            ->willReturn(false);
+        $engine->boot($this->makeFcModule());
 
-        /** @var ConsoleEngine $engine */
+        $this->assertTrue($engine->isBooted());
 
-        $engine->useContainer(new Container());
+        $this->assertTrue($engine->sourceHandler()->hasSources());
+    }
 
-        $engine->useModuleSet(new ModuleSet());
+    /** @test */
+    public function bootConsoleModule(): void
+    {
+        $engine = $this->makeEngine(new Container());
 
         $engine->boot($this->makeConsoleModule());
 
@@ -47,45 +51,6 @@ class ConsoleEngineBootTest extends TestCase
 
         $this->assertFalse($engine->isBooted());
     }
-
-    /** @test */
-    public function bootFcModule(): void
-    {
-        $engine = $this->makeEngine(new Container());
-
-        $engine->boot($this->makeFcModule());
-
-        $this->assertFalse($engine->isBooted());
-    }
-
-    /** @test */
-    public function bootConsoleModule(): void
-    {
-        $engine = $this->makeEngine(new Container());
-
-        $engine->boot($this->makeConsoleModule());
-
-        $this->assertTrue($engine->isBooted());
-
-        $this->assertSame(
-            'test-script',
-            $engine->sourceHandler()->getCommandName()
-        );
-
-        $this->assertSame(
-            __DIR__,
-            $engine->sourceHandler()->getCommandPath()
-        );
-
-        $this->assertCount(1, $engine->sourceHandler()->getDirectoryList());
-
-        $this->assertSame(
-            [ '/application/tests/ConsoleEngine/Console' ],
-            $engine->sourceHandler()->getDirectoryList()
-        );
-
-        $this->assertTrue($engine->isBooted());
-    }
     
     private function makeMvcModule(): MvcModule
     {
@@ -98,6 +63,7 @@ class ConsoleEngineBootTest extends TestCase
 
             public function bootRoutes(Router &$router): void
             {
+                $router->any('/');
             }
         };
     }
@@ -145,9 +111,9 @@ class ConsoleEngineBootTest extends TestCase
         };
     }
 
-    private function makeEngine(Container $container): ConsoleEngine
+    private function makeEngine(Container $container): FcEngine
     {
-        $engine = new ConsoleEngine();
+        $engine = new FcEngine();
 
         $engine->useContainer($container);
 

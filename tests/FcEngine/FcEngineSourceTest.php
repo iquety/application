@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Tests\ConsoleEngine;
+namespace Tests\FcEngine;
 
-use Iquety\Application\IoEngine\Console\ConsoleEngine;
+use Iquety\Application\IoEngine\FrontController\FcEngine;
 use Iquety\Application\IoEngine\ModuleSet;
 use Iquety\Injection\Container;
 use Tests\TestCase;
 
-class ConsoleEngineSourceTest extends TestCase
+class FcEngineSourceTest extends TestCase
 {
     /** @test */
     public function singleton(): void
     {
-        $engine = new ConsoleEngine();
+        $engine = new FcEngine();
 
         $engine->useContainer(new Container());
 

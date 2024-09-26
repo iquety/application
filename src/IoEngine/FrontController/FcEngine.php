@@ -61,7 +61,7 @@ class FcEngine extends IoEngine
         $moduleBootstrap = $this->moduleSet()->findByClass($module);
 
         if ($moduleBootstrap === null) {
-            throw new RuntimeException('At least one engine must be provided');
+            throw new RuntimeException('At least one module must be provided');
         }
 
         $moduleBootstrap->bootDependencies($this->container());
