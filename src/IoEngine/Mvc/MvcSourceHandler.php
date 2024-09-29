@@ -6,7 +6,7 @@ namespace Iquety\Application\IoEngine\Mvc;
 
 use Closure;
 use InvalidArgumentException;
-use Iquety\Application\IoEngine\ActionDescriptor;
+use Iquety\Application\IoEngine\Action\ActionDescriptor;
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\Mvc\Controller\Controller;
 use Iquety\Application\IoEngine\Mvc\Controller\ErrorController;

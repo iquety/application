@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Iquety\Application\IoEngine\Console;
 
-use Iquety\Application\IoEngine\ActionDescriptor;
+use Iquety\Application\IoEngine\Action\ActionDescriptor;
 
 class ConsoleDescriptor extends ActionDescriptor
 {

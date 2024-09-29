@@ -17,7 +17,7 @@ use Iquety\Application\IoEngine\Mvc\MvcEngine;
 use Iquety\Injection\Container;
 use Iquety\Routing\Router;
 use Tests\IoEngine\Mvc\Stubs\OneController;
-use Tests\IoEngine\Stubs\FrontController\SubDirectory\TwoCommand;
+use Tests\IoEngine\FrontController\Stubs\SubDirectory\TwoCommand;
 use Tests\TestCase;
 
 /**
@@ -154,7 +154,7 @@ class EngineSetMultiTest extends TestCase
             public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
                 $sourceSet->add(new CommandSource(
-                    'Tests\IoEngine\Stubs\FrontController'
+                    'Tests\IoEngine\FrontController\Stubs'
                 ));
             }
         };
@@ -171,7 +171,7 @@ class EngineSetMultiTest extends TestCase
             public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
                 $sourceSet->add(new CommandSource(
-                    'Tests\IoEngine\Stubs\FrontController\SubDirectory'
+                    'Tests\IoEngine\FrontController\Stubs\SubDirectory'
                 ));
             }
         };

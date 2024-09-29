@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Iquety\Application\IoEngine\Action;
 
-use InvalidArgumentException;
 use Iquety\Application\IoEngine\File;
 use Iquety\Application\IoEngine\FileSet;
 use Iquety\Application\IoEngine\UriParser;
@@ -73,12 +72,6 @@ class Input
         $this->path = $originalPath;
 
         foreach ($originalParamList as $name => $value) {
-            if ($value instanceof UploadedFileInterface) {
-                $this->paramList[$name] = $this->makeFileSet([ $value ]);
-
-                continue;
-            }
-
             if (is_array($value) === true) {
                 $this->paramList[$name] = $this->makeFileSet($value);
 
@@ -187,10 +180,6 @@ class Input
 
         // validar as informações dos arquivos
         foreach ($fileList as $uploadedFile) {
-            if (! $uploadedFile instanceof UploadedFileInterface) {
-                throw new InvalidArgumentException('File structure is invalid');
-            }
-
             $fileSet->add(new File($uploadedFile));
         }
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Iquety\Application\IoEngine\FrontController;
 
 use InvalidArgumentException;
-use Iquety\Application\IoEngine\ActionDescriptor;
+use Iquety\Application\IoEngine\Action\ActionDescriptor;
 use Iquety\Application\IoEngine\FrontController\Command\Command;
 use Iquety\Application\IoEngine\FrontController\Command\ErrorCommand;
 use Iquety\Application\IoEngine\FrontController\Command\MainCommand;

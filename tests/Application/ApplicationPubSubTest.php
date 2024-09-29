@@ -9,10 +9,8 @@ use Iquety\Application\Application;
 use Iquety\Application\IoEngine\FrontController\FcEngine;
 use Iquety\Application\IoEngine\IoEngine;
 use Iquety\Application\IoEngine\Module;
-use Iquety\Application\IoEngine\Mvc\MvcEngine;
 use Iquety\PubSub\Publisher\EventPublisher;
 use Iquety\PubSub\Publisher\SimpleEventPublisher;
-use Iquety\PubSub\Subscriber\EventSubscriber;
 use Tests\TestCase;
 
 /** @SuppressWarnings(PHPMD.StaticAccess) */

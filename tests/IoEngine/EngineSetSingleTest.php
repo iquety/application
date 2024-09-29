@@ -12,11 +12,11 @@ use Iquety\Application\IoEngine\FrontController\FcEngine;
 use Iquety\Application\IoEngine\FrontController\CommandSource;
 use Iquety\Application\IoEngine\FrontController\CommandSourceSet;
 use Iquety\Application\IoEngine\Action\Input;
-use Iquety\Application\IoEngine\ActionDescriptor;
+use Iquety\Application\IoEngine\Action\ActionDescriptor;
 use Iquety\Application\IoEngine\FrontController\FcModule;
 use Iquety\Application\IoEngine\ModuleSet;
 use Iquety\Injection\Container;
-use Tests\IoEngine\Stubs\FrontController\SubDirectory\TwoCommand;
+use Tests\IoEngine\FrontController\Stubs\SubDirectory\TwoCommand;
 use Tests\TestCase;
 
 /**
@@ -88,7 +88,7 @@ class EngineSetSingleTest extends TestCase
             public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
                 $sourceSet->add(new CommandSource(
-                    'Tests\IoEngine\Stubs\FrontController'
+                    'Tests\IoEngine\FrontController\Stubs'
                 ));
             }
         };
@@ -123,7 +123,7 @@ class EngineSetSingleTest extends TestCase
             public function bootNamespaces(CommandSourceSet &$sourceSet): void
             {
                 $sourceSet->add(new CommandSource(
-                    'Tests\IoEngine\Stubs\FrontController'
+                    'Tests\IoEngine\FrontController\Stubs'
                 ));
             }
         };

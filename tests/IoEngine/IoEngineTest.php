@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\IoEngine;
 
 use Iquety\Application\IoEngine\Action\Input;
-use Iquety\Application\IoEngine\ActionDescriptor;
+use Iquety\Application\IoEngine\Action\ActionDescriptor;
 use Iquety\Application\IoEngine\IoEngine;
 use Iquety\Application\IoEngine\Module;
 use Iquety\Application\IoEngine\ModuleSet;
