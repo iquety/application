@@ -34,5 +34,4 @@ class MakeableTest extends TestCase
 
         $this->assertSame('teste', $object->execute());
     }
-
 }
