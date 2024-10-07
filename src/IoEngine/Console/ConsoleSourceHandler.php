@@ -22,7 +22,7 @@ class ConsoleSourceHandler implements SourceHandler
     public function addSources(RoutineSourceSet $sourceSet): void
     {
         /** @var RoutineSource $source */
-        foreach($sourceSet->toArray() as $source) {
+        foreach ($sourceSet->toArray() as $source) {
             $this->directoryList[] = $source->getDirectory();
         }
 
@@ -44,6 +44,7 @@ class ConsoleSourceHandler implements SourceHandler
         return $this->commandPath;
     }
 
+    /** @SuppressWarnings(PHPMD.StaticAccess) */
     public function getDescriptorTo(Input $input): ?ActionDescriptor
     {
         return ConsoleDescriptor::factory($this->moduleClass, '', 0);
@@ -95,8 +96,6 @@ class ConsoleSourceHandler implements SourceHandler
         throw new NotImplementedException(
             'The Console engine does not use this method'
         );
-
-        return $this;
     }
 
     public function setMainActionClass(string $actionClass): self

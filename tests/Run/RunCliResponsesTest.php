@@ -19,7 +19,10 @@ use Iquety\Application\RunCli;
 use Iquety\Injection\Container;
 use Tests\TestCase;
 
-/** @SuppressWarnings(PHPMD.StaticAccess) */
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class RunCliResponsesTest extends TestCase
 {
     public function setUp(): void
@@ -31,7 +34,7 @@ class RunCliResponsesTest extends TestCase
     {
         Application::instance()->reset();
     }
-    
+
     /**
      * o container é obtido da aplicação dentro dos controladores
      * por isso deve ser manipulado aqui através dela
@@ -74,8 +77,12 @@ class RunCliResponsesTest extends TestCase
         $this->assertStringContainsString('Console error', (string)$response->getBody());
     }
 
-    private function makeOutput(Container $container, array $consoleArguments, ?Module $extraModule = null): ConsoleOutput
-    {
+    /** @param array<int,string> $consoleArguments */
+    private function makeOutput(
+        Container $container,
+        array $consoleArguments,
+        ?Module $extraModule = null
+    ): ConsoleOutput {
         return $this->makeRunnner($container, $extraModule)
             ->run(new ConsoleInput($consoleArguments));
     }

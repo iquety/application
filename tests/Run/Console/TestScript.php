@@ -14,9 +14,9 @@ class TestScript extends Script
         $this->setName('test-console');
     }
 
+    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
     protected function handle(Arguments $arguments): void
     {
         $this->info('Teste console');
     }
 }
-

@@ -12,7 +12,6 @@ use Iquety\Application\IoEngine\FrontController\CommandSourceSet;
 use Iquety\Application\IoEngine\FrontController\FcEngine;
 use Iquety\Application\IoEngine\FrontController\FcModule;
 use Iquety\Application\IoEngine\ModuleSet;
-use Iquety\Application\IoEngine\Mvc\MvcEngine;
 use Iquety\Application\IoEngine\Mvc\MvcModule;
 use Iquety\Injection\Container;
 use Iquety\Routing\Router;
@@ -51,7 +50,8 @@ class FcEngineBootTest extends TestCase
 
         $this->assertFalse($engine->isBooted());
     }
-    
+
+    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
     private function makeMvcModule(): MvcModule
     {
         return new class extends MvcModule
@@ -68,6 +68,7 @@ class FcEngineBootTest extends TestCase
         };
     }
 
+    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
     private function makeFcModule(): FcModule
     {
         return new class extends FcModule
@@ -84,6 +85,7 @@ class FcEngineBootTest extends TestCase
         };
     }
 
+    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
     private function makeConsoleModule(): ConsoleModule
     {
         return new class extends ConsoleModule

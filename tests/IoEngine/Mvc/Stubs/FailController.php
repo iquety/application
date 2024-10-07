@@ -16,6 +16,7 @@ class FailController extends Controller
 
     /**
      * @SuppressWarnings(PHPMD.ShortVariable)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @return array<int,string>
      */
     public function execute(Input $input): array

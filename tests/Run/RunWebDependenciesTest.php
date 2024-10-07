@@ -24,7 +24,10 @@ use Psr\Http\Message\UriInterface;
 use RuntimeException;
 use Tests\TestCase;
 
-/** @SuppressWarnings(PHPMD.StaticAccess) */
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class RunWebDependenciesTest extends TestCase
 {
     public function setUp(): void
@@ -36,7 +39,7 @@ class RunWebDependenciesTest extends TestCase
     {
         Application::instance()->reset();
     }
-    
+
     /** @test */
     public function sessionDependency(): void
     {

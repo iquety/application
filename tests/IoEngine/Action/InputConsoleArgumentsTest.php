@@ -47,7 +47,7 @@ class InputConsoleArgumentsTest extends TestCase
             'The argument list is corrupt. It does not contain the script name'
         );
 
-        $input = Input::fromConsoleArguments($argumentList);
+        Input::fromConsoleArguments($argumentList);
     }
 
     /** @return array<string,array<int,mixed>> */
@@ -86,7 +86,7 @@ class InputConsoleArgumentsTest extends TestCase
                 'isolated-two'
             ]
         ];
-        
+
         return $list;
     }
 

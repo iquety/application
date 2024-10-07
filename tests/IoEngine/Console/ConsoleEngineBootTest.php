@@ -86,7 +86,8 @@ class ConsoleEngineBootTest extends TestCase
 
         $this->assertTrue($engine->isBooted());
     }
-    
+
+    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
     private function makeMvcModule(): MvcModule
     {
         return new class extends MvcModule
@@ -102,6 +103,7 @@ class ConsoleEngineBootTest extends TestCase
         };
     }
 
+    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
     private function makeFcModule(): FcModule
     {
         return new class extends FcModule
@@ -118,6 +120,7 @@ class ConsoleEngineBootTest extends TestCase
         };
     }
 
+    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
     private function makeConsoleModule(): ConsoleModule
     {
         return new class extends ConsoleModule

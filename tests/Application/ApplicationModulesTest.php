@@ -29,7 +29,7 @@ class ApplicationModulesTest extends TestCase
     {
         /** @var Module */
         $moduleOne = $this->createStub(Module::class);
-        
+
         /** @var Module */
         $moduleTwo = $this->createStub(FcModule::class);
 
@@ -48,7 +48,7 @@ class ApplicationModulesTest extends TestCase
         $moduleList = $application->moduleSet()->toArray();
 
         $this->assertCount(3, $moduleList);
-        
+
         $this->assertInstanceOf(Module::class, $moduleList[$moduleOne::class]);
         $this->assertSame($application->mainModule(), $moduleList[$moduleOne::class]);
     }
@@ -58,7 +58,7 @@ class ApplicationModulesTest extends TestCase
     {
         /** @var Module */
         $moduleOne = $this->createStub(Module::class);
-        
+
         /** @var Module */
         $moduleTwo = $this->createStub(FcModule::class);
 
@@ -77,7 +77,7 @@ class ApplicationModulesTest extends TestCase
         $moduleList = $application->moduleSet()->toArray();
 
         $this->assertCount(3, $moduleList);
-        
+
         $this->assertInstanceOf(Module::class, $moduleList[$moduleOne::class]);
         $this->assertSame($application->mainModule(), $moduleList[$moduleOne::class]);
     }
@@ -93,12 +93,12 @@ class ApplicationModulesTest extends TestCase
             'Module %s has already been registered',
             $moduleOne::class
         ));
-                
+
         $application = Application::instance();
 
         // inicializa o módulo principal
         $application->bootApplication($moduleOne);
-        
+
         // inicializa os módulos secundários
         $application->bootModule($moduleOne);
     }
@@ -117,12 +117,12 @@ class ApplicationModulesTest extends TestCase
             'Module %s has already been registered',
             $moduleTwo::class
         ));
-                
+
         $application = Application::instance();
 
         // inicializa o módulo principal
         $application->bootApplication($moduleOne);
-        
+
         // inicializa os módulos secundários
         $application->bootModule($moduleTwo);
         $application->bootModule($moduleTwo);

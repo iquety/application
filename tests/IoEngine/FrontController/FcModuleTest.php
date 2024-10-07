@@ -25,6 +25,10 @@ class FcModuleTest extends TestCase
         $this->assertSame(NotFoundCommand::class, $module->getNotFoundActionClass());
     }
 
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     private function makeModule(): FcModule
     {
         return new class extends FcModule
@@ -35,4 +39,3 @@ class FcModuleTest extends TestCase
         };
     }
 }
-

@@ -19,9 +19,9 @@ use Iquety\Injection\Container;
 class RunCli
 {
     public function __construct(
-        private Environment $environment,
+        private Environment $environment, // @phpstan-ignore-line
         private Container $container,
-        private Module $mainModule,
+        private Module $mainModule, // @phpstan-ignore-line
         private EngineSet $engineSet
     ) {
     }
@@ -34,7 +34,7 @@ class RunCli
         // para o ioc fazer uso
         $this->container->addSingleton(Application::class, Application::instance());
         $this->container->addSingleton(Input::class, $input);
-        
+
         /** @var ConsoleDescriptor $descriptor */
         $descriptor = $this->engineSet->resolve($input); // o terminal encerra aqui
 

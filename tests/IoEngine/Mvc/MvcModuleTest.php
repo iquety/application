@@ -25,6 +25,7 @@ class MvcModuleTest extends TestCase
         $this->assertSame(NotFoundController::class, $module->getNotFoundActionClass());
     }
 
+    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
     private function makeModule(): MvcModule
     {
         return new class extends MvcModule
@@ -35,4 +36,3 @@ class MvcModuleTest extends TestCase
         };
     }
 }
-

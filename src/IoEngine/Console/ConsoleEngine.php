@@ -53,7 +53,7 @@ class ConsoleEngine extends IoEngine
 
         $terminal->setHowToUse("./$commandName routine [options] [arguments]");
 
-        foreach($this->sourceHandler()->getDirectoryList() as $directory) {
+        foreach ($this->sourceHandler()->getDirectoryList() as $directory) {
             $terminal->loadRoutinesFrom($directory);
         }
 

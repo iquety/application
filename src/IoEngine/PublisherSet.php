@@ -11,7 +11,7 @@ use RuntimeException;
 
 class PublisherSet
 {
-    /** @var array<int,EventPublisher> */
+    /** @var array<class-string,EventPublisher> */
     private array $publisherList = [];
 
     public function add(EventPublisher $publisher): void
@@ -53,7 +53,7 @@ class PublisherSet
         }
     }
 
-    /** @return array<int,EventPublisher> */
+    /** @return array<class-string,EventPublisher> */
     public function toArray(): array
     {
         return $this->publisherList;

@@ -22,7 +22,10 @@ use Iquety\Injection\Container;
 use Psr\Http\Message\ResponseInterface;
 use Tests\TestCase;
 
-/** @SuppressWarnings(PHPMD.StaticAccess) */
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class RunWebFcResponsesTest extends TestCase
 {
     public function setUp(): void
@@ -34,7 +37,7 @@ class RunWebFcResponsesTest extends TestCase
     {
         Application::instance()->reset();
     }
-    
+
     /**
      * o container é obtido da aplicação dentro dos comandos
      * por isso deve ser manipulado aqui através dela

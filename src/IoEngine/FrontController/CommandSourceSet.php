@@ -10,7 +10,7 @@ use Iquety\Application\IoEngine\Action\Input;
 
 class CommandSourceSet
 {
-    /** @var array<string,Source> */
+    /** @var array<string,CommandSource> */
     private array $sourceList = [];
 
     public function __construct(private string $moduleClass)
@@ -48,7 +48,7 @@ class CommandSourceSet
         return $this->sourceList !== [];
     }
 
-    /** @return array<string,Source> */
+    /** @return array<string,CommandSource> */
     public function toArray(): array
     {
         return $this->sourceList;

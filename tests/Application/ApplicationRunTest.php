@@ -31,14 +31,14 @@ class ApplicationRunTest extends TestCase
     {
         /** @var ServerRequestInterface $fakeRequest */
         $fakeRequest = $this->createMock(ServerRequestInterface::class);
-        
+
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
             'No I/O motors were registered in the application'
         );
-        
+
         $application = Application::instance();
-        
+
         $application->run($fakeRequest);
     }
 
@@ -50,7 +50,7 @@ class ApplicationRunTest extends TestCase
 
         /** @var IoEngine $fakeEngine */
         $fakeEngine = $this->createMock(IoEngine::class);
-                
+
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
             'No module was registered in the application'
@@ -68,10 +68,10 @@ class ApplicationRunTest extends TestCase
     {
         /** @var ServerRequestInterface $fakeRequest */
         $fakeRequest = $this->createMock(ServerRequestInterface::class);
-        
+
         /** @var IoEngine $fakeEngine */
         $fakeEngine = $this->createMock(IoEngine::class);
-        
+
         $fakeModule = $this->createMock(Module::class);
 
         $fakeModule->method('bootDependencies')
@@ -82,11 +82,11 @@ class ApplicationRunTest extends TestCase
             'Method bootApplication failed for module %s',
             $fakeModule::class
         ));
-        
+
         $application = Application::instance();
-        
+
         $application->bootEngine($fakeEngine);
-        
+
         /** @var Module $fakeModule */
         $application->bootApplication($fakeModule);
 
@@ -134,13 +134,13 @@ class ApplicationRunTest extends TestCase
         $fakeRequest = $this->createMock(ServerRequestInterface::class);
 
         $fakeEngine = $this->createMock(IoEngine::class);
-        
+
         $fakeEngine->method('boot')
         ->willThrowException(new Exception('Erro qualquer'));
-        
+
         /** @var Module $fakeMainModule */
         $fakeMainModule = $this->createMock(Module::class);
-        
+
         /** @var Module $fakeSecondaryModule */
         $fakeSecondaryModule = $this->createMock(MvcModule::class);
 

@@ -59,7 +59,7 @@ class ApplicationFactoriesTest extends TestCase
         $application->container()->addFactory('three', ArrayObject::class);
         $application->container()->addFactory('four', fn() => new ArrayObject());
         $application->container()->addFactory('five', fn($value) => new ArrayObject($value));
-        
+
         $this->assertSame('value', $application->make('one'));
         $this->assertEquals(new ArrayObject(), $application->make('two'));
         $this->assertEquals(new ArrayObject(), $application->make('three'));
@@ -68,6 +68,5 @@ class ApplicationFactoriesTest extends TestCase
             new ArrayObject(['name' => 'ricardo']),
             $application->make('five', ['name' => 'ricardo'])
         );
-
     }
 }

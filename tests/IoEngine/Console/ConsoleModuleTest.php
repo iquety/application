@@ -41,6 +41,10 @@ class ConsoleModuleTest extends TestCase
         $module->{$methodName}();
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     private function makeModule(): ConsoleModule
     {
         return new class extends ConsoleModule

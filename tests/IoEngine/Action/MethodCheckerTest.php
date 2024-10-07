@@ -33,6 +33,7 @@ class MethodCheckerTest extends TestCase
     /**
      * @test
      * @dataProvider methodProvider
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function methodBlocked(HttpMethod $method): void
     {
@@ -63,6 +64,7 @@ class MethodCheckerTest extends TestCase
     /**
      * @test
      * @dataProvider methodProvider
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function methodAllowed(HttpMethod $method): void
     {
@@ -89,4 +91,3 @@ class MethodCheckerTest extends TestCase
         $this->assertSame('teste', $object->execute());
     }
 }
-

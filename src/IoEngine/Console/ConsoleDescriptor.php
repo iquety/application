@@ -28,6 +28,7 @@ class ConsoleDescriptor extends ActionDescriptor
         return $descriptor;
     }
 
+    /** @SuppressWarnings(PHPMD.StaticAccess) */
     public function withOutput(string $output, int $status): ConsoleDescriptor
     {
         return ConsoleDescriptor::factory($this->module(), $output, $status);
@@ -53,4 +54,3 @@ class ConsoleDescriptor extends ActionDescriptor
         return $this->status;
     }
 }
-

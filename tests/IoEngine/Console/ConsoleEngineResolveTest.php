@@ -13,7 +13,10 @@ use Tests\TestCase;
 
 class ConsoleEngineResolveTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function resolve(): void
     {
         $this->expectException(RuntimeException::class);
@@ -22,7 +25,7 @@ class ConsoleEngineResolveTest extends TestCase
         $engine = new ConsoleEngine();
 
         $engine->useContainer(new Container());
-        $engine->useModuleSet(new ModuleSet);
+        $engine->useModuleSet(new ModuleSet());
 
         $engine->resolve(Input::fromString('/'));
     }

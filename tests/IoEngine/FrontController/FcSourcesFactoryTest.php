@@ -19,7 +19,10 @@ use Tests\TestCase;
 
 class FcSourcesFactoryTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function noSourceHandler(): void
     {
         $this->expectException(RuntimeException::class);
@@ -30,7 +33,10 @@ class FcSourcesFactoryTest extends TestCase
         $handler->getDescriptorTo(Input::fromString('/'));
     }
 
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function requestHomeNoSourceHandler(): void
     {
         $this->expectException(RuntimeException::class);
@@ -43,7 +49,10 @@ class FcSourcesFactoryTest extends TestCase
         $handler->getDescriptorTo(Input::fromString('/any'));
     }
 
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function requestHomeWithoutCommand(): void
     {
         $sourceSet = new CommandSourceSet(Module::class);
@@ -62,7 +71,10 @@ class FcSourcesFactoryTest extends TestCase
         $this->assertSame(MainCommand::class . '::execute', $descriptor->action());
     }
 
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function requestNotFoundCommand(): void
     {
         $sourceSet = new CommandSourceSet(Module::class);
@@ -77,7 +89,10 @@ class FcSourcesFactoryTest extends TestCase
         $this->assertNull($descriptor);
     }
 
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function requestCommandProcessed(): void
     {
         $input = Input::fromRequest(

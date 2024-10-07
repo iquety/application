@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 class RoutineSourceSet
 {
-    /** @var array<string,Source> */
+    /** @var array<string,RoutineSource> */
     private array $sourceList = [];
 
     public function __construct(private string $moduleClass)
@@ -38,7 +38,7 @@ class RoutineSourceSet
         return $this->moduleClass;
     }
 
-    /** @return array<string,Source> */
+    /** @return array<string,RoutineSource> */
     public function toArray(): array
     {
         return $this->sourceList;

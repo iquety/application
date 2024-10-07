@@ -21,6 +21,7 @@ use ReflectionClass;
 use RuntimeException;
 use Throwable;
 
+/** @SuppressWarnings(PHPMD.CouplingBetweenObjects) */
 class RunWeb
 {
     public function __construct(
@@ -50,7 +51,7 @@ class RunWeb
 
         $executor = new ActionExecutor($this->container, $this->mainModule);
 
-        return $executor->makeResponseBy($descriptor, $input);
+        return $executor->makeResponseBy($descriptor);
     }
 
     private function consolidateHttpDependencies(ServerRequestInterface $request): void
@@ -67,7 +68,7 @@ class RunWeb
         );
 
         /** @var HttpFactory $httpFactory */
-        $httpFactory = $this->container->get(HttpFactory::class);        
+        $httpFactory = $this->container->get(HttpFactory::class);
 
         $this->container->addFactory(
             StreamInterface::class,
@@ -106,25 +107,25 @@ class RunWeb
     }
 
    /** @param class-string $contract */
-   private function assertSucessfulConstruction(string $contract): void
-   {
-       try {
-           $instance = $this->container->get($contract);
-       } catch (ContainerException) {
-           throw new RuntimeException(sprintf(
-               'Please provide an implementation for the %s dependency ' .
-               'in the given module in the Application->bootApplication ' . 
-               'or Application->bootModule method',
-               (new ReflectionClass($contract))->getShortName(),
-           ));
-       }
+    private function assertSucessfulConstruction(string $contract): void
+    {
+        try {
+            $instance = $this->container->get($contract);
+        } catch (ContainerException) {
+            throw new RuntimeException(sprintf(
+                'Please provide an implementation for the %s dependency ' .
+                'in the given module in the Application->bootApplication ' .
+                'or Application->bootModule method',
+                (new ReflectionClass($contract))->getShortName(),
+            ));
+        }
 
-       if (is_subclass_of($instance, $contract) === false) {
-           throw new RuntimeException(sprintf(
-               'The implementation provided to the %s dependency in the module ' .
-               'provided in the Application->bootApplication method is invalid',
-               (new ReflectionClass($contract))->getShortName(),
-           ));
-       }
-   }
+        if (is_subclass_of($instance, $contract) === false) {
+            throw new RuntimeException(sprintf(
+                'The implementation provided to the %s dependency in the module ' .
+                'provided in the Application->bootApplication method is invalid',
+                (new ReflectionClass($contract))->getShortName(),
+            ));
+        }
+    }
 }

@@ -34,7 +34,7 @@ class ApplicationPubSubTest extends TestCase
 
         /** @var IoEngine */
         $engine = $this->createStub(IoEngine::class);
-        
+
         /** @var EventPublisher */
         $publisherOne = $this->createStub(EventPublisher::class);
 
@@ -52,7 +52,7 @@ class ApplicationPubSubTest extends TestCase
         $publisherList = $application->eventPublisherSet()->toArray();
 
         $this->assertCount(2, $publisherList);
-        
+
         $this->assertInstanceOf(SimpleEventPublisher::class, $publisherList[$publisherTwo::class]);
     }
 
@@ -64,7 +64,7 @@ class ApplicationPubSubTest extends TestCase
 
         /** @var IoEngine */
         $engine = $this->createStub(IoEngine::class);
-        
+
         /** @var EventPublisher */
         $publisherOne = $this->createStub(EventPublisher::class);
 

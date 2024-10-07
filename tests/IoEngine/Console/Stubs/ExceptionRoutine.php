@@ -19,6 +19,7 @@ class ExceptionRoutine extends Script
         $this->setHowToUse("./example dizer-ola [opcoes]");
     }
 
+    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
     protected function handle(Arguments $arguments): void
     {
         throw new Exception('Uma exceção foi lançada');

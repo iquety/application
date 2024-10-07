@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Http;
 
 use Exception;
-use InvalidArgumentException;
 use Iquety\Application\Application;
 use Iquety\Application\Environment;
 use Iquety\Application\Http\HttpFactory;
@@ -15,7 +14,10 @@ use Iquety\Application\Http\HttpStatus;
 use Psr\Http\Message\ResponseInterface;
 use Tests\TestCase;
 
-/** @SuppressWarnings(PHPMD.StaticAccess) */
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 abstract class HttpResponseFactoryTestCase extends TestCase
 {
     public function setUp(): void

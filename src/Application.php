@@ -89,6 +89,10 @@ class Application
 
     public function mainModule(): Module
     {
+        if ($this->mainModule === null) {
+            throw new InvalidArgumentException('Main module was not specified');
+        }
+
         return $this->mainModule;
     }
 
@@ -123,7 +127,7 @@ class Application
     {
         return $this->publisherSet;
     }
-    
+
     public function runIn(Environment $environment): void
     {
         $this->environment = $environment;
@@ -213,7 +217,7 @@ class Application
                 $this->mainModule(),
                 $this->engineSet()
             );
-    
+
             return $runner->run($request);
         }
 

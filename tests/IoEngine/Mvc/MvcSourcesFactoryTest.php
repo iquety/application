@@ -10,15 +10,13 @@ use Iquety\Application\IoEngine\Action\ActionDescriptor;
 use Iquety\Application\IoEngine\Module;
 use Iquety\Application\IoEngine\Mvc\Controller\Controller;
 use Iquety\Application\IoEngine\Mvc\Controller\MainController;
-use Iquety\Application\IoEngine\Mvc\Controller\NotFoundController;
 use Iquety\Application\IoEngine\Mvc\MvcSourceHandler;
 use Iquety\Routing\Router;
 use RuntimeException;
-use Tests\IoEngine\Mvc\Stubs\AnyController;
-use Tests\IoEngine\Mvc\Stubs\NotController;
 use Tests\IoEngine\Mvc\Stubs\OneController;
 use Tests\TestCase;
 
+/** @SuppressWarnings(PHPMD.StaticAccess) */
 class MvcSourcesFactoryTest extends TestCase
 {
     /** @test */

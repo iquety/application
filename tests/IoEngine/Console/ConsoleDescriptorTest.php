@@ -26,7 +26,10 @@ class ConsoleDescriptorTest extends TestCase
         $this->assertSame('::', $descriptor->action());
     }
 
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function factory(): void
     {
         $descriptor = ConsoleDescriptor::factory(ConsoleModule::class, 'saida de terminal', -1);

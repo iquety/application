@@ -22,7 +22,7 @@ class FcSourceHandler implements SourceHandler
 
     private string $notFoundCommandClass = NotFoundCommand::class;
 
-    /** @var array<int,SourceSet> */
+    /** @var array<int,CommandSourceSet> */
     private array $sourceList = [];
 
     public function addSources(CommandSourceSet $sourceSet): void
@@ -79,7 +79,7 @@ class FcSourceHandler implements SourceHandler
         return $this->makeDescriptor('not-found', $this->notFoundCommandClass, 'execute');
     }
 
-    /** @return array<int,SourceSet> */
+    /** @return array<int,CommandSourceSet> */
     public function getSourceList(): array
     {
         return $this->sourceList;

@@ -20,7 +20,7 @@ class ActionExecutor
     public function __construct(
         private Container $container,
         private Module $mainModule
-    ){
+    ) {
     }
 
     /** @SuppressWarnings(PHPMD.StaticAccess) */

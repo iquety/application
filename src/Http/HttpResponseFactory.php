@@ -137,9 +137,9 @@ class HttpResponseFactory
 
         $textualContent = '';
 
-        foreach($content as $name => $value) {
+        foreach ($content as $name => $value) {
             if (is_array($value) === true) {
-                $textualContent .= $this->makeTextResponse($value, $level+1);
+                $textualContent .= $this->makeTextResponse($value, $level + 1);
                 continue;
             }
 

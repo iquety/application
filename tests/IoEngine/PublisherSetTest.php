@@ -105,7 +105,7 @@ class PublisherSetTest extends TestCase
         $this->expectExceptionMessage(
             'No event publishers specified for the application',
         );
-        
+
         $publisherSet = new PublisherSet();
 
         $publisherSet->subscribe('canal1', FakeSubscriber::class);

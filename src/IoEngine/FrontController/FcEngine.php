@@ -15,7 +15,7 @@ use RuntimeException;
 class FcEngine extends IoEngine
 {
     private bool $booted = false;
-    
+
     public function boot(Module $module): void
     {
         // módulos diferentes serão ignorados

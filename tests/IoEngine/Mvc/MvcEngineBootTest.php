@@ -50,7 +50,8 @@ class MvcEngineBootTest extends TestCase
 
         $this->assertTrue($engine->sourceHandler()->hasRoutes());
     }
-    
+
+    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
     private function makeMvcModule(): MvcModule
     {
         return new class extends MvcModule
@@ -67,6 +68,7 @@ class MvcEngineBootTest extends TestCase
         };
     }
 
+    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
     private function makeFcModule(): FcModule
     {
         return new class extends FcModule
@@ -83,6 +85,7 @@ class MvcEngineBootTest extends TestCase
         };
     }
 
+    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
     private function makeConsoleModule(): ConsoleModule
     {
         return new class extends ConsoleModule

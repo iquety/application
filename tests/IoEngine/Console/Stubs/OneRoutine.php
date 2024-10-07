@@ -18,10 +18,10 @@ class OneRoutine extends Script
         $this->setHowToUse("./example dizer-ola [opcoes]");
     }
 
+    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
     protected function handle(Arguments $arguments): void
     {
         // dispara saída padrão para o teste capturar
         $this->line("Rotina de teste executada");
-
     }
 }

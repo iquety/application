@@ -11,12 +11,15 @@ use Iquety\Application\IoEngine\Mvc\MvcSourceHandler;
 use Iquety\Injection\Container;
 use Iquety\Routing\Router;
 use RuntimeException;
-use Tests\IoEngine\Stubs\Mvc\AnyController;
+use Tests\IoEngine\Mvc\Stubs\AnyController;
 use Tests\TestCase;
 
 class MvcEngineResolveTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function resolveWithoutModules(): void
     {
         $this->expectException(RuntimeException::class);
@@ -33,7 +36,7 @@ class MvcEngineResolveTest extends TestCase
 
         $engine = new MvcEngine();
         $engine->useContainer($container);
-        $engine->useModuleSet(new ModuleSet);
+        $engine->useModuleSet(new ModuleSet());
 
         $engine->resolve(Input::fromString('/any'));
     }

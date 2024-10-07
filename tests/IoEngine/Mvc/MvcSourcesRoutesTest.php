@@ -25,7 +25,4 @@ class MvcSourcesRoutesTest extends TestCase
 
         $this->assertTrue($handler->hasRoutes());
     }
-
-    
 }
-

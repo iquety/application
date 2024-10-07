@@ -33,7 +33,7 @@ class ApplicationEngineTest extends TestCase
 
         /** @var IoEngine */
         $engineOne = $this->createStub(IoEngine::class);
-        
+
         /** @var IoEngine */
         $engineTwo = $this->createStub(FcEngine::class);
 
@@ -52,7 +52,7 @@ class ApplicationEngineTest extends TestCase
         $engineList = $application->engineSet()->toArray();
 
         $this->assertCount(3, $engineList);
-        
+
         $this->assertInstanceOf(IoEngine::class, $engineList[$engineOne::class]);
     }
 
@@ -64,18 +64,18 @@ class ApplicationEngineTest extends TestCase
 
         /** @var IoEngine */
         $engine = $this->createStub(IoEngine::class);
-        
+
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(sprintf(
             'Engine %s has already been registered',
             $engine::class
         ));
-                
+
         $application = Application::instance();
 
         // inicializa o módulo principal
         $application->bootApplication($module);
-        
+
         $application->bootEngine($engine);
         $application->bootEngine($engine);
     }

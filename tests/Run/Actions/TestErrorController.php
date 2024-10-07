@@ -14,4 +14,3 @@ class TestErrorController extends Controller
         throw new Exception('Mensagem de erro');
     }
 }
-

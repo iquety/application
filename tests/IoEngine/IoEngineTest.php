@@ -58,6 +58,7 @@ class IoEngineTest extends TestCase
         $this->assertInstanceOf(ModuleSet::class, $engine->moduleSet());
     }
 
+    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
     protected function makeIoEngine(): IoEngine
     {
         global $sourceHandler;
@@ -66,16 +67,20 @@ class IoEngineTest extends TestCase
 
         return new class extends IoEngine
         {
-            public function boot(Module $module): void {}
-            
-            public function resolve(Input $input): ?ActionDescriptor {
+            public function boot(Module $module): void
+            {
+            }
+
+            public function resolve(Input $input): ?ActionDescriptor
+            {
                 return null;
             }
 
             public function sourceHandler(): SourceHandler
-            { 
+            {
                 global $sourceHandler;
-                return $sourceHandler; 
+
+                return $sourceHandler;
             }
         };
     }

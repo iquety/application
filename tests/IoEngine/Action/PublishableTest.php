@@ -14,7 +14,10 @@ use Tests\TestCase;
 
 class PublishableTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function publish(): void
     {
         $eventPublisher = new SimpleEventPublisher();

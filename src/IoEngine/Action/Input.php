@@ -30,6 +30,7 @@ class Input
     /** @var array<int,string> */
     private array $target = [];
 
+    /** @param array<int,string> $argumentList */
     public static function fromConsoleArguments(array $argumentList): self
     {
         if (isset($argumentList[0]) === false || trim($argumentList[0]) === '') {

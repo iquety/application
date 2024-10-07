@@ -15,7 +15,10 @@ use Tests\TestCase;
 
 class MakeableTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function makeable(): void
     {
         $application = Application::instance();

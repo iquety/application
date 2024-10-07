@@ -15,9 +15,9 @@ class ErrorScript extends Script
         $this->setName('test-error');
     }
 
+    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
     protected function handle(Arguments $arguments): void
     {
         throw new Exception('Console error');
     }
 }
-

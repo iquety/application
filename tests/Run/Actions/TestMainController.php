@@ -13,4 +13,3 @@ class TestMainController extends Controller
         return 'Custom home page';
     }
 }
-

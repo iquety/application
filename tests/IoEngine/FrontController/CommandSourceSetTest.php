@@ -18,7 +18,7 @@ class CommandSourceSetTest extends TestCase
         $source = new CommandSource('Tests\Run\Actions');
 
         $sourceSet = new CommandSourceSet(Module::class);
-        
+
 
         $this->assertFalse($sourceSet->hasSources());
 

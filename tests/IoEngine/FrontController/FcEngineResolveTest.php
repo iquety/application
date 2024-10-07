@@ -17,7 +17,10 @@ use Tests\TestCase;
 
 class FcEngineResolveTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function resolveWithoutModules(): void
     {
         $this->expectException(RuntimeException::class);
@@ -34,7 +37,7 @@ class FcEngineResolveTest extends TestCase
 
         $engine = new FcEngine();
         $engine->useContainer($container);
-        $engine->useModuleSet(new ModuleSet);
+        $engine->useModuleSet(new ModuleSet());
 
         $engine->resolve(Input::fromString('/any-command'));
     }

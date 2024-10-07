@@ -23,7 +23,10 @@ use Tests\Run\Actions\TestErrorController;
 use Tests\Run\Actions\TestMainController;
 use Tests\TestCase;
 
-/** @SuppressWarnings(PHPMD.StaticAccess) */
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class RunWebMvcResponsesTest extends TestCase
 {
     public function setUp(): void
@@ -35,7 +38,7 @@ class RunWebMvcResponsesTest extends TestCase
     {
         Application::instance()->reset();
     }
-    
+
     /**
      * o container é obtido da aplicação dentro dos controladores
      * por isso deve ser manipulado aqui através dela
@@ -136,7 +139,7 @@ class RunWebMvcResponsesTest extends TestCase
             public function bootRoutes(Router &$router): void
             {
                 $router->get('/error')
-                    ->usingAction(TestErrorController::class, 'myMethod');   
+                    ->usingAction(TestErrorController::class, 'myMethod');
             }
         };
 

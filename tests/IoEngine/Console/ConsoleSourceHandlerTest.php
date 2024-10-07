@@ -58,7 +58,10 @@ class ConsoleSourceHandlerTest extends TestCase
         $this->assertSame(__DIR__, $handler->getCommandPath());
     }
 
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function makeDescriptor(): void
     {
         $routineSourceSet = new RoutineSourceSet(Module::class);
@@ -110,7 +113,8 @@ class ConsoleSourceHandlerTest extends TestCase
             'The Console engine does not use this method'
         );
 
-        $handler = new ConsoleSourceHandler();;
+        $handler = new ConsoleSourceHandler();
+        ;
 
         $handler->{$methodName}();
     }
@@ -126,35 +130,35 @@ class ConsoleSourceHandlerTest extends TestCase
             'The Console engine does not use this method'
         );
 
-        $handler = new ConsoleSourceHandler();;
+        $handler = new ConsoleSourceHandler();
 
         $handler->{$methodName}('qualquer coisa');
     }
 
-    private function makeConsoleModule(): ConsoleModule
-    {
-        return new class extends ConsoleModule
-        {
-            public function bootDependencies(Container $container): void
-            {
-                // ...
-            }
+    // private function makeConsoleModule(): ConsoleModule
+    // {
+    //     return new class extends ConsoleModule
+    //     {
+    //         public function bootDependencies(Container $container): void
+    //         {
+    //             // ...
+    //         }
 
-            public function bootRoutineDirectories(RoutineSourceSet &$sourceSet): void
-            {
-                $sourceSet->add(new RoutineSource(__DIR__ . '/Console'));
-            }
+    //         public function bootRoutineDirectories(RoutineSourceSet &$sourceSet): void
+    //         {
+    //             $sourceSet->add(new RoutineSource(__DIR__ . '/Console'));
+    //         }
 
-            public function getCommandName(): string
-            {
-                return 'test-script';
-            }
+    //         public function getCommandName(): string
+    //         {
+    //             return 'test-script';
+    //         }
 
-            /** Devolve o diretório real da aplicação que implementa o Console */
-            public function getCommandPath(): string
-            {
-                return __DIR__;
-            }
-        };
-    }
+    //         /** Devolve o diretório real da aplicação que implementa o Console */
+    //         public function getCommandPath(): string
+    //         {
+    //             return __DIR__;
+    //         }
+    //     };
+    // }
 }
