@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
  * symfony/http-foundation
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class SymfonyNativeSession implements Session
+class NativeSession implements Session
 {
     private ?SymfonyObject $session = null;
 

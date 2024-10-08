@@ -6,7 +6,7 @@ namespace Tests\Run;
 
 use ArrayObject;
 use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
-use Iquety\Application\Adapter\Session\SymfonyNativeSession;
+use Iquety\Application\Adapter\Session\NativeSession;
 use Iquety\Application\Application;
 use Iquety\Application\Environment;
 use Iquety\Application\Http\HttpFactory;
@@ -69,7 +69,7 @@ class RunWebDependenciesTest extends TestCase
         ));
 
         $container = new Container();
-        $container->addFactory(Session::class, new SymfonyNativeSession());
+        $container->addFactory(Session::class, new NativeSession());
 
         $this->makeFakeRequest($container);
     }
@@ -80,7 +80,7 @@ class RunWebDependenciesTest extends TestCase
         $container = new Container();
 
         // disponibiliza as dependências obrigatórias
-        $container->addFactory(Session::class, new SymfonyNativeSession());
+        $container->addFactory(Session::class, new NativeSession());
         $container->addFactory(HttpFactory::class, new DiactorosHttpFactory());
 
         // certifica que o container não possui as dependencias Http
@@ -138,7 +138,7 @@ class RunWebDependenciesTest extends TestCase
         $container = new Container();
 
         // disponibiliza as dependências obrigatórias
-        $container->addFactory(Session::class, new SymfonyNativeSession());
+        $container->addFactory(Session::class, new NativeSession());
 
         // dependência inválida para HttpFactory
         $container->addFactory(HttpFactory::class, new ArrayObject());

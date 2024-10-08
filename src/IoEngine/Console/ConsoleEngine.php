@@ -65,7 +65,9 @@ class ConsoleEngine extends IoEngine
         $moduleBootstrap = $this->moduleSet()->findByClass($module);
 
         if ($moduleBootstrap === null) {
-            throw new RuntimeException('At least one module must be provided');
+            throw new RuntimeException(
+                'At least one Routine Source Set must be added via addSources'
+            );
         }
 
         $moduleBootstrap->bootDependencies($this->container());

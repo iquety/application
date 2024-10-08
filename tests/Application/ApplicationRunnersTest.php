@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Tests\Application;
 
 use ArrayObject;
-use Exception;
 use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
-use Iquety\Application\Adapter\Session\SymfonyNativeSession;
+use Iquety\Application\Adapter\Session\NativeSession;
 use Iquety\Application\Application;
 use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\Session;
@@ -131,7 +130,7 @@ class ApplicationRunnersTest extends TestCase
         {
             public function bootDependencies(Container $container): void
             {
-                $container->addFactory(Session::class, new SymfonyNativeSession());
+                $container->addFactory(Session::class, new NativeSession());
                 $container->addFactory(HttpFactory::class, new DiactorosHttpFactory());
             }
 

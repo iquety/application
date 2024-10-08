@@ -7,7 +7,6 @@ namespace Iquety\Application\IoEngine\Console;
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\Action\ActionDescriptor;
 use Iquety\Application\IoEngine\SourceHandler;
-use RuntimeException;
 
 class ConsoleSourceHandler implements SourceHandler
 {
@@ -48,12 +47,6 @@ class ConsoleSourceHandler implements SourceHandler
     /** @SuppressWarnings(PHPMD.StaticAccess) */
     public function getDescriptorTo(Input $input): ?ActionDescriptor
     {
-        if ($this->moduleClass === '') {
-            throw new RuntimeException(
-                'At least one Routine Source Set must be added via addSources'
-            );
-        }
-
         return ConsoleDescriptor::factory($this->moduleClass, '', 0);
     }
 

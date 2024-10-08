@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Adapter\Session;
 
-use Iquety\Application\Adapter\Session\SymfonyNativeSession;
+use Iquety\Application\Adapter\Session\NativeSession;
 use Iquety\Application\Http\Session;
 
-class SymfonyNativeTest extends AbstractCase
+class NativeTest extends AbstractCase
 {
     protected function makeFactory(): Session
     {
-        $session = new SymfonyNativeSession();
+        $session = new NativeSession();
         $session->enableTestMode();
         return $session;
     }

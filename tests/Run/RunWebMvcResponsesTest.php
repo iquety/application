@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Run;
 
 use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
-use Iquety\Application\Adapter\Session\SymfonyNativeSession;
+use Iquety\Application\Adapter\Session\NativeSession;
 use Iquety\Application\Application;
 use Iquety\Application\Environment;
 use Iquety\Application\Http\HttpFactory;
@@ -112,7 +112,7 @@ class RunWebMvcResponsesTest extends TestCase
     private function makeResponse(Container $container, string $uri, ?Module $extraModule = null): ResponseInterface
     {
         // disponibiliza as dependências obrigatórias
-        $container->addFactory(Session::class, new SymfonyNativeSession());
+        $container->addFactory(Session::class, new NativeSession());
         $container->addFactory(HttpFactory::class, new DiactorosHttpFactory());
 
         /** @var DiactorosHttpFactory $factory */

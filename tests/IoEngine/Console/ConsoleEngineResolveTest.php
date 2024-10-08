@@ -17,7 +17,7 @@ class ConsoleEngineResolveTest extends TestCase
      * @test
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function resolve(): void
+    public function resolveWithoutModules(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
