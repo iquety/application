@@ -6,9 +6,15 @@ namespace Tests\Application;
 
 use Exception;
 use Iquety\Application\Application;
+use Iquety\Application\IoEngine\Console\ConsoleDescriptor;
+use Iquety\Application\IoEngine\Console\ConsoleEngine;
+use Iquety\Application\IoEngine\Console\ConsoleInput;
+use Iquety\Application\IoEngine\Console\ConsoleOutput;
 use Iquety\Application\IoEngine\IoEngine;
 use Iquety\Application\IoEngine\Module;
+use Iquety\Application\IoEngine\Mvc\MvcEngine;
 use Iquety\Application\IoEngine\Mvc\MvcModule;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use Tests\TestCase;
@@ -136,7 +142,7 @@ class ApplicationRunTest extends TestCase
         $fakeEngine = $this->createMock(IoEngine::class);
 
         $fakeEngine->method('boot')
-        ->willThrowException(new Exception('Erro qualquer'));
+            ->willThrowException(new Exception('Erro qualquer'));
 
         /** @var Module $fakeMainModule */
         $fakeMainModule = $this->createMock(Module::class);

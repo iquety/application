@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Run;
 
+use ArrayObject;
 use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\Adapter\Session\SymfonyNativeSession;
 use Iquety\Application\Application;
@@ -117,6 +118,63 @@ class RunWebDependenciesTest extends TestCase
             Environment::DEVELOPMENT->value,
             $request->getHeaderLine('Environment')
         );
+
+        /** @var ResponseInterface $response */
+        $response = $container->getWithArguments(ResponseInterface::class, [201, 'Test']);
+
+        $this->assertSame(201, $response->getStatusCode());
+        $this->assertSame('Test', (string)$response->getReasonPhrase());
+    }
+
+    /** @test */
+    public function invalidHttpFactoryDependency(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            'The implementation provided to the HttpFactory dependency in the module ' .
+            'provided in the Application->bootApplication method is invalid',
+        );
+
+        $container = new Container();
+
+        // disponibiliza as dependências obrigatórias
+        $container->addFactory(Session::class, new SymfonyNativeSession());
+
+        // dependência inválida para HttpFactory
+        $container->addFactory(HttpFactory::class, new ArrayObject());
+
+        /** @var ServerRequestInterface $request */
+        $request = $this->createMock(ServerRequestInterface::class);
+
+        // executa o motor Web
+        $this->makeRunnner($container)->run($request);
+    }
+
+    /** @test */
+    public function invalidSessionDependency(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            'The implementation provided to the Session dependency in the module ' .
+            'provided in the Application->bootApplication method is invalid',
+        );
+
+        $container = new Container();
+
+        // disponibiliza as dependências obrigatórias
+        $container->addFactory(HttpFactory::class, new DiactorosHttpFactory());
+
+        // dependência inválida para Session
+        $container->addFactory(Session::class, new ArrayObject());
+
+        /** @var DiactorosHttpFactory $factory */
+        $factory = $container->get(HttpFactory::class);
+
+        // executa o motor Web
+        $originalRequest = $factory->createRequestFromGlobals();
+
+        // executa o motor Web
+        $this->makeRunnner($container)->run($originalRequest);
     }
 
     private function makeRunnner(Container $container): RunWeb

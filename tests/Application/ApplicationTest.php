@@ -5,12 +5,8 @@ declare(strict_types=1);
 namespace Tests\Application;
 
 use DateTimeZone;
-use InvalidArgumentException;
 use Iquety\Application\Application;
 use Iquety\Application\Environment;
-use Iquety\Application\IoEngine\FrontController\FcModule;
-use Iquety\Application\IoEngine\Module;
-use Iquety\Application\IoEngine\Mvc\MvcModule;
 use Tests\TestCase;
 
 /** @SuppressWarnings(PHPMD.StaticAccess) */

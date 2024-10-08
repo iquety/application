@@ -207,7 +207,7 @@ class Application
             }
 
             /** @throws RuntimeException */
-            $this->engineSet->bootEnginesWith($module);
+            $this->engineSet()->bootEnginesWith($module);
         }
 
         if ($request instanceof ConsoleInput) {

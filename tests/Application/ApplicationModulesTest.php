@@ -25,6 +25,17 @@ class ApplicationModulesTest extends TestCase
     }
 
     /** @test */
+    public function notBootApplication(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Main module was not specified');
+
+        $application = Application::instance();
+
+        $application->mainModule();
+    }
+
+    /** @test */
     public function bootModules(): void
     {
         /** @var Module */

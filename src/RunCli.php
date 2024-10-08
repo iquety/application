@@ -10,6 +10,7 @@ use Iquety\Application\IoEngine\Console\ConsoleInput;
 use Iquety\Application\IoEngine\Console\ConsoleOutput;
 use Iquety\Application\IoEngine\EngineSet;
 use Iquety\Application\IoEngine\Module;
+use Iquety\Console\Terminal;
 use Iquety\Injection\Container;
 
 /**
@@ -37,6 +38,13 @@ class RunCli
 
         /** @var ConsoleDescriptor $descriptor */
         $descriptor = $this->engineSet->resolve($input); // o terminal encerra aqui
+
+        if (! $descriptor instanceof ConsoleDescriptor) {
+            return new ConsoleOutput(
+                'There is no engine capable of interpreting terminal commands',
+                Terminal::STATUS_ERROR
+            );
+        }
 
         return new ConsoleOutput($descriptor->output(), $descriptor->status());
     }

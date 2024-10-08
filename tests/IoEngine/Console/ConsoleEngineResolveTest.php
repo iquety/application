@@ -20,7 +20,9 @@ class ConsoleEngineResolveTest extends TestCase
     public function resolve(): void
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('At least one module must be provided');
+        $this->expectExceptionMessage(
+            'At least one Routine Source Set must be added via addSource'
+        );
 
         $engine = new ConsoleEngine();
 
