@@ -1,0 +1,11 @@
+TEST=xxxx
+db_name=yyyy
+EMPTY=
+numeric_one=123
+numeric_two=1.23
+FALSE_1=0
+FALSE_2=false
+FALSE_3=FALSE
+TRUE_1=1
+TRUE_2=true
+TRUE_3=TRUE
