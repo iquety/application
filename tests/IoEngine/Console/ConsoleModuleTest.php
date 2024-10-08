@@ -12,6 +12,7 @@ use Tests\TestCase;
 /** @SuppressWarnings(PHPMD.StaticAccess) */
 class ConsoleModuleTest extends TestCase
 {
+    /** @return array<string,array<int,string>> */
     public function methodsProvider(): array
     {
         $list = [];

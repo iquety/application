@@ -37,6 +37,7 @@ class PublishableTest extends TestCase
         $object = new class {
             use Publishable;
 
+            /** @return array<int,string>> */
             public function execute(): array
             {
                 $event = new FakeEventOccurred(

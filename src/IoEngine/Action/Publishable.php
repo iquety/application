@@ -22,7 +22,7 @@ trait Publishable
 
         Application::instance()->eventPublisherSet()->publish($channel, $event);
 
-        $this->publishedOutput[] = ob_get_clean();
+        $this->publishedOutput[] = (string)ob_get_clean();
     }
 
     /** @return array<int,string> */

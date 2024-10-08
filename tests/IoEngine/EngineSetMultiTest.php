@@ -79,10 +79,10 @@ class EngineSetMultiTest extends TestCase
     /**
      * @return object{
      *   'engineSet':EngineSet,
-     *   'fcModuleOne':Bootstrap,
-     *   'fcModuleTwo':Bootstrap,
-     *   'mvcModuleOne':Bootstrap,
-     *   'mvcModuleTwo':Bootstrap
+     *   'fcModuleOne':Module,
+     *   'fcModuleTwo':Module,
+     *   'mvcModuleOne':Module,
+     *   'mvcModuleTwo':Module
      * }
      */
     private function makeEngineSet(Container $container, ModuleSet $moduleSet): object

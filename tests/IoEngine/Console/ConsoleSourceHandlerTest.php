@@ -80,6 +80,7 @@ class ConsoleSourceHandlerTest extends TestCase
         $this->assertSame(0, $descriptor->status());
     }
 
+    /** @return array<string,array<int,string>> */
     public function gettersProvider(): array
     {
         $list = [];
@@ -91,6 +92,7 @@ class ConsoleSourceHandlerTest extends TestCase
         return $list;
     }
 
+    /** @return array<string,array<int,string>> */
     public function settersProvider(): array
     {
         $list = [];

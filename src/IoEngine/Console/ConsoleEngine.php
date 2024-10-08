@@ -72,10 +72,13 @@ class ConsoleEngine extends IoEngine
 
         ob_start();
 
-        $terminal->run($input->toArray());
+        /** @var array<int,string> $terminalArguments */
+        $terminalArguments = $input->toArray();
+
+        $terminal->run($terminalArguments);
 
         return $actionDescriptor->withOutput(
-            ob_get_clean(),
+            (string)ob_get_clean(),
             $terminal->executedStatus()
         );
     }
@@ -86,7 +89,7 @@ class ConsoleEngine extends IoEngine
         if ($this->container()->has(ConsoleSourceHandler::class) === false) {
             $this->container()->addSingleton(
                 ConsoleSourceHandler::class,
-                fn() => new ConsoleSourceHandler($this->container())
+                fn() => new ConsoleSourceHandler()
             );
         }
 
