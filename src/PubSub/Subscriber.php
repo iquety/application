@@ -20,6 +20,6 @@ abstract class Subscriber implements EventSubscriber
 
     public function receiveInTimezone(): DateTimeZone
     {
-        return Application::instance()->timezone();
+        return Application::instance()->timeZone();
     }
 }
