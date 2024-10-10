@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\IoEngine\Mvc;
 
-use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\Action\ActionDescriptor;
 use Iquety\Application\IoEngine\Module;
@@ -81,7 +80,7 @@ class MvcSourcesFactoryTest extends TestCase
         $this->expectExceptionMessage('The route found does not have a action');
 
         $input = Input::fromRequest(
-            (new DiactorosHttpFactory())->createServerRequest('POST', '/any')
+            $this->makeHttpFactory()->createServerRequest('POST', '/any')
         );
 
         $router = new Router();
@@ -98,7 +97,7 @@ class MvcSourcesFactoryTest extends TestCase
     public function routeProcessed(): void
     {
         $input = Input::fromRequest(
-            (new DiactorosHttpFactory())->createServerRequest('POST', '/any/33')
+            $this->makeHttpFactory()->createServerRequest('POST', '/any/33')
         );
 
         $router = new Router();
@@ -121,7 +120,7 @@ class MvcSourcesFactoryTest extends TestCase
     public function routeProcessedForModule(): void
     {
         $input = Input::fromRequest(
-            (new DiactorosHttpFactory())->createServerRequest('POST', '/any/33')
+            $this->makeHttpFactory()->createServerRequest('POST', '/any/33')
         );
 
         $router = new Router();

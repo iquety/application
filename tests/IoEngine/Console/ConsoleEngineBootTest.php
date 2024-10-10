@@ -72,14 +72,14 @@ class ConsoleEngineBootTest extends TestCase
 
         $this->assertSame(
             'test-script',
-            $engine->sourceHandler()->getCommandName()
+            $engine->sourceHandler()->getScriptName()
         );
 
         $rootPath = dirname(__DIR__, 2);
 
         $this->assertSame(
             $rootPath . '/Support/Stubs',
-            $engine->sourceHandler()->getCommandPath()
+            $engine->sourceHandler()->getScriptPath()
         );
 
         $this->assertCount(1, $engine->sourceHandler()->getDirectoryList());

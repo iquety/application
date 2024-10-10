@@ -31,8 +31,8 @@ class ConsoleEngine extends IoEngine
         $module->bootRoutineDirectories($sourceSet);
 
         $this->sourceHandler()
-            ->setCommandName($module->getCommandName())
-            ->setCommandPath($module->getCommandPath())
+            ->setScriptName($module->getScriptName())
+            ->setScriptPath($module->getScriptPath())
             ->addSources($sourceSet);
 
         $this->booted = true;
@@ -45,13 +45,13 @@ class ConsoleEngine extends IoEngine
 
     public function resolve(Input $input): ?ActionDescriptor
     {
-        $commandName = $this->sourceHandler()->getCommandName();
-        $commandPath = $this->sourceHandler()->getCommandPath();
+        $scriptName = $this->sourceHandler()->getScriptName();
+        $scriptPath = $this->sourceHandler()->getScriptPath();
 
         // talvez compartilhar o terminal via container
-        $terminal = new Terminal($commandPath);
+        $terminal = new Terminal($scriptPath);
 
-        $terminal->setHowToUse("./$commandName routine [options] [arguments]");
+        $terminal->setHowToUse("./$scriptName routine [options] [arguments]");
 
         foreach ($this->sourceHandler()->getDirectoryList() as $directory) {
             $terminal->loadRoutinesFrom($directory);

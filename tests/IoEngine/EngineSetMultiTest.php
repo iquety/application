@@ -7,16 +7,13 @@ namespace Tests\IoEngine;
 use Iquety\Application\Http\HttpMethod;
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\EngineSet;
-use Iquety\Application\IoEngine\FrontController\FcModule;
 use Iquety\Application\IoEngine\FrontController\FcEngine;
 use Iquety\Application\IoEngine\Module;
 use Iquety\Application\IoEngine\ModuleSet;
-use Iquety\Application\IoEngine\Mvc\MvcModule;
 use Iquety\Application\IoEngine\Mvc\MvcEngine;
 use Iquety\Injection\Container;
 use Tests\IoEngine\Mvc\Stubs\OneController;
 use Tests\IoEngine\FrontController\Stubs\SubDirectory\TwoCommand;
-use Tests\Support\Stubs\CustomFcModule;
 use Tests\TestCase;
 
 /**
@@ -169,40 +166,4 @@ class EngineSetMultiTest extends TestCase
 
         return $engine;
     }
-
-    // private function makeFcModuleOne(): FcModule
-    // {
-    //     return $this->makeFcModuleOne(
-    //         'Tests\IoEngine\FrontController\Stubs',
-    //         ['fc-dep-one' => fn() => 'one']
-    //     );
-    // }
-
-    // private function makeFcModuleTwo(): FcModule
-    // {
-    //     return $this->makeFcModuleTwo(
-    //         'Tests\IoEngine\FrontController\Stubs\SubDirectory',
-    //         ['fc-dep-two' => fn() => 'two']
-    //     );
-    // }
-
-    // private function makeMvcModuleOne(): MvcModule
-    // {
-    //     return $this->makeMvcModule(
-    //         HttpMethod::GET,
-    //         '/mvc-one/:id',
-    //         OneController::class . '@execute',
-    //         ['mvc-dep-one' => fn() => 'one']
-    //     );
-    // }
-
-    // private function makeMvcModuleTwo(): MvcModule
-    // {
-    //     return $this->makeMvcModule(
-    //         HttpMethod::GET,
-    //         '/mvc-two/:id',
-    //         OneController::class . '@execute',
-    //         ['mvc-dep-two' => fn() => 'two']
-    //     );
-    // }
 }

@@ -15,10 +15,10 @@ abstract class ConsoleModule implements Module
      * Devolve o nome do arquivo contendo o script de terminal
      * Ex.: app, artisan, etc
      */
-    abstract public function getCommandName(): string;
+    abstract public function getScriptName(): string;
 
     /** Devolve o diretório real da aplicação que implementa o Console */
-    abstract public function getCommandPath(): string;
+    abstract public function getScriptPath(): string;
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

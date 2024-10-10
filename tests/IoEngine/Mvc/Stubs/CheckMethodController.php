@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\IoEngine\Mvc\Stubs;
 
-use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\Mvc\Controller\Controller;
 use Iquety\Application\Http\HttpMethod;

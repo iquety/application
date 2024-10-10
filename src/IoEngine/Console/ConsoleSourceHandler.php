@@ -10,9 +10,9 @@ use Iquety\Application\IoEngine\SourceHandler;
 
 class ConsoleSourceHandler implements SourceHandler
 {
-    private string $commandName = 'unknown';
+    private string $scriptName = 'unknown';
 
-    private string $commandPath = '';
+    private string $scriptPath = '';
 
     /** @var array<int,string> */
     private array $directoryList = [];
@@ -34,14 +34,14 @@ class ConsoleSourceHandler implements SourceHandler
         return $this->directoryList !== [];
     }
 
-    public function getCommandName(): string
+    public function getScriptName(): string
     {
-        return $this->commandName;
+        return $this->scriptName;
     }
 
-    public function getCommandPath(): string
+    public function getScriptPath(): string
     {
-        return $this->commandPath;
+        return $this->scriptPath;
     }
 
     /** @SuppressWarnings(PHPMD.StaticAccess) */
@@ -56,16 +56,16 @@ class ConsoleSourceHandler implements SourceHandler
         return $this->directoryList;
     }
 
-    public function setCommandName(string $commandName): self
+    public function setScriptName(string $scriptName): self
     {
-        $this->commandName = $commandName;
+        $this->scriptName = $scriptName;
 
         return $this;
     }
 
-    public function setCommandPath(string $commandPath): self
+    public function setScriptPath(string $scriptPath): self
     {
-        $this->commandPath = $commandPath;
+        $this->scriptPath = $scriptPath;
 
         return $this;
     }

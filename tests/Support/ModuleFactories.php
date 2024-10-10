@@ -4,26 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Support;
 
-use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\Adapter\Session\MemorySession;
 use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\HttpMethod;
 use Iquety\Application\Http\Session;
 use Iquety\Application\IoEngine\Console\ConsoleModule;
-use Iquety\Application\IoEngine\Console\RoutineSource;
-use Iquety\Application\IoEngine\Console\RoutineSourceSet;
-use Iquety\Application\IoEngine\FrontController\CommandSource;
-use Iquety\Application\IoEngine\FrontController\CommandSourceSet;
 use Iquety\Application\IoEngine\FrontController\FcModule;
 use Iquety\Application\IoEngine\Module;
 use Iquety\Application\IoEngine\Mvc\MvcModule;
-use Iquety\Injection\Container;
-use Iquety\Routing\Router;
 use Tests\Support\Stubs\ConsoleModuleOne;
 use Tests\Support\Stubs\ConsoleModuleTwo;
-use Tests\Support\Stubs\CustomConsoleModule;
-use Tests\Support\Stubs\CustomFcModule;
-use Tests\Support\Stubs\CustomMvcModule;
 use Tests\Support\Stubs\FcModuleOne;
 use Tests\Support\Stubs\FcModuleTwo;
 use Tests\Support\Stubs\GenericModule;
@@ -135,7 +125,7 @@ trait ModuleFactories
         $dependencyList = array_merge(
             [
                 Session::class => new MemorySession(),
-                HttpFactory::class => new DiactorosHttpFactory()
+                HttpFactory::class => $this->makeHttpFactory()
             ],
             $dependencyList
         );

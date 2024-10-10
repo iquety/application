@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Run;
 
-use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\Adapter\Session\NativeSession;
-use Iquety\Application\Application;
 use Iquety\Application\Environment;
 use Iquety\Application\Http\HttpFactory;
+use Iquety\Application\Http\HttpMethod;
 use Iquety\Application\Http\Session;
 use Iquety\Application\IoEngine\EngineSet;
 use Iquety\Application\IoEngine\Module;
 use Iquety\Application\IoEngine\ModuleSet;
 use Iquety\Application\IoEngine\Mvc\MvcEngine;
-use Iquety\Application\IoEngine\Mvc\MvcModule;
 use Iquety\Application\RunWeb;
 use Iquety\Injection\Container;
-use Iquety\Routing\Router;
 use Psr\Http\Message\ResponseInterface;
 use Tests\Run\Actions\TestErrorController;
 use Tests\Run\Actions\TestMainController;
@@ -29,16 +26,6 @@ use Tests\TestCase;
  */
 class RunWebMvcResponsesTest extends TestCase
 {
-    public function setUp(): void
-    {
-        Application::instance()->reset();
-    }
-
-    public function tearDown(): void
-    {
-        Application::instance()->reset();
-    }
-
     /** @test */
     public function response404(): void
     {
@@ -79,20 +66,11 @@ class RunWebMvcResponsesTest extends TestCase
     {
         $container = $this->makeContainer();
 
-        $extraModule = new class extends MvcModule
-        {
-            public function bootDependencies(Container $container): void
-            {
-                // ...
-            }
-
-            public function bootRoutes(Router &$router): void
-            {
-                // adicionada a rota '/' para forçar a resolução pelo roteador
-                $router->get('/')
-                    ->usingAction(TestMainController::class, 'myMethod');
-            }
-        };
+        $extraModule = $this->makeMvcModuleTwo(
+            HttpMethod::GET,
+            '/',
+            TestMainController::class . '@myMethod'
+        );
 
         $response = $this->makeResponse($container, '/', $extraModule);
 
@@ -102,15 +80,13 @@ class RunWebMvcResponsesTest extends TestCase
 
     private function makeResponse(Container $container, string $uri, ?Module $extraModule = null): ResponseInterface
     {
+        $factory = $this->makeHttpFactory();
+
         // disponibiliza as dependências obrigatórias
         $container->addFactory(Session::class, new NativeSession());
-        $container->addFactory(HttpFactory::class, new DiactorosHttpFactory());
-
-        /** @var DiactorosHttpFactory $factory */
-        $factory = $container->get(HttpFactory::class);
+        $container->addFactory(HttpFactory::class, $factory);
 
         $originalRequest = $factory->createRequestFromGlobals();
-
         $originalRequest = $originalRequest->withUri($factory->createUri($uri));
 
         // executa o motor Web
@@ -120,19 +96,11 @@ class RunWebMvcResponsesTest extends TestCase
 
     private function makeRunnner(Container $container, ?Module $extraModule = null): RunWeb
     {
-        $module = new class extends MvcModule
-        {
-            public function bootDependencies(Container $container): void
-            {
-                // ...
-            }
-
-            public function bootRoutes(Router &$router): void
-            {
-                $router->get('/error')
-                    ->usingAction(TestErrorController::class, 'myMethod');
-            }
-        };
+        $module = $this->makeMvcModuleOne(
+            HttpMethod::GET,
+            '/error',
+            TestErrorController::class . '@myMethod'
+        );
 
         $moduleSet = new ModuleSet();
         $moduleSet->add($module);

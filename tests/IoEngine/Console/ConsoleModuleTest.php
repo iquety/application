@@ -54,12 +54,12 @@ class ConsoleModuleTest extends TestCase
             {
             }
 
-            public function getCommandName(): string
+            public function getScriptName(): string
             {
                 return '';
             }
 
-            public function getCommandPath(): string
+            public function getScriptPath(): string
             {
                 return '';
             }

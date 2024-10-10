@@ -39,23 +39,23 @@ class ConsoleSourceHandlerTest extends TestCase
     }
 
     /** @test */
-    public function commandName(): void
+    public function scriptName(): void
     {
         $handler = new ConsoleSourceHandler();
 
-        $handler->setCommandName('nome-comando');
+        $handler->setScriptName('nome-comando');
 
-        $this->assertSame('nome-comando', $handler->getCommandName());
+        $this->assertSame('nome-comando', $handler->getScriptName());
     }
 
     /** @test */
-    public function commandPath(): void
+    public function scriptPath(): void
     {
         $handler = new ConsoleSourceHandler();
 
-        $handler->setCommandPath(__DIR__);
+        $handler->setScriptPath(__DIR__);
 
-        $this->assertSame(__DIR__, $handler->getCommandPath());
+        $this->assertSame(__DIR__, $handler->getScriptPath());
     }
 
     /**

@@ -34,13 +34,13 @@ class ConsoleModuleOne extends ConsoleModule
         $sourceSet->add(new RoutineSource($this->directory));
     }
 
-    public function getCommandName(): string
+    public function getScriptName(): string
     {
         return 'test-script';
     }
 
     /** Devolve o diretório real da aplicação que implementa o Console */
-    public function getCommandPath(): string
+    public function getScriptPath(): string
     {
         return $this->rootPath;
     }

@@ -4,17 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Run;
 
-use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\Adapter\Session\NativeSession;
-use Iquety\Application\Application;
 use Iquety\Application\Environment;
 use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\Session;
 use Iquety\Application\IoEngine\EngineSet;
-use Iquety\Application\IoEngine\FrontController\CommandSource;
-use Iquety\Application\IoEngine\FrontController\CommandSourceSet;
 use Iquety\Application\IoEngine\FrontController\FcEngine;
-use Iquety\Application\IoEngine\FrontController\FcModule;
 use Iquety\Application\IoEngine\Module;
 use Iquety\Application\IoEngine\ModuleSet;
 use Iquety\Application\RunWeb;
@@ -28,16 +23,6 @@ use Tests\TestCase;
  */
 class RunWebFcResponsesTest extends TestCase
 {
-    public function setUp(): void
-    {
-        Application::instance()->reset();
-    }
-
-    public function tearDown(): void
-    {
-        Application::instance()->reset();
-    }
-
     /** @test */
     public function response404(): void
     {
@@ -75,15 +60,13 @@ class RunWebFcResponsesTest extends TestCase
 
     private function makeResponse(Container $container, string $uri, ?Module $extraModule = null): ResponseInterface
     {
+        $factory = $this->makeHttpFactory();
+
         // disponibiliza as dependências obrigatórias
         $container->addFactory(Session::class, new NativeSession());
-        $container->addFactory(HttpFactory::class, new DiactorosHttpFactory());
-
-        /** @var DiactorosHttpFactory $factory */
-        $factory = $container->get(HttpFactory::class);
-
+        $container->addFactory(HttpFactory::class, $factory);
+        
         $originalRequest = $factory->createRequestFromGlobals();
-
         $originalRequest = $originalRequest->withUri($factory->createUri($uri));
 
         // executa o motor Web
@@ -93,18 +76,7 @@ class RunWebFcResponsesTest extends TestCase
 
     private function makeRunnner(Container $container, ?Module $extraModule = null): RunWeb
     {
-        $module = new class extends FcModule
-        {
-            public function bootDependencies(Container $container): void
-            {
-                // ...
-            }
-
-            public function bootNamespaces(CommandSourceSet &$sourceSet): void
-            {
-                $sourceSet->add(new CommandSource('Tests\Run\Actions'));
-            }
-        };
+        $module = $this->makeFcModuleOne('Tests\Run\Actions');
 
         $moduleSet = new ModuleSet();
         $moduleSet->add($module);

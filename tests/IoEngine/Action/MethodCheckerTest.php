@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\IoEngine\Action;
 
-use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\Application;
-use Iquety\Application\Http\HttpFactory;
 use Iquety\Application\Http\HttpMethod;
 use Iquety\Application\IoEngine\Action\Makeable;
 use Iquety\Application\IoEngine\Action\MethodChecker;
@@ -40,7 +38,7 @@ class MethodCheckerTest extends TestCase
         $this->expectException(MethodNotAllowedException::class);
         $this->expectExceptionMessage('');
 
-        $serveRequest = (new DiactorosHttpFactory())
+        $serveRequest = $this->makeHttpFactory()
             ->createServerRequest($method->value, '/', []);
 
         $application = Application::instance();
@@ -68,7 +66,7 @@ class MethodCheckerTest extends TestCase
      */
     public function methodAllowed(HttpMethod $method): void
     {
-        $serveRequest = (new DiactorosHttpFactory())
+        $serveRequest = $this->makeHttpFactory()
             ->createServerRequest($method->value, '/', []);
 
         $application = Application::instance();

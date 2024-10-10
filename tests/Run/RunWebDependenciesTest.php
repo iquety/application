@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Run;
 
 use ArrayObject;
-use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\Adapter\Session\NativeSession;
 use Iquety\Application\Application;
 use Iquety\Application\Environment;
@@ -31,16 +30,6 @@ use Tests\TestCase;
  */
 class RunWebDependenciesTest extends TestCase
 {
-    public function setUp(): void
-    {
-        Application::instance()->reset();
-    }
-
-    public function tearDown(): void
-    {
-        Application::instance()->reset();
-    }
-
     /** @test */
     public function sessionDependency(): void
     {
@@ -52,9 +41,7 @@ class RunWebDependenciesTest extends TestCase
             'Session'
         ));
 
-        $container = new Container();
-
-        $this->makeFakeRequest($container);
+        $this->makeFakeRequest($this->makeContainer());
     }
 
     /** @test */
@@ -68,7 +55,7 @@ class RunWebDependenciesTest extends TestCase
             'HttpFactory'
         ));
 
-        $container = new Container();
+        $container = $this->makeContainer();
         $container->addFactory(Session::class, new NativeSession());
 
         $this->makeFakeRequest($container);
@@ -77,11 +64,13 @@ class RunWebDependenciesTest extends TestCase
     /** @test */
     public function httpDependencies(): void
     {
-        $container = new Container();
+        $factory = $this->makeHttpFactory();
+
+        $container = $this->makeContainer();
 
         // disponibiliza as dependências obrigatórias
         $container->addFactory(Session::class, new NativeSession());
-        $container->addFactory(HttpFactory::class, new DiactorosHttpFactory());
+        $container->addFactory(HttpFactory::class, $factory);
 
         // certifica que o container não possui as dependencias Http
         $this->assertFalse($container->has(StreamInterface::class));
@@ -92,10 +81,8 @@ class RunWebDependenciesTest extends TestCase
         $this->assertFalse($container->has(Input::class));
         $this->assertFalse($container->has(Application::class));
 
-        /** @var DiactorosHttpFactory $factory */
-        $factory = $container->get(HttpFactory::class);
-
         $originalRequest = $factory->createRequestFromGlobals();
+
         $this->assertSame('', $originalRequest->getHeaderLine('Accept'));
         $this->assertSame('', $originalRequest->getHeaderLine('Environment'));
 
@@ -135,7 +122,7 @@ class RunWebDependenciesTest extends TestCase
             'provided in the Application->bootApplication method is invalid',
         );
 
-        $container = new Container();
+        $container = $this->makeContainer();
 
         // disponibiliza as dependências obrigatórias
         $container->addFactory(Session::class, new NativeSession());
@@ -159,16 +146,15 @@ class RunWebDependenciesTest extends TestCase
             'provided in the Application->bootApplication method is invalid',
         );
 
-        $container = new Container();
+        $factory = $this->makeHttpFactory();
+
+        $container = $this->makeContainer();
 
         // disponibiliza as dependências obrigatórias
-        $container->addFactory(HttpFactory::class, new DiactorosHttpFactory());
+        $container->addFactory(HttpFactory::class, $factory);
 
         // dependência inválida para Session
         $container->addFactory(Session::class, new ArrayObject());
-
-        /** @var DiactorosHttpFactory $factory */
-        $factory = $container->get(HttpFactory::class);
 
         // executa o motor Web
         $originalRequest = $factory->createRequestFromGlobals();
@@ -183,31 +169,18 @@ class RunWebDependenciesTest extends TestCase
 
         $engineSet->add(new MvcEngine());
 
-        $module = new class extends MvcModule
-        {
-            public function bootDependencies(Container $container): void
-            {
-                // ...
-            }
-        };
-
-        $runner = new RunWeb(
+        return new RunWeb(
             Environment::DEVELOPMENT,
             $container,
-            $module,
+            $this->makeMvcModuleOne(),
             $engineSet
         );
-
-        return $runner;
     }
 
     private function makeFakeRequest(Container $container): ResponseInterface
     {
         $runner = $this->makeRunnner($container);
 
-        /** @var ServerRequestInterface $fakeRequest */
-        $fakeRequest = $this->createMock(ServerRequestInterface::class);
-
-        return $runner->run($fakeRequest);
+        return $runner->run($this->makeServerRequest());
     }
 }

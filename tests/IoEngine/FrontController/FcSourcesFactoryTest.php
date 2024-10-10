@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\IoEngine\FrontController;
 
-use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\Action\ActionDescriptor;
 use Iquety\Application\IoEngine\FrontController\Command\Command;
@@ -96,7 +95,7 @@ class FcSourcesFactoryTest extends TestCase
     public function requestCommandProcessed(): void
     {
         $input = Input::fromRequest(
-            (new DiactorosHttpFactory())->createServerRequest('POST', '/any-command/33')
+            $this->makeHttpFactory()->createServerRequest('POST', '/any-command/33')
         );
 
         $sourceSet = new CommandSourceSet(Module::class);
