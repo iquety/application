@@ -56,7 +56,7 @@ final class Configuration
 
         $valueList = parse_ini_string($contents, true, INI_SCANNER_TYPED);
 
-        foreach($valueList as $name => $value) {
+        foreach ((array)$valueList as $name => $value) {
             $this->set($name, $value);
         }
     }

@@ -7,26 +7,12 @@ namespace Tests\Application;
 use ArrayObject;
 use InvalidArgumentException;
 use Iquety\Application\Application;
-use Iquety\Application\IoEngine\FrontController\FcModule;
-use Iquety\Application\IoEngine\IoEngine;
-use Iquety\Application\IoEngine\Module;
-use Iquety\Application\IoEngine\Mvc\MvcModule;
 use Iquety\Injection\NotFoundException;
 use Tests\TestCase;
 
 /** @SuppressWarnings(PHPMD.StaticAccess) */
 class ApplicationFactoriesTest extends TestCase
 {
-    public function setUp(): void
-    {
-        Application::instance()->reset();
-    }
-
-    public function tearDown(): void
-    {
-        Application::instance()->reset();
-    }
-
     /** @test */
     public function dependencyDefinition(): void
     {

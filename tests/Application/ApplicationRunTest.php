@@ -6,15 +6,9 @@ namespace Tests\Application;
 
 use Exception;
 use Iquety\Application\Application;
-use Iquety\Application\IoEngine\Console\ConsoleDescriptor;
-use Iquety\Application\IoEngine\Console\ConsoleEngine;
-use Iquety\Application\IoEngine\Console\ConsoleInput;
-use Iquety\Application\IoEngine\Console\ConsoleOutput;
 use Iquety\Application\IoEngine\IoEngine;
 use Iquety\Application\IoEngine\Module;
-use Iquety\Application\IoEngine\Mvc\MvcEngine;
 use Iquety\Application\IoEngine\Mvc\MvcModule;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use Tests\TestCase;
@@ -22,22 +16,9 @@ use Tests\TestCase;
 /** @SuppressWarnings(PHPMD.StaticAccess) */
 class ApplicationRunTest extends TestCase
 {
-    public function setUp(): void
-    {
-        Application::instance()->reset();
-    }
-
-    public function tearDown(): void
-    {
-        Application::instance()->reset();
-    }
-
     /** @test */
     public function runWithoutEngine(): void
     {
-        /** @var ServerRequestInterface $fakeRequest */
-        $fakeRequest = $this->createMock(ServerRequestInterface::class);
-
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
             'No I/O motors were registered in the application'
@@ -45,18 +26,12 @@ class ApplicationRunTest extends TestCase
 
         $application = Application::instance();
 
-        $application->run($fakeRequest);
+        $application->run($this->makeServerRequest());
     }
 
     /** @test */
     public function runWithoutModule(): void
     {
-        /** @var ServerRequestInterface $fakeRequest */
-        $fakeRequest = $this->createMock(ServerRequestInterface::class);
-
-        /** @var IoEngine $fakeEngine */
-        $fakeEngine = $this->createMock(IoEngine::class);
-
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
             'No module was registered in the application'
@@ -64,20 +39,14 @@ class ApplicationRunTest extends TestCase
 
         $application = Application::instance();
 
-        $application->bootEngine($fakeEngine);
+        $application->bootEngine($this->makeGenericIoEngine());
 
-        $application->run($fakeRequest);
+        $application->run($this->makeServerRequest());
     }
 
     /** @test */
     public function runWithMainModuleBootError(): void
     {
-        /** @var ServerRequestInterface $fakeRequest */
-        $fakeRequest = $this->createMock(ServerRequestInterface::class);
-
-        /** @var IoEngine $fakeEngine */
-        $fakeEngine = $this->createMock(IoEngine::class);
-
         $fakeModule = $this->createMock(Module::class);
 
         $fakeModule->method('bootDependencies')
@@ -91,25 +60,17 @@ class ApplicationRunTest extends TestCase
 
         $application = Application::instance();
 
-        $application->bootEngine($fakeEngine);
+        $application->bootEngine($this->makeGenericIoEngine());
 
         /** @var Module $fakeModule */
         $application->bootApplication($fakeModule);
 
-        $application->run($fakeRequest);
+        $application->run($this->makeServerRequest());
     }
 
     /** @test */
     public function runWithSecondaryModuleBootError(): void
     {
-        /** @var ServerRequestInterface $fakeRequest */
-        $fakeRequest = $this->createMock(ServerRequestInterface::class);
-
-        /** @var IoEngine $fakeEngine */
-        $fakeEngine = $this->createMock(IoEngine::class);
-
-        $fakeMainModule = $this->createMock(Module::class);
-
         $fakeSecondaryModule = $this->createMock(MvcModule::class);
         $fakeSecondaryModule->method('bootDependencies')
             ->willThrowException(new Exception('Erro qualquer'));
@@ -122,33 +83,23 @@ class ApplicationRunTest extends TestCase
 
         $application = Application::instance();
 
-        $application->bootEngine($fakeEngine);
+        $application->bootEngine($this->makeGenericIoEngine());
 
-        /** @var Module $fakeMainModule */
-        $application->bootApplication($fakeMainModule);
+        $application->bootApplication($this->makeGenericModule());
 
         /** @var Module $fakeSecondaryModule */
         $application->bootModule($fakeSecondaryModule);
 
-        $application->run($fakeRequest);
+        $application->run($this->makeServerRequest());
     }
 
     /** @test */
     public function runWithEngineBootError(): void
     {
-        /** @var ServerRequestInterface $fakeRequest */
-        $fakeRequest = $this->createMock(ServerRequestInterface::class);
-
         $fakeEngine = $this->createMock(IoEngine::class);
 
         $fakeEngine->method('boot')
             ->willThrowException(new Exception('Erro qualquer'));
-
-        /** @var Module $fakeMainModule */
-        $fakeMainModule = $this->createMock(Module::class);
-
-        /** @var Module $fakeSecondaryModule */
-        $fakeSecondaryModule = $this->createMock(MvcModule::class);
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(sprintf(
@@ -161,10 +112,10 @@ class ApplicationRunTest extends TestCase
         /** @var IoEngine $fakeEngine */
         $application->bootEngine($fakeEngine);
 
-        $application->bootApplication($fakeMainModule);
+        $application->bootApplication($this->makeGenericModule());
 
-        $application->bootModule($fakeSecondaryModule);
+        $application->bootModule($this->makeMvcModuleOne());
 
-        $application->run($fakeRequest);
+        $application->run($this->makeServerRequest());
     }
 }

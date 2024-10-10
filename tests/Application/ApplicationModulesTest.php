@@ -14,16 +14,6 @@ use Tests\TestCase;
 /** @SuppressWarnings(PHPMD.StaticAccess) */
 class ApplicationModulesTest extends TestCase
 {
-    public function setUp(): void
-    {
-        Application::instance()->reset();
-    }
-
-    public function tearDown(): void
-    {
-        Application::instance()->reset();
-    }
-
     /** @test */
     public function notBootApplication(): void
     {
@@ -41,20 +31,14 @@ class ApplicationModulesTest extends TestCase
         /** @var Module */
         $moduleOne = $this->createStub(Module::class);
 
-        /** @var Module */
-        $moduleTwo = $this->createStub(FcModule::class);
-
-        /** @var Module */
-        $moduleThree = $this->createStub(MvcModule::class);
-
         $application = Application::instance();
 
         // inicializa o módulo principal
         $application->bootApplication($moduleOne);
 
         // inicializa os módulos secundários
-        $application->bootModule($moduleTwo);
-        $application->bootModule($moduleThree);
+        $application->bootModule($this->makeFcModuleOne());
+        $application->bootModule($this->makeMvcModuleOne());
 
         $moduleList = $application->moduleSet()->toArray();
 
@@ -70,17 +54,11 @@ class ApplicationModulesTest extends TestCase
         /** @var Module */
         $moduleOne = $this->createStub(Module::class);
 
-        /** @var Module */
-        $moduleTwo = $this->createStub(FcModule::class);
-
-        /** @var Module */
-        $moduleThree = $this->createStub(MvcModule::class);
-
         $application = Application::instance();
 
         // inicializa os módulos secundários
-        $application->bootModule($moduleTwo);
-        $application->bootModule($moduleThree);
+        $application->bootModule($this->makeFcModuleOne());
+        $application->bootModule($this->makeMvcModuleOne());
 
         // inicializa o módulo principal
         $application->bootApplication($moduleOne);
@@ -96,8 +74,7 @@ class ApplicationModulesTest extends TestCase
     /** @test */
     public function bootModulesEqualApplication(): void
     {
-        /** @var Module */
-        $moduleOne = $this->createStub(Module::class);
+        $moduleOne = $this->makeGenericModule();
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(sprintf(
@@ -118,9 +95,6 @@ class ApplicationModulesTest extends TestCase
     public function bootTwoEqualModules(): void
     {
         /** @var Module */
-        $moduleOne = $this->createStub(Module::class);
-
-        /** @var Module */
         $moduleTwo = $this->createStub(FcModule::class);
 
         $this->expectException(InvalidArgumentException::class);
@@ -132,7 +106,7 @@ class ApplicationModulesTest extends TestCase
         $application = Application::instance();
 
         // inicializa o módulo principal
-        $application->bootApplication($moduleOne);
+        $application->bootApplication($this->makeGenericModule());
 
         // inicializa os módulos secundários
         $application->bootModule($moduleTwo);

@@ -35,15 +35,6 @@ class RunCliResponsesTest extends TestCase
         Application::instance()->reset();
     }
 
-    /**
-     * o container é obtido da aplicação dentro dos controladores
-     * por isso deve ser manipulado aqui através dela
-     */
-    private function makeContainer(): Container
-    {
-        return Application::instance()->container();
-    }
-
     /** @test */
     public function outputNotFound(): void
     {

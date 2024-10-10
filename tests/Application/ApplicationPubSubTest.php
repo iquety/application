@@ -6,7 +6,6 @@ namespace Tests\Application;
 
 use InvalidArgumentException;
 use Iquety\Application\Application;
-use Iquety\Application\IoEngine\FrontController\FcEngine;
 use Iquety\Application\IoEngine\IoEngine;
 use Iquety\Application\IoEngine\Module;
 use Iquety\PubSub\Publisher\EventPublisher;
@@ -16,25 +15,9 @@ use Tests\TestCase;
 /** @SuppressWarnings(PHPMD.StaticAccess) */
 class ApplicationPubSubTest extends TestCase
 {
-    public function setUp(): void
-    {
-        Application::instance()->reset();
-    }
-
-    public function tearDown(): void
-    {
-        Application::instance()->reset();
-    }
-
     /** @test */
     public function bootPublisher(): void
     {
-        /** @var Module */
-        $module = $this->createStub(Module::class);
-
-        /** @var IoEngine */
-        $engine = $this->createStub(IoEngine::class);
-
         /** @var EventPublisher */
         $publisherOne = $this->createStub(EventPublisher::class);
 
@@ -42,8 +25,8 @@ class ApplicationPubSubTest extends TestCase
         $publisherTwo = $this->createStub(SimpleEventPublisher::class);
 
         $application = Application::instance();
-        $application->bootApplication($module);
-        $application->bootEngine($engine);
+        $application->bootApplication($this->makeGenericModule());
+        $application->bootEngine($this->makeGenericIoEngine());
 
         $application->bootEventPublisher($publisherOne);
 
@@ -59,12 +42,6 @@ class ApplicationPubSubTest extends TestCase
     /** @test */
     public function bootTwoEqualPublishers(): void
     {
-        /** @var Module */
-        $module = $this->createStub(Module::class);
-
-        /** @var IoEngine */
-        $engine = $this->createStub(IoEngine::class);
-
         /** @var EventPublisher */
         $publisherOne = $this->createStub(EventPublisher::class);
 
@@ -75,8 +52,8 @@ class ApplicationPubSubTest extends TestCase
         ));
 
         $application = Application::instance();
-        $application->bootApplication($module);
-        $application->bootEngine($engine);
+        $application->bootApplication($this->makeGenericModule());
+        $application->bootEngine($this->makeGenericIoEngine());
 
         $application->bootEventPublisher($publisherOne);
 

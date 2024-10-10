@@ -15,22 +15,9 @@ use Tests\TestCase;
 /** @SuppressWarnings(PHPMD.StaticAccess) */
 class ApplicationEngineTest extends TestCase
 {
-    public function setUp(): void
-    {
-        Application::instance()->reset();
-    }
-
-    public function tearDown(): void
-    {
-        Application::instance()->reset();
-    }
-
     /** @test */
     public function bootEngines(): void
     {
-        /** @var Module */
-        $module = $this->createStub(Module::class);
-
         /** @var IoEngine */
         $engineOne = $this->createStub(IoEngine::class);
 
@@ -43,7 +30,7 @@ class ApplicationEngineTest extends TestCase
         $application = Application::instance();
 
         // inicializa o módulo principal
-        $application->bootApplication($module);
+        $application->bootApplication($this->makeGenericModule());
 
         $application->bootEngine($engineOne);
         $application->bootEngine($engineTwo);
@@ -59,9 +46,6 @@ class ApplicationEngineTest extends TestCase
     /** @test */
     public function bootTwoEqualEngines(): void
     {
-        /** @var Module */
-        $module = $this->createStub(Module::class);
-
         /** @var IoEngine */
         $engine = $this->createStub(IoEngine::class);
 
@@ -74,7 +58,7 @@ class ApplicationEngineTest extends TestCase
         $application = Application::instance();
 
         // inicializa o módulo principal
-        $application->bootApplication($module);
+        $application->bootApplication($this->makeGenericModule());
 
         $application->bootEngine($engine);
         $application->bootEngine($engine);

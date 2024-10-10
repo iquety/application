@@ -19,9 +19,7 @@ class EngineSetTest extends TestCase
             'To return the handler, you must add at least one engine'
         );
 
-        $container = new Container();
-
-        $engineSet = new EngineSet($container);
+        $engineSet = new EngineSet($this->makeContainer());
 
         $engineSet->sourceHandler();
     }

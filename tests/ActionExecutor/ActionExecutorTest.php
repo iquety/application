@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Tests\ActionExecutor;
 
 use Iquety\Application\ActionExecutor;
-use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
-use Iquety\Application\Application;
 use Iquety\Application\Http\HttpResponseFactory;
 use Iquety\Application\Http\HttpStatus;
 use Iquety\Application\IoEngine\Action\ActionDescriptor;
@@ -16,7 +14,6 @@ use Iquety\Application\IoEngine\Mvc\Controller\Controller;
 use Iquety\Application\IoEngine\Mvc\Controller\ErrorController;
 use Iquety\Application\IoEngine\Mvc\Controller\NotFoundController;
 use Iquety\Application\IoEngine\Mvc\MvcModule;
-use Iquety\Injection\Container;
 use Tests\ActionExecutor\Stubs\AnyController;
 use Tests\ActionExecutor\Stubs\ExceptionController;
 use Tests\ActionExecutor\Stubs\MethodNotController;
@@ -31,20 +28,16 @@ class ActionExecutorTest extends TestCase
      */
     public function makeResponseBy(): void
     {
-        $httpFactory = new DiactorosHttpFactory();
-
-        $request = $httpFactory->createRequestFromGlobals();
-
-        $container = new Container();
+        $container = $this->makeContainer();
 
         $container->addFactory(
             HttpResponseFactory::class,
-            new HttpResponseFactory($httpFactory, $request)
+            $this->makeResponseFactory()
         );
 
         $container->addFactory(
             Input::class,
-            Input::fromRequest($request)
+            Input::fromRequest($this->makeServerRequest())
         );
 
         $module = $this->createMock(Module::class);
@@ -69,20 +62,16 @@ class ActionExecutorTest extends TestCase
      */
     public function methodNotAlowed(): void
     {
-        $httpFactory = new DiactorosHttpFactory();
-
-        $request = $httpFactory->createRequestFromGlobals();
-
-        $container = Application::instance()->container();
+        $container = $this->makeContainer();
 
         $container->addFactory(
             HttpResponseFactory::class,
-            new HttpResponseFactory($httpFactory, $request)
+            $this->makeResponseFactory()
         );
 
         $container->addFactory(
             Input::class,
-            Input::fromRequest($request)
+            Input::fromRequest($this->makeServerRequest())
         );
 
         $module = $this->createMock(MvcModule::class);
@@ -110,20 +99,16 @@ class ActionExecutorTest extends TestCase
      */
     public function actionError(): void
     {
-        $httpFactory = new DiactorosHttpFactory();
-
-        $request = $httpFactory->createRequestFromGlobals();
-
-        $container = Application::instance()->container();
+        $container = $this->makeContainer();
 
         $container->addFactory(
             HttpResponseFactory::class,
-            new HttpResponseFactory($httpFactory, $request)
+            $this->makeResponseFactory()
         );
 
         $container->addFactory(
             Input::class,
-            Input::fromRequest($request)
+            Input::fromRequest($this->makeServerRequest())
         );
 
         $module = $this->createMock(MvcModule::class);

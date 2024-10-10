@@ -37,9 +37,7 @@ class EngineSetSingleTest extends TestCase
             $engine::class
         ));
 
-        $container = new Container();
-
-        $engineSet = new EngineSet($container);
+        $engineSet = new EngineSet($this->makeContainer());
 
         $engineSet->add($engine);
         $engineSet->add($engine);
@@ -60,9 +58,7 @@ class EngineSetSingleTest extends TestCase
             $engineOne::class
         ));
 
-        $container = new Container();
-
-        $engineSet = new EngineSet($container);
+        $engineSet = new EngineSet($this->makeContainer());
 
         $engineSet->add($engineOne);
         $engineSet->add($engineTwo);
@@ -79,19 +75,7 @@ class EngineSetSingleTest extends TestCase
         $engine = new FcEngine();
         $engine->useModuleSet($moduleSet);
 
-        $module = new class extends FcModule {
-            public function bootDependencies(Container $container): void
-            {
-                $container->addSingleton('signature-test', fn() => 'teste');
-            }
-
-            public function bootNamespaces(CommandSourceSet &$sourceSet): void
-            {
-                $sourceSet->add(new CommandSource(
-                    'Tests\IoEngine\FrontController\Stubs'
-                ));
-            }
-        };
+        $module = $this->makeFcModuleOne('Tests\IoEngine\FrontController\Stubs');
 
         $engineSet = new EngineSet($container);
         $engineSet->add($engine);
@@ -108,25 +92,13 @@ class EngineSetSingleTest extends TestCase
     /** @test */
     public function singleEngineNotFound(): void
     {
-        $container = new Container();
+        $container = $this->makeContainer();
         $moduleSet = new ModuleSet();
 
         $engine = new FcEngine();
         $engine->useModuleSet($moduleSet);
 
-        $module = new class extends FcModule {
-            public function bootDependencies(Container $container): void
-            {
-                $container->addSingleton('signature-test', fn() => 'teste');
-            }
-
-            public function bootNamespaces(CommandSourceSet &$sourceSet): void
-            {
-                $sourceSet->add(new CommandSource(
-                    'Tests\IoEngine\FrontController\Stubs'
-                ));
-            }
-        };
+        $module = $this->makeFcModuleOne('Tests\IoEngine\FrontController\Stubs');
 
         $engineSet = new EngineSet($container);
         $engineSet->add($engine);

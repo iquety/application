@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace Tests\IoEngine;
 
+use Iquety\Application\Http\HttpMethod;
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\EngineSet;
 use Iquety\Application\IoEngine\FrontController\FcModule;
 use Iquety\Application\IoEngine\FrontController\FcEngine;
-use Iquety\Application\IoEngine\FrontController\CommandSource;
-use Iquety\Application\IoEngine\FrontController\CommandSourceSet;
 use Iquety\Application\IoEngine\Module;
 use Iquety\Application\IoEngine\ModuleSet;
 use Iquety\Application\IoEngine\Mvc\MvcModule;
 use Iquety\Application\IoEngine\Mvc\MvcEngine;
 use Iquety\Injection\Container;
-use Iquety\Routing\Router;
 use Tests\IoEngine\Mvc\Stubs\OneController;
 use Tests\IoEngine\FrontController\Stubs\SubDirectory\TwoCommand;
+use Tests\Support\Stubs\CustomFcModule;
 use Tests\TestCase;
 
 /**
@@ -45,27 +44,29 @@ class EngineSetMultiTest extends TestCase
      */
     public function multiEngineResolved(string $uri, string $dependency, string $value): void
     {
-        $container = new Container();
+        $container = $this->makeContainer();
         $moduleSet = new ModuleSet();
 
         $made = $this->makeEngineSet($container, $moduleSet);
 
-        $descriptor = $made->engineSet->resolve(Input::fromString($uri));
+        $descriptor = $made->engineSet->resolve(
+            Input::fromString($uri)
+        );
 
         $bootstrap = match ($dependency) {
-            'fc-dep-one' => $made->fcModuleOne::class,
-            'fc-dep-two' => $made->fcModuleTwo::class,
+            'fc-dep-one'  => $made->fcModuleOne::class,
+            'fc-dep-two'  => $made->fcModuleTwo::class,
             'mvc-dep-one' => $made->mvcModuleOne::class,
             'mvc-dep-two' => $made->mvcModuleTwo::class,
-            default => ''
+            default       => ''
         };
 
         $className = match ($dependency) {
-            'fc-dep-one' => TwoCommand::class,
-            'fc-dep-two' => TwoCommand::class,
+            'fc-dep-one'  => TwoCommand::class,
+            'fc-dep-two'  => TwoCommand::class,
             'mvc-dep-one' => OneController::class,
             'mvc-dep-two' => OneController::class,
-            default => ''
+            default       => ''
         };
 
         $this->assertSame($bootstrap, $descriptor->module());
@@ -89,15 +90,41 @@ class EngineSetMultiTest extends TestCase
     {
         $engineSet = new EngineSet($container);
 
-        $engineOne = $this->makeFcEngine($container, $moduleSet, [
-            $fcModuleOne = $this->makeFcModuleOne(),
-            $fcModuleTwo = $this->makeFcModuleTwo()
-        ]);
+        $fcModuleOne = $this->makeFcModuleOne(
+            'Tests\IoEngine\FrontController\Stubs',
+            ['fc-dep-one' => fn() => 'one']
+        );
 
-        $engineTwo = $this->makeMvcEngine($container, $moduleSet, [
-            $mvcModuleOne = $this->makeMvcModuleOne(),
-            $mvcModuleTwo = $this->makeMvcModuleTwo()
-        ]);
+        $fcModuleTwo = $this->makeFcModuleTwo(
+            'Tests\IoEngine\FrontController\Stubs\SubDirectory',
+            ['fc-dep-two' => fn() => 'two']
+        );
+
+        $mvcModuleOne = $this->makeMvcModuleOne(
+            HttpMethod::GET,
+            '/mvc-one/:id',
+            OneController::class . '@execute',
+            ['mvc-dep-one' => fn() => 'one']
+        );
+
+        $mvcModuleTwo = $this->makeMvcModuleTwo(
+            HttpMethod::GET,
+            '/mvc-two/:id',
+            OneController::class . '@execute',
+            ['mvc-dep-two' => fn() => 'two']
+        );
+
+        $engineOne = $this->makeFcEngine(
+            $container,
+            $moduleSet,
+            [ $fcModuleOne, $fcModuleTwo ]
+        );
+
+        $engineTwo = $this->makeMvcEngine(
+            $container,
+            $moduleSet,
+            [ $mvcModuleOne, $mvcModuleTwo ]
+        );
 
         $engineSet->add($engineOne);
         $engineSet->add($engineTwo);
@@ -143,67 +170,39 @@ class EngineSetMultiTest extends TestCase
         return $engine;
     }
 
-    private function makeFcModuleOne(): FcModule
-    {
-        return new class extends FcModule {
-            public function bootDependencies(Container $container): void
-            {
-                $container->addSingleton('fc-dep-one', fn() => 'one');
-            }
+    // private function makeFcModuleOne(): FcModule
+    // {
+    //     return $this->makeFcModuleOne(
+    //         'Tests\IoEngine\FrontController\Stubs',
+    //         ['fc-dep-one' => fn() => 'one']
+    //     );
+    // }
 
-            public function bootNamespaces(CommandSourceSet &$sourceSet): void
-            {
-                $sourceSet->add(new CommandSource(
-                    'Tests\IoEngine\FrontController\Stubs'
-                ));
-            }
-        };
-    }
+    // private function makeFcModuleTwo(): FcModule
+    // {
+    //     return $this->makeFcModuleTwo(
+    //         'Tests\IoEngine\FrontController\Stubs\SubDirectory',
+    //         ['fc-dep-two' => fn() => 'two']
+    //     );
+    // }
 
-    private function makeFcModuleTwo(): FcModule
-    {
-        return new class extends FcModule {
-            public function bootDependencies(Container $container): void
-            {
-                $container->addSingleton('fc-dep-two', fn() => 'two');
-            }
+    // private function makeMvcModuleOne(): MvcModule
+    // {
+    //     return $this->makeMvcModule(
+    //         HttpMethod::GET,
+    //         '/mvc-one/:id',
+    //         OneController::class . '@execute',
+    //         ['mvc-dep-one' => fn() => 'one']
+    //     );
+    // }
 
-            public function bootNamespaces(CommandSourceSet &$sourceSet): void
-            {
-                $sourceSet->add(new CommandSource(
-                    'Tests\IoEngine\FrontController\Stubs\SubDirectory'
-                ));
-            }
-        };
-    }
-
-    private function makeMvcModuleOne(): MvcModule
-    {
-        return new class extends MvcModule {
-            public function bootDependencies(Container $container): void
-            {
-                $container->addSingleton('mvc-dep-one', fn() => 'one');
-            }
-
-            public function bootRoutes(Router &$router): void
-            {
-                $router->get('/mvc-one/:id')->usingAction(OneController::class, 'execute');
-            }
-        };
-    }
-
-    private function makeMvcModuleTwo(): MvcModule
-    {
-        return new class extends MvcModule {
-            public function bootDependencies(Container $container): void
-            {
-                $container->addSingleton('mvc-dep-two', fn() => 'two');
-            }
-
-            public function bootRoutes(Router &$router): void
-            {
-                $router->get('/mvc-two/:id')->usingAction(OneController::class, 'execute');
-            }
-        };
-    }
+    // private function makeMvcModuleTwo(): MvcModule
+    // {
+    //     return $this->makeMvcModule(
+    //         HttpMethod::GET,
+    //         '/mvc-two/:id',
+    //         OneController::class . '@execute',
+    //         ['mvc-dep-two' => fn() => 'two']
+    //     );
+    // }
 }

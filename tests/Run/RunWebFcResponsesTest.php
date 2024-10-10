@@ -38,15 +38,6 @@ class RunWebFcResponsesTest extends TestCase
         Application::instance()->reset();
     }
 
-    /**
-     * o container é obtido da aplicação dentro dos comandos
-     * por isso deve ser manipulado aqui através dela
-     */
-    private function makeContainer(): Container
-    {
-        return Application::instance()->container();
-    }
-
     /** @test */
     public function response404(): void
     {

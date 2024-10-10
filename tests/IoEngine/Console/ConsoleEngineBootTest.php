@@ -15,6 +15,7 @@ use Iquety\Application\IoEngine\ModuleSet;
 use Iquety\Application\IoEngine\Mvc\MvcModule;
 use Iquety\Injection\Container;
 use Iquety\Routing\Router;
+use ReflectionClass;
 use Tests\TestCase;
 
 class ConsoleEngineBootTest extends TestCase
@@ -29,11 +30,11 @@ class ConsoleEngineBootTest extends TestCase
 
         /** @var ConsoleEngine $engine */
 
-        $engine->useContainer(new Container());
+        $engine->useContainer($this->makeContainer());
 
         $engine->useModuleSet(new ModuleSet());
 
-        $engine->boot($this->makeConsoleModule());
+        $engine->boot($this->makeConsoleModuleOne());
 
         $this->assertFalse($engine->isBooted());
     }
@@ -41,9 +42,9 @@ class ConsoleEngineBootTest extends TestCase
     /** @test */
     public function bootMvcModule(): void
     {
-        $engine = $this->makeEngine(new Container());
+        $engine = $this->makeEngine($this->makeContainer());
 
-        $engine->boot($this->makeMvcModule());
+        $engine->boot($this->makeMvcModuleOne());
 
         $this->assertFalse($engine->isBooted());
     }
@@ -51,9 +52,9 @@ class ConsoleEngineBootTest extends TestCase
     /** @test */
     public function bootFcModule(): void
     {
-        $engine = $this->makeEngine(new Container());
+        $engine = $this->makeEngine($this->makeContainer());
 
-        $engine->boot($this->makeFcModule());
+        $engine->boot($this->makeFcModuleOne('Tests\Run\Actions'));
 
         $this->assertFalse($engine->isBooted());
     }
@@ -61,9 +62,11 @@ class ConsoleEngineBootTest extends TestCase
     /** @test */
     public function bootConsoleModule(): void
     {
-        $engine = $this->makeEngine(new Container());
+        $engine = $this->makeEngine($this->makeContainer());
 
-        $engine->boot($this->makeConsoleModule());
+        $module = $this->makeConsoleModuleOne(__DIR__ . '/Console');
+
+        $engine->boot($module);
 
         $this->assertTrue($engine->isBooted());
 
@@ -72,8 +75,10 @@ class ConsoleEngineBootTest extends TestCase
             $engine->sourceHandler()->getCommandName()
         );
 
+        $rootPath = dirname(__DIR__, 2);
+
         $this->assertSame(
-            __DIR__,
+            $rootPath . '/Support/Stubs',
             $engine->sourceHandler()->getCommandPath()
         );
 
@@ -85,67 +90,6 @@ class ConsoleEngineBootTest extends TestCase
         );
 
         $this->assertTrue($engine->isBooted());
-    }
-
-    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
-    private function makeMvcModule(): MvcModule
-    {
-        return new class extends MvcModule
-        {
-            public function bootDependencies(Container $container): void
-            {
-                // ...
-            }
-
-            public function bootRoutes(Router &$router): void
-            {
-            }
-        };
-    }
-
-    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
-    private function makeFcModule(): FcModule
-    {
-        return new class extends FcModule
-        {
-            public function bootDependencies(Container $container): void
-            {
-                // ...
-            }
-
-            public function bootNamespaces(CommandSourceSet &$sourceSet): void
-            {
-                $sourceSet->add(new CommandSource('Tests\Run\Actions'));
-            }
-        };
-    }
-
-    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
-    private function makeConsoleModule(): ConsoleModule
-    {
-        return new class extends ConsoleModule
-        {
-            public function bootDependencies(Container $container): void
-            {
-                // ...
-            }
-
-            public function bootRoutineDirectories(RoutineSourceSet &$sourceSet): void
-            {
-                $sourceSet->add(new RoutineSource(__DIR__ . '/Console'));
-            }
-
-            public function getCommandName(): string
-            {
-                return 'test-script';
-            }
-
-            /** Devolve o diretório real da aplicação que implementa o Console */
-            public function getCommandPath(): string
-            {
-                return __DIR__;
-            }
-        };
     }
 
     private function makeEngine(Container $container): ConsoleEngine

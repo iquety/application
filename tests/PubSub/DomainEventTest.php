@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\PubSub;
 
 use DateTimeImmutable;
-use DateTimeZone;
 use Iquety\Application\PubSub\DomainEvent;
 use Tests\PubSub\Stubs\FakeEventOccurred;
 use Tests\TestCase;
@@ -25,7 +24,10 @@ class DomainEventTest extends TestCase
         $this->assertInstanceOf(DateTimeImmutable::class, $event->schedule());
     }
 
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function factory(): void
     {
         /** @var FakeEventOccurred $event */

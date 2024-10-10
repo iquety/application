@@ -43,7 +43,10 @@ class ConfigurationTest extends TestCase
         $this->assertSame(33, $config->get('not exists', 33));
     }
 
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function loadFrom(): void
     {
         $config = Configuration::loadFrom(__DIR__ . '/Stubs/env');
@@ -56,14 +59,17 @@ class ConfigurationTest extends TestCase
             "NUMERIC_TWO" => 1.23,
             "FALSE_1"     => 0,
             "FALSE_2"     => false,
-            "FALSE_3"     => FALSE,
+            "FALSE_3"     => false,
             "TRUE_1"      => 1,
             "TRUE_2"      => true,
-            "TRUE_3"      => TRUE,
+            "TRUE_3"      => true,
         ], $config->toArray());
     }
 
-    /** @test */
+    /**
+     * @test
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function loadFileNotFound(): void
     {
         $file = __DIR__ . '/env';

@@ -24,7 +24,7 @@ class MvcEngineBootTest extends TestCase
     {
         $engine = $this->makeEngine(new Container());
 
-        $engine->boot($this->makeConsoleModule());
+        $engine->boot($this->makeConsoleModuleOne(__DIR__ . '/Console'));
 
         $this->assertFalse($engine->isBooted());
     }
@@ -34,7 +34,7 @@ class MvcEngineBootTest extends TestCase
     {
         $engine = $this->makeEngine(new Container());
 
-        $engine->boot($this->makeFcModule());
+        $engine->boot($this->makeFcModuleOne('Tests\Run\Actions'));
 
         $this->assertFalse($engine->isBooted());
     }
@@ -44,73 +44,11 @@ class MvcEngineBootTest extends TestCase
     {
         $engine = $this->makeEngine(new Container());
 
-        $engine->boot($this->makeMvcModule());
+        $engine->boot($this->makeMvcModuleOne());
 
         $this->assertTrue($engine->isBooted());
 
         $this->assertTrue($engine->sourceHandler()->hasRoutes());
-    }
-
-    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
-    private function makeMvcModule(): MvcModule
-    {
-        return new class extends MvcModule
-        {
-            public function bootDependencies(Container $container): void
-            {
-                // ...
-            }
-
-            public function bootRoutes(Router &$router): void
-            {
-                $router->any('/');
-            }
-        };
-    }
-
-    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
-    private function makeFcModule(): FcModule
-    {
-        return new class extends FcModule
-        {
-            public function bootDependencies(Container $container): void
-            {
-                // ...
-            }
-
-            public function bootNamespaces(CommandSourceSet &$sourceSet): void
-            {
-                $sourceSet->add(new CommandSource('Tests\Run\Actions'));
-            }
-        };
-    }
-
-    /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
-    private function makeConsoleModule(): ConsoleModule
-    {
-        return new class extends ConsoleModule
-        {
-            public function bootDependencies(Container $container): void
-            {
-                // ...
-            }
-
-            public function bootRoutineDirectories(RoutineSourceSet &$sourceSet): void
-            {
-                $sourceSet->add(new RoutineSource(__DIR__ . '/Console'));
-            }
-
-            public function getCommandName(): string
-            {
-                return 'test-script';
-            }
-
-            /** Devolve o diretório real da aplicação que implementa o Console */
-            public function getCommandPath(): string
-            {
-                return __DIR__;
-            }
-        };
     }
 
     private function makeEngine(Container $container): MvcEngine

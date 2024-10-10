@@ -7,7 +7,6 @@ namespace Tests\IoEngine;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use Iquety\Application\IoEngine\PublisherSet;
-use Iquety\PubSub\Event\Event;
 use Iquety\PubSub\Publisher\PhpEventPublisher;
 use Iquety\PubSub\Publisher\SimpleEventPublisher;
 use RuntimeException;
