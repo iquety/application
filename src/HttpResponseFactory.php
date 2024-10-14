@@ -27,7 +27,7 @@ class HttpResponseFactory
         if ($accept === '') {
             $accept = 'text/html';
         }
-        
+
         $this->mimeType = HttpMime::from($accept);
     }
 
@@ -87,7 +87,6 @@ class HttpResponseFactory
         }
 
         return match ($this->mimeType) {
-            HttpMime::HTML => $this->factory->createResponseHtml($content, $status),
             HttpMime::JSON => $this->factory->createResponseJson($content, $status),
             HttpMime::TEXT => $this->factory->createResponseText($content, $status),
             HttpMime::XML => $this->factory->createResponseXml($content, $status),

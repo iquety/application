@@ -6,7 +6,7 @@ namespace Tests\IoEngine\FrontController\Stubs;
 
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\FrontController\Command\Command;
-use Iquety\Application\Http\HttpMethod;
+use Iquety\Http\HttpMethod;
 
 class CheckMethodCommand extends Command
 {

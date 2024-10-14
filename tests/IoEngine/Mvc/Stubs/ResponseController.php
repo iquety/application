@@ -6,7 +6,7 @@ namespace Tests\IoEngine\Mvc\Stubs;
 
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\Mvc\Controller\Controller;
-use Iquety\Application\Http\HttpFactory;
+use Iquety\Http\HttpFactory;
 use Psr\Http\Message\ResponseInterface;
 
 class ResponseController extends Controller

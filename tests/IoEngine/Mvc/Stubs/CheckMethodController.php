@@ -6,7 +6,7 @@ namespace Tests\IoEngine\Mvc\Stubs;
 
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\Mvc\Controller\Controller;
-use Iquety\Application\Http\HttpMethod;
+use Iquety\Http\HttpMethod;
 
 class CheckMethodController extends Controller
 {

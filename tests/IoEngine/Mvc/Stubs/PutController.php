@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\IoEngine\Mvc\Stubs;
 
-use Iquety\Application\Http\HttpMethod;
+use Iquety\Http\HttpMethod;
 
 class PutController extends CheckMethodController
 {

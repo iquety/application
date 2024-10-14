@@ -6,7 +6,7 @@ namespace Tests\IoEngine\FrontController\Stubs;
 
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\FrontController\Command\Command;
-use Iquety\Application\Http\HttpFactory;
+use Iquety\Http\HttpFactory;
 use Psr\Http\Message\ResponseInterface;
 
 class OneCommand extends Command
