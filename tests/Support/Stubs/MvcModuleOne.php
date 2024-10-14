@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Support\Stubs;
 
-use Iquety\Application\Http\HttpMethod;
 use Iquety\Application\IoEngine\Mvc\MvcModule;
+use Iquety\Http\HttpMethod;
 use Iquety\Injection\Container;
 use Iquety\Routing\Router;
 

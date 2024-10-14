@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\Run;
 
-use Iquety\Application\Adapter\Session\NativeSession;
 use Iquety\Application\Environment;
-use Iquety\Application\Http\HttpFactory;
-use Iquety\Application\Http\Session;
 use Iquety\Application\IoEngine\EngineSet;
 use Iquety\Application\IoEngine\FrontController\FcEngine;
 use Iquety\Application\IoEngine\Module;
 use Iquety\Application\IoEngine\ModuleSet;
 use Iquety\Application\RunWeb;
+use Iquety\Http\Adapter\Session\NativeSession;
+use Iquety\Http\HttpFactory;
+use Iquety\Http\Session;
 use Iquety\Injection\Container;
 use Psr\Http\Message\ResponseInterface;
 use Tests\TestCase;
@@ -65,7 +65,7 @@ class RunWebFcResponsesTest extends TestCase
         // disponibiliza as dependências obrigatórias
         $container->addFactory(Session::class, new NativeSession());
         $container->addFactory(HttpFactory::class, $factory);
-        
+
         $originalRequest = $factory->createRequestFromGlobals();
         $originalRequest = $originalRequest->withUri($factory->createUri($uri));
 

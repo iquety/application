@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\IoEngine;
 
-use Iquety\Application\Http\HttpMethod;
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\EngineSet;
 use Iquety\Application\IoEngine\FrontController\FcEngine;
 use Iquety\Application\IoEngine\Module;
 use Iquety\Application\IoEngine\ModuleSet;
 use Iquety\Application\IoEngine\Mvc\MvcEngine;
+use Iquety\Http\HttpMethod;
 use Iquety\Injection\Container;
 use Tests\IoEngine\Mvc\Stubs\OneController;
 use Tests\IoEngine\FrontController\Stubs\SubDirectory\TwoCommand;

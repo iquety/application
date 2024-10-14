@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Iquety\Application\Http;
+namespace Iquety\Application;
 
-use InvalidArgumentException;
 use Iquety\Application\Environment;
+use Iquety\Http\HttpFactory;
+use Iquety\Http\HttpMime;
+use Iquety\Http\HttpStatus;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use SimpleXMLElement;
@@ -22,9 +24,13 @@ class HttpResponseFactory
         private HttpFactory $factory,
         private ServerRequestInterface $serverRequest
     ) {
-        $this->mimeType = HttpMime::makeBy(
-            $this->serverRequest->getHeaderLine('Accept')
-        );
+        $accept = $this->serverRequest->getHeaderLine('Accept');
+
+        if ($accept === '') {
+            $accept = 'text/plain';
+        }
+        
+        $this->mimeType = HttpMime::from($accept);
 
         $this->environment = Environment::makeBy(
             $this->serverRequest->getHeaderLine('Environment')
@@ -84,7 +90,7 @@ class HttpResponseFactory
 
         $response = $this->factory->createResponse(
             $status->value,
-            HttpStatus::reason($status->value)
+            HttpStatus::from($status->value)->reason()
         );
 
         $response = $response->withHeader('Content-type', $this->mimeType->value);

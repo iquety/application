@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Support;
 
-use Iquety\Application\Adapter\Session\MemorySession;
-use Iquety\Application\Http\HttpFactory;
-use Iquety\Application\Http\HttpMethod;
-use Iquety\Application\Http\Session;
 use Iquety\Application\IoEngine\Console\ConsoleModule;
 use Iquety\Application\IoEngine\FrontController\FcModule;
 use Iquety\Application\IoEngine\Module;
 use Iquety\Application\IoEngine\Mvc\MvcModule;
+use Iquety\Http\Adapter\Session\MemorySession;
+use Iquety\Http\HttpFactory;
+use Iquety\Http\HttpMethod;
+use Iquety\Http\Session;
 use Tests\Support\Stubs\ConsoleModuleOne;
 use Tests\Support\Stubs\ConsoleModuleTwo;
 use Tests\Support\Stubs\FcModuleOne;

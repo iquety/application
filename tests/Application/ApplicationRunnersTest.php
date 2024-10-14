@@ -6,7 +6,6 @@ namespace Tests\Application;
 
 use ArrayObject;
 use Iquety\Application\Application;
-use Iquety\Application\Http\HttpMethod;
 use Iquety\Application\IoEngine\Console\ConsoleEngine;
 use Iquety\Application\IoEngine\Console\ConsoleInput;
 use Iquety\Application\IoEngine\Console\ConsoleOutput;
@@ -14,6 +13,7 @@ use Iquety\Application\IoEngine\Module;
 use Iquety\Application\IoEngine\Mvc\MvcEngine;
 use Iquety\Application\IoEngine\Mvc\MvcModule;
 use Iquety\Console\Terminal;
+use Iquety\Http\HttpMethod;
 use Psr\Http\Message\ResponseInterface;
 use Tests\TestCase;
 

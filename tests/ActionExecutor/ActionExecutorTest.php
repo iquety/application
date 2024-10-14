@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Tests\ActionExecutor;
 
 use Iquety\Application\ActionExecutor;
-use Iquety\Application\Http\HttpResponseFactory;
-use Iquety\Application\Http\HttpStatus;
+use Iquety\Application\HttpResponseFactory;
 use Iquety\Application\IoEngine\Action\ActionDescriptor;
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\Module;
@@ -14,6 +13,7 @@ use Iquety\Application\IoEngine\Mvc\Controller\Controller;
 use Iquety\Application\IoEngine\Mvc\Controller\ErrorController;
 use Iquety\Application\IoEngine\Mvc\Controller\NotFoundController;
 use Iquety\Application\IoEngine\Mvc\MvcModule;
+use Iquety\Http\HttpStatus;
 use Tests\ActionExecutor\Stubs\AnyController;
 use Tests\ActionExecutor\Stubs\ExceptionController;
 use Tests\ActionExecutor\Stubs\MethodNotController;

@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Iquety\Application\IoEngine\FrontController\Command;
 
-use Iquety\Application\IoEngine\Action\Input;
-use Iquety\Application\Http\HttpFactory;
+use Iquety\Http\HttpFactory;
 use Psr\Http\Message\ResponseInterface;
 
 class MainCommand extends Command

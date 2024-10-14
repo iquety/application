@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Support;
 
-use Iquety\Application\Adapter\HttpFactory\DiactorosHttpFactory;
-use Iquety\Application\Http\HttpFactory;
-use Iquety\Application\Http\HttpResponseFactory;
+use Iquety\Application\HttpResponseFactory;
+use Iquety\Http\Adapter\HttpFactory\DiactorosHttpFactory;
+use Iquety\Http\HttpFactory;
 use Psr\Http\Message\ServerRequestInterface;
 
 trait HttpFactories

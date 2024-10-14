@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\IoEngine\FrontController;
 
-use Iquety\Application\Http\HttpMethod;
 use Iquety\Application\IoEngine\FrontController\FcEngine;
 use Iquety\Application\IoEngine\ModuleSet;
+use Iquety\Http\HttpMethod;
 use Iquety\Injection\Container;
 use Tests\TestCase;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Iquety\Application\IoEngine\Action;
 
-use Iquety\Application\Http\HttpMethod;
+use Iquety\Http\HttpMethod;
 use Psr\Http\Message\ServerRequestInterface;
 
 trait MethodChecker

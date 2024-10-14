@@ -6,10 +6,9 @@ namespace Iquety\Application;
 
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\Action\MethodNotAllowedException;
-use Iquety\Application\Http\HttpResponseFactory;
-use Iquety\Application\Http\HttpStatus;
 use Iquety\Application\IoEngine\Action\ActionDescriptor;
 use Iquety\Application\IoEngine\Module;
+use Iquety\Http\HttpStatus;
 use Iquety\Injection\Container;
 use Iquety\Injection\InversionOfControl;
 use Psr\Http\Message\ResponseInterface;

@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Iquety\Application;
 
-use Iquety\Application\Http\HttpFactory;
-use Iquety\Application\Http\HttpMime;
-use Iquety\Application\Http\HttpResponseFactory;
-use Iquety\Application\Http\Session;
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\EngineSet;
 use Iquety\Application\IoEngine\Module;
+use Iquety\Http\HttpFactory;
+use Iquety\Http\HttpMime;
+use Iquety\Http\Session;
 use Iquety\Injection\Container;
 use Iquety\Injection\ContainerException;
 use Psr\Http\Message\ResponseInterface;

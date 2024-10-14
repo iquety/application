@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tests\IoEngine\Action;
 
 use Iquety\Application\Application;
-use Iquety\Application\Http\HttpMethod;
 use Iquety\Application\IoEngine\Action\Makeable;
 use Iquety\Application\IoEngine\Action\MethodChecker;
 use Iquety\Application\IoEngine\Action\MethodNotAllowedException;
+use Iquety\Http\HttpMethod;
 use Psr\Http\Message\ServerRequestInterface;
 use Tests\TestCase;
 
