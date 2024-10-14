@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Support;
 
+use Iquety\Application\Environment;
 use Iquety\Application\HttpResponseFactory;
 use Iquety\Http\Adapter\HttpFactory\DiactorosHttpFactory;
 use Iquety\Http\HttpFactory;
@@ -23,7 +24,8 @@ trait HttpFactories
     {
         return new HttpResponseFactory(
             $this->makeHttpFactory(),
-            $this->makeServerRequest()
+            $this->makeServerRequest(),
+            Environment::STAGE
         );
     }
 

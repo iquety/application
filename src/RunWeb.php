@@ -87,7 +87,7 @@ class RunWeb
 
         $this->container->addSingleton(
             HttpResponseFactory::class,
-            fn() => new HttpResponseFactory($httpFactory, $request)
+            fn() => new HttpResponseFactory($httpFactory, $request, $this->environment)
         );
     }
 

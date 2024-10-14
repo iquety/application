@@ -53,16 +53,4 @@ enum Environment: string
      * Usado na execução dos comandos de terminal.
      */
     case CONSOLE = 'console';
-
-    public static function makeBy(string $enviromnent): Environment
-    {
-        return match ($enviromnent) {
-            'development' => self::DEVELOPMENT,
-            'production'  => self::PRODUCTION,
-            'stage'       => self::STAGE,
-            'testing'     => self::TESTING,
-            'console'     => self::CONSOLE,
-            default       => self::PRODUCTION
-        };
-    }
 }

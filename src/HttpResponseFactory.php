@@ -10,31 +10,25 @@ use Iquety\Http\HttpMime;
 use Iquety\Http\HttpStatus;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use SimpleXMLElement;
 use Throwable;
 
 class HttpResponseFactory
 {
     private HttpMime $mimeType;
 
-    private Environment $environment;
-
     /** @SuppressWarnings(PHPMD.StaticAccess) */
     public function __construct(
         private HttpFactory $factory,
-        private ServerRequestInterface $serverRequest
+        private ServerRequestInterface $serverRequest,
+        private Environment $environment
     ) {
         $accept = $this->serverRequest->getHeaderLine('Accept');
 
         if ($accept === '') {
-            $accept = 'text/plain';
+            $accept = 'text/html';
         }
         
         $this->mimeType = HttpMime::from($accept);
-
-        $this->environment = Environment::makeBy(
-            $this->serverRequest->getHeaderLine('Environment')
-        );
     }
 
     /** @param array<int|string,mixed>|string|ResponseInterface $content */
@@ -88,105 +82,26 @@ class HttpResponseFactory
             return $content;
         }
 
+        if ($content === '') {
+            return $this->createResponseEmpty($status);
+        }
+
+        return match ($this->mimeType) {
+            HttpMime::HTML => $this->factory->createResponseHtml($content, $status),
+            HttpMime::JSON => $this->factory->createResponseJson($content, $status),
+            HttpMime::TEXT => $this->factory->createResponseText($content, $status),
+            HttpMime::XML => $this->factory->createResponseXml($content, $status),
+            default => $this->factory->createResponseHtml($content, $status)
+        };
+    }
+
+    private function createResponseEmpty(HttpStatus $status): ResponseInterface
+    {
         $response = $this->factory->createResponse(
             $status->value,
             HttpStatus::from($status->value)->reason()
         );
 
-        $response = $response->withHeader('Content-type', $this->mimeType->value);
-
-        if ($content === '') {
-            return $response;
-        }
-
-        $resolvedContent = match ($this->mimeType) {
-            HttpMime::HTML => $this->makeHtmlResponse($content),
-            HttpMime::JSON => $this->makeJsonResponse($content),
-            HttpMime::TEXT => $this->makeTextResponse($content),
-            HttpMime::XML  => $this->makeXmlResponse($content),
-            // default        => $this->makeHtmlResponse($content)
-        };
-
-        return $response->withBody(
-            $this->factory->createStream($resolvedContent)
-        );
-    }
-
-    /** @param array<int|string,mixed>|string $content */
-    private function makeHtmlResponse(array|string $content): string
-    {
-        if (is_array($content) === true) {
-            return $this->makeTextResponse($content);
-        }
-
-        return $content;
-    }
-
-    /** @param array<int|string,mixed>|string $content */
-    private function makeJsonResponse(array|string $content): string
-    {
-        if (is_string($content) === true) {
-            $content = [ 'content' => $content ];
-        }
-
-        return (string)json_encode($content, JSON_FORCE_OBJECT);
-    }
-
-    /** @param array<int|string,mixed>|string $content */
-    private function makeTextResponse(array|string $content, int $level = 0): string
-    {
-        if (is_array($content) === false) {
-            return $content;
-        }
-
-        $padding = str_repeat('  ', $level);
-
-        $textualContent = '';
-
-        foreach ($content as $name => $value) {
-            if (is_array($value) === true) {
-                $textualContent .= $this->makeTextResponse($value, $level + 1);
-                continue;
-            }
-
-            $textualContent .= "$padding$name=$value\n";
-        }
-
-        return $textualContent;
-    }
-
-    /** @param array<int|string,mixed>|string $content */
-    private function makeXmlResponse(array|string $content): string
-    {
-        if (is_string($content) === true) {
-            $content = [ 'content' => $content ];
-        }
-
-        $mainElement = new SimpleXMLElement('<root/>');
-
-        return $this->arrayToXml($content, $mainElement);
-    }
-
-    /** @param array<int|string,mixed> $content */
-    private function arrayToXml(array $content, SimpleXMLElement $element): string
-    {
-        foreach ($content as $tag => $value) {
-            if (is_numeric($tag) === true) {
-                $tag = 'item';
-            }
-
-            if (is_array($value) === true) {
-                $this->arrayToXml($value, $element->addChild((string)$tag));
-
-                continue;
-            }
-
-            $element->addChild(
-                (string)$tag,
-                (string)htmlentities((string)$value)
-            );
-        }
-
-        return (string)$element->asXML();
+        return $response->withHeader('Content-type', $this->mimeType->value);
     }
 }
