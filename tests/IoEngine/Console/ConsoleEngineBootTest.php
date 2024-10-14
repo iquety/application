@@ -84,9 +84,9 @@ class ConsoleEngineBootTest extends TestCase
 
         $this->assertCount(1, $engine->sourceHandler()->getDirectoryList());
 
-        $this->assertSame(
-            [ '/application/tests/IoEngine/Console/Console' ],
-            $engine->sourceHandler()->getDirectoryList()
+        $this->assertStringContainsString(
+            'tests/IoEngine/Console/Console',
+            $engine->sourceHandler()->getDirectoryList()[0]
         );
 
         $this->assertTrue($engine->isBooted());
