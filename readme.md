@@ -22,16 +22,16 @@ composer require iquety/application
 
 - Separation of concerns, using bootable modules;
 - Extremely flexible dependencies, using Hexagonal architecture (Ports and Adapters);
-- Multiple mechanisms to manage user inputs (MVC or FrontController);
+- Multiple mechanisms to manage user inputs (MVC, FrontController or Console);
 - Publish/Subscribe pattern for event-based architecture.
 
 ### About each Module
 
-- May have the most appropriate mechanism (MVC or FrontController);
+- May have the most appropriate mechanism (MVC, FrontController or Console);
 - You can define your own routes;
 - You can define your own dependencies;
 - Its dependencies are only manufactured if a module route is accessed;
-- The invocation of actions (Controller/Command) is done using Inversion of Control.
+- The invocation of web actions (Controller/Command) is done using Inversion of Control.
 
 For detailed information, see [Documentation Summary](docs/en/index.md).
 

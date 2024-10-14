@@ -11,19 +11,21 @@ dos dados, enviá-los para a interface do usuário (a exibição).
 
 Esse padrão promove uma clara Separação das Preocupações (SOC).
 
-Para configurar rotas para o motor MVC, é preciso implementar um bootstrap
-do tipo `MvcBootstrap`:
+Para configurar rotas para o motor MVC, é preciso implementar um inicializador
+do tipo `MvcModule`:
 
 ```php
 // CustomMvcBootstrap.php
 
-class CustomMvcBootstrap extends MvcBootstrap
+class CustomMvcModule extends MvcModule
 {
     public function bootDependencies(Container $container): void
     {
         $container->addSingleton(Session::class, MemorySession::class);
 
         $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
+
+        $container->addFactory(MyInterface::class, new MyImplementation());
     }
 
     public function bootRoutes(Router &$router): void
@@ -40,7 +42,7 @@ $app = Application::instance();
 
 $app->bootEngine(new MvcEngine());
 
-$app->bootApplication(new CustomMvcBootstrap());
+$app->bootApplication(new CustomMvcModule());
 
 $response = $app->run();
 
@@ -58,6 +60,8 @@ public function bootDependencies(Container $container): void
     $container->addSingleton(Session::class, MemorySession::class);
 
     $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
+
+    $container->addFactory(MyInterface::class, new MyImplementation());
 }
 ```
 

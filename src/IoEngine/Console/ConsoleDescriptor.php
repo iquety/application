@@ -15,7 +15,7 @@ class ConsoleDescriptor extends ActionDescriptor
     public static function factory(string $bootstrapClass, string $output, int $status): self
     {
         $descriptor = new self(
-            Script::class,
+            ConsoleRoutine::class,
             $bootstrapClass,
             '',
             ''

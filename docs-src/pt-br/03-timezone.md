@@ -12,7 +12,7 @@ Mas é possível mudar isso através do método `useTimezone`:
 ```php
 $app = Application::instance();
 
-$app->useTimezone(new DateTimeZone('America/Vancouver'));
+$app->useTimeZone(new DateTimeZone('America/Vancouver'));
 ```
 
 --page-nav--

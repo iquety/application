@@ -13,7 +13,7 @@ interfaces e não para implementações". Dessa forma, uma boa prática é atrel
 uma implementação ao nome da interface e fabricar a dependência a partir da interface.
 
 ```php
-class CustomMvcBootstrap extends MvcBootstrap
+class CustomMvcModule extends MvcModule
 {
     public function bootDependencies(Container $container): void
     {

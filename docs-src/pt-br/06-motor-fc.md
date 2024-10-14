@@ -16,18 +16,20 @@ O funcionamento é muito semelhante ao MVC, porém, tende a prover uma Separaç�
 Preocupações (SOC) ainda melhor e mais bem definida.
 
 Para configurar a localização da hierarquia de comandos para o mecanismo FrontController,
-é preciso implementar um bootstrap do tipo `FcBootstrap`:
+é preciso implementar um inicializador do tipo `FcModule`:
 
 ```php
-// CustomFcBootstrap.php
+// CustomFcModule.php
 
-class CustomFcBootstrap extends FcBootstrap
+class CustomFcModule extends FcModule
 {
     public function bootDependencies(Container $container): void
     {
         $container->addSingleton(Session::class, MemorySession::class);
 
         $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
+
+        $container->addFactory(MyInterface::class, new MyImplementation());
     }
 
     public function bootNamespaces(SourceSet &$sourceSet): void
@@ -44,7 +46,7 @@ $app = Application::instance();
 
 $app->bootEngine(new FcEngine());
 
-$app->bootApplication(new CustomFcBootstrap());
+$app->bootApplication(new CustomFcModule());
 
 $response = $app->run();
 
@@ -62,6 +64,8 @@ public function bootDependencies(Container $container): void
     $container->addSingleton(Session::class, MemorySession::class);
 
     $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
+
+    $container->addFactory(MyInterface::class, new MyImplementation());
 }
 ```
 

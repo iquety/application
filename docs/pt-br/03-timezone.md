@@ -13,7 +13,7 @@ Mas é possível mudar isso através do método `useTimezone`:
 ```php
 $app = Application::instance();
 
-$app->useTimezone(new DateTimeZone('America/Vancouver'));
+$app->useTimeZone(new DateTimeZone('America/Vancouver'));
 ```
 
 [◂ Modo de execução](02-modo-de-execucao.md) | [Índice da documentação](indice.md) | [Motores ▸](04-motores.md)

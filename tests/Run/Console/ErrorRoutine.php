@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tests\Run\Console;
 
 use Exception;
-use Iquety\Application\IoEngine\Console\Script;
+use Iquety\Application\IoEngine\Console\ConsoleRoutine;
 use Iquety\Console\Arguments;
 
-class ErrorScript extends Script
+class ErrorRoutine extends ConsoleRoutine
 {
     protected function initialize(): void
     {

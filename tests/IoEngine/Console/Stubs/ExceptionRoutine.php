@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tests\IoEngine\Console\Stubs;
 
 use Exception;
-use Iquety\Application\IoEngine\Console\Script;
+use Iquety\Application\IoEngine\Console\ConsoleRoutine;
 use Iquety\Console\Arguments;
 
-class ExceptionRoutine extends Script
+class ExceptionRoutine extends ConsoleRoutine
 {
     protected function initialize(): void
     {

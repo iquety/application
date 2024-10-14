@@ -1,6 +1,6 @@
 # PubSub: recebendo eventos
 
-[◂ PubSub: enviando eventos](12-pubsub-enviando-eventos.md) | [Índice da documentação](indice.md) | [Evoluindo a biblioteca ▸](99-evoluindo.md)
+[◂ PubSub: enviando eventos](12-pubsub-enviando-eventos.md) | [Índice da documentação](indice.md) | [Arquitetura ▸](98-arquitetura.md)
 -- | -- | --
 
 ## 1. O que é um Assinante
@@ -125,5 +125,5 @@ class UserEventSubscriber implements EventSubscriber
 }
 ```
 
-[◂ PubSub: enviando eventos](12-pubsub-enviando-eventos.md) | [Índice da documentação](indice.md) | [Evoluindo a biblioteca ▸](99-evoluindo.md)
+[◂ PubSub: enviando eventos](12-pubsub-enviando-eventos.md) | [Índice da documentação](indice.md) | [Arquitetura ▸](98-arquitetura.md)
 -- | -- | --

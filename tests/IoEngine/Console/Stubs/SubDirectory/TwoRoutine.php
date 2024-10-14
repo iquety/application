@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\IoEngine\Console\Stubs\SubDirectory;
 
-use Iquety\Application\IoEngine\Console\Script;
+use Iquety\Application\IoEngine\Console\ConsoleRoutine;
 use Iquety\Console\Arguments;
 
-class TwoRoutine extends Script
+class TwoRoutine extends ConsoleRoutine
 {
     protected function initialize(): void
     {

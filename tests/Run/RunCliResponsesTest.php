@@ -25,16 +25,6 @@ use Tests\TestCase;
  */
 class RunCliResponsesTest extends TestCase
 {
-    public function setUp(): void
-    {
-        Application::instance()->reset();
-    }
-
-    public function tearDown(): void
-    {
-        Application::instance()->reset();
-    }
-
     /** @test */
     public function outputNotFound(): void
     {

@@ -1,6 +1,6 @@
 # Evoluindo a biblioteca
 
-[◂ PubSub: recebendo eventos](13-pubsub-recebendo-eventos.md) | [Índice da documentação ▸](indice.md)
+[◂ Arquitetura](98-arquitetura.md) | [Índice da documentação ▸](indice.md)
 -- | --
 
 ## 1. Infraestrutura
@@ -80,5 +80,5 @@ gerar a documentação navegável no diretório `docs`:
 composer docmap
 ```
 
-[◂ PubSub: recebendo eventos](13-pubsub-recebendo-eventos.md) | [Índice da documentação ▸](indice.md)
+[◂ Arquitetura](98-arquitetura.md) | [Índice da documentação ▸](indice.md)
 -- | --

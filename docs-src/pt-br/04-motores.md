@@ -8,7 +8,7 @@ arquitetural diferente e o mais famoso deles é conhecido como MVC.
 
 Esta biblioteca oferece a possibilidade de utilizar motores diferentes para
 cada necessidade, podendo ser executados ao mesmo tempo. Por exemplo, é possível
-usar MVC para um faixa de URIs e FrontController para outra faixa.
+usar "MVC" para um faixa de URIs e "FrontController" para outra faixa.
 
 ```php
 $app = Application::instance();
@@ -16,7 +16,7 @@ $app = Application::instance();
 $app->bootEngine(new MvcEngine());
 $app->bootEngine(new FcEngine());
 
-$app->bootApplication(/* Bootstrap */);
+$app->bootApplication(/* Module */);
 
 $response = $app->run();
 

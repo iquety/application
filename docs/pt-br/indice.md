@@ -21,4 +21,5 @@ Bem vindo(a) à documentação da **Iquety Application**. Aqui você encontra as
 - [Padrão Publish/Subscribe](11-pubsub.md)
 - [PubSub: enviando eventos](12-pubsub-enviando-eventos.md)
 - [PubSub: recebendo eventos](13-pubsub-recebendo-eventos.md)
+- [Arquitetura](98-arquitetura.md)
 - [Evoluindo a biblioteca](99-evoluindo.md)

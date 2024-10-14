@@ -6,7 +6,7 @@ namespace Tests\IoEngine\Console;
 
 use Iquety\Application\IoEngine\Console\ConsoleDescriptor;
 use Iquety\Application\IoEngine\Console\ConsoleModule;
-use Iquety\Application\IoEngine\Console\Script;
+use Iquety\Application\IoEngine\Console\ConsoleRoutine;
 use Tests\TestCase;
 
 class ConsoleDescriptorTest extends TestCase
@@ -15,13 +15,13 @@ class ConsoleDescriptorTest extends TestCase
     public function getters(): void
     {
         $descriptor = new ConsoleDescriptor(
-            Script::class,
+            ConsoleRoutine::class,
             ConsoleModule::class,
             '',
             ''
         );
 
-        $this->assertSame(Script::class, $descriptor->type());
+        $this->assertSame(ConsoleRoutine::class, $descriptor->type());
         $this->assertSame(ConsoleModule::class, $descriptor->module());
         $this->assertSame('::', $descriptor->action());
     }
@@ -34,7 +34,7 @@ class ConsoleDescriptorTest extends TestCase
     {
         $descriptor = ConsoleDescriptor::factory(ConsoleModule::class, 'saida de terminal', -1);
 
-        $this->assertSame(Script::class, $descriptor->type());
+        $this->assertSame(ConsoleRoutine::class, $descriptor->type());
         $this->assertSame(ConsoleModule::class, $descriptor->module());
         $this->assertSame('::', $descriptor->action());
 

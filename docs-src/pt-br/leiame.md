@@ -22,16 +22,16 @@ composer require iquety/application
 
 - Separação de interesses, usando módulos bootáveis;
 - Dependências extremamente flexíveis, usando arquitetura Hexagonal (Ports and Adapters);
-- Múltiplos mecanismos para gerir entradas do usuário (MVC ou FrontController);
+- Múltiplos mecanismos para gerir entradas do usuário (MVC, FrontController ou Console);
 - Padrão Publish/Subscribe para arquitetura baseada em eventos.
 
 ### Sobre cada Módulo
 
-- Pode possuir o mecanismo mais adequado (MVC ou FrontController);
+- Pode possuir o mecanismo mais adequado (MVC, FrontController ou Console);
 - Pode definir suas próprias rotas;
 - Pode definir suas próprias dependências;
 - Suas dependências são fabricadas apenas se uma rota do módulo for acessada;
-- A invocação das ações (Controller/Command) é feita usando Inversão de Controle.
+- A invocação das ações web (Controller/Command) é feita usando Inversão de Controle.
 
 Para informações detalhadas, consulte o [Sumário da Documentação](indice.md).
 
