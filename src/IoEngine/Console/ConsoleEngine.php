@@ -77,6 +77,8 @@ class ConsoleEngine extends IoEngine
         /** @var array<int,string> $terminalArguments */
         $terminalArguments = $input->toArray();
 
+        array_shift($terminalArguments);
+
         $terminal->run($terminalArguments);
 
         return $actionDescriptor->withOutput(

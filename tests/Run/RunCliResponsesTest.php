@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Run;
 
-use Iquety\Application\Application;
 use Iquety\Application\Environment;
 use Iquety\Application\IoEngine\Console\ConsoleEngine;
 use Iquety\Application\IoEngine\Console\ConsoleInput;
@@ -30,7 +29,7 @@ class RunCliResponsesTest extends TestCase
     {
         $container = $this->makeContainer();
 
-        $response = $this->makeOutput($container, ['not-found']);
+        $response = $this->makeOutput($container, ['script-name', 'not-found']);
 
         $this->assertSame(127, $response->getStatusCode());
         $this->assertStringContainsString('How to use:', (string)$response->getBody());
@@ -41,7 +40,7 @@ class RunCliResponsesTest extends TestCase
     {
         $container = $this->makeContainer();
 
-        $response = $this->makeOutput($container, ['test-console']);
+        $response = $this->makeOutput($container, ['script-name', 'test-console']);
 
         $this->assertSame(0, $response->getStatusCode());
         $this->assertStringContainsString('Teste console', (string)$response->getBody());
@@ -52,7 +51,7 @@ class RunCliResponsesTest extends TestCase
     {
         $container = $this->makeContainer();
 
-        $response = $this->makeOutput($container, ['test-error']);
+        $response = $this->makeOutput($container, ['script-name', 'test-error']);
 
         $this->assertSame(126, $response->getStatusCode());
         $this->assertStringContainsString('Console error', (string)$response->getBody());
