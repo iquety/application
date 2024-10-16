@@ -110,7 +110,7 @@ class HttpResponseFactory
             // casos: application/xml;q=0.9
             $mime = preg_replace('/;.*/', '', $mime);
 
-            if ($mime === '*.*') {
+            if ($mime === '*/*') {
                 $resolved = HttpMime::HTML;
 
                 break;

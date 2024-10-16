@@ -341,6 +341,22 @@ abstract class HttpResponseCase extends TestCase
             HttpMime::TEXT
         ];
 
+        $list = [];
+        $list['default 1'] = [
+            '*/*,application/xhtml+xml,image/png;q=0.9,image/avif,image/webp;q=0.8',
+            HttpMime::HTML
+        ];
+        
+        $list['default 2'] = [
+            'application/xhtml+xml,*/*,image/png;q=0.9,image/avif,image/webp;q=0.8',
+            HttpMime::HTML
+        ];
+
+        $list['default last'] = [
+            'application/xhtml+xml,image/png;q=0.9,image/avif,image/webp;q=0.8,*/*',
+            HttpMime::HTML
+        ];
+
         return $list;
     }
 
