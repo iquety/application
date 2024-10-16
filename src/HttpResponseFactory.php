@@ -22,13 +22,7 @@ class HttpResponseFactory
         private ServerRequestInterface $serverRequest,
         private Environment $environment
     ) {
-        $accept = $this->serverRequest->getHeaderLine('Accept');
-
-        if ($accept === '') {
-            $accept = 'text/html';
-        }
-
-        $this->mimeType = HttpMime::from($accept);
+        $this->mimeType = $this->resolveAccept();
     }
 
     /** @param array<int|string,mixed>|string|ResponseInterface $content */
@@ -102,5 +96,35 @@ class HttpResponseFactory
         );
 
         return $response->withHeader('Content-type', $this->mimeType->value);
+    }
+
+    private function resolveAccept(): HttpMime
+    {
+        $acceptHeader = $this->serverRequest->getHeaderLine('Accept');
+
+        $mimeList = array_filter(explode(',', $acceptHeader));
+
+        $resolved = HttpMime::HTML;
+
+        foreach($mimeList as $mime) {
+            // casos: application/xml;q=0.9
+            $mime = preg_replace('/;.*/', '', $mime);
+
+            if ($mime === '*.*') {
+                $resolved = HttpMime::HTML;
+
+                break;
+            }
+
+            $try = HttpMime::tryFrom($mime);
+
+            if ($try !== null) {
+                $resolved = $try;
+
+                break;
+            }
+        }
+
+        return $resolved;
     }
 }

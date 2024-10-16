@@ -232,7 +232,7 @@ abstract class HttpResponseCase extends TestCase
      * @test
      * @dataProvider contentAcceptProvider
      */
-    public function withMimeTypeHtml(
+    public function withSingleMimeType(
         HttpStatus $httpStatus,
         string $contentBody,
         HttpMime $acceptMime,
@@ -254,6 +254,116 @@ abstract class HttpResponseCase extends TestCase
         $this->assertTrue($response->hasHeader('Content-type'));
         $this->assertSame($acceptMime->value, $response->getHeaderLine('Content-type'));
         $this->assertSame($responseBody, (string)$response->getBody());
+    }
+
+    /** @return array<string,array<int,mixed>> */
+    public function contentAcceptMultipleProvider(): array
+    {
+        $list = [];
+
+        $list['json 1'] = [
+            'application/json,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            HttpMime::JSON
+        ];
+
+        $list['json 2'] = [
+            'application/xhtml+xml,application/json,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            HttpMime::JSON
+        ];
+
+        $list['json 3'] = [
+            'application/xhtml+xml,image/png,application/json,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            HttpMime::JSON
+        ];
+
+        $list['json param'] = [
+            'application/xhtml+xml,image/png,application/json;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            HttpMime::JSON
+        ];
+
+        $list['xml 1'] = [
+            'application/xml,text/html,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            HttpMime::XML
+        ];
+
+        $list['xml 2'] = [
+            'image/png,application/xml,text/html,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            HttpMime::XML
+        ];
+
+        $list['xml 3'] = [
+            'image/png,application/xpix,application/xml,text/html,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            HttpMime::XML
+        ];
+
+        $list['xml param'] = [
+            'image/png,application/xpix,application/xml;q=0.9,text/html,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            HttpMime::XML
+        ];
+
+        $list['html 1'] = [
+            'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            HttpMime::HTML
+        ];
+
+        $list['html 2'] = [
+            'application/xhtml+xml,text/html,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            HttpMime::HTML
+        ];
+
+        $list['html 3'] = [
+            'application/xhtml+xml,image/png,text/html,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            HttpMime::HTML
+        ];
+
+        $list['html param'] = [
+            'application/xhtml+xml,image/png,text/html;q=0.9,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            HttpMime::HTML
+        ];
+
+        $list['text 1'] = [
+            'text/plain,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            HttpMime::TEXT
+        ];
+
+        $list['text 2'] = [
+            'application/xhtml+xml,text/plain,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            HttpMime::TEXT
+        ];
+
+        $list['text 3'] = [
+            'application/xhtml+xml,image/png,text/plain,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            HttpMime::TEXT
+        ];
+
+        $list['text param'] = [
+            'application/xhtml+xml,image/png,text/plain;q=0.9,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            HttpMime::TEXT
+        ];
+
+        return $list;
+    }
+
+    /**
+     * @test
+     * @dataProvider contentAcceptMultipleProvider
+     */
+    public function withMultipleMimeTypes(string $acceptHeader, HttpMime $acceptResolved): void
+    {
+        $serverRequest = $this->adapterFactory()
+            ->createRequestFromGlobals()
+            ->withAddedHeader('Accept', $acceptHeader);
+
+        $responseFactory = new HttpResponseFactory(
+            $this->adapterFactory(),
+            $serverRequest,
+            Environment::STAGE
+        );
+
+        $response = $responseFactory->response('xxxxxx', HttpStatus::OK);
+
+        $this->assertTrue($response->hasHeader('Content-type'));
+        $this->assertSame($acceptResolved->value, $response->getHeaderLine('Content-type'));
     }
 
     /** @return array<string,array<int,mixed>> */
