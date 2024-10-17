@@ -1,6 +1,7 @@
 # Motor Console
 
---page-nav--
+[◂ Motor FrontController](06-motor-fc.md) | [Índice da documentação](indice.md) | [Arquitetura Hexagonal ▸](08-arquitetura-hexagonal.md)
+-- | -- | --
 
 ## 1. Introdução
 
@@ -157,4 +158,5 @@ rotina-linda          Informações lindas
 Para mais informações sobre como implementar uma rotina e sobre as ferramentas
 disponíveis para utilização, leia a [documentação da biblioteca `iquety/console`](https://github.com/iquety/console).
 
---page-nav--
+[◂ Motor FrontController](06-motor-fc.md) | [Índice da documentação](indice.md) | [Arquitetura Hexagonal ▸](08-arquitetura-hexagonal.md)
+-- | -- | --

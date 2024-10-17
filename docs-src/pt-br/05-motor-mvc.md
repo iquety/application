@@ -2,7 +2,7 @@
 
 --page-nav--
 
-## 1. Bootstrap
+## 1. Introdução
 
 O MVC (sigla de Model, View e Controller) é um padrão arquitetural onde as
 solicitações do usuário são roteadas para um gerenciador (o controlador) que é
@@ -11,91 +11,86 @@ dos dados, enviá-los para a interface do usuário (a exibição).
 
 Esse padrão promove uma clara Separação das Preocupações (SOC).
 
-Para configurar rotas para o motor MVC, é preciso implementar um inicializador
-do tipo `MvcModule`:
+## 2. Bootstrap
+
+No arquivo de bootstrap do sistema (geralmente é o index.php), deve-se implementar
+a inicialização de uma aplicação que use o motor `MvcEngine` como no exemplo abaixo:
 
 ```php
-// CustomMvcBootstrap.php
+<?php
 
-class CustomMvcModule extends MvcModule
-{
-    public function bootDependencies(Container $container): void
-    {
-        $container->addSingleton(Session::class, MemorySession::class);
+declare(strict_types=1);
 
-        $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
+use Iquety\Application\Application;
+use Iquety\Application\IoEngine\Mvc\MvcEngine;
+use Iquety\Http\Adapter\HttpFactory\DiactorosHttpFactory;
 
-        $container->addFactory(MyInterface::class, new MyImplementation());
-    }
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
-    public function bootRoutes(Router &$router): void
-    {
-        $router->get('/usuario/editar/:id')->usingAction(UserController::class, 'edit');
-    }
-}
-```
-
-```php
-// index.php
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 $app = Application::instance();
 
 $app->bootEngine(new MvcEngine());
 
-$app->bootApplication(new CustomMvcModule());
+$app->bootApplication(...); // aqui colocaremos a instância do módulo
+$app->bootModule(...); // pode ser aqui também, como módulo secundário
 
-$response = $app->run();
+$request = new DiactorosHttpFactory();
+
+$response = $app->run($request->createRequestFromGlobals());
 
 $app->sendResponse($response);
 ```
 
-## 2. Adicionando dependências
+## 3. Implementação do Módulo
 
-No método `bootDependencies` deve-se configurar as dependências que estarão disponíveis para
-a execução dos controladores.
-
-```php
-public function bootDependencies(Container $container): void
-{
-    $container->addSingleton(Session::class, MemorySession::class);
-
-    $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
-
-    $container->addFactory(MyInterface::class, new MyImplementation());
-}
-```
-
-Tudo o que for declarado aqui estará disponível para a Inversão de Controle, e
-poderá ser invocado como argumento nos métodos dos controladores.
+Agora que a inicialização da aplicação está implementada, precisamos fornecer a
+instância de nosso módulo para o método `bootApplication` (se for o módulo principal)
+ou `bootModule` (se for um módulo secundário). Para fins didáticos, Vamos chamar
+nosso módulo de `MeuModuloMvc`:
 
 ```php
-// UserController.php
-
-class UserController extends Controller
+class MeuModuloMvc extends MvcModule
 {
-    public function edit(Input $input, int $id, HttpFactory $factory): ResponseInterface
+    public function bootDependencies(Container $container): void
     {
-        // A Inversão de Controle injetou o HttpFactory aqui como argumento
+        // dependência obrigatório para Mvc
+        $container->addSingleton(Session::class, MemorySession::class);
+
+        // dependência obrigatório para Mvc
+        $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
+
+        // dependência adicional
+        $container->addFactory(MinhaInterface::class, new MinhaImplementacao());
+    }
+
+    public function bootRoutes(Router &$router): void
+    {
+        // mapeia o URI /usuario/editar/<qualquer valor> para MeuControlador
+        // quando a requisição for do tipo GET
+        $router->get('/usuario/editar/:id')->usingAction(MeuControlador::class, 'editar');
     }
 }
 ```
 
-## 3. Mapeando rotinas
+## 4. Mapeamento de rotas
 
-### 3.1. Controladores
+### 4.1. Para objetos
 
-No método `bootRoutes` deve-se configurar as rotas disponíveis na aplicação.
-Cada URI deve ser mapeada para um verbo, um controlador e uma ação.
+Como visto no método `MeuModuloMvc::bootRoutes` deve-se configurar as rotas
+disponíveis na aplicação. Cada URI deve ser mapeada para um verbo, um controlador e uma ação.
 
 ```php
 public function bootRoutes(Router &$router): void
 {
-    $router->get('/usuario/editar/:id')->usingAction(UserController::class, 'edit');
+    $router->get('/usuario/editar/:id')->usingAction(MeuControlador::class, 'editar');
 }
 ```
 
-No exemplo acima, o método `edit` do controlador `UserController` é mapeado para
-o URI `/usuario/editar/<algum-número>` quando o verbo HTTP usado for `GET`.
+No exemplo acima, o método `editar` do controlador `MeuControlador` é mapeado para
+o URI `/usuario/editar/<qualquer-valor>` quando o verbo HTTP usado for `GET`.
 
 Outros verbos disponíveis são:
 
@@ -110,7 +105,7 @@ $router->delete('...');
 
 > Obs: O método `any` irá disponibilizar o controlador para qualquer verbo.
 
-### 3.2. Callbacks
+### 4.2. Para callbacks
 
 Quando não for necessário implementar um controlador, pode-se adicionar um
 callback diretamente ao mapear um URI:
@@ -124,25 +119,76 @@ public function bootRoutes(Router &$router): void
 }
 ```
 
-No exemplo acima, o callback será mapeado para o URI `/usuario/editar/<algum-número>`
+No exemplo acima, o callback será mapeado para o URI `/usuario/editar/<qualquer valor>`
 quando o verbo HTTP usado for `GET`. O retorno do callback será usado como
 resposta da aplicação.
 
-### 3.3. Anatomia de um controlador
+## 5. Implementação do Controlador
 
-A partir do roteador, é possível definir os verbos `get`, `post`, `put`, `patch`
-e `delete`, de forma que o controlador mapeado só funcionará para o verbo específico.
-
-Caso uma rota seja definida com o verbo especial `any`, será possível filtrar
-o verbo desejado na implementação do comando, usando o método `forMethod` para
-definir o verbo adequado.
+A última coisa a fazer, é criar controladores para serem executados. Na configuração
+do `MeuModuloMvc`, determinou-se que quando uma requisição for feita usando o verbo GET
+para a rota `/usuario/editar/<qualquer valor>`, o método `editar` do controlador
+`MeuControlador` será invocado para fabricar a resposta. A seguir, implementaremos
+o arquivo `MeuControlador.php`:
 
 ```php
-public function execute(Input $input, int $id, HttpFactory $factory): ResponseInterface
-{
-    $this->forMethod(HttpMethod::POST);
+<?php
 
-    // A Inversão de Controle injetou o HttpFactory aqui como argumento
+declare(strict_types=1);
+
+namespace Acme\Meus\Controladores\Aqui;
+
+use Iquety\Application\IoEngine\Action\Input;
+use Iquety\Application\IoEngine\Mvc\Controller\Controller;
+
+class MeuControlador extends Controller
+{
+    // A Injeção de Dependências irá procurar por 
+    // uma dependência identificada como MinhaInterface::class
+    // se tiver sido registrada em MeuModuloMvc::bootDependencies
+    // então será disponibilizada para o argumento $dep
+    public function __construct(MinhaInterface $dep)
+    {
+    }
+
+    // O parâmetro :id mapeado na rota em MeuModuloMvc 
+    // capturará qualquer valor fornecido na requisição 
+    // e disponibilizará no argumento $id
+    //
+    // O argumento $nomeQualquer receberá a Injeção de Dependências
+    public function editar(Input $input, string $id, MinhaInterface $nomeQualquer): string
+    {
+        return 'Resposta em texto';
+    }
+}
+```
+
+> **Injeção de Dependências:** para mais informações sobre o assunto, veja [arquitetura hexagonal](08-arquitetura-hexagonal.md).
+
+No mapeamento de rotas, além dos verbos `get`, `post`, `put`, `patch` e `delete`,
+é possível mapear um controlador para o verbo especial `any`.
+
+```php
+// MeuModuloMvc.php
+
+public function bootRoutes(Router &$router): void
+{
+    $router->any('/usuario/editar/:id')->usingAction(MeuControlador::class, 'editar');
+}
+```
+
+Ao usar o verbo especial `any`, será possível filtrar o verbo desejado na
+implementação do próprio controlador, usando o método `forMethod` para restringir
+a requisição ao verbo adequado.
+
+```php
+// MeuControlador.php
+
+public function editar(Input $input, string $id, MinhaInterface $nomeQualquer): string
+{
+    // o método editar somente continuará a execução se 
+    // o verbo da requisição for POST
+    $this->forMethod(HttpMethod::POST);
 }
 ```
 

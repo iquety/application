@@ -2,7 +2,7 @@
 
 --page-nav--
 
-## 1. Bootstrap
+## 1. Introdução
 
 Basicamente o Front Controller é composto por um Manipulador Web (um controlador
 único) que recebe todas as solicitações do usuário. Também existe uma hierarquia
@@ -15,106 +15,112 @@ ela será usada para prover uma resposta para o usuário.
 O funcionamento é muito semelhante ao MVC, porém, tende a prover uma Separação de
 Preocupações (SOC) ainda melhor e mais bem definida.
 
-Para configurar a localização da hierarquia de comandos para o mecanismo FrontController,
-é preciso implementar um inicializador do tipo `FcModule`:
+## 2. Bootstrap
+
+No arquivo de bootstrap do sistema (geralmente é o index.php), deve-se implementar
+a inicialização de uma aplicação que use o motor `FcEngine` como no exemplo abaixo:
 
 ```php
-// CustomFcModule.php
+<?php
 
-class CustomFcModule extends FcModule
-{
-    public function bootDependencies(Container $container): void
-    {
-        $container->addSingleton(Session::class, MemorySession::class);
+declare(strict_types=1);
 
-        $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
+use Iquety\Application\Application;
+use Iquety\Application\IoEngine\FrontController\FcEngine;
+use Iquety\Http\Adapter\HttpFactory\DiactorosHttpFactory;
 
-        $container->addFactory(MyInterface::class, new MyImplementation());
-    }
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
-    public function bootNamespaces(SourceSet &$sourceSet): void
-    {
-        $sourceSet->add(new Source('MyCommands\SubDirectory'));
-    }
-}
-```
-
-```php
-// index.php
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 $app = Application::instance();
 
 $app->bootEngine(new FcEngine());
 
-$app->bootApplication(new CustomFcModule());
+$app->bootApplication(...); // aqui colocaremos a instância do módulo
+$app->bootModule(...); // pode ser aqui também, como módulo secundário
 
-$response = $app->run();
+$request = new DiactorosHttpFactory();
+
+$response = $app->run($request->createRequestFromGlobals());
 
 $app->sendResponse($response);
 ```
 
-## 2. Adicionando dependências
+## 3. Implementação do Módulo
 
-No método `bootDependencies` deve-se configurar as dependências que estarão
-disponíveis para a execução dos controladores.
+Agora que a inicialização da aplicação está implementada, precisamos fornecer a
+instância de nosso módulo para o método `bootApplication` (se for o módulo principal)
+ou `bootModule` (se for um módulo secundário). Para fins didáticos, Vamos chamar
+nosso módulo de `MeuModuloFc`:
 
-```php
-public function bootDependencies(Container $container): void
-{
-    $container->addSingleton(Session::class, MemorySession::class);
-
-    $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
-
-    $container->addFactory(MyInterface::class, new MyImplementation());
-}
-```
-
-Tudo o que for declarado aqui estará disponível para a Inversão de Controle, e
-poderá ser invocado como argumento no método `execute` dos comandos.
 
 ```php
-// UserCommand.php
-
-class UserCommand extends Command
+class MeuModuloFc extends FcModule
 {
-    public function execute(Input $input, int $id, HttpFactory $factory): ResponseInterface
+    public function bootDependencies(Container $container): void
     {
-        // A Inversão de Controle injetou o HttpFactory aqui como argumento
+        // dependência obrigatório para FrontController
+        $container->addSingleton(Session::class, MemorySession::class);
+
+        // dependência obrigatório para FrontController
+        $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
+
+        // dependência adicional
+        $container->addFactory(MinhaInterface::class, new MinhaImplementacao());
+    }
+
+    public function bootNamespaces(SourceSet &$sourceSet): void
+    {
+        // determina que os comandos serão procurados neste namespace
+        $sourceSet->add(new Source('Acme\Meus\Comandos\Aqui'));
     }
 }
 ```
 
-## 3. Implementando rotinas
+## 5. Implementação do Comando
 
-### 3.1. Executando Comandos
-
-No método `bootNamespaces`, deve-se configurar os namespaces liberados para
-o Manipulador Web procurar por comandos.
+A última coisa a fazer, é criar comandos para serem executados. Na configuração
+do `MeuModuloFc`, determinou-se que quando uma requisição for feita, um comando
+correspondente será procurado no namespace `Acme\Meus\Comandos\Aqui`. A seguir,
+implementaremos o arquivo `MeuComando.php`:
 
 ```php
-public function bootNamespaces(SourceSet &$sourceSet): void
+<?php
+
+declare(strict_types=1);
+
+namespace Acme\Meus\Comandos\Aqui;
+
+use Iquety\Application\IoEngine\Action\Input;
+use Iquety\Application\IoEngine\FrontController\Command\Command;
+use Iquety\Http\HttpMethod;
+
+class MeuComando extends Command
 {
-    $sourceSet->add(new Source('MyCommands\SubDirectory'));
+    // A Injeção de Dependências irá procurar por 
+    // uma dependência identificada como MinhaInterface::class
+    // se tiver sido registrada em MeuModuloMvc::bootDependencies
+    // então será disponibilizada para o argumento $dep
+    public function __construct(MinhaInterface $dep)
+    {
+    }
+
+    // O argumento $nomeQualquer receberá a Injeção de Dependências
+    public function execute(Input $input, MinhaInterface $nomeQualquer): string
+    {
+        $this->forMethod($this->httpMethod
+
+        return 'Resposta em texto';
+    }
 }
 ```
 
-No exemplo acima, todos os comandos cujo namespace comece com
-'MyCommands\SubDirectory' serão considerados aptos para ser executados como
-comandos do FrontController.
+> **Injeção de Dependências:** para mais informações sobre o assunto, veja [arquitetura hexagonal](08-arquitetura-hexagonal.md).
 
-### 3.2. Anatomia de um comando
-
-Diferente do motor MVC, onde um Controlador pode possuir várias ações,
-um Comando possui sempre uma única ação chamada `execute`.
-
-```php
-public function execute(Input $input, int $id, HttpFactory $factory): ResponseInterface
-{
-    $this->forMethod(HttpMethod::POST);
-
-    // A Inversão de Controle injetou o HttpFactory aqui como argumento
-}
-```
+Diferente do motor MVC, onde um Controlador pode possuir várias ações, um Comando
+possui sempre uma única ação chamada `execute`.
 
 Outra diferença é que, como não existe um roteador, será necessário especificar
 qual verbo HTTP estará habilitado a executar o comando. Isso é feito na implementação

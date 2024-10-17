@@ -11,6 +11,8 @@ em qual ambiente a aplicação está sendo executada.
 $app = Application::instance();
 
 $app->runIn(Environment::PRODUCTION);
+
+$app->runningMode(); // Environment::PRODUCTION
 ```
 
 ## 2. DEVELOPMENT

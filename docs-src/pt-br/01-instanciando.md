@@ -2,12 +2,30 @@
 
 --page-nav--
 
-Toda aplicação web deve ter um ponto de início, um arquivo que é invocado todas as vezes que qualquer requisição é feita para o servidor web. Geralmente, este arquivo é o `index.php` e se encontra no diretório raiz (docroot) configurado no servidor. Tecnicamente, podemos dizer que este arquivo é o `bootstrap` da nossa aplicação.
+Toda aplicação web deve ter um ponto de início, ou seja, um arquivo que será
+invocado todas as vezes que qualquer requisição for feita para o servidor web.
+Geralmente, este arquivo é o `index.php` e se encontra no diretório raiz (docroot)
+configurado no servidor. Tecnicamente, podemos dizer que este arquivo é o
+`bootstrap` da nossa aplicação.
 
-É neste arquivo que devemos inicializar a biblioteca Iquety Application e configurar a aplicação de acordo com as necessidades da nossa aplicação web.
+É neste arquivo que devemos inicializar a biblioteca `Iquety Application` e
+configurá-la de acordo com as necessidades da nossa aplicação web.
 
 ```php
+<?php
 // index.php
+
+declare(strict_types=1);
+
+use Iquety\Application\Application;
+use Iquety\Application\IoEngine\FrontController\FcEngine;
+use Iquety\Application\IoEngine\Mvc\MvcEngine;
+use Iquety\Http\Adapter\HttpFactory\DiactorosHttpFactory;
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 $app = Application::instance();
 
@@ -15,15 +33,17 @@ $app->runIn(Environment::PRODUCTION);
 
 $app->useTimezone(new DateTimeZone('America/Vancouver'));
 
-$app->bootEngine(/* Motor 1 */);
-$app->bootEngine(/* Motor 2 */);
+$app->bootEngine(...); // motor 1
+$app->bootEngine(...); // motor 2
 
-$app->bootApplication(/* Bootstrap Principal */);
+$app->bootApplication(...); // módulo principal
 
-$app->bootModule(/* Bootstrap Módulo 1*/);
-$app->bootModule(/* Bootstrap Módulo 2*/);
+$app->bootModule(...); // módulo secundário 1
+$app->bootModule(...); // módulo secundário 2
 
-$response = $app->run();
+$request = new DiactorosHttpFactory();
+
+$response = $app->run($request->createRequestFromGlobals());
 
 $app->sendResponse($response);
 ```

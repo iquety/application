@@ -62,3 +62,5 @@ serão executados:
 
 A resolução de qual rotina de terminal executar é efetuada pela biblioteca
 `iquety/console`.
+
+![Fluxograma](../../docs-src/gherkin/fluxograma.png)
