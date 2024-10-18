@@ -1,7 +1,6 @@
-# PubSub: sending events
+# PubSub: enviando eventos
 
-[◂ Publish/Subscribe pattern](11-pubsub.md) | [Documentation index](index.md) | [PubSub: receiving events ▸](13-pubsub-receiving-events.md)
--- | -- | --
+--page-nav--
 
 ## 1. What is an Event
 
@@ -9,7 +8,7 @@ An event is the encapsulation of information that represents an action that
 occurred at a specific moment in time. Events should always be named in the past,
 as they are something that has already happened (e.g.: UserRegistered, PasswordChanged,
 etc.). The "consequences" of an event are determined by the subscriber (Subscriber),
-as will be explained in [PubSub: receiving events](13-pubsub-receiving-events.md).
+as will be explained in [PubSub: receiving events](12-pubsub-receiving-events.md).
 
 ## 2. How to implement an Event
 
@@ -26,11 +25,18 @@ immutability.
 > **Important:** Date values ​​must implement `DateTimeImmutable`!
 
 ```php
-public function __construct(
-    private string $name,
-    private string $cpf,
-    private DateTimeImmutable $schedule
-) {
+use Iquety\Application\PubSub\DomainEvent;
+
+class UserRegistered extends DomainEvent
+{
+    public function __construct(
+        private string $name,
+        private string $cpf,
+        private DateTimeImmutable $scheduledAt
+    ) {
+    }
+
+    ...
 }
 ```
 
@@ -45,9 +51,16 @@ Good examples of identification are 'user_registered' or 'user.registered'.
 Bad examples are 'registered', '12345' or 'abst345sd'.
 
 ```php
-public function label(): string
+use Iquety\Application\PubSub\DomainEvent;
+
+class UserRegistered extends DomainEvent
 {
-    return 'user.registered';
+    ...
+
+    public function label(): string
+    {
+        return 'user.registered';
+    }
 }
 ```
 
@@ -57,12 +70,14 @@ Getters can be implemented, as long as they do not change the current state of
 the event and only function as data accessors.
 
 ```php
-class UserRegistered extends Iquety\Application\PubSub\DomainEvent
+use Iquety\Application\PubSub\DomainEvent;
+
+class UserRegistered extends DomainEvent
 {
     public function __construct(
         private string $name,
         private string $cpf,
-        private DateTimeImmutable $schedule
+        private DateTimeImmutable $scheduledAt
     ) {
     }
 
@@ -79,6 +94,11 @@ class UserRegistered extends Iquety\Application\PubSub\DomainEvent
     public function name(): string
     {
         return $this->name;
+    }
+
+    public function scheduledAt(): DateTimeImmutable
+    {
+        return $this->scheduledAt;
     }
 }
 ```
@@ -148,64 +168,11 @@ with the time of the event's occurrence.
 public function toArray(): array;
 ```
 
-### 2.5. Example
-
-Below is an example implementation for the "UserRegistered" event:
-
-```php
-declare(strict_types=1);
-
-namespace Foo\User\Events;
-
-use DateTimeImmutable;
-use Iquety\PubSub\Event\Event;
-
-class UserRegistered implements Event
-{
-    public function __construct(
-        private string $name,
-        private string $cpf,
-        private DateTimeImmutable $ocurredOn
-    ) {
-    }
-
-    public function label(): string
-    {
-        return 'user.registered';
-    }
-
-    /** @param array<string,mixed> $values */
-    public static function factory(array $values): Event
-    {
-        // in the previous version 'cpf' was called 'document'
-        if (isset($values['document']) === true) {
-            $values['cpf'] = $values['document'];
-        }
-        
-        return new self(
-            $values['name'],
-            $values['cpf'],
-            new DateTimeImmutable($values['ocurredOn'])
-        );
-    }
-
-    public function cpf(): string
-    {
-        return $this->cpf;
-    }
-
-    public function name(): string
-    {
-        return $this->name;
-    }
-}
-```
-
 ## 3. How to publish an event
 
-Both implementations, both [Command (FcEngine)](06-fc-engine.md) and
-[Controller (MvcEngine)](05-mvc-engine.md) have the `publish` method to send
-events to the [registered subscribers](13-pubsub-receiving-events.md).
+The different types of actions ([FcEngine/Command](06-fc-engine.md), [MvcEngine/Controller](05-mvc-engine.md) or [ConsoleEngine/ConsoleRoutine](07-console-engine.md)) have
+the `publish` method to send the events to the
+[registered subscribers](12-pubsub-receiving-events.md).
 
 ```php
 // UserController.php
@@ -219,11 +186,10 @@ class UserController extends Controller
 }
 ```
 
-In the example above, the `edit` method of the `UserController` controller
-publishes the `UserRegistered` event on the `'receiver-channel'` channel.
+In the example above, the `UserController::edit` method publishes the event
+`UserRegistered` in the `'receiver-channel'` channel.
 
-The moment the event is published, all subscribers will be consulted.
+At the moment the event is published, all subscribers will be consulted.
 Those who are able to receive the event will use it.
 
-[◂ Publish/Subscribe pattern](11-pubsub.md) | [Documentation index](index.md) | [PubSub: receiving events ▸](13-pubsub-receiving-events.md)
--- | -- | --
+--page-nav--

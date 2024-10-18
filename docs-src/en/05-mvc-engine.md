@@ -2,96 +2,97 @@
 
 --page-nav--
 
-## 1. Bootstrap
+## 1. Introduction
 
-MVC (acronym for Model, View and Controller) is an architectural pattern where
-user requests are routed to a manager (the controller) which is responsible for
-invoking the business rules (the model) and, after processing the data, send
-them to the user interface (the view).
+MVC (acronym for Model, View, and Controller) is an architectural pattern where
+user requests are routed to a manager (the controller) that is responsible for
+invoking business rules (the model) and, after processing the data, sending it
+to the user interface (the view).
 
-This standard promotes a clear Separation of Concerns (SOC).
+This pattern promotes a clear Separation of Concerns (SOC).
 
-To configure routes for the MVC engine, you need to implement a bootstrap of
-type `MvcBootstrap`:
+## 2. Bootstrap
 
-```php
-// CustomMvcBootstrap.php
-
-class CustomMvcBootstrap extends MvcBootstrap
-{
-    public function bootDependencies(Container $container): void
-    {
-        $container->addSingleton(Session::class, MemorySession::class);
-
-        $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
-    }
-
-    public function bootRoutes(Router &$router): void
-    {
-        $router->get('/usuario/editar/:id')->usingAction(UserController::class, 'edit');
-    }
-}
-```
+In the system's bootstrap file (usually index.php), you must implement the
+initialization of an application that uses the `MvcEngine` engine as in the
+example below:
 
 ```php
-// index.php
+<?php
+
+declare(strict_types=1);
+
+use Iquety\Application\Application;
+use Iquety\Application\IoEngine\Mvc\MvcEngine;
+use Iquety\Http\Adapter\HttpFactory\DiactorosHttpFactory;
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 $app = Application::instance();
 
 $app->bootEngine(new MvcEngine());
 
-$app->bootApplication(new CustomMvcBootstrap());
+$app->bootApplication(...); // here we will place the module instance
+$app->bootModule(...); // It can be here too, as a secondary module
 
-$response = $app->run();
+$request = new DiactorosHttpFactory();
+
+$response = $app->run($request->createRequestFromGlobals());
 
 $app->sendResponse($response);
 ```
 
-## 2. Adding dependencies
+## 3. Module Implementation
 
-In the `bootDependencies` method you must configure the dependencies that will
-be available for the execution of the controllers.
-
-```php
-public function bootDependencies(Container $container): void
-{
-    $container->addSingleton(Session::class, MemorySession::class);
-
-    $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
-}
-```
-
-Everything declared here will be available for Inversion of Control, and can be
-invoked as an argument in controller methods.
+Now that the application initialization is implemented, we need to provide the
+instance of our module to the `bootApplication` method (if it is the main module)
+or `bootModule` (if it is a secondary module). For didactic purposes, let's call
+our module `MyMvcModule`:
 
 ```php
-// UserController.php
-
-class UserController extends Controller
+class MyMvcModule extends MvcModule
 {
-    public function edit(Input $input, int $id, HttpFactory $factory): ResponseInterface
+    public function bootDependencies(Container $container): void
     {
-        // Inversion of Control injected the HttpFactory here as an argument
+        // mandatory dependency for Mvc
+        $container->addSingleton(Session::class, MemorySession::class);
+
+        // mandatory dependency for Mvc
+        $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
+
+        // additional dependency
+        $container->addFactory(MyInterface::class, new MyImplementation());
+    }
+
+    public function bootRoutes(Router &$router): void
+    {
+        // maps the URI /user/edit/<any value> to MyController when the request
+        // is of the GET type
+        $router->get('/user/edit/:id')->usingAction(MyController::class, 'edit');
     }
 }
 ```
 
-## 3. Mapping routines
+## 4. Route mapping
 
-### 3.1. Controllers
+### 4.1. For objects
 
-In the `bootRoutes` method you must configure the routes available in the application.
-Each URI must be mapped to a verb, a controller, and an action.
+As seen in the `MyMvcModule::bootRoutes` method, you must configure the routes
+available in the application. Each URI must be mapped to a verb, a controller
+and an action.
 
 ```php
 public function bootRoutes(Router &$router): void
 {
-    $router->get('/user/edit/:id')->usingAction(UserController::class, 'edit');
+    $router->get('/user/edit/:id')->usingAction(MyController::class, 'edit');
 }
 ```
 
-In the example above, the `edit` method of the `UserController` controller is
-mapped to the URI `/user/edit/<some-number>` when the HTTP verb used is `GET`.
+In the above example, the `edit` method of the `MyController` controller is
+mapped to the URI `/user/edit/<any-value>` when the HTTP verb used is `GET`.
 
 Other available verbs are:
 
@@ -104,9 +105,9 @@ $router->patch('...');
 $router->delete('...');
 ```
 
-> Note: The `any` method will make the controller available for any verb.
+> Note: The `any` method will make the controller available to any verb.
 
-### 3.2. Callbacks
+### 4.2. For callbacks
 
 When it is not necessary to implement a controller, you can add a callback
 directly when mapping a URI:
@@ -120,25 +121,77 @@ public function bootRoutes(Router &$router): void
 }
 ```
 
-In the example above, the callback will be mapped to the URI `/user/edit/<some-number>`
-when the HTTP verb used is `GET`. The callback return will be used as application
-response.
+In the example above, the callback will be mapped to the URI `/user/edit/<any value>`
+when the HTTP verb used is `GET`. The callback return will be used as the
+application's response.
 
-### 3.3. Anatomy of a Controller
+## 5. Controller Implementation
 
-From the router, it is possible to define the verbs `get`, `post`, `put`, `patch`
-and `delete`, so that the mapped controller will only work for the specific verb.
-
-If a route is defined with the special verb `any`, it will be possible to filter
-the desired verb in the command implementation, using the `forMethod` method to
-define the appropriate verb.
+The last thing to do is to create controllers to be executed. In the configuration
+of `MyMvcModule`, it was determined that when a request is made using the GET
+verb for the `/user/edit/<any value>` route, the `edit` method of the
+`MyController` controller will be invoked to produce the response. Next, we will implement
+the `MyController.php` file:
 
 ```php
-public function execute(Input $input, int $id, HttpFactory $factory): ResponseInterface
-{
-    $this->forMethod(HttpMethod::POST);
+<?php
 
-    // Inversion of Control injected the HttpFactory here as an argument
+declare(strict_types=1);
+
+namespace Acme\My\Controllers;
+
+use Iquety\Application\IoEngine\Action\Input;
+use Iquety\Application\IoEngine\Mvc\Controller\Controller;
+
+class MyController extends Controller
+{
+    // Dependency Injection will look for a dependency identified
+    // as MyInterface::class if it has been registered in
+    // MyMvcModule::bootDependencies then it will be made available
+    // to the $dep argument
+    public function __construct(MyInterface $dep)
+    {
+    }
+
+    // The :id parameter mapped to the route in MyMvcModule
+    // will capture any value provided in the request
+    // and make it available in the $id argument
+    //
+    // The $anyName argument will receive Dependency Injection
+    public function edit(Input $input, string $id, MyInterface $anyName): string
+    {
+        return 'Text response';
+    }
+}
+```
+
+> **Dependency Injection:** For more information on this topic, see
+[hexagonal architecture](08-hexagonal-architecture.md).
+
+In route mapping, in addition to the verbs `get`, `post`, `put`, `patch` and `delete`,
+it is possible to map a controller to the special verb `any`.
+
+```php
+// MyMvcModule.php
+
+public function bootRoutes(Router &$router): void
+{
+    $router->any('/user/edit/:id')->usingAction(MyController::class, 'edit');
+}
+```
+
+By using the special verb `any`, it will be possible to filter the desired verb
+in the implementation of the controller itself, using the `forMethod` method to
+restrict the request to the appropriate verb.
+
+```php
+// MyController.php
+
+public function edit(Input $input, string $id, MyInterface $anyName): string
+{
+    // the edit method will only continue execution
+    // if the request verb is POST
+    $this->forMethod(HttpMethod::POST);
 }
 ```
 

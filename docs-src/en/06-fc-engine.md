@@ -1,118 +1,131 @@
-# FrontController engine
+# Motor FrontController
 
 --page-nav--
 
-## 1. Bootstrap
+## 1. Introdução
 
 Basically, the Front Controller is composed of a Web Handler (a single controller)
 that receives all user requests. There is also a hierarchy of classes where each
-of them represents an action to be performed (command objects).
+class represents an action to be executed (command objects).
 
-When the user makes a request `/usuario/editar/22`, for example, the Web Handler
-will search the command hierarchy. If the User/Edit class is found, it will be
-used to provide a response to the user.
+When the user makes a request `/user/edit/22`, for example, the Web Handler will
+search the command hierarchy. If the User/Edit class is found, it will be used
+to provide a response to the user.
 
 The operation is very similar to MVC, however, it tends to provide an even better
 and more well-defined Separation of Concerns (SOC).
 
-To configure the location of the command hierarchy for the FrontController engine,
-you need to implement a bootstrap of type `FcBootstrap`:
+## 2. Bootstrap
+
+In the system bootstrap file (usually index.php), you must implement the
+initialization of an application that uses the `FcEngine` engine as in the
+example below:
 
 ```php
-// CustomFcBootstrap.php
+<?php
 
-class CustomFcBootstrap extends FcBootstrap
-{
-    public function bootDependencies(Container $container): void
-    {
-        $container->addSingleton(Session::class, MemorySession::class);
+declare(strict_types=1);
 
-        $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
-    }
+use Iquety\Application\Application;
+use Iquety\Application\IoEngine\FrontController\FcEngine;
+use Iquety\Http\Adapter\HttpFactory\DiactorosHttpFactory;
 
-    public function bootNamespaces(SourceSet &$sourceSet): void
-    {
-        $sourceSet->add(new Source('MyCommands\SubDirectory'));
-    }
-}
-```
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
-```php
-// index.php
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 $app = Application::instance();
 
 $app->bootEngine(new FcEngine());
 
-$app->bootApplication(new CustomFcBootstrap());
+$app->bootApplication(...); // here we will place the module instance
+$app->bootModule(...); // It can be here too, as a secondary module
 
-$response = $app->run();
+$request = new DiactorosHttpFactory();
+
+$response = $app->run($request->createRequestFromGlobals());
 
 $app->sendResponse($response);
 ```
 
-## 2. Adding dependencies
+## 3. Module Implementation
 
-In the `bootDependencies` method you must configure the dependencies that will
-be available for the execution of the controllers.
+Now that the application initialization is implemented, we need to provide the
+instance of our module to the `bootApplication` method (if it is the main module)
+or `bootModule` (if it is a secondary module). For didactic purposes, let's call
+our module `MyFcModule`:
 
-```php
-public function bootDependencies(Container $container): void
-{
-    $container->addSingleton(Session::class, MemorySession::class);
-
-    $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
-}
-```
-
-Everything declared here will be available for Inversion of Control, and can be
-invoked as an argument in the `execute` method of the commands.
 
 ```php
-// UserCommand.php
-
-class UserCommand extends Command
+class MyFcModule extends FcModule
 {
-    public function execute(Input $input, int $id, HttpFactory $factory): ResponseInterface
+    public function bootDependencies(Container $container): void
     {
-        // Inversion of Control injected the HttpFactory here as an argument
+        // mandatory dependency for FrontController
+        $container->addSingleton(Session::class, MemorySession::class);
+
+        // mandatory dependency for FrontController
+        $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
+
+        // additional dependency
+        $container->addFactory(MyInterface::class, new MyImplementation());
+    }
+
+    public function bootNamespaces(SourceSet &$sourceSet): void
+    {
+        // determines that commands will be searched for in this namespace
+        $sourceSet->add(new Source('Acme\My\Commands'));
     }
 }
 ```
 
-## 3. Implementing routines
+## 5. Command Implementation
 
-### 3.1. Executing Commands
-
-In the `bootNamespaces` method, you must configure the namespaces released for
-the Web Handler to search for commands.
+The last thing to do is to create commands to be executed. In the configuration
+of `MyFcModule`, it was determined that when a request is made, a corresponding
+command will be searched for in the namespace `Acme\My\Commands`. Next, we will
+implement the `MyCommand.php` file:
 
 ```php
-public function bootNamespaces(SourceSet &$sourceSet): void
+<?php
+
+declare(strict_types=1);
+
+namespace Acme\Meus\Comandos\Aqui;
+
+use Iquety\Application\IoEngine\Action\Input;
+use Iquety\Application\IoEngine\FrontController\Command\Command;
+use Iquety\Http\HttpMethod;
+
+class MyCommand extends Command
 {
-    $sourceSet->add(new Source('MyCommands\SubDirectory'));
+    // Dependency Injection will look for
+    // a dependency identified as MyInterface::class
+    // if it has been registered in MyMvcModule::bootDependencies
+    // then it will be made available to the $dep argument
+    public function __construct(MyInterface $dep)
+    {
+    }
+
+    // The $anyName argument will receive Dependency Injection
+    public function execute(Input $input, MyInterface $anyName): string
+    {
+        $this->forMethod($this->httpMethod
+
+        return 'Text response';
+    }
 }
 ```
 
-In the example above, all commands whose namespace begins with 'MyCommands\SubDirectory'
-will be considered capable of being executed as FrontController commands.
+> **Dependency Injection:** for more information on the subject, see [hexagonal architecture](08-hexagonal-architecture.md).
 
-### 3.2. Anatomy of a command
-
-Unlike the MVC engine, where a Controller can have several actions, a Command
+Unlike the MVC engine, where a Controller can have multiple actions, a Command
 always has a single action called `execute`.
 
-```php
-public function execute(Input $input, int $id, HttpFactory $factory): ResponseInterface
-{
-    $this->forMethod(HttpMethod::POST);
-
-    // Inversion of Control injected the HttpFactory here as an argument
-}
-```
-
-Another difference is that, as there is no router, it will be necessary to
-specify which HTTP verb will be able to execute the command. This is done in the
-command implementation, using the `forMethod` method to define the appropriate verb.
+Another difference is that, since there is no router, it will be necessary to
+specify which HTTP verb will be enabled to execute the command. This is done in
+the command implementation, using the `forMethod` method to define the
+appropriate verb.
 
 --page-nav--

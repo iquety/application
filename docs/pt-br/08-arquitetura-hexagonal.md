@@ -1,6 +1,6 @@
 # Arquitetura Hexagonal
 
-[◂ Motor Console](07-motor-console.md) | [Índice da documentação](indice.md) | [Dependências existentes ▸](10-dependencias-existentes.md)
+[◂ Motor Console](07-motor-console.md) | [Índice da documentação](indice.md) | [Dependências existentes ▸](09-dependencias-existentes.md)
 -- | -- | --
 
 ## 1. Introdução
@@ -124,5 +124,5 @@ class MeuControlador extends Controller
 }
 ```
 
-[◂ Motor Console](07-motor-console.md) | [Índice da documentação](indice.md) | [Dependências existentes ▸](10-dependencias-existentes.md)
+[◂ Motor Console](07-motor-console.md) | [Índice da documentação](indice.md) | [Dependências existentes ▸](09-dependencias-existentes.md)
 -- | -- | --

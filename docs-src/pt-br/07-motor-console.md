@@ -78,7 +78,7 @@ class MeuModuloConsole extends ConsoleModule
     public function getScriptName(): string
     {
         // este nome será usado para exibir informações ao usuário
-        return 'meu-script';
+        return 'exemplo';
     }
 
     public function getScriptPath(): string

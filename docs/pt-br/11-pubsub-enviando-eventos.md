@@ -1,14 +1,15 @@
 # PubSub: enviando eventos
 
---page-nav--
+[◂ Padrão Publish/Subscribe](10-pubsub.md) | [Índice da documentação](indice.md) | [PubSub: recebendo eventos ▸](12-pubsub-recebendo-eventos.md)
+-- | -- | --
 
 ## 1. O que é um Evento
 
 Um evento é o encapsulamento de informações que representam uma ação ocorrida em
-um determinado momento no tempo. Eventos devem sempre ser nomeados no passado,
-pois são alguma coisa que já aconteceu (ex.: UserRegistered, PasswordChanged etc).
+um determinado momento no tempo. Eventos devem ser nomeados sempre no passado,
+pois são coisas que já aconteceram (ex.: UsuarioRegistrado, SenhaAlterada etc).
 As "consequências" de um evento são determinadas pelo assinante (Subscriber),
-como será explicado em [PubSub: recebendo eventos](13-pubsub-recebendo-eventos.md).
+como será explicado em [PubSub: recebendo eventos](12-pubsub-recebendo-eventos.md).
 
 ## 2. Como implementar um Evento
 
@@ -16,24 +17,32 @@ Um novo evento deve cumprir o contrato de `Iquety\Application\PubSub\DomainEvent
 
 A implementação mínima deve contemplar os métodos `__constructor` e `label`:
 
-### 2.1. Construtor
+### 2.1. O Construtor
 
-Todos os eventos devem receber seus valores somente através do construtor. Não
-deve ser possível alterá-los depois da instanciação, a fim de garantir sua
-imutabilidade.
+Todos os eventos devem receber seus valores somente através do construtor. 
+Outro fator importante é que não deve ser possível alterar valores depois da
+instanciação, para garantir a imutabilidade do evento.
 
-> **Importante:** Valores de data devem implementar `DateTimeImmutable`!
+> **Importante:** também para garantir a imutabilidade, os valores de data devem
+implementar `DateTimeImmutable`!
 
 ```php
-public function __construct(
-    private string $name,
-    private string $cpf,
-    private DateTimeImmutable $schedule
-) {
+use Iquety\Application\PubSub\DomainEvent;
+
+class UsuarioCadastrado extends DomainEvent
+{
+    public function __construct(
+        private string $nome,
+        private string $cpf,
+        private DateTimeImmutable $agendadoEm
+    ) {
+    }
+
+    ...
 }
 ```
 
-### 2.2. Método label
+### 2.2. O método label
 
 Este método deve devolver uma **identificação textual única**, que nomeie o evento
 de forma clara e objetiva. Deve ser um nome declarativo e facilmente reconhecível
@@ -44,30 +53,39 @@ Bons exemplos de identificação são 'user_registered' ou 'user.registered'.
 Péssimos exemplos são 'registered', '12345' ou 'abst345sd'.
 
 ```php
-public function label(): string
+use Iquety\Application\PubSub\DomainEvent;
+
+class UsuarioCadastrado extends DomainEvent
 {
-    return 'user.registered';
+    ...
+
+    public function label(): string
+    {
+        return 'usuario.cadastrado';
+    }
 }
 ```
 
-### 2.3. Getters
+### 2.3. Usando getters
 
 Getters podem ser implementados, desde que não alterem o estado atual do evento
 e funcionem apenas como acessores de dados.
 
 ```php
-class UserRegistered extends Iquety\Application\PubSub\DomainEvent
+use Iquety\Application\PubSub\DomainEvent;
+
+class UsuarioCadastrado extends DomainEvent
 {
     public function __construct(
-        private string $name,
+        private string $nome,
         private string $cpf,
-        private DateTimeImmutable $schedule
+        private DateTimeImmutable $agendadoEm
     ) {
     }
 
     public function label(): string
     {
-        return 'user.registered';
+        return 'usuario.cadastrado';
     }
 
     public function cpf(): string
@@ -75,9 +93,14 @@ class UserRegistered extends Iquety\Application\PubSub\DomainEvent
         return $this->cpf;
     }
 
-    public function name(): string
+    public function nome(): string
     {
-        return $this->name;
+        return $this->nome;
+    }
+
+    public function agendadoEm(): DateTimeImmutable
+    {
+        return $this->agendadoEm;
     }
 }
 ```
@@ -108,9 +131,9 @@ não se atualizaram, possam continuar enviando eventos, mesmo que incompletos.
 /** @param array<string,mixed> $values */
 public static function factory(array $values): Event
 {
-    // na versão anterior 'cpf' se chamava 'document'
-    if (isset($values['document']) === true) {
-        $values['cpf'] = $values['document'];
+    // na versão anterior 'cpf' se chamava 'documento'
+    if (isset($values['documento']) === true) {
+        $values['cpf'] = $values['documento'];
     }
 
     return parent::factory($values);
@@ -146,81 +169,28 @@ momento da ocorrência do evento.
 public function toArray(): array;
 ```
 
-### 2.5. Exemplo
+## 3. Como publicar um evento
 
-Abaixo, um exemplo de implementação para o evento "UserRegistered":
-
-```php
-declare(strict_types=1);
-
-namespace Foo\User\Events;
-
-use DateTimeImmutable;
-use Iquety\PubSub\Event\Event;
-
-class UserRegistered implements Event
-{
-    public function __construct(
-        private string $name,
-        private string $cpf,
-        private DateTimeImmutable $ocurredOn
-    ) {
-    }
-
-    public function label(): string
-    {
-        return 'user.registered';
-    }
-
-    /** @param array<string,mixed> $values */
-    public static function factory(array $values): Event
-    {
-        // na versão anterior 'cpf' se chamava 'document'
-        if (isset($values['document']) === true) {
-            $values['cpf'] = $values['document'];
-        }
-        
-        return new self(
-            $values['name'],
-            $values['cpf'],
-            new DateTimeImmutable($values['ocurredOn'])
-        );
-    }
-
-    public function cpf(): string
-    {
-        return $this->cpf;
-    }
-
-    public function name(): string
-    {
-        return $this->name;
-    }
-}
-```
-
-## 3. How to publish an event
-
-Ambas implementações, tanto o [Command (FcEngine)](06-motor-fc.md) como o
-[Controller (MvcEngine)](05-motor-mvc.md) possuem o método `publish` para enviar
-os eventos para os [assinantes registrados](13-pubsub-recebendo-eventos.md).
+Os diferentes tipos de ações ([FcEngine/Command](06-motor-fc.md), [MvcEngine/Controller](05-motor-mvc.md) ou [ConsoleEngine/ConsoleRoutine](07-motor-console.md)) possuem o método `publish`
+para enviar os eventos para os [assinantes registrados](12-pubsub-recebendo-eventos.md).
 
 ```php
 // UserController.php
 
-class UserController extends Controller
+class UsuarioControlador extends Controller
 {
-    public function edit(): ResponseInterface
+    public function editar(): ResponseInterface
     {
-        $this->publish('receiver-channel', new UserRegistered(...));
+        $this->publish('canal-recebedor', new UsuarioCadastrado(...));
     }
 }
 ```
 
-No exemplo acima, o método `edit` do controlador `UserController` publica o evento
-`UserRegistered` no canal `'receiver-channel'`.
+No exemplo acima, o método `UsuarioControlador::editar` publica o evento
+`UsuarioCadastrado` no canal `'canal-recebedor'`.
 
 No momento que o evento é publicado, todos os assinantes serão consultados.
 Aqueles que forem capazes de receber o evento, irão utilizá-lo.
 
---page-nav--
+[◂ Padrão Publish/Subscribe](10-pubsub.md) | [Índice da documentação](indice.md) | [PubSub: recebendo eventos ▸](12-pubsub-recebendo-eventos.md)
+-- | -- | --

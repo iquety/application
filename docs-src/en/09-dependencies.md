@@ -1,4 +1,4 @@
-# Existing dependencies
+# Dependências existentes
 
 --page-nav--
 
@@ -29,6 +29,6 @@ In the `Iquety\Application\Adapter\Session` namespace, there are adapters for
 session management.
 
 - MemorySession (Fake manager to implement tests);
-- [SynfonyNativeSession](https://github.com/symfony/http-foundation).
+- [NativeSession](https://github.com/symfony/http-foundation).
 
 --page-nav--

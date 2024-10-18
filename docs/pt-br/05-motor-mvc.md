@@ -57,10 +57,10 @@ class MeuModuloMvc extends MvcModule
 {
     public function bootDependencies(Container $container): void
     {
-        // dependência obrigatório para Mvc
+        // dependência obrigatória para Mvc
         $container->addSingleton(Session::class, MemorySession::class);
 
-        // dependência obrigatório para Mvc
+        // dependência obrigatória para Mvc
         $container->addSingleton(HttpFactory::class, new DiactorosHttpFactory());
 
         // dependência adicional

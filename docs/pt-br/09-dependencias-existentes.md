@@ -1,6 +1,6 @@
 # Dependências existentes
 
-[◂ Arquitetura Hexagonal](08-arquitetura-hexagonal.md) | [Índice da documentação](indice.md) | [Padrão Publish/Subscribe ▸](11-pubsub.md)
+[◂ Arquitetura Hexagonal](08-arquitetura-hexagonal.md) | [Índice da documentação](indice.md) | [Padrão Publish/Subscribe ▸](10-pubsub.md)
 -- | -- | --
 
 ## 1. Dependências fornecidas
@@ -32,5 +32,5 @@ para gerenciamento de sessões.
 - MemorySession (Gerenciador falso para implementar testes);
 - [NativeSession](https://github.com/symfony/http-foundation).
 
-[◂ Arquitetura Hexagonal](08-arquitetura-hexagonal.md) | [Índice da documentação](indice.md) | [Padrão Publish/Subscribe ▸](11-pubsub.md)
+[◂ Arquitetura Hexagonal](08-arquitetura-hexagonal.md) | [Índice da documentação](indice.md) | [Padrão Publish/Subscribe ▸](10-pubsub.md)
 -- | -- | --

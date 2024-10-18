@@ -1,6 +1,6 @@
-# PubSub: receiving events
+# PubSub: recebendo eventos
 
-[◂ PubSub: sending events](12-pubsub-sending-events.md) | [Documentation index](index.md) | [Evolving the library ▸](99-evolution.md)
+[◂ PubSub: enviando eventos](11-pubsub-sending-events.md) | [Documentation index](index.md) | [Architecture ▸](98-architecture.md)
 -- | -- | --
 
 ## 1. What is a Subscriber
@@ -74,7 +74,7 @@ example, if `subscribedToEventType` returns the type `UserEvent`, only events
 that implement the `UserEvent` interface will be received in the `handleEvent`
 method.
 
-## 5. Example
+## 5. Example of a Subscriber
 
 Below, an example implementation for "`UserEventSubscriber`":
 
@@ -107,15 +107,15 @@ class UserEventSubscriber implements EventSubscriber
     public function handleEvent(Event $event): void
     {
         if ($event instanceof UserRegistered) {
-            // ...
-            // routine that creates a new user in the database
+            // Here we implement the routine that
+            // creates a new user in the database
 
             return;
         }
 
         if ($event instanceof UserEmailChanged) {
-            // ...
-            // routine that updates the email of an existing user in the database
+            // Here we implement the routine that updates
+            // the email of an existing user in the database
         }
     }
 
@@ -127,5 +127,5 @@ class UserEventSubscriber implements EventSubscriber
 }
 ```
 
-[◂ PubSub: sending events](12-pubsub-sending-events.md) | [Documentation index](index.md) | [Evolving the library ▸](99-evolution.md)
+[◂ PubSub: enviando eventos](11-pubsub-sending-events.md) | [Documentation index](index.md) | [Architecture ▸](98-architecture.md)
 -- | -- | --

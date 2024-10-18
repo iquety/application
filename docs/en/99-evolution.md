@@ -1,6 +1,6 @@
 # Evolving the library
 
-[◂ PubSub: receiving events](13-pubsub-receiving-events.md) | [Documentation index ▸](index.md)
+[◂ Architecture](98-architecture.md) | [Documentation index ▸](index.md)
 -- | --
 
 ## 1. Infrastructure
@@ -80,5 +80,5 @@ browsable documentation in the `docs` directory:
 composer docmap
 ```
 
-[◂ PubSub: receiving events](13-pubsub-receiving-events.md) | [Documentation index ▸](index.md)
+[◂ Architecture](98-architecture.md) | [Documentation index ▸](index.md)
 -- | --

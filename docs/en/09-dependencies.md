@@ -1,6 +1,6 @@
-# Existing dependencies
+# Dependências existentes
 
-[◂ Hexagonal Architecture](09-hexagonal-architecture.md) | [Documentation index](index.md) | [Publish/Subscribe pattern ▸](11-pubsub.md)
+[◂ Hexagonal Architecture](08-hexagonal-architecture.md) | [Documentation index](index.md) | [Publish/Subscribe Pattern ▸](10-pubsub.md)
 -- | -- | --
 
 ## 1. Provided dependencies
@@ -30,7 +30,7 @@ In the `Iquety\Application\Adapter\Session` namespace, there are adapters for
 session management.
 
 - MemorySession (Fake manager to implement tests);
-- [SynfonyNativeSession](https://github.com/symfony/http-foundation).
+- [NativeSession](https://github.com/symfony/http-foundation).
 
-[◂ Hexagonal Architecture](09-hexagonal-architecture.md) | [Documentation index](index.md) | [Publish/Subscribe pattern ▸](11-pubsub.md)
+[◂ Hexagonal Architecture](08-hexagonal-architecture.md) | [Documentation index](index.md) | [Publish/Subscribe Pattern ▸](10-pubsub.md)
 -- | -- | --

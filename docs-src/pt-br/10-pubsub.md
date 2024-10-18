@@ -26,18 +26,33 @@ Para publicar eventos, é preciso inicializar um ou mais publicadores. No exempl
 a seguir, o `SimpleEventPublisher` será utilizado:
 
 ```php
+<?php
 // index.php
+
+declare(strict_types=1);
+
+use Iquety\Application\Application;
+use Iquety\Application\IoEngine\FrontController\FcEngine;
+use Iquety\Application\IoEngine\Mvc\MvcEngine;
+use Iquety\Http\Adapter\HttpFactory\DiactorosHttpFactory;
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 $app = Application::instance();
 
 // inicializa um publicador de eventos
 $app->bootEventPublisher(SimpleEventPublisher::instance());
 
-$app->bootEngine(new MvcEngine());
+$app->bootEngine(...); // motor 1
 
-$app->bootApplication(new MainMvcBootstrap());
+$app->bootApplication(...); // módulo principal
 
-$response = $app->run();
+$response = $app->run(...); // requisição do usuário
+
+$app->sendResponse($response);
 ```
 
 Atualmente, os [publicadores disponíveis](https://github.com/iquety/pubsub/tree/main/src/Publisher) são:
