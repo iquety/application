@@ -98,6 +98,7 @@ class HttpResponseFactory
         return $response->withHeader('Content-type', $this->mimeType->value);
     }
 
+    /** @SuppressWarnings(PHPMD.StaticAccess) */
     private function resolveAccept(): HttpMime
     {
         $acceptHeader = $this->serverRequest->getHeaderLine('Accept');
@@ -106,9 +107,9 @@ class HttpResponseFactory
 
         $resolved = HttpMime::HTML;
 
-        foreach($mimeList as $mime) {
+        foreach ($mimeList as $mime) {
             // casos: application/xml;q=0.9
-            $mime = preg_replace('/;.*/', '', $mime);
+            $mime = preg_replace('/;.*/', '', $mime) ?? '*/*';
 
             if ($mime === '*/*') {
                 $resolved = HttpMime::HTML;

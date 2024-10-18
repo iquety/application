@@ -57,7 +57,6 @@ instance of our module to the `bootApplication` method (if it is the main module
 or `bootModule` (if it is a secondary module). For didactic purposes, let's call
 our module `MyFcModule`:
 
-
 ```php
 class MyFcModule extends FcModule
 {

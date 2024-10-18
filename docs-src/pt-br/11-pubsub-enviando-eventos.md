@@ -18,7 +18,7 @@ A implementação mínima deve contemplar os métodos `__constructor` e `label`:
 
 ### 2.1. O Construtor
 
-Todos os eventos devem receber seus valores somente através do construtor. 
+Todos os eventos devem receber seus valores somente através do construtor.
 Outro fator importante é que não deve ser possível alterar valores depois da
 instanciação, para garantir a imutabilidade do evento.
 

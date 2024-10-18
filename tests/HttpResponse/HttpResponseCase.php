@@ -256,7 +256,10 @@ abstract class HttpResponseCase extends TestCase
         $this->assertSame($responseBody, (string)$response->getBody());
     }
 
-    /** @return array<string,array<int,mixed>> */
+    /**
+     * @return array<string,array<int,mixed>>
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function contentAcceptMultipleProvider(): array
     {
         $list = [];
@@ -292,12 +295,12 @@ abstract class HttpResponseCase extends TestCase
         ];
 
         $list['xml 3'] = [
-            'image/png,application/xpix,application/xml,text/html,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'image/png,application/xpix,application/xml,text/html;q=0.9,image/avif,image/webp,*/*;q=0.8',
             HttpMime::XML
         ];
 
         $list['xml param'] = [
-            'image/png,application/xpix,application/xml;q=0.9,text/html,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'image/png,application/xpix,application/xml;q=0.9,text/html;q=0.9,image/avif,image/webp,*/*;q=0.8',
             HttpMime::XML
         ];
 
@@ -346,7 +349,7 @@ abstract class HttpResponseCase extends TestCase
             '*/*,application/xhtml+xml,image/png;q=0.9,image/avif,image/webp;q=0.8',
             HttpMime::HTML
         ];
-        
+
         $list['default 2'] = [
             'application/xhtml+xml,*/*,image/png;q=0.9,image/avif,image/webp;q=0.8',
             HttpMime::HTML

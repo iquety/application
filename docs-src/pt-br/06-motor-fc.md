@@ -55,7 +55,6 @@ instância de nosso módulo para o método `bootApplication` (se for o módulo p
 ou `bootModule` (se for um módulo secundário). Para fins didáticos, Vamos chamar
 nosso módulo de `MeuModuloFc`:
 
-
 ```php
 class MeuModuloFc extends FcModule
 {

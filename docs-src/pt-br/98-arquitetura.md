@@ -43,7 +43,7 @@ No processo, os seguintes objetos serão utilizados:
 **ActionExecutor:** a resolução da URI solicitada é efetuada pelo `ActionExecutor`
 que produz um `ActionDescriptor` contendo o resultado da resolução
 
-**ActionDescriptor:** um descritor contendo as informações necessárias para a 
+**ActionDescriptor:** um descritor contendo as informações necessárias para a
 executar a ação (Mvc:Controller ou FrontController:Command) solicitada.
 
 - decide se $actionClasse é do tipo $actionType  
