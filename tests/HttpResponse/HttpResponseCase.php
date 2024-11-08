@@ -205,7 +205,7 @@ abstract class HttpResponseCase extends TestCase
                 if ($body !== '') {
                     $responseBody = match ($mime) {
                         HttpMime::JSON => sprintf(
-                            '{"content":"%s"}',
+                            '"%s"',
                             $body
                         ),
                         HttpMime::XML => sprintf(
@@ -344,7 +344,6 @@ abstract class HttpResponseCase extends TestCase
             HttpMime::TEXT
         ];
 
-        $list = [];
         $list['default 1'] = [
             '*/*,application/xhtml+xml,image/png;q=0.9,image/avif,image/webp;q=0.8',
             HttpMime::HTML

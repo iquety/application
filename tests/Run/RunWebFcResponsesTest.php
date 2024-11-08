@@ -10,6 +10,7 @@ use Iquety\Application\IoEngine\FrontController\FcEngine;
 use Iquety\Application\IoEngine\Module;
 use Iquety\Application\IoEngine\ModuleSet;
 use Iquety\Application\RunWeb;
+use Iquety\Http\Adapter\Session\MemorySession;
 use Iquety\Http\Adapter\Session\NativeSession;
 use Iquety\Http\HttpFactory;
 use Iquety\Http\Session;
@@ -32,7 +33,7 @@ class RunWebFcResponsesTest extends TestCase
         $response = $this->makeResponse($container, '/not-found');
 
         $this->assertSame(404, $response->getStatusCode());
-        $this->assertSame('Not Found', (string)$response->getBody());
+        $this->assertSame('"Not Found"', (string)$response->getBody());
     }
 
     /** @test */
@@ -44,7 +45,7 @@ class RunWebFcResponsesTest extends TestCase
         $response = $this->makeResponse($container, '/test-error-command');
 
         $this->assertSame(500, $response->getStatusCode());
-        $this->assertSame('Mensagem de erro', (string)$response->getBody());
+        $this->assertSame('"Mensagem de erro"', (string)$response->getBody());
     }
 
     /** @test */
@@ -58,16 +59,73 @@ class RunWebFcResponsesTest extends TestCase
         $this->assertSame('Iquety Framework - Home Page', (string)$response->getBody());
     }
 
+    /** @test */
+    public function responseFlashError(): void
+    {
+        $container = $this->makeContainer();
+
+        $response = $this->makeResponse($container, '/test-flash-error-command');
+
+        $this->assertSame(400, $response->getStatusCode());
+
+        $this->assertSame('/destination', $response->getHeaderLine('Location'));
+
+        $this->assertSame('', (string)$response->getBody());
+    }
+
+    /** @test */
+    public function responseValidationError(): void
+    {
+        $container = $this->makeContainer();
+
+        $response = $this->makeResponse($container, '/test-validation-error-command');
+
+        $expected = json_encode([
+            'name' => ["Value of the field 'name' must be equal to 'Ricardo Pereira'"],
+            'email' => []
+        ]);
+
+        $this->assertSame(400, $response->getStatusCode());
+
+        $this->assertSame(
+            $expected,
+            (string)$response->getBody()
+        );
+    }
+
+    /** @test */
+    public function responseValidationSuccess(): void
+    {
+        $container = $this->makeContainer();
+
+        $response = $this->makeResponse($container, '/test-validation-ok-command');
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $this->assertSame(
+            '"ok"',
+            (string)$response->getBody()
+        );
+    }
+
     private function makeResponse(Container $container, string $uri, ?Module $extraModule = null): ResponseInterface
     {
         $factory = $this->makeHttpFactory();
 
         // disponibiliza as dependências obrigatórias
-        $container->addFactory(Session::class, new NativeSession());
+        $container->addFactory(Session::class, new MemorySession());
         $container->addFactory(HttpFactory::class, $factory);
 
         $originalRequest = $factory->createRequestFromGlobals();
-        $originalRequest = $originalRequest->withUri($factory->createUri($uri));
+
+        // imita os parâmetros POST
+        $originalRequest = $originalRequest->withParsedBody([
+            'name' => 'Ricardo',
+            'email' => 'ricardo@naitis.com',
+            'password' => '23456789'
+        ]);
+
+        $originalRequest = $originalRequest->withHeader('Accept', 'application/json');
 
         // executa o motor Web
         return $this->makeRunnner($container, $extraModule)

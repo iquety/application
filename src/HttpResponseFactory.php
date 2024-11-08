@@ -10,6 +10,7 @@ use Iquety\Http\HttpMime;
 use Iquety\Http\HttpStatus;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 use Throwable;
 
 class HttpResponseFactory
@@ -64,6 +65,17 @@ class HttpResponseFactory
         }
 
         return $this->response($content, HttpStatus::INTERNAL_SERVER_ERROR);
+    }
+
+    public function redirect(
+        string|UriInterface $uri,
+        HttpStatus $status = HttpStatus::FOUND
+    ): ResponseInterface {
+        if (is_string($uri) === true) {
+            $uri = $this->factory->createUri($uri);
+        }
+
+        return $this->factory->createRedirect($uri, $status);
     }
 
     /**

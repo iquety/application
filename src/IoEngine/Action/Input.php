@@ -14,6 +14,8 @@ use RuntimeException;
 /** Contém os parâmetros de entrada do usuário */
 class Input
 {
+    use Validable;
+
     private bool $hasNext;
 
     private string $method = 'GET';
