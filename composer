@@ -7,14 +7,14 @@
 
 PHP_CONTAINER='iquety-app'
 
-dockerComposeUp()
+dockerUp()
 {
     docker compose &>/dev/null
     
     if [ "$?" == "0" ]; then
         docker compose up -d
 
-        exit 0;
+        return
     fi
 
     docker-compose &>/dev/null
@@ -22,11 +22,11 @@ dockerComposeUp()
     if [ "$?" == "0" ]; then
         docker-compose up -d
 
-        exit 0;
+        return
     fi
 }
 
-dockerComposeUp
+dockerUp
 
 if [ "$1" == "analyse" ] || [ "$1" == "lint" ]; then
     docker run \
