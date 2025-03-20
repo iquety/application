@@ -36,7 +36,7 @@ class InputRequestTest extends TestCase
         $request = (new RequestFactory())->makeRequest(
             'POST',
             '/one/two/3',
-            'x=four&y=five&z=six',
+            'x=four&y=five&z=six&a[]=seven&a[]=seven',
             ['name' => 'test'],
             $this->phpSingleFile()
         );
@@ -48,12 +48,13 @@ class InputRequestTest extends TestCase
         $this->assertSame(['one', 'two', '3'], $input->getPath());
         $this->assertSame(['one'], $input->getTarget());
 
-        $this->assertCount(7, $input->toArray());
+        $this->assertCount(8, $input->toArray());
         $this->assertSame('two', $input->param(0));
         $this->assertSame(3, $input->param(1));
         $this->assertSame('four', $input->param('x'));
         $this->assertSame('five', $input->param('y'));
         $this->assertSame('six', $input->param('z'));
+        $this->assertSame(['seven', 'seven'], $input->param('a'));
         $this->assertSame('test', $input->param('name'));
         $this->assertInstanceOf(FileSet::class, $input->param('inputFile'));
     }
@@ -64,7 +65,7 @@ class InputRequestTest extends TestCase
         $request = (new RequestFactory())->makeRequest(
             'GET',
             '/one/two/3',
-            'x=four&y=five&z=six',
+            'x=four&y=five&z=six&a[]=seven&a[]=seven',
             ['name' => 'test'],
             $this->phpSingleFile()
         );
@@ -76,12 +77,13 @@ class InputRequestTest extends TestCase
         $this->assertSame(['one', 'two', '3'], $input->getPath());
         $this->assertSame(['one'], $input->getTarget());
 
-        $this->assertCount(7, $input->toArray());
+        $this->assertCount(8, $input->toArray());
         $this->assertSame('two', $input->param(0));
         $this->assertSame(3, $input->param(1));
         $this->assertSame('four', $input->param('x'));
         $this->assertSame('five', $input->param('y'));
         $this->assertSame('six', $input->param('z'));
+        $this->assertSame(['seven', 'seven'], $input->param('a'));
         $this->assertSame('test', $input->param('name'));
         $this->assertInstanceOf(FileSet::class, $input->param('inputFile'));
     }
