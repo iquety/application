@@ -95,11 +95,11 @@ class RunWebMvcResponsesTest extends TestCase
 
         $response = $this->makeResponse($container, '/', $extraModule);
 
-        $this->assertSame(400, $response->getStatusCode());
-
         $this->assertSame('/destination', $response->getHeaderLine('Location'));
 
         $this->assertSame('', (string)$response->getBody());
+
+        $this->assertSame(400, $response->getStatusCode());
     }
 
     /** @test */
@@ -120,12 +120,9 @@ class RunWebMvcResponsesTest extends TestCase
             'email' => []
         ]);
 
+        $this->assertSame($expected, (string)$response->getBody());
+        
         $this->assertSame(400, $response->getStatusCode());
-
-        $this->assertSame(
-            $expected,
-            (string)$response->getBody()
-        );
     }
 
     /** @test */
@@ -141,12 +138,9 @@ class RunWebMvcResponsesTest extends TestCase
 
         $response = $this->makeResponse($container, '/', $extraModule);
 
-        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('"ok"', (string)$response->getBody());
 
-        $this->assertSame(
-            '"ok"',
-            (string)$response->getBody()
-        );
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     private function makeResponse(Container $container, string $uri, ?Module $extraModule = null): ResponseInterface
