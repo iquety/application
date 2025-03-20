@@ -4,53 +4,61 @@ declare(strict_types=1);
 
 namespace Iquety\Application\IoEngine\Action;
 
-use Closure;
+use InvalidArgumentException;
 use Iquety\Application\Application;
 use Iquety\Application\IoEngine\FileSet;
 use Iquety\Http\Session;
-use Iquety\Shield\Assertion\Contains;
-use Iquety\Shield\Assertion\EndsWith;
-use Iquety\Shield\Assertion\EqualTo;
-use Iquety\Shield\Assertion\GreaterThan;
-use Iquety\Shield\Assertion\GreaterThanOrEqualTo;
-use Iquety\Shield\Assertion\IsAlpha;
-use Iquety\Shield\Assertion\IsAlphaNumeric;
-use Iquety\Shield\Assertion\IsBase64;
-use Iquety\Shield\Assertion\IsBrPhoneNumber;
-use Iquety\Shield\Assertion\IsCep;
-use Iquety\Shield\Assertion\IsCreditCard;
-use Iquety\Shield\Assertion\IsDate;
-use Iquety\Shield\Assertion\IsDateTime;
-use Iquety\Shield\Assertion\IsEmail;
-use Iquety\Shield\Assertion\IsEmpty;
-use Iquety\Shield\Assertion\IsFalse;
-use Iquety\Shield\Assertion\IsHexadecimal;
-use Iquety\Shield\Assertion\IsHexColor;
-use Iquety\Shield\Assertion\IsIp;
-use Iquety\Shield\Assertion\IsMacAddress;
-use Iquety\Shield\Assertion\IsNotEmpty;
-use Iquety\Shield\Assertion\IsNotNull;
-use Iquety\Shield\Assertion\IsNull;
-use Iquety\Shield\Assertion\IsTime;
-use Iquety\Shield\Assertion\IsTrue;
-use Iquety\Shield\Assertion\IsUrl;
-use Iquety\Shield\Assertion\IsUuid;
-use Iquety\Shield\Assertion\Length;
-use Iquety\Shield\Assertion\LessThan;
-use Iquety\Shield\Assertion\LessThanOrEqualTo;
-use Iquety\Shield\Assertion\Matches;
-use Iquety\Shield\Assertion\MaxLength;
-use Iquety\Shield\Assertion\MinLength;
-use Iquety\Shield\Assertion\NotContains;
-use Iquety\Shield\Assertion\NotEqualTo;
-use Iquety\Shield\Assertion\NotMatches;
-use Iquety\Shield\Assertion\StartsWith;
+use Iquety\Shield\Assertion;
 use Iquety\Shield\Field;
 use Iquety\Shield\Shield;
 use LogicException;
+use RuntimeException;
+use Throwable;
 
 /**
  * @method float|int|string|FileSet|null param()
+ * @method self contains(string $needle)
+ * @method self endsWith(string $needle)
+ * @method self startsWith(string $needle)
+ * @method self equalTo(mixed $needle)
+ * @method self greaterThan(int $length)
+ * @method self greaterThanOrEqualTo(int $length)
+ * @method self isAlpha()
+ * @method self isAlphaNumeric()
+ * @method self isAmountTime()
+ * @method self isBase64()
+ * @method self isBrPhoneNumber()
+ * @method self isCep()
+ * @method self isCpf()
+ * @method self isCreditCard()
+ * @method self isCreditCardBrand()
+ * @method self isCvv()
+ * @method self isDate()
+ * @method self isDateTime()
+ * @method self isEmail()
+ * @method self isEmpty()
+ * @method self isFalse()
+ * @method self isHexadecimal()
+ * @method self isHexColor()
+ * @method self isIp()
+ * @method self isMacAddress()
+ * @method self isNotEmpty()
+ * @method self isNotNull()
+ * @method self isNull()
+ * @method self isTime()
+ * @method self isTrue()
+ * @method self isUrl()
+ * @method self isUuid()
+ * @method self length(int $length)
+ * @method self lessThan(int $length)
+ * @method self lessThanOrEqualTo(int $length)
+ * @method self matches(string $needle)
+ * @method self maxLength(int $length)
+ * @method self minLength(int $length)
+ * @method self notContains(string $needle)
+ * @method self notEqualTo(mixed $needle)
+ * @method self notMatches(string $needle)
+ * @method self startsWith(string $needle)
  */
 trait Validable
 {
@@ -59,6 +67,8 @@ trait Validable
     private string $currentFieldName = '';
 
     private ?Field $currentField = null;
+
+    private ?Assertion $currentAssertion = null;
 
     private function shield(): Shield
     {
@@ -109,268 +119,77 @@ trait Validable
         return $this;
     }
 
-    private function getTyped(mixed $value): mixed
+    /** @param array<int,mixed> $argumentList */
+    public function __call(string $method, array $argumentList): self
     {
-        if (is_bool($value) === true) {
-            return (bool)$value;
+        $methodMap = new ValidableMap($method);
+
+        $this->startFluency();
+
+        if ($method === 'message') {
+            $this->currentAssertion->message(...$argumentList);
+
+            return $this;
         }
 
-        if (is_int($value) === true) {
-            return (int)$value;
+        try {
+            $className = $this->makeAssertionClassName($method);
+    
+            $fieldValue = $this->param($this->currentFieldName);
+
+            if ($fieldValue === null) {
+                throw new InvalidArgumentException("Field '$this->currentFieldName' does not exist");
+            }
+
+            $values = $methodMap->getAssertionValues(
+                $fieldValue,
+                $argumentList[0] ?? ''
+            );
+
+            $valueOne = $values['valueOne'];
+            $valueTwo = $values['valueTwo'];
+
+            $assertion = new $className($valueOne, $valueTwo);
+    
+            $this->currentAssertion = $this->currentField->assert($assertion);
+
+            return $this;
+        } catch(InvalidArgumentException $exception) {
+            throw $exception;
+        } catch(Throwable $exception) {
+            throw new RuntimeException(sprintf(
+                "%s on %s in line %d",
+                $exception->getMessage(),
+                $exception->getFile(),
+                $exception->getLine()
+            ));
         }
 
-        if (is_float($value) === true) {
-            return (float)$value;
-        }
-
-        if (is_null($value) === true) {
-            return null;
-        }
-
-        return (string) $value;
+        // $this->endFluency();
     }
 
-    private function assertFluency(): void
+    private function makeAssertionClassName(string $method): string
+    {
+        $className = "\Iquety\Shield\Assertion\\" . ucfirst($method);
+
+        if (class_exists($className) === false) {
+            throw new LogicException("Method $method does not exist");
+        }
+
+        return $className;
+    }
+
+    private function startFluency(): void
     {
         if($this->currentField === null) {
             throw new LogicException('You need to start with the assert() method');
         }
     }
 
-    private function endFluency(): void
-    {
-        $this->currentField = null;
+    // private function endFluency(): void
+    // {
+    //     $this->currentField = null;
 
-        $this->currentFieldName = '';
-    }
-
-    private function makeAssertion(Closure $assertionFactory): void
-    {
-        $this->assertFluency();
-
-        $value = (string)$this->param($this->currentFieldName);
-
-        $assertion = $assertionFactory($value);
-
-        $this->currentField->assert($assertion);
-
-        $this->endFluency();
-    }
-
-    public function contains(string $needle): void
-    {
-        $this->makeAssertion(fn($value) => new Contains($value, $needle));
-    }
-
-    public function endsWith(string $needle): void
-    {
-        $this->makeAssertion(fn($value) => new EndsWith($value, $needle));
-    }
-
-    public function equalTo(mixed $needle): void
-    {
-        $this->makeAssertion(
-            fn($value) => new EqualTo($this->getTyped($value), $needle)
-        );
-    }
-
-    public function greaterThan(mixed $lenght): void
-    {
-        $this->makeAssertion(
-            fn($value) => new GreaterThan($this->getTyped($value), $lenght)
-        );
-    }
-
-    public function greaterThanOrEqualTo(float|int $lenght): void
-    {
-        $this->makeAssertion(
-            fn($value) => new GreaterThanOrEqualTo($this->getTyped($value), $lenght)
-        );
-    }
-
-    public function isAlpha(): void
-    {
-        $this->makeAssertion(fn($value) => new IsAlpha($value));
-    }
-
-    public function isAlphaNumeric(): void
-    {
-        $this->makeAssertion(fn($value) => new IsAlphaNumeric($value));
-
-    }
-
-    public function isBase64(): void
-    {
-        $this->makeAssertion(fn($value) => new IsBase64($value));
-
-    }
-
-    public function isCreditCard(): void
-    {
-        $this->makeAssertion(fn($value) => new IsCreditCard($value));
-    }
-
-    public function isDate(): void
-    {
-        $this->makeAssertion(fn($value) => new IsDate($value));
-    }
-
-    public function isDateTime(): void
-    {
-        $this->makeAssertion(fn($value) => new IsDateTime($value));
-    }
-
-    public function isEmail(): void
-    {
-        $this->makeAssertion(fn($value) => new IsEmail($value));
-    }
-
-    public function isEmpty(): void
-    {
-        $this->makeAssertion(
-            fn($value) => new IsEmpty($this->getTyped($value))
-        );
-    }
-
-    public function isFalse(): void
-    {
-        $this->makeAssertion(
-            fn($value) => new IsFalse($this->getTyped($value))
-        );
-    }
-
-    public function isHexadecimal(): void
-    {
-        $this->makeAssertion(fn($value) => new IsHexadecimal($value));
-    }
-
-    public function isHexColor(): void
-    {
-        $this->makeAssertion(fn($value) => new IsHexColor($value));
-    }
-
-    public function isIp(): void
-    {
-        $this->makeAssertion(fn($value) => new IsIp($value));
-    }
-
-    public function isMacAddress(): void
-    {
-        $this->makeAssertion(fn($value) => new IsMacAddress($value));
-    }
-
-    public function isNotEmpty(): void
-    {
-        $this->makeAssertion(
-            fn($value) => new IsNotEmpty($this->getTyped($value))
-        );
-    }
-
-    public function isNotNull(): void
-    {
-        $this->makeAssertion(
-            fn($value) => new IsNotNull($this->getTyped($value))
-        );
-    }
-
-    public function isNull(): void
-    {
-        $this->makeAssertion(
-            fn($value) => new IsNull($this->getTyped($value))
-        );
-    }
-
-    public function isBrPhoneNumber(): void
-    {
-        $this->makeAssertion(fn($value) => new IsBrPhoneNumber($value));
-    }
-
-    public function isCep(): void
-    {
-        $this->makeAssertion(fn($value) => new IsCep($value));
-    }
-
-    public function isTime(): void
-    {
-        $this->makeAssertion(fn($value) => new IsTime($value));
-    }
-
-    public function isTrue(): void
-    {
-        $this->makeAssertion(
-            fn($value) => new IsTrue($this->getTyped($value))
-        );
-    }
-
-    public function isUrl(): void
-    {
-        $this->makeAssertion(fn($value) => new IsUrl($value));
-    }
-
-    public function isUuid(): void
-    {
-        $this->makeAssertion(fn($value) => new IsUuid($value));
-    }
-
-    public function length(float|int $lenght): void
-    {
-        $this->makeAssertion(
-            fn($value) => new Length($this->getTyped($value), $lenght)
-        );
-    }
-
-    public function lessThan(float|int $lenght): void
-    {
-        $this->makeAssertion(
-            fn($value) => new LessThan($this->getTyped($value), $lenght)
-        );
-    }
-
-    public function lessThanOrEqualTo(float|int $lenght): void
-    {
-        $this->makeAssertion(
-            fn($value) => new LessThanOrEqualTo($this->getTyped($value), $lenght)
-        );
-    }
-
-    public function matches(string $pattern): void
-    {
-        $this->makeAssertion(fn($value) => new Matches($value, $pattern));
-    }
-
-    public function maxLength(float|int $lenght): void
-    {
-        $this->makeAssertion(
-            fn($value) => new MaxLength($this->getTyped($value), $lenght)
-        );
-    }
-
-    public function minLength(float|int $lenght): void
-    {
-        $this->makeAssertion(
-            fn($value) => new MinLength($this->getTyped($value), $lenght)
-        );
-    }
-
-    public function notContains(string $needle): void
-    {
-        $this->makeAssertion(fn($value) => new NotContains($value, $needle));
-    }
-
-    public function notEqualTo(mixed $needle): void
-    {
-        $this->makeAssertion(
-            fn($value) => new NotEqualTo($this->getTyped($value), $needle)
-        );
-    }
-
-    public function notMatches(string $pattern): void
-    {
-        $this->makeAssertion(fn($value) => new NotMatches($value, $pattern));
-    }
-
-    public function startsWith(string $needle): void
-    {
-        $this->makeAssertion(fn($value) => new StartsWith($value, $needle));
-    }
+    //     $this->currentFieldName = '';
+    // }
 }

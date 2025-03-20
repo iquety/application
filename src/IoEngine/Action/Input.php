@@ -75,7 +75,7 @@ class Input
         $this->path = $originalPath;
 
         foreach ($originalParamList as $name => $value) {
-            if (is_array($value) === true) {
+            if (is_array($value) === true && isset($value[0]) && gettype($value[0]) === 'object') {
                 $this->paramList[$name] = $this->makeFileSet($value);
 
                 continue;
@@ -157,7 +157,7 @@ class Input
         $this->next();
     }
 
-    public function param(int|string $param): float|int|string|FileSet|null
+    public function param(int|string $param): array|float|int|string|FileSet|null
     {
         return $this->paramList[$param] ?? null;
     }

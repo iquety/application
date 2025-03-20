@@ -37,7 +37,7 @@ class UriParser
     public function toArray(): array
     {
         return array_map(
-            fn($value) => $this->fixTypes($value),
+            fn($value) => (new ValueParser($value))->withCorrectType(),
             $this->paramList
         );
     }
@@ -64,30 +64,5 @@ class UriParser
         parse_str($queryString, $queryParamList);
 
         return $queryParamList;
-    }
-
-    /**
-     * @param array<mixed>|float|int|string $value
-     * @return array<mixed>|float|int|string
-     */
-    public function fixTypes(array|float|int|string $value): array|float|int|string
-    {
-        if (is_array($value) === true) {
-            foreach ($value as $key => $subValue) {
-                $value[$key] = $this->fixTypes($subValue);
-            }
-
-            return $value;
-        }
-
-        if (is_numeric($value) === false) {
-            return $value;
-        }
-
-        if (is_int($value + 0) === true) {
-            return (int)$value;
-        }
-
-        return (float)$value;
     }
 }
