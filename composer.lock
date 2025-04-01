@@ -634,16 +634,16 @@
         },
         {
             "name": "iquety/shield",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iquety/shield.git",
-                "reference": "2700da8ac9b1251454e5de65050f5e0dd819f28d"
+                "reference": "ce72ddc9e53954e0b91ee25ff11c2f95bb13c3f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iquety/shield/zipball/2700da8ac9b1251454e5de65050f5e0dd819f28d",
-                "reference": "2700da8ac9b1251454e5de65050f5e0dd819f28d",
+                "url": "https://api.github.com/repos/iquety/shield/zipball/ce72ddc9e53954e0b91ee25ff11c2f95bb13c3f6",
+                "reference": "ce72ddc9e53954e0b91ee25ff11c2f95bb13c3f6",
                 "shasum": ""
             },
             "require": {
@@ -676,9 +676,9 @@
             ],
             "support": {
                 "issues": "https://github.com/iquety/shield/issues",
-                "source": "https://github.com/iquety/shield/tree/v2.0.0"
+                "source": "https://github.com/iquety/shield/tree/v2.0.1"
             },
-            "time": "2025-03-15T17:29:34+00:00"
+            "time": "2025-03-24T14:50:09+00:00"
         },
         {
             "name": "laminas/laminas-diactoros",
@@ -2461,16 +2461,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.21",
+            "version": "1.12.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "14276fdef70575106a3392a4ed553c06a984df28"
+                "reference": "29201e7a743a6ab36f91394eab51889a82631428"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/14276fdef70575106a3392a4ed553c06a984df28",
-                "reference": "14276fdef70575106a3392a4ed553c06a984df28",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/29201e7a743a6ab36f91394eab51889a82631428",
+                "reference": "29201e7a743a6ab36f91394eab51889a82631428",
                 "shasum": ""
             },
             "require": {
@@ -2515,7 +2515,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-09T09:24:50+00:00"
+            "time": "2025-03-23T14:57:32+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -4004,16 +4004,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.11.3",
+            "version": "3.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "ba05f990e79cbe69b9f35c8c1ac8dca7eecc3a10"
+                "reference": "2d1b63db139c3c6ea0c927698e5160f8b3b8d630"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/ba05f990e79cbe69b9f35c8c1ac8dca7eecc3a10",
-                "reference": "ba05f990e79cbe69b9f35c8c1ac8dca7eecc3a10",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/2d1b63db139c3c6ea0c927698e5160f8b3b8d630",
+                "reference": "2d1b63db139c3c6ea0c927698e5160f8b3b8d630",
                 "shasum": ""
             },
             "require": {
@@ -4080,11 +4080,11 @@
                     "type": "open_collective"
                 },
                 {
-                    "url": "https://thanks.dev/phpcsstandards",
+                    "url": "https://thanks.dev/u/gh/phpcsstandards",
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-01-23T17:04:15+00:00"
+            "time": "2025-03-18T05:04:51+00:00"
         },
         {
             "name": "symfony/config",

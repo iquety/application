@@ -96,10 +96,16 @@ class ValidableMap
     private function makeSearchValues(mixed $requestValue, mixed $routineValue): array
     {
         if (is_array($requestValue) === true) {
-            return [ 'valueOne' => array_map(fn($value) => (string)$value, $requestValue), 'valueTwo' => (string)$routineValue ];
+            return [
+                'valueOne' => $requestValue,
+                'valueTwo' => (new ValueParser($routineValue))->withCorrectType()
+            ];
         }
 
-        return [ 'valueOne' => (string)$requestValue, 'valueTwo' => (string)$routineValue ];
+        return [
+            'valueOne' => (string)$requestValue,
+            'valueTwo' => $routineValue
+        ];
     }
 
     /**
