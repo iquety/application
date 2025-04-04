@@ -4,19 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\IoEngine\Assertion;
 
+use InvalidArgumentException;
+use Iquety\Application\IoEngine\Action\AssertionResponseException;
+use Iquety\Application\IoEngine\Action\Input;
+
 class LessThanTest extends AssertionCase
 {
-    use AssertionHasDefaultParams;
-    use AssertionHasNumericValue;
-    use AssertionHasObjectValue;
-    use AssertionHasFieldExists;
-
-    public function setUpProvider(): void
-    {
-        $this->setAssertionMethod('lessThan');
-
-        $this->setAssertionHttpParams($this->getDefaultHttpParams());
-    }
+    use HasProviderInvalidValue;
+    use HasProviderFieldNotExist;
 
     /**
      * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
@@ -25,8 +20,6 @@ class LessThanTest extends AssertionCase
      */
     public function validProvider(): array
     {
-        $this->setUpProvider();
-
         $list = [];
         
         $list['param int 111 less than int 112']    = $this->makeAssertionItem('param_int', 112);
@@ -54,8 +47,6 @@ class LessThanTest extends AssertionCase
     /** @return array<string,array<int,mixed>> */
     public function invalidProvider(): array
     {
-        $this->setUpProvider();
-
         $list = [];
 
         $list['param int 111 not less than int 111']    = $this->makeAssertionItem('param_int', 111);
@@ -101,5 +92,89 @@ class LessThanTest extends AssertionCase
         $list["array not less than 4"] = $this->makeAssertionItem('param_array', '4');
 
         return $list;
+    }
+
+    /**
+     * @test
+     * @dataProvider validProvider
+     */
+    public function valueAsserted(string $paramName, mixed $valueOne): void
+    {
+        $input = Input::fromString(
+            '/user/edit/03?' . http_build_query($this->getHttpParams()),
+        );
+
+        $input->assert($paramName)->lessThan($valueOne);
+
+        // se a asserção não passar, uma exceção será lançada
+        $input->validOrResponse();
+
+        // se chegar até aqui... tudo correu bem
+        $this->assertTrue(true);
+    }
+
+    /**
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Compara com um valor (texto, inteiro ou decimal) transformado em texto
+     * @test
+     * @dataProvider invalidProvider
+     */
+    public function valueNotAsserted(string $paramName, mixed $valueOne): void
+    {
+        $this->expectException(AssertionResponseException::class);
+        $this->expectExceptionMessage('The value was not successfully asserted');
+
+        $input = Input::fromString(
+            '/user/edit/03?' . http_build_query($this->getHttpParams()),
+        );
+
+        $input->assert($paramName)->lessThan($valueOne);
+
+        // se a asserção não passar, uma exceção será lançada
+        // para o ActionExecutor capturar e liberar a resposta
+        $input->validOrResponse();
+    }
+
+    /**
+     * @test
+     * @dataProvider invalidObjectArgumentsProvider
+     */
+    public function valueIsInvalidObject(string $paramName, mixed $valueOne): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Argument is not valid');
+
+        $input = Input::fromString('/user/edit/03?' . http_build_query([
+            'param_string' => 'text',
+            'param_int'    => 123,
+            'param_float'  => 12.3,
+            'param_array'  => ['one', 'two'],
+        ]));
+
+        $input->assert($paramName)->lessThan($valueOne);
+        
+        // se a asserção não passar, uma exceção será lançada
+        // para o ActionExecutor capturar e liberar a resposta
+        $input->validOrResponse();
+    }
+
+    /**
+     * @test
+     * @dataProvider invalidFieldExistsProvider
+     */
+    public function fieldDoesNotExist(string $paramName): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Field '$paramName' does not exist");
+
+        $input = Input::fromString(
+            '/user/edit/03?' . http_build_query(['param_null' => null]),
+        );
+
+        $input->assert($paramName)->lessThan('xx');
+        
+        // se a asserção não passar, uma exceção será lançada
+        // para o ActionExecutor capturar e liberar a resposta
+        $input->validOrResponse();
     }
 }

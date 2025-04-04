@@ -45,6 +45,15 @@ abstract class AssertionCase extends TestCase
         ];
     }
 
+    protected function paramToLabel(string $param): string
+    {
+        $label = explode('_', $param);
+        $label = array_map(fn($word) => ucfirst($word), $label);
+        $label = implode(' ', $label);
+
+        return $label;
+    }
+
     protected function makeAssertionItem(string $paramName, mixed $valueOne = '',  mixed $valueTwo = ''): array
     {
         // $paramList = array_map(function ($value) {

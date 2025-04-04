@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
 
-class IsAlphaNumericTest extends AssertionCase
+class IsCreditCardTest extends AssertionCase
 {
     use HasProviderFieldNotExist;
 
@@ -20,16 +20,26 @@ class IsAlphaNumericTest extends AssertionCase
     public function validProvider(): array
     {
         $httpParams = [
-            'param_upper_case_string'         => 'CORAÇÃO',
-            'param_lower_case_string'         => 'coração',
-            'param_upper_case_string_integer' => 'CORAÇÃO123',
-            'param_lower_case_string_integer' => 'coração123',
-            'param_string_integer'            => '123',
-            'param_string_decimal'            => '12.3',
-            'param_false'                     => false,          // false é mudado para 0
-            'param_true'                      => true,           // true é mudado para 1
-            'param_integer'                   => 123,
-            'param_decimal'                   => 12.3,
+            'visa'             => '4111111111111111',
+            'mastercard'       => '5500000000000004',
+            'american_express' => '340000000000009',
+            'diners_club'      => '30000000000004',
+            'discover'         => '6011000000000004',
+            'jcb'              => '3088000000000009',
+    
+            'visa_numeric'             => 4111111111111111,
+            'mastercard_numeric'       => 5500000000000004,
+            'american_express_numeric' => 340000000000009,
+            'diners_club_numeric'      => 30000000000004,
+            'discover_numeric'         => 6011000000000004,
+            'jcb_numeric'              => 3088000000000009,
+    
+            'visa_with_signals'             => '4111-1111-1111-1111',
+            'mastercard_with_signals'       => '5500-0000-0000-0004',
+            'american_express_with_signals' => '3400-000000-00009',
+            'diners_club_with_signals'      => '3000-000000-0004',
+            'discover_with_signals'         => '6011-0000-0000-0004',
+            'jcb_with_signals'              => '3088-0000-0000-0009',
         ];
 
         $list = [];
@@ -47,36 +57,22 @@ class IsAlphaNumericTest extends AssertionCase
     public function invalidProvider(): array
     {
         $httpParams = [
-            'param_iso_8601_dirty'                 => '00002024-12-31xxx',
-            'param_european_format_dirty'          => '31/12//2024',
-            'param_us_format_dirty'                => 'xxx12/31/2024',
-            'param_alternative_format_dirty'       => 'rr2x024.12.31',
-            'param_abbreviated_month_name_dirty'   => 'xxx31-Dec-2024',
-            'param_full_month_name_dirty'          => 'xxxDecember 31, 2024',
-            'param_iso_8601_invalid_month'         => '2024-13-31',
-            'param_iso_8601_invalid_day'           => '2024-12-32',
-            'param_european_format_month'          => '31/13/2024',
-            'param_european_format_day'            => '32/12/2024',
-            'param_us_format_month'                => '13/31/2024',
-            'param_us_format_day'                  => '12/32/2024',
-            'param_alternative_format_month'       => '2024.13.31',
-            'param_alternative_format_day'         => '2024.12.32',
-            'param_abbreviated_month_name_month'   => '31-Err-2024',
-            'param_abbreviated_month_name_day'     => '32-Dec-2024',
-            'param_full_month_name_month'          => 'Invalid 31, 2024',
-            'param_full_month_name_day'            => 'December 32, 2024',
-            'param_special_characters'             => '@#$%^&*()',
-            'param_numbers_and_special_characters' => '123@#$%',
-            'param_empty_string'                   => '',
-            'param_one_space_string'               => ' ',
-            'param_two_spaces_string'              => ' ',
-            'param_array'                          => ['a'],
-            'param_false'                          => 'false',
-            'param_true'                           => 'true',
+            'random_number'      => '1234567890123456',
+            'too_short'          => '4111111111111',
+            'too_long'           => '55000000000000000000',
+            'non_numeric'        => 'abcdefg',
+            'empty_string'       => '',
+            'one_space_string'   => ' ',
+            'two_spaces_string'  => '  ',
+            'array'              => ['a'],
+            'param_false'        => false,
+            'param_true'         => true,
+            'param_string_false' => 'false',
+            'param_string_true'  => 'true',
         ];
 
         $list = [];
-        
+
         foreach(array_keys($httpParams) as $param) {
             $label = $this->paramToLabel($param);
 
@@ -97,7 +93,7 @@ class IsAlphaNumericTest extends AssertionCase
             '/user/edit/03?' . http_build_query($httpParams),
         );
 
-        $input->assert($paramName)->isAlphaNumeric();
+        $input->assert($paramName)->isCreditCard();
 
         // se a asserção não passar, uma exceção será lançada
         $input->validOrResponse();
@@ -122,7 +118,7 @@ class IsAlphaNumericTest extends AssertionCase
             '/user/edit/03?' . http_build_query($httpParams),
         );
 
-        $input->assert($paramName)->isAlphaNumeric();
+        $input->assert($paramName)->isCreditCard();
 
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
@@ -142,7 +138,7 @@ class IsAlphaNumericTest extends AssertionCase
             '/user/edit/03?' . http_build_query(['param_null' => null]),
         );
 
-        $input->assert($paramName)->isAlphaNumeric();
+        $input->assert($paramName)->isCreditCard();
         
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta

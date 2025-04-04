@@ -157,7 +157,7 @@ class Input
         $this->next();
     }
 
-    public function param(int|string $param): array|float|int|string|FileSet|null
+    public function param(int|string $param): array|bool|float|int|string|FileSet|null
     {
         return $this->paramList[$param] ?? null;
     }

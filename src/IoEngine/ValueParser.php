@@ -27,8 +27,12 @@ class ValueParser
             return null;
         }
 
-        if (in_array($value, ['true', 'false']) === true) {
-            return (bool) $value;
+        if ($value === 'false') {
+            return false;
+        }
+
+        if ($value === 'true') {
+            return true;
         }
 
         if (is_array($value) === true) {

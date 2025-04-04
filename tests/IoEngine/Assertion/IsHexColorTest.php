@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
 
-class IsAlphaNumericTest extends AssertionCase
+class IsHexColorTest extends AssertionCase
 {
     use HasProviderFieldNotExist;
 
@@ -20,16 +20,21 @@ class IsAlphaNumericTest extends AssertionCase
     public function validProvider(): array
     {
         $httpParams = [
-            'param_upper_case_string'         => 'CORAÇÃO',
-            'param_lower_case_string'         => 'coração',
-            'param_upper_case_string_integer' => 'CORAÇÃO123',
-            'param_lower_case_string_integer' => 'coração123',
-            'param_string_integer'            => '123',
-            'param_string_decimal'            => '12.3',
-            'param_false'                     => false,          // false é mudado para 0
-            'param_true'                      => true,           // true é mudado para 1
-            'param_integer'                   => 123,
-            'param_decimal'                   => 12.3,
+            'hexcolor_1' => '#123456',
+            'hexcolor_2' => '#ABCDEF',
+            'hexcolor_3' => '#012345',
+            'hexcolor_4' => '#FEDCBA',
+            'hexcolor_5' => '#987654',
+            'hexcolor_6' => '#3210AB',
+            'hexcolor_7' => '#CDEF01',
+
+            'hexcolor_alpha_1' => '#12345600',
+            'hexcolor_alpha_2' => '#ABCDEFaa',
+            'hexcolor_alpha_3' => '#012345bb',
+            'hexcolor_alpha_4' => '#FEDCBAcc',
+            'hexcolor_alpha_5' => '#987654dd',
+            'hexcolor_alpha_6' => '#3210ABee',
+            'hexcolor_alpha_7' => '#CDEF01ff',
         ];
 
         $list = [];
@@ -47,36 +52,35 @@ class IsAlphaNumericTest extends AssertionCase
     public function invalidProvider(): array
     {
         $httpParams = [
-            'param_iso_8601_dirty'                 => '00002024-12-31xxx',
-            'param_european_format_dirty'          => '31/12//2024',
-            'param_us_format_dirty'                => 'xxx12/31/2024',
-            'param_alternative_format_dirty'       => 'rr2x024.12.31',
-            'param_abbreviated_month_name_dirty'   => 'xxx31-Dec-2024',
-            'param_full_month_name_dirty'          => 'xxxDecember 31, 2024',
-            'param_iso_8601_invalid_month'         => '2024-13-31',
-            'param_iso_8601_invalid_day'           => '2024-12-32',
-            'param_european_format_month'          => '31/13/2024',
-            'param_european_format_day'            => '32/12/2024',
-            'param_us_format_month'                => '13/31/2024',
-            'param_us_format_day'                  => '12/32/2024',
-            'param_alternative_format_month'       => '2024.13.31',
-            'param_alternative_format_day'         => '2024.12.32',
-            'param_abbreviated_month_name_month'   => '31-Err-2024',
-            'param_abbreviated_month_name_day'     => '32-Dec-2024',
-            'param_full_month_name_month'          => 'Invalid 31, 2024',
-            'param_full_month_name_day'            => 'December 32, 2024',
-            'param_special_characters'             => '@#$%^&*()',
-            'param_numbers_and_special_characters' => '123@#$%',
-            'param_empty_string'                   => '',
-            'param_one_space_string'               => ' ',
-            'param_two_spaces_string'              => ' ',
-            'param_array'                          => ['a'],
-            'param_false'                          => 'false',
-            'param_true'                           => 'true',
+            'invalid_hexcolor_1'  => '#12345G',
+            'invalid_hexcolor_2'  => '#ABCDEFG',
+            'invalid_hexcolor_3'  => '#0123456',
+            'invalid_hexcolor_4'  => '#ABCDEF0',
+            'invalid_hexcolor_5'  => '#1234567',
+            'invalid_hexcolor_8'  => '#ABCDEF012',
+            'invalid_hexcolor_9'  => '#123456789',
+            'invalid_hexcolor_10' => '#ABCDEF0123',
+            'invalid_hexcolor_11' => '#123456789A',
+            'invalid_hexcolor_12' => '#ABCDEF01234',
+            'invalid_hexcolor_13' => '#123456789AB',
+            'invalid_hexcolor_14' => '#ABCDEF012345',
+            'invalid_hexcolor_15' => '#123456789ABC',
+            'invalid_hexcolor_16' => '#ABCDEF0123456',
+            'invalid_hexcolor_17' => '#123456789ABCD',
+            'invalid_hexcolor_18' => '#ABCDEF01234567',
+            'invalid_hexcolor_19' => '#123456789ABCDEF',
+            'invalid_hexcolor_20' => '#ABCDEF012345678',
+            'empty_string'        => '',
+            'one_space_string'    => ' ',
+            'two_spaces_string'   => '  ',
+            'array'               => ['a'],
+            'false'               => false,                // false é mudado para 0
+            'true'                => true,                 // false é mudado para 1
+            'integer'             => 12345,
         ];
 
         $list = [];
-        
+
         foreach(array_keys($httpParams) as $param) {
             $label = $this->paramToLabel($param);
 
@@ -97,7 +101,7 @@ class IsAlphaNumericTest extends AssertionCase
             '/user/edit/03?' . http_build_query($httpParams),
         );
 
-        $input->assert($paramName)->isAlphaNumeric();
+        $input->assert($paramName)->isHexColor();
 
         // se a asserção não passar, uma exceção será lançada
         $input->validOrResponse();
@@ -122,7 +126,7 @@ class IsAlphaNumericTest extends AssertionCase
             '/user/edit/03?' . http_build_query($httpParams),
         );
 
-        $input->assert($paramName)->isAlphaNumeric();
+        $input->assert($paramName)->isHexColor();
 
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
@@ -142,7 +146,7 @@ class IsAlphaNumericTest extends AssertionCase
             '/user/edit/03?' . http_build_query(['param_null' => null]),
         );
 
-        $input->assert($paramName)->isAlphaNumeric();
+        $input->assert($paramName)->isHexColor();
         
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta

@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
 
-class IsAlphaNumericTest extends AssertionCase
+class IsFalseTest extends AssertionCase
 {
     use HasProviderFieldNotExist;
 
@@ -20,16 +20,14 @@ class IsAlphaNumericTest extends AssertionCase
     public function validProvider(): array
     {
         $httpParams = [
-            'param_upper_case_string'         => 'CORAÇÃO',
-            'param_lower_case_string'         => 'coração',
-            'param_upper_case_string_integer' => 'CORAÇÃO123',
-            'param_lower_case_string_integer' => 'coração123',
-            'param_string_integer'            => '123',
-            'param_string_decimal'            => '12.3',
-            'param_false'                     => false,          // false é mudado para 0
-            'param_true'                      => true,           // true é mudado para 1
-            'param_integer'                   => 123,
-            'param_decimal'                   => 12.3,
+            'boolean_false'       => false,
+            'string_false'        => 'false',
+            'binary_false'        => 0,
+            'string_binary_false' => '0',
+            'empty_string'        => '',
+            'one_space_string'    => ' ',
+            'two_spaces_string'   => '  ',
+            'off'                 => 'off',
         ];
 
         $list = [];
@@ -47,36 +45,17 @@ class IsAlphaNumericTest extends AssertionCase
     public function invalidProvider(): array
     {
         $httpParams = [
-            'param_iso_8601_dirty'                 => '00002024-12-31xxx',
-            'param_european_format_dirty'          => '31/12//2024',
-            'param_us_format_dirty'                => 'xxx12/31/2024',
-            'param_alternative_format_dirty'       => 'rr2x024.12.31',
-            'param_abbreviated_month_name_dirty'   => 'xxx31-Dec-2024',
-            'param_full_month_name_dirty'          => 'xxxDecember 31, 2024',
-            'param_iso_8601_invalid_month'         => '2024-13-31',
-            'param_iso_8601_invalid_day'           => '2024-12-32',
-            'param_european_format_month'          => '31/13/2024',
-            'param_european_format_day'            => '32/12/2024',
-            'param_us_format_month'                => '13/31/2024',
-            'param_us_format_day'                  => '12/32/2024',
-            'param_alternative_format_month'       => '2024.13.31',
-            'param_alternative_format_day'         => '2024.12.32',
-            'param_abbreviated_month_name_month'   => '31-Err-2024',
-            'param_abbreviated_month_name_day'     => '32-Dec-2024',
-            'param_full_month_name_month'          => 'Invalid 31, 2024',
-            'param_full_month_name_day'            => 'December 32, 2024',
-            'param_special_characters'             => '@#$%^&*()',
-            'param_numbers_and_special_characters' => '123@#$%',
-            'param_empty_string'                   => '',
-            'param_one_space_string'               => ' ',
-            'param_two_spaces_string'              => ' ',
-            'param_array'                          => ['a'],
-            'param_false'                          => 'false',
-            'param_true'                           => 'true',
+            'boolean_true'       => true,
+            'string_true'        => 'true',
+            'binary_true'        => 1,
+            'string_binary_true' => '1',
+            'string'             => 'x',
+            // 'empty_array'        => [],
+            'on'                 => 'on',
         ];
 
         $list = [];
-        
+
         foreach(array_keys($httpParams) as $param) {
             $label = $this->paramToLabel($param);
 
@@ -97,7 +76,7 @@ class IsAlphaNumericTest extends AssertionCase
             '/user/edit/03?' . http_build_query($httpParams),
         );
 
-        $input->assert($paramName)->isAlphaNumeric();
+        $input->assert($paramName)->isFalse();
 
         // se a asserção não passar, uma exceção será lançada
         $input->validOrResponse();
@@ -122,7 +101,7 @@ class IsAlphaNumericTest extends AssertionCase
             '/user/edit/03?' . http_build_query($httpParams),
         );
 
-        $input->assert($paramName)->isAlphaNumeric();
+        $input->assert($paramName)->isFalse();
 
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
@@ -142,7 +121,7 @@ class IsAlphaNumericTest extends AssertionCase
             '/user/edit/03?' . http_build_query(['param_null' => null]),
         );
 
-        $input->assert($paramName)->isAlphaNumeric();
+        $input->assert($paramName)->isFalse();
         
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta

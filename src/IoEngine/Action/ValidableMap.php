@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Iquety\Application\IoEngine\Action;
 
+use Exception;
 use InvalidArgumentException;
 use Iquety\Application\IoEngine\ValueParser;
 
@@ -20,9 +21,9 @@ class ValidableMap
             throw new InvalidArgumentException('Argument is not valid');
         }
 
-        $containsMethods = ['contains', 'notContains', 'endsWith', 'startsWith', 'matches', 'notMatches'];
+        $searchMethods = ['contains', 'notContains', 'endsWith', 'startsWith', 'matches', 'notMatches'];
 
-        if (in_array($this->methodName, $containsMethods) === true) {
+        if (in_array($this->methodName, $searchMethods) === true) {
             return $this->makeSearchValues($requestValue, $routineValue);
         }
 
@@ -35,16 +36,15 @@ class ValidableMap
         $lengthMethods = ['length', 'maxLength', 'minLength' ];
 
         if (in_array($this->methodName, $lengthMethods) === true) {
-            return $this->makeLengthValues($requestValue, $routineValue);
+            return $this->makeLengthValues($this->methodName, $requestValue, $routineValue);
         }
 
         $sizeMethods = ['greaterThan', 'greaterThanOrEqualTo', 'lessThan', 'lessThanOrEqualTo'];
 
         if (in_array($this->methodName, $sizeMethods) === true) {
-            return $this->makeLengthValues($requestValue, $routineValue);
+            return $this->makeNumericSizeValues($this->methodName, $requestValue, $routineValue);
         }
         
-        // format methods
         // isAlpha
         // isAlphaNumeric
         // isAmountTime
@@ -104,7 +104,7 @@ class ValidableMap
 
         return [
             'valueOne' => (string)$requestValue,
-            'valueTwo' => $routineValue
+            'valueTwo' => (string)$routineValue
         ];
     }
 
@@ -113,7 +113,39 @@ class ValidableMap
      * @param mixed $routineValue proveniente da asserção programada
      * @return array<string,mixed>
      */
-    private function makeLengthValues(mixed $requestValue, mixed $routineValue): array
+    private function makeLengthValues(string $methodName, mixed $requestValue, mixed $routineValue): array
+    {
+        // $requestValue = (new ValueParser($requestValue))->withCorrectType();
+        $routineValue = (new ValueParser($routineValue))->withCorrectType();
+
+        if (is_numeric($routineValue) === false) {
+            throw new InvalidArgumentException('Argument must be numeric');
+        }
+
+        if (is_array($requestValue) === true) {
+            return [ 'valueOne' => $requestValue, 'valueTwo' => $routineValue ];
+        }
+
+        if (is_string($requestValue) === true) {
+            return [ 'valueOne' => $requestValue, 'valueTwo' => $routineValue ];
+        }
+
+        // valores diferentes de string ou array devem ser inválidos
+        $requestValue = match($methodName) {
+            'length'    => str_repeat('a', $routineValue + 1),
+            'maxLength' => str_repeat('a', $routineValue + 1),
+            'minLength' => str_repeat('a', $routineValue - 1)
+        };
+
+        return [ 'valueOne' => $requestValue, 'valueTwo' => $routineValue ];
+    }
+
+    /**
+     * @param mixed $requestValue proveniente da requisição
+     * @param mixed $routineValue proveniente da asserção programada
+     * @return array<string,mixed>
+     */
+    private function makeNumericSizeValues(mixed $requestValue, mixed $routineValue): array
     {
         $requestValue = (new ValueParser($requestValue))->withCorrectType();
         $routineValue = (new ValueParser($routineValue))->withCorrectType();
@@ -122,7 +154,22 @@ class ValidableMap
             throw new InvalidArgumentException('Argument must be numeric');
         }
 
-        return [ 'valueOne' => $requestValue, 'valueTwo' => $routineValue ];
+        if (is_array($requestValue) === true) {
+            return [ 'valueOne' => $requestValue, 'valueTwo' => $routineValue ];
+        }
+
+        if (is_string($requestValue) === true) {
+            return [ 'valueOne' => $requestValue, 'valueTwo' => $routineValue ];
+        }
+
+        // valores diferentes de string ou array devem ser inválidos
+        // $requestValue = match($methodName) {
+        //     'length'    => str_repeat('a', $routineValue + 1),
+        //     'maxLength' => str_repeat('a', $routineValue + 1),
+        //     'minLength' => str_repeat('a', $routineValue - 1)
+        // };
+
+        return [ 'valueOne' => (string)$requestValue, 'valueTwo' => $routineValue ];
     }
 
     /**
@@ -131,8 +178,10 @@ class ValidableMap
      */
     private function makeFormatValue(mixed $value): array
     {
+        $value = (new ValueParser($value))->withCorrectType();
+
         return [
-            'valueOne' => (new ValueParser($value))->withCorrectType(),
+            'valueOne' => $value,
             'valueTwo' => null
         ];
     }

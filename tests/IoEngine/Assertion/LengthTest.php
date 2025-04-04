@@ -7,6 +7,7 @@ namespace Tests\IoEngine\Assertion;
 use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
+use stdClass;
 
 class LengthTest extends AssertionCase
 {
@@ -21,26 +22,19 @@ class LengthTest extends AssertionCase
      */
     public function validProvider(): array
     {
+        $httpParams = [
+            'string_7_chars_has_length_7'        => 'Palavra',
+            'string_utf8_7_chars_has_length_7'   => 'coração',
+            'array_with_7_elements_has_length_7' => [1, 2, 3, 4, 5, 6, 7]
+        ];
+
         $list = [];
+        
+        foreach(array_keys($httpParams) as $param) {
+            $label = $this->paramToLabel($param);
 
-        $list['param int 111 has length int 111'] = $this->makeAssertionItem('param_int', 111);
-        $list['param int 111 has length string 111'] = $this->makeAssertionItem('param_int', '111');
-
-        $list['param int string 222 has length int 222'] = $this->makeAssertionItem('param_int_string', 222);
-        $list['param int string 222 has length string 222'] = $this->makeAssertionItem('param_int_string', '222');
-
-        $list['param decimal 22.5 has length decimal 22.5'] = $this->makeAssertionItem('param_decimal', 22.5);
-        $list['param decimal 22.5 has length string 22.5'] = $this->makeAssertionItem('param_decimal', '22.5');
-
-        $list['param string Coração!# has length 9'] = $this->makeAssertionItem('param_string', 9);
-
-        $list['param boolean true has length 1'] = $this->makeAssertionItem('param_true', '1');
-        $list['param boolean true has length int 1'] = $this->makeAssertionItem('param_true', 1);
-
-        $list['param boolean false has length 0'] = $this->makeAssertionItem('param_false', '0');
-        $list['param boolean false has length int 0'] = $this->makeAssertionItem('param_false', 0);
-
-        $list["array has length 5"] = $this->makeAssertionItem('param_array', 5);
+            $list[$label] = $this->makeAssertionItem($param, 7, $httpParams);
+        }
 
         return $list;
     }
@@ -48,51 +42,22 @@ class LengthTest extends AssertionCase
     /** @return array<string,array<int,mixed>> */
     public function invalidProvider(): array
     {
+        $httpParams = [
+            'string_with_4_chars_is_not_7'  => 'cora',
+            'string_with_15_chars_is_not_7' => 'coração de leão',
+            'true_is_invalid_value'         => true,
+            'false_is_invalid_value'        => false,
+            'integer_is_invalid_value'      => 33,
+            'float_is_invalid_value'        => 3.3,
+        ];
+
         $list = [];
+        
+        foreach(array_keys($httpParams) as $param) {
+            $label = $this->paramToLabel($param);
 
-        $list['param int 111 not has length int 112'] = $this->makeAssertionItem('param_int', 112);
-        $list['param int 111 not has length string 112'] = $this->makeAssertionItem('param_int', '112');
-
-        $list['param int 111 not has length int 110'] = $this->makeAssertionItem('param_int', 110);
-        $list['param int 111 not has length string 110'] = $this->makeAssertionItem('param_int', '110');
-
-        $list['param int string 222 not has length int 223'] = $this->makeAssertionItem('param_int_string', 223);
-        $list['param int string 222 not has length string 223'] = $this->makeAssertionItem('param_int_string', '223');
-
-        $list['param int string 222 not has length int 221'] = $this->makeAssertionItem('param_int_string', 221);
-        $list['param int string 222 not has length string 221'] = $this->makeAssertionItem('param_int_string', '221');
-
-        $list['param decimal 22.5 not has length decimal 22.6'] = $this->makeAssertionItem('param_decimal', 22.6);
-        $list['param decimal 22.5 not has length decimal string 22.6'] = $this->makeAssertionItem('param_decimal', '22.6');
-
-        $list['param decimal 22.5 not has length decimal 22.4']  = $this->makeAssertionItem('param_decimal', 22.4);
-        $list['param decimal 22.5 not has length decimal string 22.4'] = $this->makeAssertionItem('param_decimal', '22.4');
-
-        $list['param decimal string 11.5 not has length decimal 11.6'] = $this->makeAssertionItem('param_decimal_string', 11.6);
-        $list['param decimal string 11.5 not has length string 11.6'] = $this->makeAssertionItem('param_decimal_string', '11.6');
-
-        $list['param decimal string 11.5 not has length decimal 11.4'] = $this->makeAssertionItem('param_decimal_string', 11.4);
-        $list['param decimal string 11.5 not has length string 11.4'] = $this->makeAssertionItem('param_decimal_string', '11.4');
-
-        $list['param string Coração!# not has length 10'] = $this->makeAssertionItem('param_string', 10);
-        $list['param string Coração!# not has length 10'] = $this->makeAssertionItem('param_string', '10');
-
-        $list['param string Coração!# not has length 8'] = $this->makeAssertionItem('param_string', 8);
-        $list['param string Coração!# not has length 8'] = $this->makeAssertionItem('param_string', '8');
-
-        $list['param boolean true not has length 0'] = $this->makeAssertionItem('param_true', '0');
-        $list['param boolean true not has length int 0'] = $this->makeAssertionItem('param_true', 0);
-        $list['param boolean true not has length 2'] = $this->makeAssertionItem('param_true', '2');
-        $list['param boolean true not has length int 2'] = $this->makeAssertionItem('param_true', 2);
-
-        $list['param boolean false not has length 1'] = $this->makeAssertionItem('param_false', '1');
-        $list['param boolean false not has length int 1'] = $this->makeAssertionItem('param_false', 1);
-
-        $list["array not has length 6"] = $this->makeAssertionItem('param_array', 6);
-        $list["array not has length 6"] = $this->makeAssertionItem('param_array', '6');
-
-        $list["array not has length 4"] = $this->makeAssertionItem('param_array', 4);
-        $list["array not has length 4"] = $this->makeAssertionItem('param_array', '4');
+            $list[$label] = $this->makeAssertionItem($param, 7, $httpParams);
+        }
 
         return $list;
     }
@@ -100,11 +65,12 @@ class LengthTest extends AssertionCase
     /**
      * @test
      * @dataProvider validProvider
+     * @param array<string,array<int,mixed>> $httpParams
      */
-    public function valueAsserted(string $paramName, mixed $valueOne): void
+    public function valueAsserted(string $paramName, mixed $valueOne, array $httpParams): void
     {
         $input = Input::fromString(
-            '/user/edit/03?' . http_build_query($this->getHttpParams()),
+            '/user/edit/03?' . http_build_query($httpParams),
         );
 
         $input->assert($paramName)->length($valueOne);
@@ -121,14 +87,15 @@ class LengthTest extends AssertionCase
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @test
      * @dataProvider invalidProvider
+     * @param array<string,array<int,mixed>> $httpParams
      */
-    public function valueNotAsserted(string $paramName, mixed $valueOne): void
+    public function valueNotAsserted(string $paramName, mixed $valueOne, array $httpParams): void
     {
         $this->expectException(AssertionResponseException::class);
         $this->expectExceptionMessage('The value was not successfully asserted');
 
         $input = Input::fromString(
-            '/user/edit/03?' . http_build_query($this->getHttpParams()),
+            '/user/edit/03?' . http_build_query($httpParams),
         );
 
         $input->assert($paramName)->length($valueOne);
@@ -185,7 +152,7 @@ class LengthTest extends AssertionCase
      * @test
      * @dataProvider invalidNumericArgumentsProvider
      */
-    public function valueIsNotNumeric(string $paramName, mixed $valueOne): void
+    public function valueIsNotString(string $paramName, mixed $valueOne): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Argument must be numeric');

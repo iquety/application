@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
 
-class IsAlphaNumericTest extends AssertionCase
+class IsCepTest extends AssertionCase
 {
     use HasProviderFieldNotExist;
 
@@ -20,16 +20,15 @@ class IsAlphaNumericTest extends AssertionCase
     public function validProvider(): array
     {
         $httpParams = [
-            'param_upper_case_string'         => 'CORAÇÃO',
-            'param_lower_case_string'         => 'coração',
-            'param_upper_case_string_integer' => 'CORAÇÃO123',
-            'param_lower_case_string_integer' => 'coração123',
-            'param_string_integer'            => '123',
-            'param_string_decimal'            => '12.3',
-            'param_false'                     => false,          // false é mudado para 0
-            'param_true'                      => true,           // true é mudado para 1
-            'param_integer'                   => 123,
-            'param_decimal'                   => 12.3,
+            'param_format_1' => '12345-678',
+            'param_format_2' => '98765-432',
+            'param_format_3' => '01000-000',
+            'param_format_4' => '99999-999',
+            'param_format_5' => 12345678,
+            'param_format_6' => 98765432,
+            'param_format_7' => 11000000,
+            'param_format_8' => 99999999,
+            'param_format_9' => '99999-999'
         ];
 
         $list = [];
@@ -47,36 +46,27 @@ class IsAlphaNumericTest extends AssertionCase
     public function invalidProvider(): array
     {
         $httpParams = [
-            'param_iso_8601_dirty'                 => '00002024-12-31xxx',
-            'param_european_format_dirty'          => '31/12//2024',
-            'param_us_format_dirty'                => 'xxx12/31/2024',
-            'param_alternative_format_dirty'       => 'rr2x024.12.31',
-            'param_abbreviated_month_name_dirty'   => 'xxx31-Dec-2024',
-            'param_full_month_name_dirty'          => 'xxxDecember 31, 2024',
-            'param_iso_8601_invalid_month'         => '2024-13-31',
-            'param_iso_8601_invalid_day'           => '2024-12-32',
-            'param_european_format_month'          => '31/13/2024',
-            'param_european_format_day'            => '32/12/2024',
-            'param_us_format_month'                => '13/31/2024',
-            'param_us_format_day'                  => '12/32/2024',
-            'param_alternative_format_month'       => '2024.13.31',
-            'param_alternative_format_day'         => '2024.12.32',
-            'param_abbreviated_month_name_month'   => '31-Err-2024',
-            'param_abbreviated_month_name_day'     => '32-Dec-2024',
-            'param_full_month_name_month'          => 'Invalid 31, 2024',
-            'param_full_month_name_day'            => 'December 32, 2024',
-            'param_special_characters'             => '@#$%^&*()',
-            'param_numbers_and_special_characters' => '123@#$%',
+            'param_invalid_cep_too_short'          => '1234-567',
+            'param_invalid_cep_too_long'           => '123456-789',
+            'param_invalid_cep_invalid_characters' => '12A45-678',
+            'param_invalid_cep_empty_string'       => '',
+            'param_invalid_cep_spaces'             => '123 45-678',
+            'param_invalid_cep_special_characters' => '123@5-678',
+            'param_invalid_cep_many_numbers'       => 123567890,
+            'param_invalid_cep_loss_numbers'       => 123567,
             'param_empty_string'                   => '',
             'param_one_space_string'               => ' ',
-            'param_two_spaces_string'              => ' ',
+            'param_two_spaces_string'              => '  ',
+            'param_decimal'                        => 123.456,
             'param_array'                          => ['a'],
-            'param_false'                          => 'false',
-            'param_true'                           => 'true',
+            'param_false'                          => false,
+            'param_true'                           => true,
+            'param_string_false'                   => 'false',
+            'param_string_true'                    => 'true',
         ];
 
         $list = [];
-        
+
         foreach(array_keys($httpParams) as $param) {
             $label = $this->paramToLabel($param);
 
@@ -97,7 +87,7 @@ class IsAlphaNumericTest extends AssertionCase
             '/user/edit/03?' . http_build_query($httpParams),
         );
 
-        $input->assert($paramName)->isAlphaNumeric();
+        $input->assert($paramName)->isCep();
 
         // se a asserção não passar, uma exceção será lançada
         $input->validOrResponse();
@@ -122,7 +112,7 @@ class IsAlphaNumericTest extends AssertionCase
             '/user/edit/03?' . http_build_query($httpParams),
         );
 
-        $input->assert($paramName)->isAlphaNumeric();
+        $input->assert($paramName)->isCep();
 
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
@@ -142,7 +132,7 @@ class IsAlphaNumericTest extends AssertionCase
             '/user/edit/03?' . http_build_query(['param_null' => null]),
         );
 
-        $input->assert($paramName)->isAlphaNumeric();
+        $input->assert($paramName)->isCep();
         
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta

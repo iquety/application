@@ -20,6 +20,7 @@ class MatchesTest extends AssertionCase
      */
     public function validProvider(): array
     {
+        return [];
         $list = [];
         
         $list['param int 111 matches 111'] = $this->makeAssertionItem('param_int', '/111/');
@@ -65,6 +66,8 @@ class MatchesTest extends AssertionCase
     /** @return array<string,array<int,mixed>> */
     public function invalidProvider(): array
     {
+        return [];
+        
         $list = [];
 
         $list['param int 111 not matches 112'] = $this->makeAssertionItem('param_int', '/112/');

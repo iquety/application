@@ -21,40 +21,20 @@ class MinLengthTest extends AssertionCase
      */
     public function validProvider(): array
     {
+        $httpParams = [
+            'string_less_than_7'    => 'coração de leão',             // maior que 7
+            'string_with_7_chars'   => 'coração',                     // exatamente 7 caracteres
+            'array_less_than_7'     => [1, 2, 3, 4, 5, 6, 7, 8, 9],   // maior que 7
+            'array_with_7_elements' => [1, 2, 3, 4, 5, 6, 7],         // exatamente 7
+        ];
+
         $list = [];
-
-        $list['param int 111 has at least int 111'] = $this->makeAssertionItem('param_int', 111);
-        $list['param int 111 has at least string 111'] = $this->makeAssertionItem('param_int', '111');
-
-        $list['param int 111 has at least int 110'] = $this->makeAssertionItem('param_int', 110);
-        $list['param int 111 has at least string 110'] = $this->makeAssertionItem('param_int', '110');
-
-        $list['param int string 222 has at least int 222'] = $this->makeAssertionItem('param_int_string', 222);
-        $list['param int string 222 has at least string 222'] = $this->makeAssertionItem('param_int_string', '222');
-
-        $list['param int string 222 has at least int 221'] = $this->makeAssertionItem('param_int_string', 221);
-        $list['param int string 222 has at least string 221'] = $this->makeAssertionItem('param_int_string', '221');
-
-        $list['param decimal 22.5 has at least decimal 22.5'] = $this->makeAssertionItem('param_decimal', 22.5);
-        $list['param decimal 22.5 has at least string 22.5'] = $this->makeAssertionItem('param_decimal', '22.5');
-
-        $list['param decimal 22.5 has at least decimal 22.4'] = $this->makeAssertionItem('param_decimal', 22.4);
-        $list['param decimal 22.5 has at least string 22.4'] = $this->makeAssertionItem('param_decimal', '22.4');
-
-        $list['param string Coração!# has at least 9'] = $this->makeAssertionItem('param_string', 9);
-        $list['param string Coração!# has at least 8'] = $this->makeAssertionItem('param_string', 8);
-
-        $list['param boolean true has at least 2'] = $this->makeAssertionItem('param_true', '0');
-        $list['param boolean true has at least int 2'] = $this->makeAssertionItem('param_true', 0);
         
-        $list['param boolean true has at least 1'] = $this->makeAssertionItem('param_true', '1');
-        $list['param boolean true has at least int 1'] = $this->makeAssertionItem('param_true', 1);
+        foreach(array_keys($httpParams) as $param) {
+            $label = $this->paramToLabel($param);
 
-        $list['param boolean false has at least 0'] = $this->makeAssertionItem('param_false', '0');
-        $list['param boolean false has at least int 0'] = $this->makeAssertionItem('param_false', 0);
-
-        $list["array has at least 5"] = $this->makeAssertionItem('param_array', 5);
-        $list["array has at least 4"] = $this->makeAssertionItem('param_array', 4);
+            $list[$label] = $this->makeAssertionItem($param, 7, $httpParams);
+        }
 
         return $list;
     }
@@ -62,34 +42,22 @@ class MinLengthTest extends AssertionCase
     /** @return array<string,array<int,mixed>> */
     public function invalidProvider(): array
     {
+        $httpParams = [
+            'string_with_5_chars_is_not_min_7' => 'coraç',
+            'string_with_1_char_is_not_min_7'  => 'c',
+            'true_is_invalid_value'            => true,
+            'false_is_invalid_value'           => false,
+            'integer_is_invalid_value'         => 33,
+            'float_is_invalid_value'           => 3.3
+        ];
+
         $list = [];
+        
+        foreach(array_keys($httpParams) as $param) {
+            $label = $this->paramToLabel($param);
 
-        $list['param int 111 not has at least int 112'] = $this->makeAssertionItem('param_int', 112);
-        $list['param int 111 not has at least string 112'] = $this->makeAssertionItem('param_int', '112');
-
-        $list['param int string 222 not has at least int 223'] = $this->makeAssertionItem('param_int_string', 223);
-        $list['param int string 222 not has at least string 223'] = $this->makeAssertionItem('param_int_string', '223');
-
-        $list['param int string 222 not has at least int 224'] = $this->makeAssertionItem('param_int_string', 224);
-        $list['param int string 222 not has at least string 224'] = $this->makeAssertionItem('param_int_string', '224');
-
-        $list['param decimal 22.5 not has at least decimal 22.6'] = $this->makeAssertionItem('param_decimal', 22.6);
-        $list['param decimal 22.5 not has at least decimal string 22.6'] = $this->makeAssertionItem('param_decimal', '22.6');
-
-        $list['param decimal string 11.5 not has at least decimal 11.6'] = $this->makeAssertionItem('param_decimal_string', 11.6);
-        $list['param decimal string 11.5 not has at least string 11.6'] = $this->makeAssertionItem('param_decimal_string', '11.6');
-
-        $list['param string Coração!# not has at least 10'] = $this->makeAssertionItem('param_string', 10);
-        $list['param string Coração!# not has at least 10'] = $this->makeAssertionItem('param_string', '10');
-
-        $list['param boolean true not has at least 2'] = $this->makeAssertionItem('param_true', '2');
-        $list['param boolean true not has at least int 2'] = $this->makeAssertionItem('param_true', 2);
-
-        $list['param boolean false not has at least 1'] = $this->makeAssertionItem('param_false', '1');
-        $list['param boolean false not has at least int 1'] = $this->makeAssertionItem('param_false', 1);
-
-        $list["array not has at least 6"] = $this->makeAssertionItem('param_array', 6);
-        $list["array not has at least 6"] = $this->makeAssertionItem('param_array', '6');
+            $list[$label] = $this->makeAssertionItem($param, 7, $httpParams);
+        }
 
         return $list;
     }
@@ -97,11 +65,12 @@ class MinLengthTest extends AssertionCase
     /**
      * @test
      * @dataProvider validProvider
+     * @param array<string,array<int,mixed>> $httpParams
      */
-    public function valueAsserted(string $paramName, mixed $valueOne): void
+    public function valueAsserted(string $paramName, mixed $valueOne, array $httpParams): void
     {
         $input = Input::fromString(
-            '/user/edit/03?' . http_build_query($this->getHttpParams()),
+            '/user/edit/03?' . http_build_query($httpParams),
         );
 
         $input->assert($paramName)->minLength($valueOne);
@@ -118,14 +87,15 @@ class MinLengthTest extends AssertionCase
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @test
      * @dataProvider invalidProvider
+     * @param array<string,array<int,mixed>> $httpParams
      */
-    public function valueNotAsserted(string $paramName, mixed $valueOne): void
+    public function valueNotAsserted(string $paramName, mixed $valueOne, array $httpParams): void
     {
         $this->expectException(AssertionResponseException::class);
         $this->expectExceptionMessage('The value was not successfully asserted');
 
         $input = Input::fromString(
-            '/user/edit/03?' . http_build_query($this->getHttpParams()),
+            '/user/edit/03?' . http_build_query($httpParams),
         );
 
         $input->assert($paramName)->minLength($valueOne);
