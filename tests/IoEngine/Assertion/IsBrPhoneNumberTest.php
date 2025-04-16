@@ -8,12 +8,13 @@ use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
 
+/** @SuppressWarnings(PHPMD.StaticAccess) */
 class IsBrPhoneNumberTest extends AssertionCase
 {
     use HasProviderFieldNotExist;
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @return array<string,array<int,mixed>>
      */
@@ -24,20 +25,20 @@ class IsBrPhoneNumberTest extends AssertionCase
             'param_0500_spaces' => "0500 313 4701",
             'param_0800_spaces' => "0800 729 0722",
             'param_0900_spaces' => "0900 313 4701",
-    
+
             'param_0300_dashs' => "0300-313-4701",
             'param_0500_dashs' => "0500-313-4701",
             'param_0800_dashs' => "0800-729-0722",
             'param_0900_dashs' => "0900-313-4701",
-    
+
             'param_3003_spaces' => "3003 3030",
             'param_4003_spaces' => "4003 3030",
             'param_4004_spaces' => "4004 3030",
-    
+
             'param_3003_dash' => "3003-3030",
             'param_4003_dash' => "4003-3030",
             'param_4004_dash' => "4004-3030",
-    
+
             'param_3003_int' => 30033030,
             'param_4003_int' => 40033030,
             'param_4004_int' => 40043030,
@@ -48,7 +49,7 @@ class IsBrPhoneNumberTest extends AssertionCase
             'param_mobile_digits' => "8799850997",
             'param_mobile_spaces' => "87 9985 0997",
             'param_mobile_int' => 8799850997,
-    
+
             // movel SP
             'param_mobile_prefix_9' => "(11) 9 9985-0997",
             'param_mobile_prefix_9_dashes' => "11-9-9985-0997",
@@ -57,8 +58,8 @@ class IsBrPhoneNumberTest extends AssertionCase
         ];
 
         $list = [];
-        
-        foreach(array_keys($httpParams) as $param) {
+
+        foreach (array_keys($httpParams) as $param) {
             $label = $this->paramToLabel($param);
 
             $list[$label] = $this->makeAssertionItem($param, $httpParams);
@@ -112,8 +113,8 @@ class IsBrPhoneNumberTest extends AssertionCase
         ];
 
         $list = [];
-        
-        foreach(array_keys($httpParams) as $param) {
+
+        foreach (array_keys($httpParams) as $param) {
             $label = $this->paramToLabel($param);
 
             $list[$label] = $this->makeAssertionItem($param, $httpParams);
@@ -143,7 +144,7 @@ class IsBrPhoneNumberTest extends AssertionCase
     }
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @test
      * @dataProvider invalidProvider
@@ -179,7 +180,7 @@ class IsBrPhoneNumberTest extends AssertionCase
         );
 
         $input->assert($paramName)->isBrPhoneNumber();
-        
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();

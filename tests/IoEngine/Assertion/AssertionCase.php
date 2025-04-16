@@ -8,6 +8,7 @@ use Iquety\Application\Application;
 use Iquety\Shield\Shield;
 use Tests\TestCase;
 
+/** @SuppressWarnings(PHPMD.NumberOfChildren) */
 abstract class AssertionCase extends TestCase
 {
     public function setUp(): void
@@ -21,7 +22,7 @@ abstract class AssertionCase extends TestCase
         Application::instance()->reset();
     }
 
-    /** @return array<string,array<int,mixed>> */
+    /** @return array<string,array<int,float|int|string>|bool|float|int|string|null> */
     public function getHttpParams(): array
     {
         return [
@@ -54,18 +55,9 @@ abstract class AssertionCase extends TestCase
         return $label;
     }
 
-    protected function makeAssertionItem(string $paramName, mixed $valueOne = '',  mixed $valueTwo = ''): array
+    /** @return array<int,mixed> */
+    protected function makeAssertionItem(string $paramName, mixed $valueOne = '', mixed $valueTwo = ''): array
     {
-        // $paramList = array_map(function ($value) {
-        //     if (is_float($value) === true) {
-        //         $value = strpos((string)$value, '.') === false
-        //             ? (string)$value . '.0'
-        //             : $value;
-        //     }
-            
-        //     return $value;
-        // }, $this->httpParamList);
-
         return [
             $paramName,
             $valueOne,

@@ -16,10 +16,10 @@ use RuntimeException;
 use Throwable;
 
 /**
- * @method float|int|string|FileSet|null param()
+ * @method float|int|string|FileSet|null param(int|string $param)
+ * @method self message(string $pattern)
  * @method self contains(string $needle)
  * @method self endsWith(string $needle)
- * @method self startsWith(string $needle)
  * @method self equalTo(mixed $needle)
  * @method self greaterThan(int $length)
  * @method self greaterThanOrEqualTo(int $length)
@@ -38,8 +38,8 @@ use Throwable;
  * @method self isEmail()
  * @method self isEmpty()
  * @method self isFalse()
- * @method self isHexadecimal()
  * @method self isHexColor()
+ * @method self isHexadecimal()
  * @method self isIp()
  * @method self isMacAddress()
  * @method self isNotEmpty()
@@ -92,15 +92,20 @@ trait Validable
         }
     }
 
+    /** @param array<int|string,array<int,string>|string> $errorList */
     private function flashErrors(array $errorList): void
     {
         /** @var Session $session */
         $session = Application::instance()->make(Session::class);
 
+        /**
+         * @var string $field nome do campo
+         * @var array<int,string> $messageList mensagens de erro no campo
+         */
         foreach ($errorList as $field => $messageList) {
             array_walk(
                 $messageList,
-                fn($message) =>$session->addFlash($field, $message)
+                fn($message) => $session->addFlash($field, $message)
             );
         }
     }
@@ -127,14 +132,15 @@ trait Validable
         $this->startFluency();
 
         if ($method === 'message') {
-            $this->currentAssertion->message(...$argumentList);
+            $this->currentAssertion?->message(...$argumentList);
 
             return $this;
         }
 
         try {
             $className = $this->makeAssertionClassName($method);
-    
+
+            // método param está em Input
             $fieldValue = $this->param($this->currentFieldName);
 
             if ($fieldValue === null) {
@@ -149,14 +155,15 @@ trait Validable
             $valueOne = $values['valueOne'];
             $valueTwo = $values['valueTwo'];
 
+            /** @var Assertion $assertion */
             $assertion = new $className($valueOne, $valueTwo);
-    
-            $this->currentAssertion = $this->currentField->assert($assertion);
+
+            $this->currentAssertion = $this->currentField?->assert($assertion);
 
             return $this;
-        } catch(InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $exception) {
             throw $exception;
-        } catch(Throwable $exception) {
+        } catch (Throwable $exception) {
             throw new RuntimeException(sprintf(
                 "%s on %s in line %d",
                 $exception->getMessage(),
@@ -181,7 +188,7 @@ trait Validable
 
     private function startFluency(): void
     {
-        if($this->currentField === null) {
+        if ($this->currentField === null) {
             throw new LogicException('You need to start with the assert() method');
         }
     }

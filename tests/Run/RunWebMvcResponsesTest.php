@@ -121,7 +121,7 @@ class RunWebMvcResponsesTest extends TestCase
         ]);
 
         $this->assertSame($expected, (string)$response->getBody());
-        
+
         $this->assertSame(400, $response->getStatusCode());
     }
 

@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
 
+/** @SuppressWarnings(PHPMD.StaticAccess) */
 class StartsWithTest extends AssertionCase
 {
     use HasProviderInvalidValue;
@@ -25,7 +26,7 @@ class StartsWithTest extends AssertionCase
     }
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @return array<string,array<int,mixed>>
      */
@@ -85,7 +86,7 @@ class StartsWithTest extends AssertionCase
 
         $httpParams = $this->shiftHttpArrayParam($httpParams); // remove '11.5', agora inicia com 'ção!#'
         $list["array starts with ção!#"] = $this->makeAssertionItem('param_array', 'ção!#', $httpParams);
-        
+
         return $list;
     }
 
@@ -93,9 +94,9 @@ class StartsWithTest extends AssertionCase
     public function invalidProvider(): array
     {
         $httpParams = $this->getHttpParams();
-        
+
         $list = [];
-        
+
         $list['param int 111 not starts with 112']                       = ['param_int', 112, $httpParams];
         $list['param int string 222 not starts with string 223']         = ['param_int_string', '223', $httpParams];
         $list['param int string 222 not starts with integer string 223'] = ['param_int_string',223,$httpParams];
@@ -161,8 +162,6 @@ class StartsWithTest extends AssertionCase
             fn($values) => $this->makeAssertionItem(...$values),
             $list
         );
-        
-        return $list;
     }
 
     /**
@@ -186,7 +185,7 @@ class StartsWithTest extends AssertionCase
     }
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @test
      * @param array<string,mixed> $httpParams
@@ -212,7 +211,7 @@ class StartsWithTest extends AssertionCase
      * @test
      * @dataProvider invalidObjectArgumentsProvider
      */
-    public function valueIsInvalidObject(string $paramName, mixed $valueOne, mixed $valueTwo): void
+    public function valueIsInvalidObject(string $paramName, mixed $valueOne): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Argument is not valid');
@@ -224,8 +223,8 @@ class StartsWithTest extends AssertionCase
             'param_array'  => ['one', 'two'],
         ]));
 
-        $input->assert($paramName)->startsWith($valueOne, $valueTwo);
-        
+        $input->assert($paramName)->startsWith($valueOne);
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();
@@ -245,7 +244,7 @@ class StartsWithTest extends AssertionCase
         );
 
         $input->assert($paramName)->startsWith('xx');
-        
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();

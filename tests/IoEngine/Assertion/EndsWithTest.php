@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
 
+/** @SuppressWarnings(PHPMD.StaticAccess) */
 class EndsWithTest extends AssertionCase
 {
     use HasProviderInvalidValue;
@@ -25,7 +26,7 @@ class EndsWithTest extends AssertionCase
     }
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @return array<string,array<int,mixed>>
      */
@@ -53,7 +54,7 @@ class EndsWithTest extends AssertionCase
         $httpParams = $this->popHttpArrayParam($httpParams); // remove 'ção!#', agora termina com 11.5
         $list["array ends with decimal 11.5"] = $this->makeAssertionItem('param_array', 11.5, $httpParams);
         $list["array ends with decimal string 11.5"] = $this->makeAssertionItem('param_array', '11.5', $httpParams);
-        
+
         $httpParams = $this->popHttpArrayParam($httpParams); // remove '11.5', agora termina com 22.5
         $list["array ends with decimal 22.5"] = $this->makeAssertionItem('param_array', 22.5, $httpParams);
         $list["array ends with decimal string 22.5"] = $this->makeAssertionItem('param_array', '22.5', $httpParams);
@@ -65,11 +66,14 @@ class EndsWithTest extends AssertionCase
         $httpParams = $this->popHttpArrayParam($httpParams); // remove '222', agora termina com 111
         $list["array ends with integer 111"] = $this->makeAssertionItem('param_array', 111, $httpParams);
         $list["array ends with integer string 111"] = $this->makeAssertionItem('param_array', '111', $httpParams);
-        
+
         return $list;
     }
 
-    /** @return array<string,array<int,mixed>> */
+    /**
+     * @return array<string,array<int,mixed>>
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function invalidProvider(): array
     {
         $httpParams = $this->getHttpParams();
@@ -115,7 +119,7 @@ class EndsWithTest extends AssertionCase
         );
 
         $list['param decimal 22.5 not ends with int 2'] = $this->makeAssertionItem('param_decimal', 2, $httpParams);
-        
+
         $list['param decimal 11.5 not ends with string 11.'] = $this->makeAssertionItem(
             'param_decimal_string',
             '11.',
@@ -238,7 +242,7 @@ class EndsWithTest extends AssertionCase
             11.4,
             $httpParams
         );
-        
+
         $list["array not ends with decimal string 11.5"] = $this->makeAssertionItem(
             'param_array',
             '11.4',
@@ -258,7 +262,7 @@ class EndsWithTest extends AssertionCase
             '11.4',
             $httpParams
         );
-        
+
         $httpParams = $this->popHttpArrayParam($httpParams); // remove 11.5, agora termina com 22.5
         $list["array not ends with decimal 22.4"] = $this->makeAssertionItem(
             'param_array',
@@ -279,7 +283,7 @@ class EndsWithTest extends AssertionCase
             110,
             $httpParams
         );
-        
+
         return $list;
     }
 
@@ -304,7 +308,7 @@ class EndsWithTest extends AssertionCase
     }
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @test
      * @param array<string,mixed> $httpParams
@@ -330,7 +334,7 @@ class EndsWithTest extends AssertionCase
      * @test
      * @dataProvider invalidObjectArgumentsProvider
      */
-    public function valueIsInvalidObject(string $paramName, mixed $valueOne, mixed $valueTwo): void
+    public function valueIsInvalidObject(string $paramName, mixed $valueOne): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Argument is not valid');
@@ -342,8 +346,8 @@ class EndsWithTest extends AssertionCase
             'param_array'  => ['one', 'two'],
         ]));
 
-        $input->assert($paramName)->endsWith($valueOne, $valueTwo);
-        
+        $input->assert($paramName)->endsWith($valueOne);
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();
@@ -362,8 +366,8 @@ class EndsWithTest extends AssertionCase
             '/user/edit/03?' . http_build_query(['param_null' => null]),
         );
 
-        $input->assert($paramName)->endsWith('xx', 'xx');
-        
+        $input->assert($paramName)->endsWith('xx');
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();

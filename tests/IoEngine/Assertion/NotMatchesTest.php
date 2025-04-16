@@ -8,21 +8,21 @@ use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
 
+/** @SuppressWarnings(PHPMD.StaticAccess) */
 class NotMatchesTest extends AssertionCase
 {
     use HasProviderInvalidValue;
     use HasProviderFieldNotExist;
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @return array<string,array<int,mixed>>
      */
     public function validProvider(): array
     {
-        return [];
         $list = [];
-        
+
         $list['param int 111 not matches 112'] = $this->makeAssertionItem('param_int', '/112/');
         $list['param int 111 not matches 12']  = $this->makeAssertionItem('param_int', '/12/');
         $list['param int 111 not matches 2']   = $this->makeAssertionItem('param_int', '/2/');
@@ -47,18 +47,15 @@ class NotMatchesTest extends AssertionCase
         $list['param string Coração!# not matches rç']          = $this->makeAssertionItem('param_string', '/rç/');
         $list['param string Coração!# not matches ço!#']        = $this->makeAssertionItem('param_string', '/ço!#/');
         $list['param string Coração!# not matches [a-z]*%']     = $this->makeAssertionItem('param_string', '/[a-z]*%/');
-        $list['param string Coração!# not matches [a-zçã!#]*%'] = $this->makeAssertionItem('param_string', '/[a-zçã!#]*%/');
+        $list['param string Coração!# not matches [a-zçã!#]*%'] = $this->makeAssertionItem(
+            'param_string',
+            '/[a-zçã!#]*%/'
+        );
 
         $list['param boolean true not matches [0-9]{2}']  = $this->makeAssertionItem('param_true', '/[0-9]{2}/');
         $list['param boolean true not matches 1']         = $this->makeAssertionItem('param_true', '/0/');
         $list['param boolean false not matches [0-9]{2}'] = $this->makeAssertionItem('param_false', '/[0-9]{2}/');
         $list['param boolean false not matches 0']        = $this->makeAssertionItem('param_false', '/1/');
-
-        $list["array not matches 12"]          = $this->makeAssertionItem('param_array', "/12/");
-        $list["array not matches 23"]          = $this->makeAssertionItem('param_array', "/23/");
-        $list["array not matches \.6"]         = $this->makeAssertionItem('param_array', "/\.6/");
-        $list["array not matches 1\.6"]        = $this->makeAssertionItem('param_array', "/1\.6/");
-        $list["array not matches [a-zçã!#]*%"] = $this->makeAssertionItem('param_array', "/[a-zçã!#]*%/");
 
         return $list;
     }
@@ -66,8 +63,6 @@ class NotMatchesTest extends AssertionCase
     /** @return array<string,array<int,mixed>> */
     public function invalidProvider(): array
     {
-        return [];
-        
         $list = [];
 
         $list['param int 111 matches 111'] = $this->makeAssertionItem('param_int', '/111/');
@@ -83,7 +78,7 @@ class NotMatchesTest extends AssertionCase
         $list['param decimal 22.5 matches 22']    = $this->makeAssertionItem('param_decimal', '/22/');
         $list['param decimal 22.5 matches \.5']   = $this->makeAssertionItem('param_decimal', '/\.5/');
         $list['param decimal 22.5 matches 5']     = $this->makeAssertionItem('param_decimal', '/5/');
-        
+
         $list['param decimal 11.5 matches 11.5'] = $this->makeAssertionItem('param_decimal_string', '/11\.5/');
         $list['param decimal 11.5 matches 11\.'] = $this->makeAssertionItem('param_decimal_string', '/11\./');
         $list['param decimal 11.5 matches 11']   = $this->makeAssertionItem('param_decimal_string', '/11/');
@@ -100,12 +95,6 @@ class NotMatchesTest extends AssertionCase
         $list['param boolean true matches 1']         = $this->makeAssertionItem('param_true', '/1/');
         $list['param boolean false matches [0-9]{1}'] = $this->makeAssertionItem('param_false', '/[0-9]{1}/');
         $list['param boolean false matches 0']        = $this->makeAssertionItem('param_false', '/0/');
-
-        $list["array matches 11"]         = $this->makeAssertionItem('param_array', "/11/");
-        $list["array matches 22"]         = $this->makeAssertionItem('param_array', "/22/");
-        $list["array matches \.5"]        = $this->makeAssertionItem('param_array', "/\.5/");
-        $list["array matches 1\.5"]       = $this->makeAssertionItem('param_array', "/1\.5/");
-        $list["array matches [a-zçã!#]*"] = $this->makeAssertionItem('param_array', "/[a-zçã!#]*/");
 
         return $list;
     }
@@ -130,7 +119,7 @@ class NotMatchesTest extends AssertionCase
     }
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @test
      * @dataProvider invalidProvider
@@ -168,7 +157,7 @@ class NotMatchesTest extends AssertionCase
         ]));
 
         $input->assert($paramName)->notMatches($valueOne);
-        
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();
@@ -187,8 +176,8 @@ class NotMatchesTest extends AssertionCase
             '/user/edit/03?' . http_build_query(['param_null' => null]),
         );
 
-        $input->assert($paramName)->notMatches('xx', 'xx');
-        
+        $input->assert($paramName)->notMatches('xx');
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();

@@ -8,88 +8,133 @@ use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
 
+/** @SuppressWarnings(PHPMD.StaticAccess) */
 class GreaterThanOrEqualToTest extends AssertionCase
 {
     use HasProviderInvalidValue;
     use HasProviderFieldNotExist;
+    use HasProviderNonNumericValue;
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @return array<string,array<int,mixed>>
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function validProvider(): array
     {
         $list = [];
-        
-        $list['param int 111 greater than or equal to int 111']    = $this->makeAssertionItem('param_int', 111);
-        $list['param int 111 greater than or equal to string 111'] = $this->makeAssertionItem('param_int', '111');
 
-        $list['param int 111 greater than or equal to int 110']    = $this->makeAssertionItem('param_int', 110);
-        $list['param int 111 greater than or equal to string 110'] = $this->makeAssertionItem('param_int', '110');
+        // true é transformado em 1
+        $list['param true greater than or equal to 0'] = $this->makeAssertionItem('param_true', 0);
 
-        $list['param int string 222 greater than or equal to string 222'] = $this->makeAssertionItem('param_int_string', '222');
-        $list['param int string 222 greater than or equal to int 222']    = $this->makeAssertionItem('param_int_string', 221);
-        
-        $list['param int string 222 greater than or equal to string 221'] = $this->makeAssertionItem('param_int_string', '221');
-        $list['param int string 222 greater than or equal to int 221']    = $this->makeAssertionItem('param_int_string', 221);
-        
-        $list['param decimal 22.5 greater than or equal to string 22.5']  = $this->makeAssertionItem('param_decimal', '22.5');
-        $list['param decimal 22.5 greater than or equal to decimal 22.5'] = $this->makeAssertionItem('param_decimal', 22.5);
+        // false é transformado em 0
+        $list['param false greater than or equal to 0'] = $this->makeAssertionItem(
+            'param_false',
+            0
+        );
 
-        $list['param decimal 22.5 greater than or equal to string 22.4']  = $this->makeAssertionItem('param_decimal', '22.4');
-        $list['param decimal 22.5 greater than or equal to decimal 22.4'] = $this->makeAssertionItem('param_decimal', 22.4);
+        $list['param int 111 greater than or equal to int 110'] = $this->makeAssertionItem(
+            'param_int',
+            110
+        );
 
-        $list['param decimal 11.5 greater than or equal to string 11.5']  = $this->makeAssertionItem('param_decimal_string', '11.5');
-        $list['param decimal 11.5 greater than or equal to decimal 11.5'] = $this->makeAssertionItem('param_decimal_string', 11.5);
+        $list['param int 111 greater than or equal to string 110'] = $this->makeAssertionItem(
+            'param_int',
+            '110'
+        );
 
-        $list['param decimal 11.5 greater than or equal to string 11.4']  = $this->makeAssertionItem('param_decimal_string', '11.4');
-        $list['param decimal 11.5 greater than or equal to decimal 11.4'] = $this->makeAssertionItem('param_decimal_string', 11.4);
+        $list['param int 111 greater than or equal to int 111'] = $this->makeAssertionItem(
+            'param_int',
+            111
+        );
 
-        $list['param string Coração!# greater than or equal to 9'] = $this->makeAssertionItem('param_string', 9);
-        $list['param string Coração!# greater than or equal to 8'] = $this->makeAssertionItem('param_string', 8);
-        $list['param string Coração!# greater than or equal to 1'] = $this->makeAssertionItem('param_string', 1);
-        $list['param string Coração!# greater than or equal to 0'] = $this->makeAssertionItem('param_string', 0);
+        $list['param int 111 greater than or equal to string 111'] = $this->makeAssertionItem(
+            'param_int',
+            '111'
+        );
 
-        $list['param boolean false greater than or equal to 0'] = $this->makeAssertionItem('param_false', 0);
-        $list['param boolean true greater than or equal to 0'] = $this->makeAssertionItem('param_true', 0);
-        $list['param boolean true greater than or equal to 1'] = $this->makeAssertionItem('param_true', 1);
+        $list['param string 222 greater than or equal to int 221'] = $this->makeAssertionItem(
+            'param_int_string',
+            221
+        );
 
-        $list["array greater than or equal to 5"] = $this->makeAssertionItem('param_array', 5);
+        $list['param string 222 greater than or equal to string 221'] = $this->makeAssertionItem(
+            'param_int_string',
+            '221'
+        );
+
+        $list['param string 222 greater than or equal to int 222'] = $this->makeAssertionItem(
+            'param_int_string',
+            222
+        );
+
+        $list['param string 222 greater than or equal to string 222'] = $this->makeAssertionItem(
+            'param_int_string',
+            '222'
+        );
+
+        $list['param decimal 22.5 greater than or equal to decimal 22.4'] = $this->makeAssertionItem(
+            'param_decimal',
+            22.4
+        );
+
+        $list['param decimal 22.5 greater than or equal to string 22.4'] = $this->makeAssertionItem(
+            'param_decimal',
+            '22.4'
+        );
+
+        $list['param decimal 22.5 greater than or equal to decimal 22.5'] = $this->makeAssertionItem(
+            'param_decimal',
+            22.5
+        );
+
+        $list['param decimal 22.5 greater than or equal to string 22.5'] = $this->makeAssertionItem(
+            'param_decimal',
+            '22.5'
+        );
+
+        $list['param decimal 22.0 greater than or equal to decimal 21.9'] = $this->makeAssertionItem(
+            'param_decimal_zero',
+            21.9
+        );
+
+        $list['param decimal 22.0 greater than or equal to string 21.9'] = $this->makeAssertionItem(
+            'param_decimal_zero',
+            '21.9'
+        );
+
+        $list['param decimal 22.0 greater than or equal to decimal 22.0'] = $this->makeAssertionItem(
+            'param_decimal_zero',
+            22.0
+        );
+
+        $list['param decimal 22.0 greater than or equal to string 22.0'] = $this->makeAssertionItem(
+            'param_decimal_zero',
+            '22.0'
+        );
+
+        $list['param decimal string 11.5 greater than or equal to decimal 11.4'] = $this->makeAssertionItem(
+            'param_decimal_string',
+            11.4
+        );
+
+        $list['param decimal string 11.5 greater than or equal to string 11.4'] = $this->makeAssertionItem(
+            'param_decimal_string',
+            '11.4'
+        );
+
+        $list['param decimal string 11.5 greater than or equal to decimal 11.5'] = $this->makeAssertionItem(
+            'param_decimal_string',
+            11.5
+        );
+
+        $list['param decimal string 11.5 greater than or equal to string 11.5'] = $this->makeAssertionItem(
+            'param_decimal_string',
+            '11.5'
+        );
+
         $list["array greater than or equal to 4"] = $this->makeAssertionItem('param_array', 4);
-        $list["array greater than or equal to 0"] = $this->makeAssertionItem('param_array', 0);
-
-        return $list;
-    }
-
-    /** @return array<string,array<int,mixed>> */
-    public function invalidProvider(): array
-    {
-        $list = [];
-
-        $list['param int 111 not greater than or equal to int 112']    = $this->makeAssertionItem('param_int', 112);
-        $list['param int 111 not greater than or equal to string 112'] = $this->makeAssertionItem('param_int', '112');
-
-        $list['param int string 222 not greater than or equal to int 223']    = $this->makeAssertionItem('param_int_string', 223);
-        $list['param int string 222 not greater than or equal to string 223'] = $this->makeAssertionItem('param_int_string', '223');
-
-        $list['param decimal 22.5 not greater than or equal to decimal 22.6']        = $this->makeAssertionItem('param_decimal', 22.6);
-        $list['param decimal 22.5 not greater than or equal to decimal string 22.6'] = $this->makeAssertionItem('param_decimal', '22.6');
-
-        $list['param decimal string 11.5 not greater than or equal to decimal 11.6'] = $this->makeAssertionItem('param_decimal_string', 11.6);
-        $list['param decimal string 11.5 not greater than or equal to string 11.6']  = $this->makeAssertionItem('param_decimal_string', '11.6');
-
-        $list['param string Coração!# not greater than or equal to 10'] = $this->makeAssertionItem('param_string', 10);
-        $list['param string Coração!# not greater than or equal to 10'] = $this->makeAssertionItem('param_string', '10');
-
-        $list['param boolean false not greater than or equal to 1'] = $this->makeAssertionItem('param_false', '1');
-        $list['param boolean false not greater than or equal to int 1'] = $this->makeAssertionItem('param_false', 1);
-
-        $list['param boolean true not greater than or equal to 2'] = $this->makeAssertionItem('param_true', '2');
-        $list['param boolean true not greater than or equal to int 2'] = $this->makeAssertionItem('param_true', 2);
-
-        $list["array not greater than or equal to 6"] = $this->makeAssertionItem('param_array', 6);
-        $list["array not greater than or equal to 6"] = $this->makeAssertionItem('param_array', '6');
 
         return $list;
     }
@@ -113,8 +158,74 @@ class GreaterThanOrEqualToTest extends AssertionCase
         $this->assertTrue(true);
     }
 
+    /** @return array<string,array<int,mixed>> */
+    public function invalidProvider(): array
+    {
+        $list = [];
+
+        // string é inválido
+        $list['param string not greater than or equal to 0'] = $this->makeAssertionItem(
+            'param_string',
+            0
+        );
+
+        $list['param int 111 not greater than or equal to int 112'] = $this->makeAssertionItem(
+            'param_int',
+            112
+        );
+
+        $list['param int 111 not greater than or equal to string 112'] = $this->makeAssertionItem(
+            'param_int',
+            '112'
+        );
+
+        $list['param string 222 not greater than or equal to int 223'] = $this->makeAssertionItem(
+            'param_int_string',
+            223
+        );
+
+        $list['param string 222 not greater than or equal to string 223'] = $this->makeAssertionItem(
+            'param_int_string',
+            '223'
+        );
+
+        $list['param decimal 22.5 not greater than or equal to decimal 22.6'] = $this->makeAssertionItem(
+            'param_decimal',
+            22.6
+        );
+
+        $list['param decimal 22.5 not greater than or equal to string 22.6'] = $this->makeAssertionItem(
+            'param_decimal',
+            '22.6'
+        );
+
+        $list['param decimal 22.0 not greater than or equal to decimal 22.1'] = $this->makeAssertionItem(
+            'param_decimal_zero',
+            22.1
+        );
+
+        $list['param decimal 22.0 not greater than or equal to string 22.1'] = $this->makeAssertionItem(
+            'param_decimal_zero',
+            '22.1'
+        );
+
+        $list['param decimal string 11.5 not greater than or equal to decimal 11.6'] = $this->makeAssertionItem(
+            'param_decimal_string',
+            11.6
+        );
+
+        $list['param decimal string 11.5 not greater than or equal to string 11.6'] = $this->makeAssertionItem(
+            'param_decimal_string',
+            '11.6'
+        );
+
+        $list["array not greater than or equal to 6"] = $this->makeAssertionItem('param_array', 6);
+
+        return $list;
+    }
+
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @test
      * @dataProvider invalidProvider
@@ -123,6 +234,26 @@ class GreaterThanOrEqualToTest extends AssertionCase
     {
         $this->expectException(AssertionResponseException::class);
         $this->expectExceptionMessage('The value was not successfully asserted');
+
+        $input = Input::fromString(
+            '/user/edit/03?' . http_build_query($this->getHttpParams()),
+        );
+
+        $input->assert($paramName)->greaterThanOrEqualTo($valueOne);
+
+        // se a asserção não passar, uma exceção será lançada
+        // para o ActionExecutor capturar e liberar a resposta
+        $input->validOrResponse();
+    }
+
+    /**
+     * @test
+     * @dataProvider invalidNonNumericArgumentsProvider
+     */
+    public function valueIsInvalidNonNumeric(string $paramName, mixed $valueOne): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Argument must be numeric');
 
         $input = Input::fromString(
             '/user/edit/03?' . http_build_query($this->getHttpParams()),
@@ -152,7 +283,7 @@ class GreaterThanOrEqualToTest extends AssertionCase
         ]));
 
         $input->assert($paramName)->greaterThanOrEqualTo($valueOne);
-        
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();
@@ -171,8 +302,8 @@ class GreaterThanOrEqualToTest extends AssertionCase
             '/user/edit/03?' . http_build_query(['param_null' => null]),
         );
 
-        $input->assert($paramName)->greaterThanOrEqualTo('xx');
-        
+        $input->assert($paramName)->greaterThanOrEqualTo(1);
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();

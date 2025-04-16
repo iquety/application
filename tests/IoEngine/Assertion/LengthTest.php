@@ -7,8 +7,8 @@ namespace Tests\IoEngine\Assertion;
 use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
-use stdClass;
 
+/** @SuppressWarnings(PHPMD.StaticAccess) */
 class LengthTest extends AssertionCase
 {
     use HasProviderInvalidValue;
@@ -16,7 +16,7 @@ class LengthTest extends AssertionCase
     use HasProviderNumericValue;
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @return array<string,array<int,mixed>>
      */
@@ -29,8 +29,8 @@ class LengthTest extends AssertionCase
         ];
 
         $list = [];
-        
-        foreach(array_keys($httpParams) as $param) {
+
+        foreach (array_keys($httpParams) as $param) {
             $label = $this->paramToLabel($param);
 
             $list[$label] = $this->makeAssertionItem($param, 7, $httpParams);
@@ -52,8 +52,8 @@ class LengthTest extends AssertionCase
         ];
 
         $list = [];
-        
-        foreach(array_keys($httpParams) as $param) {
+
+        foreach (array_keys($httpParams) as $param) {
             $label = $this->paramToLabel($param);
 
             $list[$label] = $this->makeAssertionItem($param, 7, $httpParams);
@@ -83,7 +83,7 @@ class LengthTest extends AssertionCase
     }
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @test
      * @dataProvider invalidProvider
@@ -122,7 +122,7 @@ class LengthTest extends AssertionCase
         ]));
 
         $input->assert($paramName)->length($valueOne);
-        
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();
@@ -141,13 +141,13 @@ class LengthTest extends AssertionCase
             '/user/edit/03?' . http_build_query(['param_null' => null]),
         );
 
-        $input->assert($paramName)->length('xx', 'xx');
-        
+        $input->assert($paramName)->length(1);
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();
     }
-    
+
     /**
      * @test
      * @dataProvider invalidNumericArgumentsProvider
@@ -165,7 +165,7 @@ class LengthTest extends AssertionCase
         );
 
         $input->assert($paramName)->length($valueOne);
-        
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();

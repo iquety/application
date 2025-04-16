@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
 
+/** @SuppressWarnings(PHPMD.StaticAccess) */
 class ContainsTest extends AssertionCase
 {
     use HasProviderInvalidValue;
@@ -15,7 +16,7 @@ class ContainsTest extends AssertionCase
 
     /**
      * A aplicação recebe os valores da requisição
-     * Recebe um valor (texto, inteiro, decimal ou array) transformado em texto 
+     * Recebe um valor (texto, inteiro, decimal ou array) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @return array<string,array<int,mixed>>
      */
@@ -38,7 +39,7 @@ class ContainsTest extends AssertionCase
         $list["array contains string 222"]   = $this->makeAssertionItem('param_array', '222');
         $list["array contains string 11.5"]  = $this->makeAssertionItem('param_array', '11.5');
         $list["array contains string ção!#"] = $this->makeAssertionItem('param_array', 'ção!#');
-        
+
         return $list;
     }
 
@@ -58,7 +59,7 @@ class ContainsTest extends AssertionCase
         //    '11.5', // decimal string
         //    'ção!#' // string
         // ]
-        
+
         $list["array not contains int 112"]             = $this->makeAssertionItem('param_array', 112);
         $list["array not contains int string 112"]      = $this->makeAssertionItem('param_array', '112');
         $list["array not contains int 221"]             = $this->makeAssertionItem('param_array', 221);
@@ -68,7 +69,7 @@ class ContainsTest extends AssertionCase
         $list["array not contains decimal 11.4"]        = $this->makeAssertionItem('param_array', 11.4);
         $list["array not contains decimal string 11.4"] = $this->makeAssertionItem('param_array', '11.4');
         $list["array not contains string ção#"]         = $this->makeAssertionItem('param_array', 'ção#');
-        
+
         return $list;
     }
 
@@ -92,7 +93,7 @@ class ContainsTest extends AssertionCase
     }
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @test
      * @dataProvider invalidProvider
@@ -130,7 +131,7 @@ class ContainsTest extends AssertionCase
         ]));
 
         $input->assert($paramName)->contains($valueOne);
-        
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();
@@ -149,8 +150,8 @@ class ContainsTest extends AssertionCase
             '/user/edit/03?' . http_build_query(['param_null' => null]),
         );
 
-        $input->assert($paramName)->contains('xx', 'xx');
-        
+        $input->assert($paramName)->contains('xx');
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();

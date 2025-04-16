@@ -8,20 +8,21 @@ use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
 
+/** @SuppressWarnings(PHPMD.StaticAccess) */
 class NotContainsTest extends AssertionCase
 {
     use HasProviderInvalidValue;
     use HasProviderFieldNotExist;
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @return array<string,array<int,mixed>>
      */
     public function validProvider(): array
     {
         $list = [];
-        
+
         $list['param int 111 not contains 112'] = $this->makeAssertionItem('param_int', 112);
 
         $list['param int string 222 not contains string 223'] = $this->makeAssertionItem('param_int_string', '223');
@@ -78,7 +79,7 @@ class NotContainsTest extends AssertionCase
         $list["array not contains decimal string 11.4"] = $this->makeAssertionItem('param_array', '11.4');
 
         $list["array not contains string ção#"] = $this->makeAssertionItem('param_array', 'ção#');
-        
+
         return $list;
     }
 
@@ -94,7 +95,7 @@ class NotContainsTest extends AssertionCase
         $list['param int 111 contains int 1']      = $this->makeAssertionItem('param_int', 1);
         $list['param int 111 contains string 1']   = $this->makeAssertionItem('param_int', '1');
 
-        
+
         $list['param int string 222 contains string 222'] = $this->makeAssertionItem('param_int_string', '222');
         $list['param int string 222 contains string 22']  = $this->makeAssertionItem('param_int_string', '22');
         $list['param int string 222 contains string 2']   = $this->makeAssertionItem('param_int_string', '2');
@@ -105,7 +106,9 @@ class NotContainsTest extends AssertionCase
         $list['param decimal 22.5 contains string 22.5']  = $this->makeAssertionItem('param_decimal', '22.5');
         $list['param decimal 22.5 contains decimal 22.5'] = $this->makeAssertionItem('param_decimal', 22.5);
         $list['param decimal 22.5 contains string .5']    = $this->makeAssertionItem('param_decimal', '.5');
-        // $list['param decimal 22.5 contains float .5'] = $this->makeAssertionItem('param_decimal', .5); // não funciona
+        // não funciona
+        // $list['param decimal 22.5 contains float .5'] = $this->makeAssertionItem('param_decimal', .5);
+
         $list['param decimal 22.5 contains string 22.']   = $this->makeAssertionItem('param_decimal', '22.');
         // $list['param decimal 22.5 contains float 22.']    = $this->makeAssertionItem('param_decimal', 22.);
         $list['param decimal 22.5 contains string 22']    = $this->makeAssertionItem('param_decimal', '22');
@@ -113,10 +116,13 @@ class NotContainsTest extends AssertionCase
         $list['param decimal 22.5 contains string 2']     = $this->makeAssertionItem('param_decimal', '2');
         $list['param decimal 22.5 contains int 2']        = $this->makeAssertionItem('param_decimal', 2);
 
-        $list['param decimal 11.5 contains string 11.5']  = $this->makeAssertionItem('param_decimal_string', '11.5');
+        $list['param decimal 11.5 contains string 11.5'] = $this->makeAssertionItem('param_decimal_string', '11.5');
         $list['param decimal 11.5 contains decimal 11.5'] = $this->makeAssertionItem('param_decimal_string', 11.5);
         $list['param decimal 11.5 contains string .5']    = $this->makeAssertionItem('param_decimal_string', '.5');
-        // $list['param decimal 11.5 contains float .5'] = $this->makeAssertionItem('param_decimal_string', .5); // não funciona
+
+        // não funciona
+        // $list['param decimal 11.5 contains float .5'] = $this->makeAssertionItem('param_decimal_string', .5);
+
         $list['param decimal 11.5 contains string 11.']   = $this->makeAssertionItem('param_decimal_string', '11.');
         // $list['param decimal 11.5 contains float 11.']    = $this->makeAssertionItem('param_decimal_string', 11.);
         $list['param decimal 11.5 contains string 11']    = $this->makeAssertionItem('param_decimal_string', '11');
@@ -146,7 +152,7 @@ class NotContainsTest extends AssertionCase
         $list["array contains decimal 22.5"] = $this->makeAssertionItem('param_array', 22.5);
         $list["array contains string 11.5"]  = $this->makeAssertionItem('param_array', '11.5');
         $list["array contains string ção!#"] = $this->makeAssertionItem('param_array', 'ção!#');
-        
+
         return $list;
     }
 
@@ -170,7 +176,7 @@ class NotContainsTest extends AssertionCase
     }
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @test
      * @dataProvider invalidProvider
@@ -208,7 +214,7 @@ class NotContainsTest extends AssertionCase
         ]));
 
         $input->assert($paramName)->notContains($valueOne);
-        
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();
@@ -227,8 +233,8 @@ class NotContainsTest extends AssertionCase
             '/user/edit/03?' . http_build_query(['param_null' => null]),
         );
 
-        $input->assert($paramName)->notContains('xx', 'xx');
-        
+        $input->assert($paramName)->notContains('xx');
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();

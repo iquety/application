@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
 
+/** @SuppressWarnings(PHPMD.StaticAccess) */
 class MinLengthTest extends AssertionCase
 {
     use HasProviderInvalidValue;
@@ -15,7 +16,7 @@ class MinLengthTest extends AssertionCase
     use HasProviderNumericValue;
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @return array<string,array<int,mixed>>
      */
@@ -29,8 +30,8 @@ class MinLengthTest extends AssertionCase
         ];
 
         $list = [];
-        
-        foreach(array_keys($httpParams) as $param) {
+
+        foreach (array_keys($httpParams) as $param) {
             $label = $this->paramToLabel($param);
 
             $list[$label] = $this->makeAssertionItem($param, 7, $httpParams);
@@ -52,8 +53,8 @@ class MinLengthTest extends AssertionCase
         ];
 
         $list = [];
-        
-        foreach(array_keys($httpParams) as $param) {
+
+        foreach (array_keys($httpParams) as $param) {
             $label = $this->paramToLabel($param);
 
             $list[$label] = $this->makeAssertionItem($param, 7, $httpParams);
@@ -83,7 +84,7 @@ class MinLengthTest extends AssertionCase
     }
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @test
      * @dataProvider invalidProvider
@@ -122,7 +123,7 @@ class MinLengthTest extends AssertionCase
         ]));
 
         $input->assert($paramName)->minLength($valueOne);
-        
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();
@@ -141,13 +142,13 @@ class MinLengthTest extends AssertionCase
             '/user/edit/03?' . http_build_query(['param_null' => null]),
         );
 
-        $input->assert($paramName)->minLength('xx', 'xx');
-        
+        $input->assert($paramName)->minLength(1);
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();
     }
-    
+
     /**
      * @test
      * @dataProvider invalidNumericArgumentsProvider
@@ -165,7 +166,7 @@ class MinLengthTest extends AssertionCase
         );
 
         $input->assert($paramName)->minLength($valueOne);
-        
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();

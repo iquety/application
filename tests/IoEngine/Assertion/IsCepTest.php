@@ -8,12 +8,13 @@ use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
 
+/** @SuppressWarnings(PHPMD.StaticAccess) */
 class IsCepTest extends AssertionCase
 {
     use HasProviderFieldNotExist;
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @return array<string,array<int,mixed>>
      */
@@ -32,8 +33,8 @@ class IsCepTest extends AssertionCase
         ];
 
         $list = [];
-        
-        foreach(array_keys($httpParams) as $param) {
+
+        foreach (array_keys($httpParams) as $param) {
             $label = $this->paramToLabel($param);
 
             $list[$label] = $this->makeAssertionItem($param, $httpParams);
@@ -67,7 +68,7 @@ class IsCepTest extends AssertionCase
 
         $list = [];
 
-        foreach(array_keys($httpParams) as $param) {
+        foreach (array_keys($httpParams) as $param) {
             $label = $this->paramToLabel($param);
 
             $list[$label] = $this->makeAssertionItem($param, $httpParams);
@@ -97,7 +98,7 @@ class IsCepTest extends AssertionCase
     }
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @test
      * @dataProvider invalidProvider
@@ -133,7 +134,7 @@ class IsCepTest extends AssertionCase
         );
 
         $input->assert($paramName)->isCep();
-        
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();

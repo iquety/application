@@ -18,7 +18,7 @@ class ValueParser
     }
 
     /**
-     * @param array<mixed>|float|int|string $value 
+     * @param array<mixed>|float|int|string $value
      * @return array<mixed>|float|int|string
      */
     public function typed(mixed $value): array|bool|float|int|null|object|string

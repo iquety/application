@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Iquety\Application\IoEngine\Action;
 
+use Countable;
 use Exception;
 use InvalidArgumentException;
 use Iquety\Application\IoEngine\ValueParser;
@@ -44,7 +45,7 @@ class ValidableMap
         if (in_array($this->methodName, $sizeMethods) === true) {
             return $this->makeNumericSizeValues($this->methodName, $requestValue, $routineValue);
         }
-        
+
         // isAlpha
         // isAlphaNumeric
         // isAmountTime
@@ -89,8 +90,8 @@ class ValidableMap
     }
 
     /**
-     * @param string $requestValue proveniente da requisição
-     * @param string $routineValue proveniente da asserção programada
+     * @param mixed $requestValue proveniente da requisição
+     * @param mixed $routineValue proveniente da asserção programada
      * @return array<string,mixed>
      */
     private function makeSearchValues(mixed $requestValue, mixed $routineValue): array
@@ -131,11 +132,19 @@ class ValidableMap
         }
 
         // valores diferentes de string ou array devem ser inválidos
-        $requestValue = match($methodName) {
-            'length'    => str_repeat('a', $routineValue + 1),
-            'maxLength' => str_repeat('a', $routineValue + 1),
-            'minLength' => str_repeat('a', $routineValue - 1)
-        };
+        switch ($methodName) {
+            case 'length':
+                $requestValue = str_repeat('a', (int)$routineValue + 1);
+                break;
+
+            case 'maxLength':
+                $requestValue = str_repeat('a', (int)$routineValue + 1);
+                break;
+
+            case 'minLength':
+                $requestValue = str_repeat('a', (int)$routineValue - 1);
+                break;
+        }
 
         return [ 'valueOne' => $requestValue, 'valueTwo' => $routineValue ];
     }
@@ -145,35 +154,47 @@ class ValidableMap
      * @param mixed $routineValue proveniente da asserção programada
      * @return array<string,mixed>
      */
-    private function makeNumericSizeValues(mixed $requestValue, mixed $routineValue): array
+    private function makeNumericSizeValues(string $methodName, mixed $requestValue, mixed $routineValue): array
     {
-        $requestValue = (new ValueParser($requestValue))->withCorrectType();
+        // $requestValue = (new ValueParser($requestValue))->withCorrectType();
         $routineValue = (new ValueParser($routineValue))->withCorrectType();
 
         if (is_numeric($routineValue) === false) {
             throw new InvalidArgumentException('Argument must be numeric');
         }
 
-        if (is_array($requestValue) === true) {
+        if (
+            $requestValue instanceof Countable
+            || is_array($requestValue) === true
+        ) {
             return [ 'valueOne' => $requestValue, 'valueTwo' => $routineValue ];
         }
 
-        if (is_string($requestValue) === true) {
+        if (is_numeric($requestValue) === true) {
             return [ 'valueOne' => $requestValue, 'valueTwo' => $routineValue ];
         }
 
-        // valores diferentes de string ou array devem ser inválidos
-        // $requestValue = match($methodName) {
-        //     'length'    => str_repeat('a', $routineValue + 1),
-        //     'maxLength' => str_repeat('a', $routineValue + 1),
-        //     'minLength' => str_repeat('a', $routineValue - 1)
-        // };
+        // valores diferentes de numéricos, arrays ou Countable devem ser inválidos
+        switch ($methodName) {
+            case 'greaterThan':
+                $requestValue = $routineValue - 1;
+                break;
+            case 'greaterThanOrEqualTo':
+                $requestValue = $routineValue - 1;
+                break;
+            case 'lessThan':
+                $requestValue = $routineValue + 1;
+                break;
+            case 'lessThanOrEqualTo':
+                $requestValue = $routineValue + 1;
+                break;
+        };
 
         return [ 'valueOne' => (string)$requestValue, 'valueTwo' => $routineValue ];
     }
 
     /**
-     * @param mixed $requestValue proveniente da requisição
+     * @param mixed $value proveniente da requisição
      * @return array<string,mixed>
      */
     private function makeFormatValue(mixed $value): array

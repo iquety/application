@@ -8,12 +8,13 @@ use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
 
+/** @SuppressWarnings(PHPMD.StaticAccess) */
 class IsCreditCardTest extends AssertionCase
 {
     use HasProviderFieldNotExist;
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @return array<string,array<int,mixed>>
      */
@@ -26,14 +27,14 @@ class IsCreditCardTest extends AssertionCase
             'diners_club'      => '30000000000004',
             'discover'         => '6011000000000004',
             'jcb'              => '3088000000000009',
-    
+
             'visa_numeric'             => 4111111111111111,
             'mastercard_numeric'       => 5500000000000004,
             'american_express_numeric' => 340000000000009,
             'diners_club_numeric'      => 30000000000004,
             'discover_numeric'         => 6011000000000004,
             'jcb_numeric'              => 3088000000000009,
-    
+
             'visa_with_signals'             => '4111-1111-1111-1111',
             'mastercard_with_signals'       => '5500-0000-0000-0004',
             'american_express_with_signals' => '3400-000000-00009',
@@ -43,8 +44,8 @@ class IsCreditCardTest extends AssertionCase
         ];
 
         $list = [];
-        
-        foreach(array_keys($httpParams) as $param) {
+
+        foreach (array_keys($httpParams) as $param) {
             $label = $this->paramToLabel($param);
 
             $list[$label] = $this->makeAssertionItem($param, $httpParams);
@@ -73,7 +74,7 @@ class IsCreditCardTest extends AssertionCase
 
         $list = [];
 
-        foreach(array_keys($httpParams) as $param) {
+        foreach (array_keys($httpParams) as $param) {
             $label = $this->paramToLabel($param);
 
             $list[$label] = $this->makeAssertionItem($param, $httpParams);
@@ -103,7 +104,7 @@ class IsCreditCardTest extends AssertionCase
     }
 
     /**
-     * Recebe um valor (texto, inteiro ou decimal) transformado em texto 
+     * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @test
      * @dataProvider invalidProvider
@@ -139,7 +140,7 @@ class IsCreditCardTest extends AssertionCase
         );
 
         $input->assert($paramName)->isCreditCard();
-        
+
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();

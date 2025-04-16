@@ -33,7 +33,7 @@ class UriParser
         return $this->path;
     }
 
-    /** @return array<int|string,array<mixed>|float|int|string> */
+    /** @return array<int|string,array<string,mixed>|bool|float|int|object|string|null> */
     public function toArray(): array
     {
         return array_map(
