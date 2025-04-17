@@ -638,12 +638,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/iquety/shield.git",
-                "reference": "9ffe960982796b54ae02ae5467564cc9e6ab7c78"
+                "reference": "1efb3a9d05a012ef3a09db6d24656055d2500467"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iquety/shield/zipball/9ffe960982796b54ae02ae5467564cc9e6ab7c78",
-                "reference": "9ffe960982796b54ae02ae5467564cc9e6ab7c78",
+                "url": "https://api.github.com/repos/iquety/shield/zipball/1efb3a9d05a012ef3a09db6d24656055d2500467",
+                "reference": "1efb3a9d05a012ef3a09db6d24656055d2500467",
                 "shasum": ""
             },
             "require": {
@@ -678,7 +678,7 @@
                 "issues": "https://github.com/iquety/shield/issues",
                 "source": "https://github.com/iquety/shield/tree/beta"
             },
-            "time": "2025-04-02T20:25:39+00:00"
+            "time": "2025-04-17T14:06:48+00:00"
         },
         {
             "name": "laminas/laminas-diactoros",
@@ -2462,16 +2462,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.23",
+            "version": "1.12.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "29201e7a743a6ab36f91394eab51889a82631428"
+                "reference": "338b92068f58d9f8035b76aed6cf2b9e5624c025"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/29201e7a743a6ab36f91394eab51889a82631428",
-                "reference": "29201e7a743a6ab36f91394eab51889a82631428",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/338b92068f58d9f8035b76aed6cf2b9e5624c025",
+                "reference": "338b92068f58d9f8035b76aed6cf2b9e5624c025",
                 "shasum": ""
             },
             "require": {
@@ -2516,7 +2516,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-23T14:57:32+00:00"
+            "time": "2025-04-16T13:01:53+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -4005,16 +4005,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.12.0",
+            "version": "3.12.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "2d1b63db139c3c6ea0c927698e5160f8b3b8d630"
+                "reference": "6d4cf6032d4b718f168c90a96e36c7d0eaacb2aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/2d1b63db139c3c6ea0c927698e5160f8b3b8d630",
-                "reference": "2d1b63db139c3c6ea0c927698e5160f8b3b8d630",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/6d4cf6032d4b718f168c90a96e36c7d0eaacb2aa",
+                "reference": "6d4cf6032d4b718f168c90a96e36c7d0eaacb2aa",
                 "shasum": ""
             },
             "require": {
@@ -4085,7 +4085,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-03-18T05:04:51+00:00"
+            "time": "2025-04-13T04:10:18+00:00"
         },
         {
             "name": "symfony/config",

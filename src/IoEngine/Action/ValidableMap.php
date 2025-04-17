@@ -8,6 +8,7 @@ use Countable;
 use Exception;
 use InvalidArgumentException;
 use Iquety\Application\IoEngine\ValueParser;
+use LogicException;
 
 class ValidableMap
 {
@@ -46,6 +47,12 @@ class ValidableMap
             return $this->makeNumericSizeValues($this->methodName, $requestValue, $routineValue);
         }
 
+        $nullableMethods = ['isNull', 'isNotNull'];
+
+        if (in_array($this->methodName, $nullableMethods) === true) {
+            throw new LogicException("Method {$this->methodName} does not exist");
+        }
+
         // isAlpha
         // isAlphaNumeric
         // isAmountTime
@@ -66,8 +73,6 @@ class ValidableMap
         // isIp
         // isMacAddress
         // isNotEmpty
-        // isNotNull
-        // isNull
         // isTime
         // isTrue
         // isUrl
