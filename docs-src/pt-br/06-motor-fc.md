@@ -8,17 +8,17 @@ Basicamente o Front Controller é composto por um Manipulador Web (um controlado
 único) que recebe todas as solicitações do usuário. Também existe uma hierarquia
 de classes onde cada uma delas representa uma ação a ser executada (objetos de comando).
 
-Quando o usuário faz uma solicitação `/usuario/editar/22`, por exemplo, o Manipulador Web
+Quando, por exemplo, o usuário fizer uma solicitação `/usuario/editar/22`, o Manipulador Web
 irá procurar na hierarquia de comandos. Se a classe Usuario/Editar for encontrada,
 ela será usada para prover uma resposta para o usuário.
 
 O funcionamento é muito semelhante ao MVC, porém, tende a prover uma Separação de
-Preocupações (SOC) ainda melhor e mais bem definida.
+Preocupações (SOC) ainda melhor e mais definida.
 
 ## 2. Bootstrap
 
-No arquivo de bootstrap do sistema (geralmente é o index.php), deve-se implementar
-a inicialização de uma aplicação que use o motor `FcEngine` como no exemplo abaixo:
+No arquivo de bootstrap do sistema (ver [Criando uma aplicação](docs/pt-br/01-instanciando.md)),
+deve-se implementar a inicialização de uma aplicação que use o motor `FcEngine`:
 
 ```php
 <?php
@@ -38,8 +38,11 @@ $app = Application::instance();
 
 $app->bootEngine(new FcEngine());
 
-$app->bootApplication(...); // aqui colocaremos a instância do módulo
-$app->bootModule(...); // pode ser aqui também, como módulo secundário
+// registramos a instância do módulo principal
+$app->bootApplication(...);
+
+// registramos as instâncias de um ou mais módulos secundários
+$app->bootModule(...);
 
 $request = new DiactorosHttpFactory();
 
@@ -109,7 +112,9 @@ class MeuComando extends Command
     // O argumento $nomeQualquer receberá a Injeção de Dependências
     public function execute(Input $input, MinhaInterface $nomeQualquer): string
     {
-        $this->forMethod($this->httpMethod
+        // o comando MeuComando somente continuará a execução se 
+        // o verbo da requisição for POST
+        $this->forMethod(HttpMethod::POST);
 
         return 'Resposta em texto';
     }

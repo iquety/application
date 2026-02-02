@@ -39,8 +39,11 @@ $app = Application::instance();
 
 $app->bootEngine(new FcEngine());
 
-$app->bootApplication(...); // here we will place the module instance
-$app->bootModule(...); // It can be here too, as a secondary module
+// We register the instance of the main module
+$app->bootApplication(...);
+
+// We register the instances of one or more secondary modules
+$app->bootModule(...);
 
 $request = new DiactorosHttpFactory();
 
@@ -110,7 +113,9 @@ class MyCommand extends Command
     // The $anyName argument will receive Dependency Injection
     public function execute(Input $input, MyInterface $anyName): string
     {
-        $this->forMethod($this->httpMethod
+        // The command `MyCommand` will only continue execution 
+        // if the request verb is `POST`.
+        $this->forMethod(HttpMethod::POST);
 
         return 'Text response';
     }

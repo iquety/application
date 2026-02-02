@@ -8,8 +8,10 @@ são tratadas pela aplicação. Cada motor implementa um padrão arquitetural di
 O mais famoso deles é conhecido como MVC, mas é possível usar outros.
 
 Um uso interessante é a possibilidade de utilizar motores diferentes para cada
-necessidade, podendo ser executados ao mesmo tempo. Por exemplo, é possível usar
-"MVC" para um faixa de URIs e "FrontController" para outra faixa.
+necessidade, podendo ser executados ao mesmo tempo.
+
+Por exemplo, é possível usar "MVC" para um faixa de URIs e "FrontController" para
+outra faixa.
 
 ```php
 <?php
@@ -31,8 +33,11 @@ $app = Application::instance();
 $app->bootEngine(new MvcEngine());
 $app->bootEngine(new FcEngine());
 
-$app->bootApplication(...); // aqui colocaremos a instância do módulo
-$app->bootModule(...); // pode ser aqui também, como módulo secundário
+// registramos a instância do módulo principal
+$app->bootApplication(...); 
+
+// registramos as instâncias de um ou mais módulos secundários
+$app->bootModule(...);
 
 $request = new DiactorosHttpFactory();
 

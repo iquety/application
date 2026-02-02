@@ -44,7 +44,11 @@ $application = Application::instance();
 
 $application->bootEngine(new ConsoleEngine());
 
-$application->bootApplication(...); // here we will place the module instance
+// We register the instance of the main module
+$app->bootApplication(...);
+
+// We register the instances of one or more secondary modules
+$app->bootModule(...);
 
 $output = $application->run(new ConsoleInput($argv));
 

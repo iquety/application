@@ -46,7 +46,11 @@ $application = Application::instance();
 
 $application->bootEngine(new ConsoleEngine());
 
-$application->bootApplication(...); // aqui colocaremos a instância do módulo
+// registramos a instância do módulo principal
+$application->bootApplication(...);
+
+// registramos as instâncias de um ou mais módulos secundários
+$app->bootModule(...);
 
 $output = $application->run(new ConsoleInput($argv));
 
@@ -70,9 +74,9 @@ class MeuModuloConsole extends ConsoleModule
 
     public function bootRoutineDirectories(RoutineSourceSet &$sourceSet): void
     {
-        // o diretório onde estão as rotinas que o script será capaz de executar
-        // pode-se especificar quantos diretórios forem necessários
-        // neste exemplo, será especificado apenas um:
+        // o diretório onde estão as rotinas que o script será capaz de executar.
+        // pode-se especificar quantos diretórios forem necessários, mas neste
+        // exemplo, será especificado apenas um:
         $sourceSet->add(new RoutineSource(__DIR__ . '/Minhas/Rotinas/Aqui'));
     }
 
