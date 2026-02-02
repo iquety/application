@@ -205,7 +205,7 @@ abstract class HttpResponseCase extends TestCase
                 if ($body !== '') {
                     $responseBody = match ($mime) {
                         HttpMime::JSON => sprintf(
-                            json_encode($body),
+                            json_encode((string)$body),
                         ),
                         HttpMime::XML => sprintf(
                             "<?xml version=\"1.0\"?>\n<root><content>%s</content></root>\n",
