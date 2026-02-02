@@ -105,9 +105,9 @@ abstract class HttpResponseCase extends TestCase
             511 => HttpStatus::NETWORK_AUTHENTICATION_REQUIRED,
         ];
 
-        $statusList = [
-            100 => HttpStatus::CONTINUE,
-        ];
+        // $statusList = [
+        //     100 => HttpStatus::CONTINUE,
+        // ];
 
         $list = [];
 
@@ -205,8 +205,7 @@ abstract class HttpResponseCase extends TestCase
                 if ($body !== '') {
                     $responseBody = match ($mime) {
                         HttpMime::JSON => sprintf(
-                            '{"content":"%s"}',
-                            $body
+                            json_encode($body),
                         ),
                         HttpMime::XML => sprintf(
                             "<?xml version=\"1.0\"?>\n<root><content>%s</content></root>\n",
