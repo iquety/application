@@ -37,7 +37,6 @@ Para informações detalhadas, consulte o [Sumário da Documentação](indice.md
 
 ## Características da Biblioteca
 
-- Feito para o PHP 8.3 ou superior;
 - Codificado com boas práticas e máxima qualidade;
 - Bem documentado e amigável para IDEs;
 - Feito com TDD (Test Driven Development);

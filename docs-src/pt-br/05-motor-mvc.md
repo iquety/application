@@ -13,8 +13,8 @@ Esse padrão promove uma clara Separação das Preocupações (SOC).
 
 ## 2. Bootstrap
 
-No arquivo de bootstrap do sistema (geralmente é o index.php), deve-se implementar
-a inicialização de uma aplicação que use o motor `MvcEngine` como no exemplo abaixo:
+No arquivo de bootstrap do sistema (ver [Criando uma aplicação](docs/pt-br/01-instanciando.md)), deve-se implementar
+a inicialização de uma aplicação que use o motor `MvcEngine`:
 
 ```php
 <?php
@@ -34,8 +34,11 @@ $app = Application::instance();
 
 $app->bootEngine(new MvcEngine());
 
-$app->bootApplication(...); // aqui colocaremos a instância do módulo
-$app->bootModule(...); // pode ser aqui também, como módulo secundário
+// registramos a instância do módulo principal
+$app->bootApplication(...);
+
+// registramos as instâncias de um ou mais módulos secundários
+$app->bootModule(...);
 
 $request = new DiactorosHttpFactory();
 
@@ -80,7 +83,8 @@ class MeuModuloMvc extends MvcModule
 ### 4.1. Para objetos
 
 Como visto no método `MeuModuloMvc::bootRoutes` deve-se configurar as rotas
-disponíveis na aplicação. Cada URI deve ser mapeada para um verbo, um controlador e uma ação.
+disponíveis na aplicação. Cada URI deve ser mapeada para um verbo (GET, POST etc),
+um controlador e uma ação.
 
 ```php
 public function bootRoutes(Router &$router): void

@@ -1,7 +1,7 @@
 services:
 
   php:
-    image: ricardopedias/docker-project:php83
+    image: ricardopedias/docker-project:php84
     container_name: iquety-app
     volumes:
       - .:/application

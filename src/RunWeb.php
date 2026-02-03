@@ -12,6 +12,7 @@ use Iquety\Http\HttpMime;
 use Iquety\Http\Session;
 use Iquety\Injection\Container;
 use Iquety\Injection\ContainerException;
+use Iquety\Shield\Shield;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
@@ -41,6 +42,8 @@ class RunWeb
         $this->container->addSingleton(Application::class, Application::instance());
 
         $this->container->addSingleton(Input::class, $input);
+
+        $this->container->addSingleton(Shield::class);
 
         try {
             $descriptor = $this->engineSet->resolve($input);

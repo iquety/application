@@ -26,6 +26,11 @@ dockerUp()
     fi
 }
 
+dockerSafeDirectory()
+{
+    docker exec -it $PHP_CONTAINER git config --global --add safe.directory /application
+}
+
 dockerUp
 
 if [ "$1" == "analyse" ] || [ "$1" == "lint" ]; then
@@ -47,6 +52,8 @@ if [ "$1" == "bash" ]; then
 
     exit 0
 fi
+
+dockerSafeDirectory
 
 docker exec -it $PHP_CONTAINER \
     composer $@

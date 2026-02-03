@@ -7,6 +7,8 @@ namespace Iquety\Application;
 use Iquety\Application\IoEngine\Action\Input;
 use Iquety\Application\IoEngine\Action\MethodNotAllowedException;
 use Iquety\Application\IoEngine\Action\ActionDescriptor;
+use Iquety\Application\IoEngine\Action\AssertionFlashException;
+use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Module;
 use Iquety\Http\HttpStatus;
 use Iquety\Injection\Container;
@@ -51,6 +53,16 @@ class ActionExecutor
             );
 
             return $responseFactory->notFoundResponse($rawResponse);
+        } catch (AssertionFlashException $exception) {
+            return $responseFactory->redirect(
+                $exception->getUri(),
+                HttpStatus::BAD_REQUEST
+            );
+        } catch (AssertionResponseException $exception) {
+            return $responseFactory->response(
+                $exception->getErrorList(),
+                HttpStatus::BAD_REQUEST
+            );
         } catch (Throwable $exception) {
             $this->container->addSingleton(Throwable::class, $exception);
 

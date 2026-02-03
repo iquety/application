@@ -30,8 +30,11 @@ $app = Application::instance();
 $app->bootEngine(new MvcEngine());
 $app->bootEngine(new FcEngine());
 
-$app->bootApplication(...); // here we will place the module instance
-$app->bootModule(...); // It can be here too, as a secondary module
+// We register the instance of the main module
+$app->bootApplication(...);
+
+// We register the instances of one or more secondary modules
+$app->bootModule(...);
 
 $request = new DiactorosHttpFactory();
 

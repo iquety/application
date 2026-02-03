@@ -1,7 +1,7 @@
 # Iquety Application
 
 [![GitHub Release](https://img.shields.io/github/release/iquety/application.svg)](https://github.com/iquety/application/releases/latest)
-![PHP Version](https://img.shields.io/badge/php-%5E8.3-blue)
+![PHP Version](https://img.shields.io/badge/php-%5E8.4-blue)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/6383da378a75457fa11a4e403d7ddd19)](https://app.codacy.com/gh/iquety/application/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/6383da378a75457fa11a4e403d7ddd19)](https://app.codacy.com/gh/iquety/application/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
@@ -37,7 +37,6 @@ For detailed information, see [Documentation Summary](docs/en/index.md).
 
 ## Library Features
 
-- Made for PHP 8.3 or higher;
 - Coded with good practices and maximum quality;
 - Well documented and friendly to IDEs;
 - Made with TDD (Test Driven Development);

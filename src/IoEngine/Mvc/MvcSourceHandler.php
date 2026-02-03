@@ -13,7 +13,7 @@ use Iquety\Application\IoEngine\Mvc\Controller\ErrorController;
 use Iquety\Application\IoEngine\Mvc\Controller\MainController;
 use Iquety\Application\IoEngine\Mvc\Controller\NotFoundController;
 use Iquety\Application\IoEngine\SourceHandler;
-use Iquety\Application\IoEngine\UriParser;
+use Iquety\Application\IoEngine\ValueParser;
 use Iquety\Routing\Route;
 use Iquety\Routing\Router;
 use RuntimeException;
@@ -71,7 +71,7 @@ class MvcSourceHandler implements SourceHandler
         $paramList = $route->params();
 
         foreach ($paramList as $name => $value) {
-            $paramList[$name] = (new UriParser(''))->fixTypes($value);
+            $paramList[$name] = (new ValueParser($value))->withCorrectType();
         }
 
         $input->appendParams($paramList);
