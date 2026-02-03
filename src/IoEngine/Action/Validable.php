@@ -180,7 +180,7 @@ trait Validable
         $className = "\Iquety\Shield\Assertion\\" . ucfirst($method);
 
         if (class_exists($className) === false) {
-            throw new LogicException("Method $method does not exist");
+            throw new LogicException(sprintf("Method %s does not exist", $method));
         }
 
         return $className;

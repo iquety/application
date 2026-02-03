@@ -590,22 +590,22 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/iquety/security.git",
-                "reference": "680285daf3915d7345172644a17d6be86d28b82f"
+                "reference": "301c26d510b4a7612598606d44b1425b8dd225e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iquety/security/zipball/680285daf3915d7345172644a17d6be86d28b82f",
-                "reference": "680285daf3915d7345172644a17d6be86d28b82f",
+                "url": "https://api.github.com/repos/iquety/security/zipball/301c26d510b4a7612598606d44b1425b8dd225e0",
+                "reference": "301c26d510b4a7612598606d44b1425b8dd225e0",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.0.0"
+                "php": "^8.4"
             },
             "require-dev": {
                 "codacy/coverage": "dev-master",
-                "iquety/docmap": "dev-main",
+                "iquety/docmap": "*",
                 "phpmd/phpmd": "@stable",
-                "phpstan/phpstan": "^0.12",
+                "phpstan/phpstan": "^1.8",
                 "phpunit/phpunit": "^9",
                 "squizlabs/php_codesniffer": "3.*"
             },
@@ -628,9 +628,9 @@
             ],
             "support": {
                 "issues": "https://github.com/iquety/security/issues",
-                "source": "https://github.com/iquety/security/tree/v1.0.2"
+                "source": "https://github.com/iquety/security/tree/main"
             },
-            "time": "2022-11-12T21:29:20+00:00"
+            "time": "2026-02-03T23:19:40+00:00"
         },
         {
             "name": "iquety/shield",

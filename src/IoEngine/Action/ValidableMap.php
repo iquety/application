@@ -50,7 +50,7 @@ class ValidableMap
         $nullableMethods = ['isNull', 'isNotNull'];
 
         if (in_array($this->methodName, $nullableMethods) === true) {
-            throw new LogicException("Method {$this->methodName} does not exist");
+            throw new LogicException(sprintf("Method %s does not exist", $this->methodName));
         }
 
         // isAlpha

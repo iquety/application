@@ -6,6 +6,7 @@ namespace Tests;
 
 use Iquety\Application\Application;
 use Iquety\Injection\Container;
+use Iquety\Security\Filesystem;
 use PHPUnit\Framework\TestCase as FrameworkTestCase;
 use Tests\Support\EngineFactories;
 use Tests\Support\HttpFactories;
@@ -41,5 +42,12 @@ abstract class TestCase extends FrameworkTestCase
     protected function makeContainer(): Container
     {
         return Application::instance()->container();
+    }
+
+    protected function getFileContents(string $filePath): string
+    {
+        $file = new Filesystem(dirname(__DIR__));
+
+        return $file->getFileContents($filePath);
     }
 }
