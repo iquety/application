@@ -46,7 +46,7 @@ class InputMultipleFilesTest extends TestCase
         );
         $this->assertFalse($fileSetOne->toArray()[0]->hasError());
         $this->assertSame(
-            file_get_contents(__DIR__ . '/attachment.gif'),
+            $this->getFileContents(__DIR__ . '/attachment.gif'),
             $fileSetOne->toArray()[0]->getContent()
         );
 
@@ -59,7 +59,7 @@ class InputMultipleFilesTest extends TestCase
         );
         $this->assertFalse($fileSetOne->toArray()[1]->hasError());
         $this->assertSame(
-            file_get_contents(__DIR__ . '/attachment.jpg'),
+            $this->getFileContents(__DIR__ . '/attachment.jpg'),
             $fileSetOne->toArray()[1]->getContent()
         );
 
@@ -72,7 +72,7 @@ class InputMultipleFilesTest extends TestCase
         );
         $this->assertFalse($fileSetOne->toArray()[2]->hasError());
         $this->assertSame(
-            file_get_contents(__DIR__ . '/attachment.png'),
+            $this->getFileContents(__DIR__ . '/attachment.png'),
             $fileSetOne->toArray()[2]->getContent()
         );
 
@@ -91,7 +91,7 @@ class InputMultipleFilesTest extends TestCase
         );
         $this->assertFalse($fileSetTwo->toArray()[0]->hasError());
         $this->assertSame(
-            file_get_contents(__DIR__ . '/attachment.png'),
+            $this->getFileContents(__DIR__ . '/attachment.png'),
             $fileSetTwo->toArray()[0]->getContent()
         );
     }
