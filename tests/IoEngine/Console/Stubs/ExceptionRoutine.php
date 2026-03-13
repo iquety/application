@@ -12,11 +12,11 @@ class ExceptionRoutine extends ConsoleRoutine
 {
     protected function initialize(): void
     {
-        $this->setName("test-exception");
+        $this->setName('test-exception');
 
         $this->setDescription("Exibe a mensagem 'olá' no terminal");
 
-        $this->setHowToUse("./example dizer-ola [opcoes]");
+        $this->setHowToUse('./example dizer-ola [opcoes]');
     }
 
     /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */

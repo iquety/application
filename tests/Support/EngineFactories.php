@@ -19,11 +19,8 @@ trait EngineFactories
 
         $aaaSourceHandler = $this->createMock(SourceHandler::class);
 
-        return new class extends IoEngine
-        {
-            public function boot(Module $module): void
-            {
-            }
+        return new class () extends IoEngine {
+            public function boot(Module $module): void {}
 
             public function resolve(Input $input): ?ActionDescriptor
             {

@@ -9,7 +9,6 @@ use Iquety\Application\Application;
 use Iquety\Application\IoEngine\IoEngine;
 use Iquety\Application\IoEngine\Module;
 use Iquety\Application\IoEngine\Mvc\MvcModule;
-use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use Tests\TestCase;
 

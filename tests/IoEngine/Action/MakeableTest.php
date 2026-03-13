@@ -21,7 +21,7 @@ class MakeableTest extends TestCase
             ->container()
             ->addFactory('dependency', 'teste');
 
-        $object = new class {
+        $object = new class () {
             use Makeable;
 
             public function execute(): string

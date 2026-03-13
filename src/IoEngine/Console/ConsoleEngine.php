@@ -82,7 +82,7 @@ class ConsoleEngine extends IoEngine
         $terminal->run($terminalArguments);
 
         return $actionDescriptor->withOutput(
-            (string)ob_get_clean(),
+            (string) ob_get_clean(),
             $terminal->executedStatus()
         );
     }

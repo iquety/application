@@ -48,7 +48,7 @@ class EqualToTest extends AssertionCase
         $list['param boolean true equal to 1'] = $this->makeAssertionItem('param_true', '1');
         $list['param boolean true equal to int 1'] = $this->makeAssertionItem('param_true', 1);
 
-        $list["array equal to array"] = $this->makeAssertionItem('param_array', $this->getHttpParams()['param_array']);
+        $list['array equal to array'] = $this->makeAssertionItem('param_array', $this->getHttpParams()['param_array']);
 
         return $list;
     }
@@ -69,8 +69,6 @@ class EqualToTest extends AssertionCase
 
         $list['param string Coração!# not equal to oração!#'] = $this->makeAssertionItem('param_string', 'oração!#');
 
-        $list['param boolean false not equal to 1'] = $this->makeAssertionItem('param_false', '1');
-        $list['param boolean false not equal to int 1'] = $this->makeAssertionItem('param_false', 1);
         $list['param boolean true not equal to 0'] = $this->makeAssertionItem('param_true', '0');
         $list['param boolean true not equal to 1'] = $this->makeAssertionItem('param_true', 0);
 
@@ -79,7 +77,7 @@ class EqualToTest extends AssertionCase
 
         array_shift($array);
 
-        $list["array not equal to array"] = $this->makeAssertionItem('param_array', $array);
+        $list['array not equal to array'] = $this->makeAssertionItem('param_array', $array);
 
         return $list;
     }

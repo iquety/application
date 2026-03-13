@@ -29,7 +29,7 @@ abstract class HttpResponseCase extends TestCase
 
         $response = $responseFactory->response('', HttpStatus::OK);
 
-        $this->assertSame('', (string)$response->getBody());
+        $this->assertSame('', (string) $response->getBody());
         $this->assertTrue($response->hasHeader('Content-type'));
         $this->assertSame('text/html', $response->getHeaderLine('Content-type'));
         $this->assertSame(HttpStatus::OK->value, $response->getStatusCode());
@@ -112,8 +112,8 @@ abstract class HttpResponseCase extends TestCase
         $list = [];
 
         foreach ($statusList as $httpStatus) {
-            $list[$httpStatus->value . " with body"]    = [ $httpStatus, 'body teste' ];
-            $list[$httpStatus->value . " without body"] = [ $httpStatus, '' ];
+            $list[$httpStatus->value . ' with body']    = [ $httpStatus, 'body teste' ];
+            $list[$httpStatus->value . ' without body'] = [ $httpStatus, '' ];
         }
 
         return $list;
@@ -133,7 +133,7 @@ abstract class HttpResponseCase extends TestCase
 
         $response = $responseFactory->response($body, $httpStatus);
 
-        $this->assertSame($body, (string)$response->getBody());
+        $this->assertSame($body, (string) $response->getBody());
         $this->assertSame($httpStatus->value, $response->getStatusCode());
         $this->assertTrue($response->hasHeader('Content-type'));
         $this->assertSame('text/html', $response->getHeaderLine('Content-type'));
@@ -153,7 +153,7 @@ abstract class HttpResponseCase extends TestCase
 
         $response = $responseFactory->response($body, $httpStatus);
 
-        $this->assertSame($body, (string)$response->getBody());
+        $this->assertSame($body, (string) $response->getBody());
         $this->assertSame($httpStatus->value, $response->getStatusCode());
         $this->assertTrue($response->hasHeader('Content-type'));
         $this->assertSame('text/html', $response->getHeaderLine('Content-type'));
@@ -173,7 +173,7 @@ abstract class HttpResponseCase extends TestCase
 
         $response = $responseFactory->response($body, $httpStatus);
 
-        $this->assertSame($body, (string)$response->getBody());
+        $this->assertSame($body, (string) $response->getBody());
         $this->assertSame($httpStatus->value, $response->getStatusCode());
         $this->assertTrue($response->hasHeader('Content-type'));
         $this->assertSame('text/html', $response->getHeaderLine('Content-type'));
@@ -205,7 +205,7 @@ abstract class HttpResponseCase extends TestCase
                 if ($body !== '') {
                     $responseBody = match ($mime) {
                         HttpMime::JSON => sprintf(
-                            (string)json_encode($body),
+                            (string) json_encode($body),
                         ),
                         HttpMime::XML => sprintf(
                             "<?xml version=\"1.0\"?>\n<root><content>%s</content></root>\n",
@@ -252,7 +252,7 @@ abstract class HttpResponseCase extends TestCase
         $this->assertSame($httpStatus->value, $response->getStatusCode());
         $this->assertTrue($response->hasHeader('Content-type'));
         $this->assertSame($acceptMime->value, $response->getHeaderLine('Content-type'));
-        $this->assertSame($responseBody, (string)$response->getBody());
+        $this->assertSame($responseBody, (string) $response->getBody());
     }
 
     /**
@@ -425,7 +425,7 @@ abstract class HttpResponseCase extends TestCase
         $this->assertEquals(404, $response->getStatusCode());
         $this->assertTrue($response->hasHeader('Content-type'));
         $this->assertSame($acceptMime->value, $response->getHeaderLine('Content-type'));
-        $this->assertSame($responseBody, (string)$response->getBody());
+        $this->assertSame($responseBody, (string) $response->getBody());
     }
 
     /**
@@ -454,7 +454,7 @@ abstract class HttpResponseCase extends TestCase
         $this->assertEquals(403, $response->getStatusCode());
         $this->assertTrue($response->hasHeader('Content-type'));
         $this->assertSame($acceptMime->value, $response->getHeaderLine('Content-type'));
-        $this->assertSame($responseBody, (string)$response->getBody());
+        $this->assertSame($responseBody, (string) $response->getBody());
     }
 
     /** @return array<string,array<int,mixed>> */
@@ -491,7 +491,7 @@ abstract class HttpResponseCase extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
 
         $this->assertEquals(500, $response->getStatusCode());
-        $this->assertStringContainsString("monomo", (string)$response->getBody());
+        $this->assertStringContainsString('monomo', (string) $response->getBody());
         $this->assertTrue($response->hasHeader('Content-type'));
         $this->assertSame($acceptMime->value, $response->getHeaderLine('Content-type'));
     }
@@ -517,8 +517,8 @@ abstract class HttpResponseCase extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
 
         $this->assertEquals(500, $response->getStatusCode());
-        $this->assertStringNotContainsString("monomo", (string)$response->getBody());
-        $this->assertStringContainsString("An error occurred on the server side", (string)$response->getBody());
+        $this->assertStringNotContainsString('monomo', (string) $response->getBody());
+        $this->assertStringContainsString('An error occurred on the server side', (string) $response->getBody());
         $this->assertTrue($response->hasHeader('Content-type'));
         $this->assertSame($acceptMime->value, $response->getHeaderLine('Content-type'));
     }

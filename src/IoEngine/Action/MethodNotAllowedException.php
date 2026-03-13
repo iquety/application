@@ -6,6 +6,4 @@ namespace Iquety\Application\IoEngine\Action;
 
 use Exception;
 
-class MethodNotAllowedException extends Exception
-{
-}
+class MethodNotAllowedException extends Exception {}

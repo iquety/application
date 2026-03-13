@@ -13,8 +13,7 @@ class FakeEventOccurred extends DomainEvent
         private string $title,
         private string $description,
         private DateTimeImmutable $schedule
-    ) {
-    }
+    ) {}
 
     public static function label(): string
     {

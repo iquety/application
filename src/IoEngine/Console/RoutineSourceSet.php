@@ -11,9 +11,7 @@ class RoutineSourceSet
     /** @var array<string,RoutineSource> */
     private array $sourceList = [];
 
-    public function __construct(private string $moduleClass)
-    {
-    }
+    public function __construct(private string $moduleClass) {}
 
     public function add(RoutineSource $source): void
     {

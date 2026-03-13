@@ -9,6 +9,16 @@ class FileSet
     /** @var array<int,File> */
     private array $fileList = [];
 
+    public function __toString(): string
+    {
+        $paramList = array_map(
+            fn(File $item) => $item->getName(),
+            $this->fileList
+        );
+
+        return implode(';', $paramList);
+    }
+
     /** @see https://www.php.net/manual/pt_BR/features.file-upload.post-method.php */
     public function add(File $file): void
     {
@@ -19,15 +29,5 @@ class FileSet
     public function toArray(): array
     {
         return $this->fileList;
-    }
-
-    public function __toString(): string
-    {
-        $paramList = array_map(
-            fn(File $item) => $item->getName(),
-            $this->fileList
-        );
-
-        return implode(';', $paramList);
     }
 }

@@ -105,44 +105,44 @@ class InputMultipleFilesTest extends TestCase
     {
         return [
             'inputFile' => [
-                "name" => [
-                    0 => "attachment.gif",
-                    1 => "attachment.jpg",
-                    2 => "attachment.png"
+                'name' => [
+                    0 => 'attachment.gif',
+                    1 => 'attachment.jpg',
+                    2 => 'attachment.png'
                 ],
-                "full_path" => [
-                    0 => "attachment.gif",
-                    1 => "attachment.jpg",
-                    2 => "attachment.png"
+                'full_path' => [
+                    0 => 'attachment.gif',
+                    1 => 'attachment.jpg',
+                    2 => 'attachment.png'
                 ],
                 'type' => [
-                    0 => "image/gif",
-                    1 => "image/jpeg",
-                    2 => "image/png"
+                    0 => 'image/gif',
+                    1 => 'image/jpeg',
+                    2 => 'image/png'
                 ],
-                "tmp_name" => [
-                    0 => __DIR__ . "/attachment.gif", // simula os arquivos
-                    1 => __DIR__ . "/attachment.jpg", // armazenados em /tmp
-                    2 => __DIR__ . "/attachment.png", // Ex: /tmp/phpntcN4T
+                'tmp_name' => [
+                    0 => __DIR__ . '/attachment.gif', // simula os arquivos
+                    1 => __DIR__ . '/attachment.jpg', // armazenados em /tmp
+                    2 => __DIR__ . '/attachment.png', // Ex: /tmp/phpntcN4T
                 ],
-                "error" => [
+                'error' => [
                     0 => 0,
                     1 => 0,
                     2 => 0,
                 ],
-                "size" => [
+                'size' => [
                     0 => 173,
                     1 => 4710,
                     2 => 222
                 ]
             ],
             'inputFile2' => [
-                "name"      => "attachment.png",
-                "full_path" => "attachment.png",
-                'type'      => "image/png",
-                "tmp_name"  => __DIR__ . "/attachment.png",
-                "error"     => 0,
-                "size"      => 222
+                'name'      => 'attachment.png',
+                'full_path' => 'attachment.png',
+                'type'      => 'image/png',
+                'tmp_name'  => __DIR__ . '/attachment.png',
+                'error'     => 0,
+                'size'      => 222
             ]
         ];
     }

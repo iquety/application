@@ -126,7 +126,7 @@ class EngineSetMultiTest extends TestCase
         $engineSet->add($engineOne);
         $engineSet->add($engineTwo);
 
-        return (object)[
+        return (object) [
             'engineSet'    => $engineSet,
             'fcModuleOne'  => $fcModuleOne,
             'fcModuleTwo'  => $fcModuleTwo,

@@ -5,16 +5,13 @@ declare(strict_types=1);
 namespace Iquety\Application\IoEngine\Action;
 
 use Countable;
-use Exception;
 use InvalidArgumentException;
 use Iquety\Application\IoEngine\ValueParser;
 use LogicException;
 
 class ValidableMap
 {
-    public function __construct(private string $methodName)
-    {
-    }
+    public function __construct(private string $methodName) {}
 
     /** @return array<string,mixed> */
     public function getAssertionValues(mixed $requestValue, mixed $routineValue): array
@@ -50,7 +47,7 @@ class ValidableMap
         $nullableMethods = ['isNull', 'isNotNull'];
 
         if (in_array($this->methodName, $nullableMethods) === true) {
-            throw new LogicException(sprintf("Method %s does not exist", $this->methodName));
+            throw new LogicException(sprintf('Method %s does not exist', $this->methodName));
         }
 
         // isAlpha
@@ -109,8 +106,8 @@ class ValidableMap
         }
 
         return [
-            'valueOne' => (string)$requestValue,
-            'valueTwo' => (string)$routineValue
+            'valueOne' => (string) $requestValue,
+            'valueTwo' => (string) $routineValue
         ];
     }
 
@@ -139,15 +136,15 @@ class ValidableMap
         // valores diferentes de string ou array devem ser inválidos
         switch ($methodName) {
             case 'length':
-                $requestValue = str_repeat('a', (int)$routineValue + 1);
+                $requestValue = str_repeat('a', (int) $routineValue + 1);
                 break;
 
             case 'maxLength':
-                $requestValue = str_repeat('a', (int)$routineValue + 1);
+                $requestValue = str_repeat('a', (int) $routineValue + 1);
                 break;
 
             case 'minLength':
-                $requestValue = str_repeat('a', (int)$routineValue - 1);
+                $requestValue = str_repeat('a', (int) $routineValue - 1);
                 break;
         }
 
@@ -195,7 +192,7 @@ class ValidableMap
                 break;
         };
 
-        return [ 'valueOne' => (string)$requestValue, 'valueTwo' => $routineValue ];
+        return [ 'valueOne' => (string) $requestValue, 'valueTwo' => $routineValue ];
     }
 
     /**

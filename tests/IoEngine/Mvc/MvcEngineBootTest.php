@@ -4,17 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\IoEngine\Mvc;
 
-use Iquety\Application\IoEngine\Console\ConsoleModule;
-use Iquety\Application\IoEngine\Console\RoutineSource;
-use Iquety\Application\IoEngine\Console\RoutineSourceSet;
-use Iquety\Application\IoEngine\FrontController\CommandSource;
-use Iquety\Application\IoEngine\FrontController\CommandSourceSet;
-use Iquety\Application\IoEngine\FrontController\FcModule;
 use Iquety\Application\IoEngine\ModuleSet;
 use Iquety\Application\IoEngine\Mvc\MvcEngine;
-use Iquety\Application\IoEngine\Mvc\MvcModule;
 use Iquety\Injection\Container;
-use Iquety\Routing\Router;
 use Tests\TestCase;
 
 class MvcEngineBootTest extends TestCase

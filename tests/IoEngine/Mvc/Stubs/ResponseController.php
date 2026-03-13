@@ -11,9 +11,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class ResponseController extends Controller
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /** @SuppressWarnings(PHPMD.ShortVariable) */
     public function execute(Input $input, int $id): ResponseInterface

@@ -9,9 +9,7 @@ use Iquety\Application\IoEngine\Mvc\Controller\Controller;
 
 class ArrayController extends Controller
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * @SuppressWarnings(PHPMD.ShortVariable)

@@ -167,13 +167,13 @@ class Application
         $identifier = array_shift($arguments);
 
         return $this->container()->getWithArguments(
-            (string)$identifier,
+            (string) $identifier,
             array_values($arguments)
         );
     }
 
     /** @SuppressWarnings(PHPMD.StaticAccess) */
-    public function run(ServerRequestInterface|ConsoleInput $request): ResponseInterface|ConsoleOutput
+    public function run(ConsoleInput|ServerRequestInterface $request): ConsoleOutput|ResponseInterface
     {
         if ($this->engineSet->hasEngines() === false) {
             throw new RuntimeException(
@@ -236,7 +236,7 @@ class Application
      * @uses \echo
      * @codeCoverageIgnore
      */
-    public function sendResponse(ResponseInterface|ConsoleOutput $response): void
+    public function sendResponse(ConsoleOutput|ResponseInterface $response): void
     {
         if ($response instanceof ConsoleOutput) {
             echo $response->getBody();
@@ -250,6 +250,6 @@ class Application
             }
         }
 
-        echo (string)$response->getBody();
+        echo (string) $response->getBody();
     }
 }

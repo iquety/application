@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Iquety\Application;
 
-use Iquety\Application\Environment;
 use Iquety\Http\HttpFactory;
 use Iquety\Http\HttpMime;
 use Iquety\Http\HttpStatus;
@@ -26,14 +25,14 @@ class HttpResponseFactory
         $this->mimeType = $this->resolveAccept();
     }
 
-    /** @param array<int|string,mixed>|string|ResponseInterface $content */
-    public function notFoundResponse(array|string|ResponseInterface $content = ''): ResponseInterface
+    /** @param array<int|string,mixed>|ResponseInterface|string $content */
+    public function notFoundResponse(array|ResponseInterface|string $content = ''): ResponseInterface
     {
         return $this->response($content, HttpStatus::NOT_FOUND);
     }
 
-    /** @param array<int|string,mixed>|string|ResponseInterface $content */
-    public function accessDeniedResponse(array|string|ResponseInterface $content = ''): ResponseInterface
+    /** @param array<int|string,mixed>|ResponseInterface|string $content */
+    public function accessDeniedResponse(array|ResponseInterface|string $content = ''): ResponseInterface
     {
         return $this->response($content, HttpStatus::FORBIDDEN);
     }
@@ -80,9 +79,9 @@ class HttpResponseFactory
 
     /**
      * @SuppressWarnings(PHPMD.StaticAccess)
-     * @param array<int|string,mixed>|string|ResponseInterface $content
+     * @param array<int|string,mixed>|ResponseInterface|string $content
      */
-    public function response(array|string|ResponseInterface $content, HttpStatus $status): ResponseInterface
+    public function response(array|ResponseInterface|string $content, HttpStatus $status): ResponseInterface
     {
         if ($content instanceof ResponseInterface) {
             return $content;

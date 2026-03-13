@@ -22,7 +22,7 @@ abstract class MvcModule implements Module
      */
     public function bootRoutes(Router &$router): void
     {
-        //...
+        // ...
     }
 
     public function getActionType(): string

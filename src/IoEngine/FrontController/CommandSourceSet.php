@@ -13,9 +13,7 @@ class CommandSourceSet
     /** @var array<string,CommandSource> */
     private array $sourceList = [];
 
-    public function __construct(private string $moduleClass)
-    {
-    }
+    public function __construct(private string $moduleClass) {}
 
     public function add(CommandSource $source): void
     {

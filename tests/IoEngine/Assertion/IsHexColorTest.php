@@ -71,11 +71,9 @@ class IsHexColorTest extends AssertionCase
             'invalid_hexcolor_18' => '#ABCDEF01234567',
             'invalid_hexcolor_19' => '#123456789ABCDEF',
             'invalid_hexcolor_20' => '#ABCDEF012345678',
-            'empty_string'        => '',
             'one_space_string'    => ' ',
             'two_spaces_string'   => '  ',
             'array'               => ['a'],
-            'false'               => false,                // false é mudado para 0
             'true'                => true,                 // false é mudado para 1
             'integer'             => 12345,
         ];

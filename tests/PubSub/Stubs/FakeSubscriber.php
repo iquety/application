@@ -23,7 +23,7 @@ class FakeSubscriber extends Subscriber
     public function handleEvent(Event $event): void
     {
         printf(
-            "Event %s occurred",
+            'Event %s occurred',
             $event->label()
         );
     }

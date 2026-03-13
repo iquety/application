@@ -10,9 +10,7 @@ use Iquety\Http\HttpMethod;
 
 class MethodPostController extends Controller
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * @SuppressWarnings(PHPMD.ShortVariable)

@@ -11,25 +11,6 @@ use Tests\TestCase;
 /** @SuppressWarnings(PHPMD.StaticAccess) */
 class InputRequestTest extends TestCase
 {
-    /**
-     * Devolve uma estrutura com 1 arquivo no formato que o PHP recebe
-     * os uploads enviados via HTTP
-     * @return array<string,array<string,int|string>>
-     */
-    private function phpSingleFile(): array
-    {
-        return [
-            'inputFile' => [
-                "name"      => "attachment.gif",
-                "full_path" => "attachment.gif",
-                'type'      => "image/gif",
-                "tmp_name"  => __DIR__ . "/attachment.gif",
-                "error"     => 0,
-                "size"      => 173
-            ]
-        ];
-    }
-
     /** @test */
     public function fromPostRequest(): void
     {
@@ -113,7 +94,7 @@ class InputRequestTest extends TestCase
 
         $this->assertSame(
             '0=two&1=three&x=four&y=1&z=1.1&name=test&inputFile=attachment.gif',
-            (string)$input
+            (string) $input
         );
     }
 
@@ -142,7 +123,7 @@ class InputRequestTest extends TestCase
 
         $this->assertSame(
             '0=two&1=three&x=four&y=1&z=1.1&name=test&inputFile=attachment.gif',
-            (string)$input
+            (string) $input
         );
     }
 
@@ -185,5 +166,23 @@ class InputRequestTest extends TestCase
         $this->assertInstanceOf(FileSet::class, $input->param('inputFile'));
         $this->assertSame(99, $input->param('id'));
         $this->assertSame('Teste', $input->param('nine'));
+    }
+    /**
+     * Devolve uma estrutura com 1 arquivo no formato que o PHP recebe
+     * os uploads enviados via HTTP
+     * @return array<string,array<string,int|string>>
+     */
+    private function phpSingleFile(): array
+    {
+        return [
+            'inputFile' => [
+                'name'      => 'attachment.gif',
+                'full_path' => 'attachment.gif',
+                'type'      => 'image/gif',
+                'tmp_name'  => __DIR__ . '/attachment.gif',
+                'error'     => 0,
+                'size'      => 173
+            ]
+        ];
     }
 }

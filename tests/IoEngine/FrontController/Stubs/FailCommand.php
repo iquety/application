@@ -10,9 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class FailCommand extends Command
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function execute(): ResponseInterface
     {

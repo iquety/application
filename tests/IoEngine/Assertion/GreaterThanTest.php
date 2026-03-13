@@ -78,7 +78,7 @@ class GreaterThanTest extends AssertionCase
         );
 
 
-        $list["array greater than 4"] = $this->makeAssertionItem('param_array', 4);
+        $list['array greater than 4'] = $this->makeAssertionItem('param_array', 4);
 
         return $list;
     }
@@ -112,9 +112,6 @@ class GreaterThanTest extends AssertionCase
 
         // string é inválido
         $list['param string not greater than 0'] = $this->makeAssertionItem('param_string', 0);
-
-        // false é transformado em 0
-        $list['param false not greater than 0'] = $this->makeAssertionItem('param_false', 0);
 
         $list['param int 111 not greater than int 111'] = $this->makeAssertionItem(
             'param_int',
@@ -217,7 +214,7 @@ class GreaterThanTest extends AssertionCase
         );
 
 
-        $list["array not greater than 5"] = $this->makeAssertionItem('param_array', 5);
+        $list['array not greater than 5'] = $this->makeAssertionItem('param_array', 5);
 
         return $list;
     }

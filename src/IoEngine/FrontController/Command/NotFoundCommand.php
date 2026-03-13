@@ -10,9 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class NotFoundCommand extends Command
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function execute(): ResponseInterface
     {

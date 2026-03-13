@@ -6,6 +6,4 @@ namespace Iquety\Application\IoEngine\Console;
 
 use Exception;
 
-class NotImplementedException extends Exception
-{
-}
+class NotImplementedException extends Exception {}

@@ -22,7 +22,7 @@ abstract class AssertionCase extends TestCase
         Application::instance()->reset();
     }
 
-    /** @return array<string,array<int,float|int|string>|bool|float|int|string|null> */
+    /** @return array<string,null|array<int,float|int|string>|bool|float|int|string> */
     public function getHttpParams(): array
     {
         return [
@@ -50,9 +50,7 @@ abstract class AssertionCase extends TestCase
     {
         $label = explode('_', $param);
         $label = array_map(fn($word) => ucfirst($word), $label);
-        $label = implode(' ', $label);
-
-        return $label;
+        return implode(' ', $label);
     }
 
     /** @return array<int,mixed> */

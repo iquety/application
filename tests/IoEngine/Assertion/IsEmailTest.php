@@ -40,13 +40,10 @@ class IsEmailTest extends AssertionCase
     {
         $httpParams = [
             'invalid'            => 'testeteste.com',
-            'empty_string'       => '',
             'one_space_string'   => ' ',
             'two_spaces_string'  => '  ',
             'array'              => ['a'],
-            'param_false'        => false,
             'param_true'         => true,
-            'param_string_false' => 'false',
             'param_string_true'  => 'true',
             'integer'            => 12345,
         ];

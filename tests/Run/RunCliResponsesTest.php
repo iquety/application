@@ -32,7 +32,7 @@ class RunCliResponsesTest extends TestCase
         $response = $this->makeOutput($container, ['script-name', 'not-found']);
 
         $this->assertSame(127, $response->getStatusCode());
-        $this->assertStringContainsString('How to use:', (string)$response->getBody());
+        $this->assertStringContainsString('How to use:', (string) $response->getBody());
     }
 
     /** @test */
@@ -43,7 +43,7 @@ class RunCliResponsesTest extends TestCase
         $response = $this->makeOutput($container, ['script-name', 'test-console']);
 
         $this->assertSame(0, $response->getStatusCode());
-        $this->assertStringContainsString('Teste console', (string)$response->getBody());
+        $this->assertStringContainsString('Teste console', (string) $response->getBody());
     }
 
     /** @test */
@@ -54,7 +54,7 @@ class RunCliResponsesTest extends TestCase
         $response = $this->makeOutput($container, ['script-name', 'test-error']);
 
         $this->assertSame(126, $response->getStatusCode());
-        $this->assertStringContainsString('Console error', (string)$response->getBody());
+        $this->assertStringContainsString('Console error', (string) $response->getBody());
     }
 
     /** @param array<int,string> $consoleArguments */
@@ -69,8 +69,7 @@ class RunCliResponsesTest extends TestCase
 
     private function makeRunnner(Container $container, ?Module $extraModule = null): RunCli
     {
-        $module = new class extends ConsoleModule
-        {
+        $module = new class () extends ConsoleModule {
             public function bootDependencies(Container $container): void
             {
                 // ...
@@ -111,13 +110,11 @@ class RunCliResponsesTest extends TestCase
             $engineSet->bootEnginesWith($extraModule);
         }
 
-        $runner = new RunCli(
+        return new RunCli(
             Environment::DEVELOPMENT,
             $container,
             $module,
             $engineSet
         );
-
-        return $runner;
     }
 }

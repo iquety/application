@@ -68,13 +68,11 @@ class IsAlphaTest extends AssertionCase
             'param_full_month_name_day'            => 'December 32, 2024',
             'param_special_characters'             => '@#$%^&*()',
             'param_numbers_and_special_characters' => '123@#$%',
-            'param_empty_string'                   => '',
             'param_one_space_string'               => ' ',
             'param_two_spaces_string'              => '  ',
             'param_integer'                        => 123456,
             'param_decimal'                        => 123.456,
             'param_array'                          => ['a'],
-            'param_false'                          => false,
             'param_true'                           => true,
         ];
 

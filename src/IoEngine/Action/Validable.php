@@ -16,7 +16,7 @@ use RuntimeException;
 use Throwable;
 
 /**
- * @method float|int|string|FileSet|null param(int|string $param)
+ * @method null|FileSet|float|int|string param(int|string $param)
  * @method self message(string $pattern)
  * @method self contains(string $needle)
  * @method self endsWith(string $needle)
@@ -45,6 +45,7 @@ use Throwable;
  * @method self isNotEmpty()
  * @method self isNotNull()
  * @method self isNull()
+ * @method self isRequired()
  * @method self isTime()
  * @method self isTrue()
  * @method self isUrl()
@@ -69,60 +70,6 @@ trait Validable
     private ?Field $currentField = null;
 
     private ?Assertion $currentAssertion = null;
-
-    private function shield(): Shield
-    {
-        if ($this->shield === null) {
-            $this->shield = Application::instance()->make(Shield::class);
-        }
-
-        return $this->shield;
-    }
-
-    public function validOrRedirect(string $uri): void
-    {
-        try {
-            $this->shield()->validOrThrow(AssertionFlashException::class);
-        } catch (AssertionFlashException $exception) {
-            $exception->setUri($uri);
-
-            $this->flashErrors($exception->getErrorList());
-
-            throw $exception;
-        }
-    }
-
-    /** @param array<int|string,array<int,string>|string> $errorList */
-    private function flashErrors(array $errorList): void
-    {
-        /** @var Session $session */
-        $session = Application::instance()->make(Session::class);
-
-        /**
-         * @var string $field nome do campo
-         * @var array<int,string> $messageList mensagens de erro no campo
-         */
-        foreach ($errorList as $field => $messageList) {
-            array_walk(
-                $messageList,
-                fn($message) => $session->addFlash($field, $message)
-            );
-        }
-    }
-
-    public function validOrResponse(): void
-    {
-        $this->shield()->validOrThrow(AssertionResponseException::class);
-    }
-
-    public function assert(string $name): self
-    {
-        $this->currentFieldName = $name;
-
-        $this->currentField = $this->shield()->field($name);
-
-        return $this;
-    }
 
     /** @param array<int,mixed> $argumentList */
     public function __call(string $method, array $argumentList): self
@@ -165,7 +112,7 @@ trait Validable
             throw $exception;
         } catch (Throwable $exception) {
             throw new RuntimeException(sprintf(
-                "%s on %s in line %d",
+                '%s on %s in line %d',
                 $exception->getMessage(),
                 $exception->getFile(),
                 $exception->getLine()
@@ -175,12 +122,66 @@ trait Validable
         // $this->endFluency();
     }
 
+    public function validOrRedirect(string $uri): void
+    {
+        try {
+            $this->shield()->validOrThrow(AssertionFlashException::class);
+        } catch (AssertionFlashException $exception) {
+            $exception->setUri($uri);
+
+            $this->flashErrors($exception->getErrorList());
+
+            throw $exception;
+        }
+    }
+
+    public function validOrResponse(): void
+    {
+        $this->shield()->validOrThrow(AssertionResponseException::class);
+    }
+
+    public function assert(string $name): self
+    {
+        $this->currentFieldName = $name;
+
+        $this->currentField = $this->shield()->field($name);
+
+        return $this;
+    }
+
+    private function shield(): Shield
+    {
+        if ($this->shield === null) {
+            $this->shield = Application::instance()->make(Shield::class);
+        }
+
+        return $this->shield;
+    }
+
+    /** @param array<int|string,array<int,string>|string> $errorList */
+    private function flashErrors(array $errorList): void
+    {
+        /** @var Session $session */
+        $session = Application::instance()->make(Session::class);
+
+        /**
+         * @var string $field nome do campo
+         * @var array<int,string> $messageList mensagens de erro no campo
+         */
+        foreach ($errorList as $field => $messageList) {
+            array_walk(
+                $messageList,
+                fn($message) => $session->addFlash($field, $message)
+            );
+        }
+    }
+
     private function makeAssertionClassName(string $method): string
     {
         $className = "\Iquety\Shield\Assertion\\" . ucfirst($method);
 
         if (class_exists($className) === false) {
-            throw new LogicException(sprintf("Method %s does not exist", $method));
+            throw new LogicException(sprintf('Method %s does not exist', $method));
         }
 
         return $className;

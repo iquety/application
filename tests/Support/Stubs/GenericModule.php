@@ -10,9 +10,7 @@ use Iquety\Injection\Container;
 class GenericModule implements Module
 {
     /** @param array<string,mixed> $dependencyList */
-    public function __construct(private array $dependencyList = [])
-    {
-    }
+    public function __construct(private array $dependencyList = []) {}
 
     public function bootDependencies(Container $container): void
     {

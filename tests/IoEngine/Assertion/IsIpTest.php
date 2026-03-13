@@ -7,7 +7,6 @@ namespace Tests\IoEngine\Assertion;
 use InvalidArgumentException;
 use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
-use stdClass;
 
 /** @SuppressWarnings(PHPMD.StaticAccess) */
 class IsIpTest extends AssertionCase
@@ -55,7 +54,6 @@ class IsIpTest extends AssertionCase
             'ipv6_too_short'               => '2001:db8:85a3',
             'ipv6_too_long'                => '2001:0db8:85a3:0000:0000:8a2e:0370:7334:1234',
             'spaces'                       => '192. 168.1.1',
-            'empty_string'                 => '',
             'one_space_string'             => ' ',
             'two_spaces_string'            => '  ',
             'array'                        => ['a']

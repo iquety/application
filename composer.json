@@ -24,10 +24,10 @@
         "behat/behat": "^3.14",
         "codacy/coverage": "dev-master",
         "iquety/docmap": "*",
-        "phpmd/phpmd": "@stable",
+        "phpmd/phpmd": "^2.15",
         "phpstan/phpstan": "^1.8",
-        "phpunit/phpunit": "^9",
-        "squizlabs/php_codesniffer": "3.*"
+        "phpunit/phpunit": "^9.5",
+        "friendsofphp/php-cs-fixer": "^3.94"
     },
     "autoload": {
         "psr-4": {
@@ -66,12 +66,15 @@
             "phpstan analyse --level=8 src",
             "phpstan analyse --level=8 tests"
         ],
-        "psr": [
-            "phpcbf --standard=PSR1,PSR12 src tests",
-            "phpcs --standard=PSR1,PSR12 src tests"
+        "psr-check": [
+            "php-cs-fixer check --diff -v"
+        ],
+
+        "psr-fix": [
+            "php-cs-fixer fix -v"
         ],
         "analyse": [
-            "@psr",
+            "@psr-check",
             "@mess",
             "@stan"
         ]

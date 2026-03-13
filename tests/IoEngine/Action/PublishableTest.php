@@ -34,7 +34,7 @@ class PublishableTest extends TestCase
             FakeSubscriber::class
         );
 
-        $object = new class {
+        $object = new class () {
             use Publishable;
 
             /** @return array<int,string>> */

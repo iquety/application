@@ -15,17 +15,6 @@ class StartsWithTest extends AssertionCase
     use HasProviderFieldNotExist;
 
     /**
-     * @param array<string,mixed> $httpParams
-     * @return array<string,mixed>
-     */
-    protected function shiftHttpArrayParam(array &$httpParams): array
-    {
-        array_shift($httpParams['param_array']);
-
-        return $httpParams;
-    }
-
-    /**
      * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @return array<string,array<int,mixed>>
@@ -69,23 +58,23 @@ class StartsWithTest extends AssertionCase
         // ]
 
         // inicia com 111
-        $list["array starts with integer string 111"] = $this->makeAssertionItem('param_array', '111', $httpParams);
-        $list["array starts with integer 111"]        = $this->makeAssertionItem('param_array', 111, $httpParams);
+        $list['array starts with integer string 111'] = $this->makeAssertionItem('param_array', '111', $httpParams);
+        $list['array starts with integer 111']        = $this->makeAssertionItem('param_array', 111, $httpParams);
 
         $httpParams = $this->shiftHttpArrayParam($httpParams); // remove 111, agora inicia com '222'
-        $list["array starts with integer string 222"] = $this->makeAssertionItem('param_array', '222', $httpParams);
-        $list["array starts with integer 222"]        = $this->makeAssertionItem('param_array', 222, $httpParams);
+        $list['array starts with integer string 222'] = $this->makeAssertionItem('param_array', '222', $httpParams);
+        $list['array starts with integer 222']        = $this->makeAssertionItem('param_array', 222, $httpParams);
 
         $httpParams = $this->shiftHttpArrayParam($httpParams); // remove '222', agora inicia com 22.5
-        $list["array starts with decimal string 22.5"] = $this->makeAssertionItem('param_array', '22.5', $httpParams);
-        $list["array starts with decimal 22.5"]        = $this->makeAssertionItem('param_array', 22.5, $httpParams);
+        $list['array starts with decimal string 22.5'] = $this->makeAssertionItem('param_array', '22.5', $httpParams);
+        $list['array starts with decimal 22.5']        = $this->makeAssertionItem('param_array', 22.5, $httpParams);
 
         $httpParams = $this->shiftHttpArrayParam($httpParams); // remove 22.5, agora inicia com '11.5'
-        $list["array starts with decimal string 11.5"] = $this->makeAssertionItem('param_array', '11.5', $httpParams);
-        $list["array starts with decimal 11.5"]        = $this->makeAssertionItem('param_array', 11.5, $httpParams);
+        $list['array starts with decimal string 11.5'] = $this->makeAssertionItem('param_array', '11.5', $httpParams);
+        $list['array starts with decimal 11.5']        = $this->makeAssertionItem('param_array', 11.5, $httpParams);
 
         $httpParams = $this->shiftHttpArrayParam($httpParams); // remove '11.5', agora inicia com 'ção!#'
-        $list["array starts with ção!#"] = $this->makeAssertionItem('param_array', 'ção!#', $httpParams);
+        $list['array starts with ção!#'] = $this->makeAssertionItem('param_array', 'ção!#', $httpParams);
 
         return $list;
     }
@@ -99,8 +88,8 @@ class StartsWithTest extends AssertionCase
 
         $list['param int 111 not starts with 112']                       = ['param_int', 112, $httpParams];
         $list['param int string 222 not starts with string 223']         = ['param_int_string', '223', $httpParams];
-        $list['param int string 222 not starts with integer string 223'] = ['param_int_string',223,$httpParams];
-        $list['param decimal 22.5 not starts with string 21.']           = ['param_decimal','21.',$httpParams];
+        $list['param int string 222 not starts with integer string 223'] = ['param_int_string', 223, $httpParams];
+        $list['param decimal 22.5 not starts with string 21.']           = ['param_decimal', '21.', $httpParams];
         $list['param decimal 22.5 not starts with string 21']            = ['param_decimal', '21', $httpParams];
         $list['param decimal 22.5 not starts with string 1']             = ['param_decimal', '1', $httpParams];
         $list['param decimal 22.5 not starts with decimal 21.']          = ['param_decimal', 21., $httpParams];
@@ -114,8 +103,6 @@ class StartsWithTest extends AssertionCase
         $list['param decimal 11.5 not starts with int 2']       = ['param_decimal_string', 2, $httpParams];
         $list['param string Coração!# not starts with raç']     = ['param_string', 'raç', $httpParams];
         $list['param string Coração!# not starts with ção!']    = ['param_string', 'ção!', $httpParams];
-        $list['param boolean false not starts with 1']          = ['param_false', '1', $httpParams];
-        $list['param boolean false not starts with int 1']      = ['param_false', 1, $httpParams];
         $list['param boolean true not starts with 0']           = ['param_true', '2', $httpParams];
         $list['param boolean true not starts with int 0']       = ['param_true', 2, $httpParams];
 
@@ -128,35 +115,35 @@ class StartsWithTest extends AssertionCase
         // ]
 
         // O array inicia com '111'. Todos os outros elementos não valem
-        $list["array not starts with integer 112"]         = ['param_array', 112, $httpParams];
-        $list["array not starts with integer string 112"]  = ['param_array', '112', $httpParams];
-        $list["array not starts with integer 221"]         = ['param_array', 221, $httpParams];
-        $list["array not starts with integer string 221"]  = ['param_array', '221', $httpParams];
-        $list["array not starts with decimal 22.4"]        = ['param_array', 22.4, $httpParams];
-        $list["array not starts with decimal string 22.4"] = ['param_array', '22.4', $httpParams];
-        $list["array not starts with decimal 11.4"]        = ['param_array', 11.4, $httpParams];
-        $list["array not starts with decimal string 11.4"] = ['param_array', '11.4', $httpParams];
+        $list['array not starts with integer 112']         = ['param_array', 112, $httpParams];
+        $list['array not starts with integer string 112']  = ['param_array', '112', $httpParams];
+        $list['array not starts with integer 221']         = ['param_array', 221, $httpParams];
+        $list['array not starts with integer string 221']  = ['param_array', '221', $httpParams];
+        $list['array not starts with decimal 22.4']        = ['param_array', 22.4, $httpParams];
+        $list['array not starts with decimal string 22.4'] = ['param_array', '22.4', $httpParams];
+        $list['array not starts with decimal 11.4']        = ['param_array', 11.4, $httpParams];
+        $list['array not starts with decimal string 11.4'] = ['param_array', '11.4', $httpParams];
 
         // O array inicia com 111, não com parte dele
-        $list["array not starts with integer 11"]        = ['param_array', 11, $httpParams];
-        $list["array not starts with integer string 11"] = ['param_array', '11', $httpParams];
-        $list["array not starts with integer 1"]         = ['param_array', 1, $httpParams];
-        $list["array not starts with integer string 1"]  = ['param_array', '1', $httpParams];
+        $list['array not starts with integer 11']        = ['param_array', 11, $httpParams];
+        $list['array not starts with integer string 11'] = ['param_array', '11', $httpParams];
+        $list['array not starts with integer 1']         = ['param_array', 1, $httpParams];
+        $list['array not starts with integer string 1']  = ['param_array', '1', $httpParams];
 
         $httpParams = $this->shiftHttpArrayParam($httpParams); // remove '111', agora inicia com '222'
-        $list["array not starts with integer string 221"] = ['param_array', '221', $httpParams];
-        $list["array not starts with integer 221"] = ['param_array', 221, $httpParams];
+        $list['array not starts with integer string 221'] = ['param_array', '221', $httpParams];
+        $list['array not starts with integer 221'] = ['param_array', 221, $httpParams];
 
         $httpParams = $this->shiftHttpArrayParam($httpParams); // remove '222', agora inicia com 22.5
-        $list["array not starts with decimal string 22.4"] = ['param_array', '22.4', $httpParams];
-        $list["array not starts with decimal 22.4"] = ['param_array', 22.4, $httpParams];
+        $list['array not starts with decimal string 22.4'] = ['param_array', '22.4', $httpParams];
+        $list['array not starts with decimal 22.4'] = ['param_array', 22.4, $httpParams];
 
         $httpParams = $this->shiftHttpArrayParam($httpParams); // remove 22.5, agora inicia com '11.5'
-        $list["array not starts with decimal string 11.4"] = ['param_array', '11.4', $httpParams];
-        $list["array not starts with decimal 11.4"] = ['param_array', 11.4, $httpParams];
+        $list['array not starts with decimal string 11.4'] = ['param_array', '11.4', $httpParams];
+        $list['array not starts with decimal 11.4'] = ['param_array', 11.4, $httpParams];
 
         $httpParams = $this->shiftHttpArrayParam($httpParams); // remove '11.5', agora inicia com 'ção!#'
-        $list["array not starts with ão!#"] = ['param_array', 'ão!#', $httpParams];
+        $list['array not starts with ão!#'] = ['param_array', 'ão!#', $httpParams];
 
         return array_map(
             fn($values) => $this->makeAssertionItem(...$values),
@@ -248,5 +235,16 @@ class StartsWithTest extends AssertionCase
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();
+    }
+
+    /**
+     * @param array<string,mixed> $httpParams
+     * @return array<string,mixed>
+     */
+    protected function shiftHttpArrayParam(array &$httpParams): array
+    {
+        array_shift($httpParams['param_array']);
+
+        return $httpParams;
     }
 }

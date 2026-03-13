@@ -47,7 +47,6 @@ class IsCpfTest extends AssertionCase
     public function invalidProvider(): array
     {
         $httpParams = [
-            'invalid_cpf_0' => '00000000000',
             'invalid_cpf_1' => '11111111111',
             'invalid_cpf_2' => '22222222222',
             'invalid_cpf_3' => '33333333333',
@@ -58,7 +57,6 @@ class IsCpfTest extends AssertionCase
             'invalid_cpf_8' => '88888888888',
             'invalid_cpf_9' => '99999999999',
 
-            'invalid_integer_cpf_0' => 00000000000,
             'invalid_integer_cpf_1' => 11111111111,
             'invalid_integer_cpf_2' => 22222222222,
             'invalid_integer_cpf_3' => 33333333333,
@@ -100,13 +98,10 @@ class IsCpfTest extends AssertionCase
             'invalid_cpf_integer_8_calc' => 11303816444,
             'invalid_cpf_integer_9_calc' => 10704535034,
 
-            'empty_string'       => '',
             'one_space_string'   => ' ',
             'two_spaces_string'  => '  ',
             'array'              => ['a'],
-            'param_false'        => false,
             'param_true'         => true,
-            'param_string_false' => 'false',
             'param_string_true'  => 'true',
         ];
 

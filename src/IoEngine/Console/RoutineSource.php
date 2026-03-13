@@ -6,9 +6,7 @@ namespace Iquety\Application\IoEngine\Console;
 
 class RoutineSource
 {
-    public function __construct(private string $directory)
-    {
-    }
+    public function __construct(private string $directory) {}
 
     public function getIdentity(): string
     {

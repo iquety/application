@@ -31,11 +31,8 @@ class FcModuleTest extends TestCase
      */
     private function makeModule(): FcModule
     {
-        return new class extends FcModule
-        {
-            public function bootDependencies(Container $container): void
-            {
-            }
+        return new class () extends FcModule {
+            public function bootDependencies(Container $container): void {}
         };
     }
 }

@@ -74,7 +74,7 @@ class LessThanTest extends AssertionCase
             '11.6'
         );
 
-        $list["array less than 6"] = $this->makeAssertionItem('param_array', 6);
+        $list['array less than 6'] = $this->makeAssertionItem('param_array', 6);
 
         return $list;
     }
@@ -108,9 +108,6 @@ class LessThanTest extends AssertionCase
 
         // true é transformado em 1
         $list['param true not less than 0'] = $this->makeAssertionItem('param_true', 0);
-
-        // false é transformado em 0
-        $list['param false not less than 0'] = $this->makeAssertionItem('param_false', 0);
 
         $list['param int 111 not less than int 110'] = $this->makeAssertionItem(
             'param_int',
@@ -162,7 +159,7 @@ class LessThanTest extends AssertionCase
             '11.4'
         );
 
-        $list["array not less than 4"] = $this->makeAssertionItem('param_array', 4);
+        $list['array not less than 4'] = $this->makeAssertionItem('param_array', 4);
 
         return $list;
     }

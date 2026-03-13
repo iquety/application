@@ -29,8 +29,7 @@ class RunWeb
         private Container $container,
         private Module $mainModule,
         private EngineSet $engineSet
-    ) {
-    }
+    ) {}
 
     /** @SuppressWarnings(PHPMD.StaticAccess) */
     public function run(ServerRequestInterface $request): ResponseInterface
@@ -96,36 +95,34 @@ class RunWeb
 
     private function applyDefaultRequestHeaders(ServerRequestInterface $request): ServerRequestInterface
     {
-        if ($request->getHeaderLine('Accept') === "") {
+        if ($request->getHeaderLine('Accept') === '') {
             $request = $request->withAddedHeader('Accept', HttpMime::HTML->value);
         }
 
-        $request = $request->withAddedHeader(
+        return $request->withAddedHeader(
             'Environment',
             $this->environment->value
         );
-
-        return $request;
     }
 
-   /** @param class-string $contract */
+    /** @param class-string $contract */
     private function assertSucessfulConstruction(string $contract): void
     {
         try {
             $instance = $this->container->get($contract);
         } catch (ContainerException) {
             throw new RuntimeException(sprintf(
-                'Please provide an implementation for the %s dependency ' .
-                'in the given module in the Application->bootApplication ' .
-                'or Application->bootModule method',
+                'Please provide an implementation for the %s dependency '
+                . 'in the given module in the Application->bootApplication '
+                . 'or Application->bootModule method',
                 (new ReflectionClass($contract))->getShortName(),
             ));
         }
 
         if (is_subclass_of($instance, $contract) === false) {
             throw new RuntimeException(sprintf(
-                'The implementation provided to the %s dependency in the module ' .
-                'provided in the Application->bootApplication method is invalid',
+                'The implementation provided to the %s dependency in the module '
+                . 'provided in the Application->bootApplication method is invalid',
                 (new ReflectionClass($contract))->getShortName(),
             ));
         }

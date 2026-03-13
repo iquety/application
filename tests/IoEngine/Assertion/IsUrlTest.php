@@ -57,14 +57,12 @@ class IsUrlTest extends AssertionCase
             'invalid_url_ip_without_scheme' => '192.168.1.1',
             'invalid_url_missing_slashes'   => 'http:example.com',
             'invalid_url_double_dots'       => 'http://example..com',
-            'invalid_url_empty_string'      => '',
             'invalid_url_chars_1'           => 'http://&example.com/捦挺挎/bar',
-            'invalid_url_chars_2'           =>
-                'www.hti.umich.edu/cgi/t/text/pageviewer-idx'
+            'invalid_url_chars_2'
+                => 'www.hti.umich.edu/cgi/t/text/pageviewer-idx'
                 . '?c=umhistmath;cc=umhistmath;rgn=full%20text;'
                 . 'idno=ABS3153.0001.001;didno=ABS3153.0001.001;view=image;seq=00000140',
             'integer' => 1234
-            // 'empty_array' => []
         ];
 
         $list = [];

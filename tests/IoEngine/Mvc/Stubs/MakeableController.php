@@ -10,9 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class MakeableController extends Controller
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * @SuppressWarnings(PHPMD.ShortVariable)

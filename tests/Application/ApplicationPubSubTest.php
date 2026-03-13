@@ -6,8 +6,6 @@ namespace Tests\Application;
 
 use InvalidArgumentException;
 use Iquety\Application\Application;
-use Iquety\Application\IoEngine\IoEngine;
-use Iquety\Application\IoEngine\Module;
 use Iquety\PubSub\Publisher\EventPublisher;
 use Iquety\PubSub\Publisher\SimpleEventPublisher;
 use Tests\TestCase;

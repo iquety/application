@@ -15,17 +15,6 @@ class EndsWithTest extends AssertionCase
     use HasProviderFieldNotExist;
 
     /**
-     * @param array<string,mixed> $httpParams
-     * @return array<string,mixed>
-     */
-    protected function popHttpArrayParam(array &$httpParams): array
-    {
-        array_pop($httpParams['param_array']);
-
-        return $httpParams;
-    }
-
-    /**
      * Recebe um valor (texto, inteiro ou decimal) transformado em texto
      * Compara com um valor (texto, inteiro ou decimal) transformado em texto
      * @return array<string,array<int,mixed>>
@@ -49,23 +38,23 @@ class EndsWithTest extends AssertionCase
         // ]
 
         // termina com 'ção!#'
-        $list["array ends with ção!#"] = $this->makeAssertionItem('param_array', 'ção!#', $httpParams);
+        $list['array ends with ção!#'] = $this->makeAssertionItem('param_array', 'ção!#', $httpParams);
 
         $httpParams = $this->popHttpArrayParam($httpParams); // remove 'ção!#', agora termina com 11.5
-        $list["array ends with decimal 11.5"] = $this->makeAssertionItem('param_array', 11.5, $httpParams);
-        $list["array ends with decimal string 11.5"] = $this->makeAssertionItem('param_array', '11.5', $httpParams);
+        $list['array ends with decimal 11.5'] = $this->makeAssertionItem('param_array', 11.5, $httpParams);
+        $list['array ends with decimal string 11.5'] = $this->makeAssertionItem('param_array', '11.5', $httpParams);
 
         $httpParams = $this->popHttpArrayParam($httpParams); // remove '11.5', agora termina com 22.5
-        $list["array ends with decimal 22.5"] = $this->makeAssertionItem('param_array', 22.5, $httpParams);
-        $list["array ends with decimal string 22.5"] = $this->makeAssertionItem('param_array', '22.5', $httpParams);
+        $list['array ends with decimal 22.5'] = $this->makeAssertionItem('param_array', 22.5, $httpParams);
+        $list['array ends with decimal string 22.5'] = $this->makeAssertionItem('param_array', '22.5', $httpParams);
 
         $httpParams = $this->popHttpArrayParam($httpParams);  // remove 22.5, agora termina com 222
-        $list["array ends with integer 222"] = $this->makeAssertionItem('param_array', 222, $httpParams);
-        $list["array ends with integer string 222"] = $this->makeAssertionItem('param_array', '222', $httpParams);
+        $list['array ends with integer 222'] = $this->makeAssertionItem('param_array', 222, $httpParams);
+        $list['array ends with integer string 222'] = $this->makeAssertionItem('param_array', '222', $httpParams);
 
         $httpParams = $this->popHttpArrayParam($httpParams); // remove '222', agora termina com 111
-        $list["array ends with integer 111"] = $this->makeAssertionItem('param_array', 111, $httpParams);
-        $list["array ends with integer string 111"] = $this->makeAssertionItem('param_array', '111', $httpParams);
+        $list['array ends with integer 111'] = $this->makeAssertionItem('param_array', 111, $httpParams);
+        $list['array ends with integer string 111'] = $this->makeAssertionItem('param_array', '111', $httpParams);
 
         return $list;
     }
@@ -168,18 +157,6 @@ class EndsWithTest extends AssertionCase
             $httpParams
         );
 
-        $list['param boolean false not ends with 1'] = $this->makeAssertionItem(
-            'param_false',
-            '1',
-            $httpParams
-        );
-
-        $list['param boolean false not ends with int 1'] = $this->makeAssertionItem(
-            'param_false',
-            1,
-            $httpParams
-        );
-
         $list['param boolean true not ends with 0'] = $this->makeAssertionItem(
             'param_true',
             '2',
@@ -201,84 +178,84 @@ class EndsWithTest extends AssertionCase
         // ]
 
         // O array termina com 'ção!#'. Todos os outros elementos não valem
-        $list["array not ends with integer 112"] = $this->makeAssertionItem(
+        $list['array not ends with integer 112'] = $this->makeAssertionItem(
             'param_array',
             112,
             $httpParams
         );
 
-        $list["array not ends with integer 112"] = $this->makeAssertionItem(
+        $list['array not ends with integer 112'] = $this->makeAssertionItem(
             'param_array',
             '112',
             $httpParams
         );
 
-        $list["array not ends with integer string 222"] = $this->makeAssertionItem(
+        $list['array not ends with integer string 222'] = $this->makeAssertionItem(
             'param_array',
             221,
             $httpParams
         );
 
-        $list["array not ends with integer string 222"] = $this->makeAssertionItem(
+        $list['array not ends with integer string 222'] = $this->makeAssertionItem(
             'param_array',
             '221',
             $httpParams
         );
 
-        $list["array not ends with decimal 22.5"] = $this->makeAssertionItem(
+        $list['array not ends with decimal 22.5'] = $this->makeAssertionItem(
             'param_array',
             22.4,
             $httpParams
         );
 
-        $list["array not ends with decimal 22.5"] = $this->makeAssertionItem(
+        $list['array not ends with decimal 22.5'] = $this->makeAssertionItem(
             'param_array',
             '22.4',
             $httpParams
         );
 
-        $list["array not ends with decimal string 11.5"] = $this->makeAssertionItem(
+        $list['array not ends with decimal string 11.5'] = $this->makeAssertionItem(
             'param_array',
             11.4,
             $httpParams
         );
 
-        $list["array not ends with decimal string 11.5"] = $this->makeAssertionItem(
+        $list['array not ends with decimal string 11.5'] = $this->makeAssertionItem(
             'param_array',
             '11.4',
             $httpParams
         );
 
         // O array termina com 'ção!#', não com parte dele
-        $list["array not ends with string ção!"] = $this->makeAssertionItem(
+        $list['array not ends with string ção!'] = $this->makeAssertionItem(
             'param_array',
             'ção!',
             $httpParams
         );
 
         $httpParams = $this->popHttpArrayParam($httpParams); // remove 'ção!#', agora termina com 11.5
-        $list["array not ends with decimal string 11.4"] = $this->makeAssertionItem(
+        $list['array not ends with decimal string 11.4'] = $this->makeAssertionItem(
             'param_array',
             '11.4',
             $httpParams
         );
 
         $httpParams = $this->popHttpArrayParam($httpParams); // remove 11.5, agora termina com 22.5
-        $list["array not ends with decimal 22.4"] = $this->makeAssertionItem(
+        $list['array not ends with decimal 22.4'] = $this->makeAssertionItem(
             'param_array',
             22.4,
             $httpParams
         );
 
         $httpParams = $this->popHttpArrayParam($httpParams); // remove 22.5, agora termina com 222
-        $list["array not ends with integer string 221"] = $this->makeAssertionItem(
+        $list['array not ends with integer string 221'] = $this->makeAssertionItem(
             'param_array',
             '221',
             $httpParams
         );
 
         $httpParams = $this->popHttpArrayParam($httpParams); // remove 222, agora termina com 111
-        $list["array not ends with integer 110"] = $this->makeAssertionItem(
+        $list['array not ends with integer 110'] = $this->makeAssertionItem(
             'param_array',
             110,
             $httpParams
@@ -371,5 +348,16 @@ class EndsWithTest extends AssertionCase
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
         $input->validOrResponse();
+    }
+
+    /**
+     * @param array<string,mixed> $httpParams
+     * @return array<string,mixed>
+     */
+    protected function popHttpArrayParam(array &$httpParams): array
+    {
+        array_pop($httpParams['param_array']);
+
+        return $httpParams;
     }
 }

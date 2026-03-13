@@ -141,20 +141,20 @@ class InputSingleFileTest extends TestCase
     {
         return [
             'inputFile' => [
-                "name"      => "attachment.gif",
-                "full_path" => "attachment.gif",
-                'type'      => "image/gif",
-                "tmp_name"  => __DIR__ . "/attachment.gif",
-                "error"     => 0,
-                "size"      => 173
+                'name'      => 'attachment.gif',
+                'full_path' => 'attachment.gif',
+                'type'      => 'image/gif',
+                'tmp_name'  => __DIR__ . '/attachment.gif',
+                'error'     => 0,
+                'size'      => 173
             ],
             'inputFile2' => [
-                "name"      => "attachment.png",
-                "full_path" => "attachment.png",
-                'type'      => "image/png",
-                "tmp_name"  => __DIR__ . "/attachment.png",
-                "error"     => 0,
-                "size"      => 222
+                'name'      => 'attachment.png',
+                'full_path' => 'attachment.png',
+                'type'      => 'image/png',
+                'tmp_name'  => __DIR__ . '/attachment.png',
+                'error'     => 0,
+                'size'      => 222
             ],
         ];
     }

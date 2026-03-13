@@ -73,6 +73,16 @@ class MvcEngine extends IoEngine
         return $actionDescriptor;
     }
 
+    /** @return MvcSourceHandler */
+    public function sourceHandler(): SourceHandler
+    {
+        if ($this->container()->has(MvcSourceHandler::class) === false) {
+            $this->container()->addSingleton(MvcSourceHandler::class);
+        }
+
+        return $this->container()->get(MvcSourceHandler::class);
+    }
+
     private function router(): Router
     {
         if ($this->container()->has(Router::class) === false) {
@@ -87,15 +97,5 @@ class MvcEngine extends IoEngine
         $this->router->resetModuleInfo();
 
         return $this->router;
-    }
-
-    /** @return MvcSourceHandler */
-    public function sourceHandler(): SourceHandler
-    {
-        if ($this->container()->has(MvcSourceHandler::class) === false) {
-            $this->container()->addSingleton(MvcSourceHandler::class);
-        }
-
-        return $this->container()->get(MvcSourceHandler::class);
     }
 }

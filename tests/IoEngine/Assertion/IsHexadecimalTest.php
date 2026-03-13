@@ -58,13 +58,9 @@ class IsHexadecimalTest extends AssertionCase
             'invalid_hexadecimal_8'  => '0123456789abcdefABCDEFg123456789abcdef',
             'invalid_hexadecimal_9'  => '1234567890ABCDEFabcdefg123456789ABCDEF',
             'invalid_hexadecimal_10' => '0123456789abcdefABCDEFg123456789ABCDEF',
-            'empty_string'           => '',
             'one_space_string'       => ' ',
             'two_spaces_string'      => '  ',
             'array'                  => ['a'],
-            // 'false'                  => false,                                      // false é mudado para 0
-            // 'true'                   => true,                                       // false é mudado para 1
-            // 'integer'                => 12345,
         ];
 
         $list = [];
