@@ -334,16 +334,16 @@
         },
         {
             "name": "iquety/console",
-            "version": "v4.0.0",
+            "version": "v4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iquety/console.git",
-                "reference": "ceb55c3724ecd975b222e6cf28f07c8d734a9c30"
+                "reference": "02ed783fecb1fd29fdcdd248bdbf25582a87ac67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iquety/console/zipball/ceb55c3724ecd975b222e6cf28f07c8d734a9c30",
-                "reference": "ceb55c3724ecd975b222e6cf28f07c8d734a9c30",
+                "url": "https://api.github.com/repos/iquety/console/zipball/02ed783fecb1fd29fdcdd248bdbf25582a87ac67",
+                "reference": "02ed783fecb1fd29fdcdd248bdbf25582a87ac67",
                 "shasum": ""
             },
             "require": {
@@ -352,11 +352,11 @@
             },
             "require-dev": {
                 "codacy/coverage": "dev-master",
+                "friendsofphp/php-cs-fixer": "^3.94",
                 "iquety/docmap": "*",
-                "phpmd/phpmd": "@stable",
+                "phpmd/phpmd": "^2.15",
                 "phpstan/phpstan": "^1.8",
-                "phpunit/phpunit": "^9",
-                "squizlabs/php_codesniffer": "3.*"
+                "phpunit/phpunit": "^9.5"
             },
             "type": "tool",
             "autoload": {
@@ -376,22 +376,22 @@
             ],
             "support": {
                 "issues": "https://github.com/iquety/console/issues",
-                "source": "https://github.com/iquety/console/tree/v4.0.0"
+                "source": "https://github.com/iquety/console/tree/v4.1.0"
             },
-            "time": "2026-02-02T23:09:50+00:00"
+            "time": "2026-03-13T19:48:57+00:00"
         },
         {
             "name": "iquety/http",
-            "version": "v2.0.2",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iquety/http.git",
-                "reference": "97ce343c6d4f0cb50d558fae72ee7f29295cc742"
+                "reference": "eb8bcc42c9f34443f049f26d9f52b751854b4ebf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iquety/http/zipball/97ce343c6d4f0cb50d558fae72ee7f29295cc742",
-                "reference": "97ce343c6d4f0cb50d558fae72ee7f29295cc742",
+                "url": "https://api.github.com/repos/iquety/http/zipball/eb8bcc42c9f34443f049f26d9f52b751854b4ebf",
+                "reference": "eb8bcc42c9f34443f049f26d9f52b751854b4ebf",
                 "shasum": ""
             },
             "require": {
@@ -408,11 +408,11 @@
             "require-dev": {
                 "behat/behat": "^3.14",
                 "codacy/coverage": "dev-master",
+                "friendsofphp/php-cs-fixer": "^3.94",
                 "iquety/docmap": "*",
-                "phpmd/phpmd": "@stable",
+                "phpmd/phpmd": "^2.15",
                 "phpstan/phpstan": "^1.8",
-                "phpunit/phpunit": "^9",
-                "squizlabs/php_codesniffer": "3.*"
+                "phpunit/phpunit": "^9.5"
             },
             "type": "tool",
             "autoload": {
@@ -430,9 +430,9 @@
             ],
             "support": {
                 "issues": "https://github.com/iquety/http/issues",
-                "source": "https://github.com/iquety/http/tree/v2.0.2"
+                "source": "https://github.com/iquety/http/tree/v2.1.0"
             },
-            "time": "2026-02-02T23:03:07+00:00"
+            "time": "2026-03-13T20:22:28+00:00"
         },
         {
             "name": "iquety/injection",
@@ -440,12 +440,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/iquety/injection.git",
-                "reference": "8bd4098e5083833890c4d88f07684b703619cdae"
+                "reference": "2933709456961cc5a13c832b5372c8513a68f4e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iquety/injection/zipball/8bd4098e5083833890c4d88f07684b703619cdae",
-                "reference": "8bd4098e5083833890c4d88f07684b703619cdae",
+                "url": "https://api.github.com/repos/iquety/injection/zipball/2933709456961cc5a13c832b5372c8513a68f4e0",
+                "reference": "2933709456961cc5a13c832b5372c8513a68f4e0",
                 "shasum": ""
             },
             "require": {
@@ -454,11 +454,11 @@
             },
             "require-dev": {
                 "codacy/coverage": "dev-master",
+                "friendsofphp/php-cs-fixer": "^3.94",
                 "iquety/docmap": "*",
-                "phpmd/phpmd": "@stable",
+                "phpmd/phpmd": "^2.15",
                 "phpstan/phpstan": "^1.8",
-                "phpunit/phpunit": "^9",
-                "squizlabs/php_codesniffer": "3.*"
+                "phpunit/phpunit": "^9.5"
             },
             "default-branch": true,
             "type": "library",
@@ -482,7 +482,7 @@
                 "issues": "https://github.com/iquety/injection/issues",
                 "source": "https://github.com/iquety/injection/tree/main"
             },
-            "time": "2026-02-02T23:46:39+00:00"
+            "time": "2026-03-13T18:50:46+00:00"
         },
         {
             "name": "iquety/pubsub",
@@ -490,12 +490,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/iquety/pubsub.git",
-                "reference": "864b0ca07293aa48b94f9a66f88e326d4f0417d8"
+                "reference": "57fd5e92905eb01edf308833e64d57cab10a1520"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iquety/pubsub/zipball/864b0ca07293aa48b94f9a66f88e326d4f0417d8",
-                "reference": "864b0ca07293aa48b94f9a66f88e326d4f0417d8",
+                "url": "https://api.github.com/repos/iquety/pubsub/zipball/57fd5e92905eb01edf308833e64d57cab10a1520",
+                "reference": "57fd5e92905eb01edf308833e64d57cab10a1520",
                 "shasum": ""
             },
             "require": {
@@ -504,11 +504,11 @@
             },
             "require-dev": {
                 "codacy/coverage": "dev-master",
+                "friendsofphp/php-cs-fixer": "^3.94",
                 "iquety/docmap": "*",
-                "phpmd/phpmd": "@stable",
-                "phpstan/phpstan": "^1.9",
-                "phpunit/phpunit": "^9",
-                "squizlabs/php_codesniffer": "3.*"
+                "phpmd/phpmd": "^2.15",
+                "phpstan/phpstan": "^1.8",
+                "phpunit/phpunit": "^9.5"
             },
             "default-branch": true,
             "type": "library",
@@ -533,7 +533,7 @@
                 "issues": "https://github.com/iquety/pubsub/issues",
                 "source": "https://github.com/iquety/pubsub/tree/main"
             },
-            "time": "2026-02-02T23:57:50+00:00"
+            "time": "2026-03-13T20:09:07+00:00"
         },
         {
             "name": "iquety/routing",
@@ -541,12 +541,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/iquety/routing.git",
-                "reference": "98ba6ab0869004620d9977c421116c2d9980836d"
+                "reference": "ad6b1bf4300c0ca1af1b5bb1cbc1ae59c37e423c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iquety/routing/zipball/98ba6ab0869004620d9977c421116c2d9980836d",
-                "reference": "98ba6ab0869004620d9977c421116c2d9980836d",
+                "url": "https://api.github.com/repos/iquety/routing/zipball/ad6b1bf4300c0ca1af1b5bb1cbc1ae59c37e423c",
+                "reference": "ad6b1bf4300c0ca1af1b5bb1cbc1ae59c37e423c",
                 "shasum": ""
             },
             "require": {
@@ -556,11 +556,11 @@
             },
             "require-dev": {
                 "codacy/coverage": "dev-master",
+                "friendsofphp/php-cs-fixer": "^3.94",
                 "iquety/docmap": "*",
-                "phpmd/phpmd": "@stable",
+                "phpmd/phpmd": "^2.15",
                 "phpstan/phpstan": "^1.8",
-                "phpunit/phpunit": "^9",
-                "squizlabs/php_codesniffer": "3.*"
+                "phpunit/phpunit": "^9.5"
             },
             "default-branch": true,
             "type": "tool",
@@ -583,7 +583,7 @@
                 "issues": "https://github.com/iquety/routing/issues",
                 "source": "https://github.com/iquety/routing/tree/main"
             },
-            "time": "2026-02-02T23:59:39+00:00"
+            "time": "2026-03-13T19:52:41+00:00"
         },
         {
             "name": "iquety/security",
@@ -591,12 +591,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/iquety/security.git",
-                "reference": "ba32ab2b6094e33f2f6f36e7ba61c6e44b8bfa17"
+                "reference": "d48f9df733a7fe561ffd710681bb304e10489956"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iquety/security/zipball/ba32ab2b6094e33f2f6f36e7ba61c6e44b8bfa17",
-                "reference": "ba32ab2b6094e33f2f6f36e7ba61c6e44b8bfa17",
+                "url": "https://api.github.com/repos/iquety/security/zipball/d48f9df733a7fe561ffd710681bb304e10489956",
+                "reference": "d48f9df733a7fe561ffd710681bb304e10489956",
                 "shasum": ""
             },
             "require": {
@@ -631,7 +631,7 @@
                 "issues": "https://github.com/iquety/security/issues",
                 "source": "https://github.com/iquety/security/tree/main"
             },
-            "time": "2026-03-13T16:52:23+00:00"
+            "time": "2026-03-13T18:39:56+00:00"
         },
         {
             "name": "iquety/shield",
@@ -639,12 +639,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/iquety/shield.git",
-                "reference": "8c688b2c40bfc825caa62c2a60a272f25e52a56e"
+                "reference": "87f58aff57d606bd91ac93b2e304a14dae12e85e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iquety/shield/zipball/8c688b2c40bfc825caa62c2a60a272f25e52a56e",
-                "reference": "8c688b2c40bfc825caa62c2a60a272f25e52a56e",
+                "url": "https://api.github.com/repos/iquety/shield/zipball/87f58aff57d606bd91ac93b2e304a14dae12e85e",
+                "reference": "87f58aff57d606bd91ac93b2e304a14dae12e85e",
                 "shasum": ""
             },
             "require": {
@@ -680,7 +680,7 @@
                 "issues": "https://github.com/iquety/shield/issues",
                 "source": "https://github.com/iquety/shield/tree/main"
             },
-            "time": "2026-03-13T16:40:50+00:00"
+            "time": "2026-03-13T18:27:13+00:00"
         },
         {
             "name": "laminas/laminas-diactoros",
@@ -2283,28 +2283,28 @@
         },
         {
             "name": "iquety/docmap",
-            "version": "v2.1.2",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iquety/docmap.git",
-                "reference": "3168173f0c94b2b4f263844339920ff34b486149"
+                "reference": "194aead144f2947cb933b5a1610f1cf79e0d47e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iquety/docmap/zipball/3168173f0c94b2b4f263844339920ff34b486149",
-                "reference": "3168173f0c94b2b4f263844339920ff34b486149",
+                "url": "https://api.github.com/repos/iquety/docmap/zipball/194aead144f2947cb933b5a1610f1cf79e0d47e7",
+                "reference": "194aead144f2947cb933b5a1610f1cf79e0d47e7",
                 "shasum": ""
             },
             "require": {
                 "iquety/console": "*",
-                "php": "^8.3"
+                "php": "^8.4"
             },
             "require-dev": {
                 "codacy/coverage": "dev-master",
-                "phpmd/phpmd": "@stable",
+                "friendsofphp/php-cs-fixer": "^3.94",
+                "phpmd/phpmd": "^2.15",
                 "phpstan/phpstan": "^1.8",
-                "phpunit/phpunit": "^9",
-                "squizlabs/php_codesniffer": "3.*"
+                "phpunit/phpunit": "^9.5"
             },
             "bin": [
                 "docmap"
@@ -2327,9 +2327,9 @@
             ],
             "support": {
                 "issues": "https://github.com/iquety/docmap/issues",
-                "source": "https://github.com/iquety/docmap/tree/v2.1.2"
+                "source": "https://github.com/iquety/docmap/tree/v2.2.0"
             },
-            "time": "2026-02-03T00:11:16+00:00"
+            "time": "2026-03-13T19:36:10+00:00"
         },
         {
             "name": "myclabs/deep-copy",
