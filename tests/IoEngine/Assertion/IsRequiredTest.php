@@ -9,7 +9,7 @@ use Iquety\Application\IoEngine\Action\AssertionResponseException;
 use Iquety\Application\IoEngine\Action\Input;
 
 /** @SuppressWarnings(PHPMD.StaticAccess) */
-class IsNotEmptyTest extends AssertionCase
+class IsRequiredTest extends AssertionCase
 {
     use HasProviderFieldNotExist;
 
@@ -78,7 +78,7 @@ class IsNotEmptyTest extends AssertionCase
             '/user/edit/03?' . http_build_query($httpParams),
         );
 
-        $input->assert($paramName)->isNotEmpty();
+        $input->assert($paramName)->isRequired();
 
         // se a asserção não passar, uma exceção será lançada
         $input->validOrResponse();
@@ -103,7 +103,7 @@ class IsNotEmptyTest extends AssertionCase
             '/user/edit/03?' . http_build_query($httpParams),
         );
 
-        $input->assert($paramName)->isNotEmpty();
+        $input->assert($paramName)->isRequired();
 
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta
@@ -123,7 +123,7 @@ class IsNotEmptyTest extends AssertionCase
             '/user/edit/03?' . http_build_query(['param_null' => null]),
         );
 
-        $input->assert($paramName)->isNotEmpty();
+        $input->assert($paramName)->isRequired();
 
         // se a asserção não passar, uma exceção será lançada
         // para o ActionExecutor capturar e liberar a resposta

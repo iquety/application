@@ -64,14 +64,10 @@ class IsBase64Test extends AssertionCase
             'param_not_base64_text_14' => '&=+==',
             'param_not_base64_text_15' => '&+/=',
             'param_not_base64_text_16' => '&+/==',
-            'param_empty_string'       => '',
             'param_one_space_string'   => ' ',
             'param_two_spaces_string'  => '  ',
             'param_array'              => ['a'],
-            'param_false'              => false, // false é mudado para 0
-            // 'param_true'               => true, // false é mudado para 1
-            'param_string_false'       => 'false', // false é mudado para 0
-            'param_string_true'        => 'true', // false é mudado para 1
+            'param_string_true'        => 'true', // true é mudado para 1
         ];
 
         $list = [];

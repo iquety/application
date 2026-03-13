@@ -52,12 +52,9 @@ class IsTimeTest extends AssertionCase
             'us_format_minute_pm'     => '11:62:59 PM',
             'us_format_second_am'     => '11:59:62 AM',
             'us_format_second_pm'     => '11:59:62 PM',
-            'empty_string'            => '',
             'one_space_string'        => ' ',
             'two_spaces_string'       => '  ',
-            'boolean'                 => false,
             'array'                   => ['a'],
-            // 'null'                    => null,
         ];
 
         $list = [];

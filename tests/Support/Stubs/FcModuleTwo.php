@@ -15,8 +15,7 @@ class FcModuleTwo extends FcModule
     public function __construct(
         private string $namespace = '',
         private array $dependencyList = []
-    ) {
-    }
+    ) {}
 
     public function bootDependencies(Container $container): void
     {

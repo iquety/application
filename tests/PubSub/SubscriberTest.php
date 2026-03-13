@@ -55,8 +55,8 @@ class SubscriberTest extends TestCase
         $subscriber->handleEvent($event);
 
         $this->assertSame(
-            sprintf("Event %s occurred", $event->label()),
-            (string)ob_get_clean()
+            sprintf('Event %s occurred', $event->label()),
+            (string) ob_get_clean()
         );
     }
 }

@@ -93,8 +93,8 @@ class LessThanOrEqualToTest extends AssertionCase
             11.6
         );
 
-        $list["array less than or equal to 5"] = $this->makeAssertionItem('param_array', 5);
-        $list["array less than or equal to 6"] = $this->makeAssertionItem('param_array', 6);
+        $list['array less than or equal to 5'] = $this->makeAssertionItem('param_array', 5);
+        $list['array less than or equal to 6'] = $this->makeAssertionItem('param_array', 6);
 
         return $list;
     }
@@ -178,8 +178,8 @@ class LessThanOrEqualToTest extends AssertionCase
         );
 
 
-        $list["array not less than or equal to 4"] = $this->makeAssertionItem('param_array', 4);
-        $list["array not less than or equal to 4"] = $this->makeAssertionItem('param_array', '4');
+        $list['array not less than or equal to 4'] = $this->makeAssertionItem('param_array', 4);
+        $list['array not less than or equal to 4'] = $this->makeAssertionItem('param_array', '4');
 
         return $list;
     }

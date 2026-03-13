@@ -6,6 +6,4 @@ namespace Iquety\Application\IoEngine\Action;
 
 use Iquety\Shield\AssertionException;
 
-class AssertionResponseException extends AssertionException
-{
-}
+class AssertionResponseException extends AssertionException {}

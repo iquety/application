@@ -14,7 +14,7 @@ class IsNullTest extends AssertionCase
     public function invalidMethod(): void
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage("Method isNull does not exist");
+        $this->expectExceptionMessage('Method isNull does not exist');
 
         $input = Input::fromString(
             '/user/edit/03?' . http_build_query(['param' => 'x']),

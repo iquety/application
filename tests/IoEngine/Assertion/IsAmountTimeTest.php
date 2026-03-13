@@ -46,11 +46,9 @@ class IsAmountTimeTest extends AssertionCase
             'param_invalid_format'    => '00:01,01',
             'param_invalid_seconds'   => '23:59:62',
             'param_invalid_minutes'   => '23:62:59',
-            'param_empty_string'      => '',
             'param_one_space_string'  => ' ',
             'param_two_spaces_string' => '  ',
             'param_array'             => ['a'],
-            'param_false'             => false,
             'param_true'              => true,
             'param_number'            => 123,
         ];

@@ -46,7 +46,7 @@ class MethodCheckerTest extends TestCase
             ->container()
             ->addFactory(ServerRequestInterface::class, $serveRequest);
 
-        $object = new class {
+        $object = new class () {
             use Makeable;
             use MethodChecker;
 
@@ -74,7 +74,7 @@ class MethodCheckerTest extends TestCase
             ->container()
             ->addFactory(ServerRequestInterface::class, $serveRequest);
 
-        $object = new class {
+        $object = new class () {
             use Makeable;
             use MethodChecker;
 

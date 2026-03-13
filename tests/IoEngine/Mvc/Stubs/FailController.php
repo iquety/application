@@ -10,9 +10,7 @@ use Iquety\Application\IoEngine\Mvc\Controller\Controller;
 
 class FailController extends Controller
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * @SuppressWarnings(PHPMD.ShortVariable)

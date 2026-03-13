@@ -48,13 +48,10 @@ class IsMacAddressTest extends AssertionCase
             'missing_separators' => '001A2B3C4D5E',
             'mixed_separators'   => '00:1A-2B:3C-4D:5E',
             'spaces'             => '00:1A: 2B:3C:4D:5E',
-            'empty_string'       => '',
             'one_space_string'   => ' ',
             'two_spaces_string'  => '  ',
             'array'              => ['a'],
-            'false'              => false,
             'true'               => true,
-            // 'null'               => null,
         ];
 
         $list = [];

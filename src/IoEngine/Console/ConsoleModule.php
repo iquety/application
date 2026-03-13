@@ -26,38 +26,38 @@ abstract class ConsoleModule implements Module
      */
     public function bootRoutineDirectories(RoutineSourceSet &$sourceSet): void
     {
-        //...
+        // ...
     }
 
     public function getActionType(): string
     {
         throw new NotImplementedException(
-            'The ConsoleModule module does not have an implementation ' .
-            'for this method, as it does not use Actions.'
+            'The ConsoleModule module does not have an implementation '
+            . 'for this method, as it does not use Actions.'
         );
     }
 
     public function getErrorActionClass(): string
     {
         throw new NotImplementedException(
-            'The ConsoleModule module does not have an implementation ' .
-            'for this method, as it does not use Actions.'
+            'The ConsoleModule module does not have an implementation '
+            . 'for this method, as it does not use Actions.'
         );
     }
 
     public function getNotFoundActionClass(): string
     {
         throw new NotImplementedException(
-            'The ConsoleModule module does not have an implementation ' .
-            'for this method, as it does not use Actions.'
+            'The ConsoleModule module does not have an implementation '
+            . 'for this method, as it does not use Actions.'
         );
     }
 
     public function getMainActionClass(): string
     {
         throw new NotImplementedException(
-            'The ConsoleModule module does not have an implementation ' .
-            'for this method, as it does not use Actions.'
+            'The ConsoleModule module does not have an implementation '
+            . 'for this method, as it does not use Actions.'
         );
     }
 }

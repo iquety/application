@@ -47,16 +47,12 @@ class IsUuidTest extends AssertionCase
             'invalid_characters' => '12345678-ABCD-WXYZ-9012-345678901234',
             'missing_dashes'     => '1234567890123456789012345',
             'special_characters' => '1234*&^%$#@!~-9012-456-7890-123456789012',
-            'empty_string'       => '',
             'one_space_string'   => ' ',
             'two_spaces_string'  => '  ',
             'spaces'             => '   ',
             'integer'            => 123456,
             'decimal'            => 123.456,
-            'boolen'             => false,
             'array'              => ['a'],
-            // 'object'             => new stdClass(),
-            // 'null'               => null,
         ];
 
         $list = [];

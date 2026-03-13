@@ -9,9 +9,7 @@ use Iquety\Application\IoEngine\Mvc\Controller\Controller;
 
 class AssociativeController extends Controller
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * @SuppressWarnings(PHPMD.ShortVariable)
@@ -22,7 +20,7 @@ class AssociativeController extends Controller
         return [
             'message' => 'Resposta com base em array',
             'id'      => $id,
-            'input'   => (string)$input
+            'input'   => (string) $input
         ];
     }
 }

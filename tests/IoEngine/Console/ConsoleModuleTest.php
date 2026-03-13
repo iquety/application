@@ -33,8 +33,8 @@ class ConsoleModuleTest extends TestCase
     {
         $this->expectException(NotImplementedException::class);
         $this->expectExceptionMessage(
-            'The ConsoleModule module does not have an implementation ' .
-            'for this method, as it does not use Actions.'
+            'The ConsoleModule module does not have an implementation '
+            . 'for this method, as it does not use Actions.'
         );
 
         $module = $this->makeModule();
@@ -48,11 +48,8 @@ class ConsoleModuleTest extends TestCase
      */
     private function makeModule(): ConsoleModule
     {
-        return new class extends ConsoleModule
-        {
-            public function bootDependencies(Container $container): void
-            {
-            }
+        return new class () extends ConsoleModule {
+            public function bootDependencies(Container $container): void {}
 
             public function getScriptName(): string
             {

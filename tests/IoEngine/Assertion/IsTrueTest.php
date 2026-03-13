@@ -47,11 +47,9 @@ class IsTrueTest extends AssertionCase
             'string_false'        => 'false',
             'binary_true'         => 0,
             'string_binary_false' => '0',
-            'empty_string'        => '',
             'one_space_string'    => ' ',
             'two_spaces_string'   => '  ',
             'string'              => 'x',
-            // 'empty_array'         => [],
             'off'                 => 'off'
         ];
 

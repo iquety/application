@@ -13,8 +13,7 @@ class ActionDescriptor
         private string $moduleClass,
         private Closure|string $actionClass,
         private string $actionMethod = ''
-    ) {
-    }
+    ) {}
 
     public function type(): string
     {

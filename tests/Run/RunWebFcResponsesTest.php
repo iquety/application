@@ -11,7 +11,6 @@ use Iquety\Application\IoEngine\Module;
 use Iquety\Application\IoEngine\ModuleSet;
 use Iquety\Application\RunWeb;
 use Iquety\Http\Adapter\Session\MemorySession;
-use Iquety\Http\Adapter\Session\NativeSession;
 use Iquety\Http\HttpFactory;
 use Iquety\Http\Session;
 use Iquety\Injection\Container;
@@ -33,7 +32,7 @@ class RunWebFcResponsesTest extends TestCase
         $response = $this->makeResponse($container, '/not-found');
 
         $this->assertSame(404, $response->getStatusCode());
-        $this->assertSame('"Not Found"', (string)$response->getBody());
+        $this->assertSame('"Not Found"', (string) $response->getBody());
     }
 
     /** @test */
@@ -45,7 +44,7 @@ class RunWebFcResponsesTest extends TestCase
         $response = $this->makeResponse($container, '/test-error-command');
 
         $this->assertSame(500, $response->getStatusCode());
-        $this->assertSame('"Mensagem de erro"', (string)$response->getBody());
+        $this->assertSame('"Mensagem de erro"', (string) $response->getBody());
     }
 
     /** @test */
@@ -56,7 +55,7 @@ class RunWebFcResponsesTest extends TestCase
         $response = $this->makeResponse($container, '/');
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('Iquety Framework - Home Page', (string)$response->getBody());
+        $this->assertSame('Iquety Framework - Home Page', (string) $response->getBody());
     }
 
     /** @test */
@@ -70,7 +69,7 @@ class RunWebFcResponsesTest extends TestCase
 
         $this->assertSame('/destination', $response->getHeaderLine('Location'));
 
-        $this->assertSame('', (string)$response->getBody());
+        $this->assertSame('', (string) $response->getBody());
     }
 
     /** @test */
@@ -89,7 +88,7 @@ class RunWebFcResponsesTest extends TestCase
 
         $this->assertSame(
             $expected,
-            (string)$response->getBody()
+            (string) $response->getBody()
         );
     }
 
@@ -104,7 +103,7 @@ class RunWebFcResponsesTest extends TestCase
 
         $this->assertSame(
             '"ok"',
-            (string)$response->getBody()
+            (string) $response->getBody()
         );
     }
 
@@ -154,13 +153,11 @@ class RunWebFcResponsesTest extends TestCase
             $engineSet->bootEnginesWith($extraModule);
         }
 
-        $runner = new RunWeb(
+        return new RunWeb(
             Environment::DEVELOPMENT,
             $container,
             $module,
             $engineSet
         );
-
-        return $runner;
     }
 }

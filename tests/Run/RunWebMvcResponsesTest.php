@@ -11,7 +11,6 @@ use Iquety\Application\IoEngine\ModuleSet;
 use Iquety\Application\IoEngine\Mvc\MvcEngine;
 use Iquety\Application\RunWeb;
 use Iquety\Http\Adapter\Session\MemorySession;
-use Iquety\Http\Adapter\Session\NativeSession;
 use Iquety\Http\HttpFactory;
 use Iquety\Http\HttpMethod;
 use Iquety\Http\Session;
@@ -39,7 +38,7 @@ class RunWebMvcResponsesTest extends TestCase
         $response = $this->makeResponse($container, '/not-found');
 
         $this->assertSame(404, $response->getStatusCode());
-        $this->assertSame('"Not Found"', (string)$response->getBody());
+        $this->assertSame('"Not Found"', (string) $response->getBody());
     }
 
     /** @test */
@@ -51,7 +50,7 @@ class RunWebMvcResponsesTest extends TestCase
         $response = $this->makeResponse($container, '/error');
 
         $this->assertSame(500, $response->getStatusCode());
-        $this->assertSame('"Mensagem de erro"', (string)$response->getBody());
+        $this->assertSame('"Mensagem de erro"', (string) $response->getBody());
     }
 
     /** @test */
@@ -62,7 +61,7 @@ class RunWebMvcResponsesTest extends TestCase
         $response = $this->makeResponse($container, '/');
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('"Iquety Framework - Home Page"', (string)$response->getBody());
+        $this->assertSame('"Iquety Framework - Home Page"', (string) $response->getBody());
     }
 
     /** @test */
@@ -79,7 +78,7 @@ class RunWebMvcResponsesTest extends TestCase
         $response = $this->makeResponse($container, '/', $extraModule);
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame('"Custom home page"', (string)$response->getBody());
+        $this->assertSame('"Custom home page"', (string) $response->getBody());
     }
 
     /** @test */
@@ -97,7 +96,7 @@ class RunWebMvcResponsesTest extends TestCase
 
         $this->assertSame('/destination', $response->getHeaderLine('Location'));
 
-        $this->assertSame('', (string)$response->getBody());
+        $this->assertSame('', (string) $response->getBody());
 
         $this->assertSame(400, $response->getStatusCode());
     }
@@ -120,7 +119,7 @@ class RunWebMvcResponsesTest extends TestCase
             'email' => []
         ]);
 
-        $this->assertSame($expected, (string)$response->getBody());
+        $this->assertSame($expected, (string) $response->getBody());
 
         $this->assertSame(400, $response->getStatusCode());
     }
@@ -138,7 +137,7 @@ class RunWebMvcResponsesTest extends TestCase
 
         $response = $this->makeResponse($container, '/', $extraModule);
 
-        $this->assertSame('"ok"', (string)$response->getBody());
+        $this->assertSame('"ok"', (string) $response->getBody());
 
         $this->assertSame(200, $response->getStatusCode());
     }
@@ -193,13 +192,11 @@ class RunWebMvcResponsesTest extends TestCase
             $engineSet->bootEnginesWith($extraModule);
         }
 
-        $runner = new RunWeb(
+        return new RunWeb(
             Environment::DEVELOPMENT,
             $container,
             $module,
             $engineSet
         );
-
-        return $runner;
     }
 }

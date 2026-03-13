@@ -28,11 +28,8 @@ class MvcModuleTest extends TestCase
     /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
     private function makeModule(): MvcModule
     {
-        return new class extends MvcModule
-        {
-            public function bootDependencies(Container $container): void
-            {
-            }
+        return new class () extends MvcModule {
+            public function bootDependencies(Container $container): void {}
         };
     }
 }

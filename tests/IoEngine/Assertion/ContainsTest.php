@@ -36,9 +36,9 @@ class ContainsTest extends AssertionCase
         //    'ção!#' // string
         // ]
 
-        $list["array contains string 222"]   = $this->makeAssertionItem('param_array', '222');
-        $list["array contains string 11.5"]  = $this->makeAssertionItem('param_array', '11.5');
-        $list["array contains string ção!#"] = $this->makeAssertionItem('param_array', 'ção!#');
+        $list['array contains string 222']   = $this->makeAssertionItem('param_array', '222');
+        $list['array contains string 11.5']  = $this->makeAssertionItem('param_array', '11.5');
+        $list['array contains string ção!#'] = $this->makeAssertionItem('param_array', 'ção!#');
 
         return $list;
     }
@@ -60,15 +60,15 @@ class ContainsTest extends AssertionCase
         //    'ção!#' // string
         // ]
 
-        $list["array not contains int 112"]             = $this->makeAssertionItem('param_array', 112);
-        $list["array not contains int string 112"]      = $this->makeAssertionItem('param_array', '112');
-        $list["array not contains int 221"]             = $this->makeAssertionItem('param_array', 221);
-        $list["array not contains int string 221"]      = $this->makeAssertionItem('param_array', '221');
-        $list["array not contains decimal 22.4"]        = $this->makeAssertionItem('param_array', 22.4);
-        $list["array not contains decimal string 22.4"] = $this->makeAssertionItem('param_array', '22.4');
-        $list["array not contains decimal 11.4"]        = $this->makeAssertionItem('param_array', 11.4);
-        $list["array not contains decimal string 11.4"] = $this->makeAssertionItem('param_array', '11.4');
-        $list["array not contains string ção#"]         = $this->makeAssertionItem('param_array', 'ção#');
+        $list['array not contains int 112']             = $this->makeAssertionItem('param_array', 112);
+        $list['array not contains int string 112']      = $this->makeAssertionItem('param_array', '112');
+        $list['array not contains int 221']             = $this->makeAssertionItem('param_array', 221);
+        $list['array not contains int string 221']      = $this->makeAssertionItem('param_array', '221');
+        $list['array not contains decimal 22.4']        = $this->makeAssertionItem('param_array', 22.4);
+        $list['array not contains decimal string 22.4'] = $this->makeAssertionItem('param_array', '22.4');
+        $list['array not contains decimal 11.4']        = $this->makeAssertionItem('param_array', 11.4);
+        $list['array not contains decimal string 11.4'] = $this->makeAssertionItem('param_array', '11.4');
+        $list['array not contains string ção#']         = $this->makeAssertionItem('param_array', 'ção#');
 
         return $list;
     }

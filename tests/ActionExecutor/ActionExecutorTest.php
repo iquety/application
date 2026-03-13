@@ -53,7 +53,7 @@ class ActionExecutorTest extends TestCase
         ));
 
         $this->assertSame(HttpStatus::OK->value, $response->getStatusCode());
-        $this->assertSame('Test', (string)$response->getBody());
+        $this->assertSame('Test', (string) $response->getBody());
     }
 
     /**
@@ -90,7 +90,7 @@ class ActionExecutorTest extends TestCase
         ));
 
         $this->assertSame(HttpStatus::NOT_FOUND->value, $response->getStatusCode());
-        $this->assertSame('Not Found', (string)$response->getBody());
+        $this->assertSame('Not Found', (string) $response->getBody());
     }
 
     /**
@@ -127,6 +127,6 @@ class ActionExecutorTest extends TestCase
         ));
 
         $this->assertSame(HttpStatus::INTERNAL_SERVER_ERROR->value, $response->getStatusCode());
-        $this->assertSame('Error message', (string)$response->getBody());
+        $this->assertSame('Error message', (string) $response->getBody());
     }
 }

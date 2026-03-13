@@ -11,6 +11,34 @@ use Psr\Http\Message\ServerRequestInterface;
 class RequestFactory
 {
     /**
+     * @param array<string,mixed> $payload
+     * @param array<int|string,mixed> $uploadedFiles
+     */
+    public function makeRequest(
+        string $method,
+        string $path,
+        string $query,
+        array $payload,
+        array $uploadedFiles
+    ): ServerRequestInterface {
+        $queryParamList = [];
+
+        parse_str($query, $queryParamList);
+
+        return (new ServerRequestFactory())->fromGlobals(
+            [
+                'REQUEST_URI'    => "$path?$query",
+                'QUERY_STRING'   => $query,
+                'REQUEST_METHOD' => mb_strtoupper($method)
+            ],
+            null,
+            $payload,
+            null,
+            $this->makeUploadedFiles($this->normalizedFiles($uploadedFiles)),
+            null
+        );
+    }
+    /**
      * Transforma a estrutura de características (recebida pelo PHP) em uma
      * estrutura mais correta, de entidades
      *
@@ -46,7 +74,7 @@ class RequestFactory
      *     ],
      * ]
      * @param array<int|string,mixed> $phpFiles
-     * @return array<string,array<string,mixed>|array<int,array<string,mixed>>>
+     * @return array<string,array<int,array<string,mixed>>|array<string,mixed>>
      */
     private function normalizedFiles(array $phpFiles): array
     {
@@ -83,36 +111,7 @@ class RequestFactory
     }
 
     /**
-     * @param array<string,mixed> $payload
-     * @param array<int|string,mixed> $uploadedFiles
-     */
-    public function makeRequest(
-        string $method,
-        string $path,
-        string $query,
-        array $payload,
-        array $uploadedFiles
-    ): ServerRequestInterface {
-        $queryParamList = [];
-
-        parse_str($query, $queryParamList);
-
-        return (new ServerRequestFactory())->fromGlobals(
-            [
-                'REQUEST_URI'    => "$path?$query",
-                'QUERY_STRING'   => $query,
-                'REQUEST_METHOD' => mb_strtoupper($method)
-            ],
-            null,
-            $payload,
-            null,
-            $this->makeUploadedFiles($this->normalizedFiles($uploadedFiles)),
-            null
-        );
-    }
-
-    /**
-     * @param array<string,array<string,mixed>|array<int,array<string,mixed>>> $uploadedFiles
+     * @param array<string,array<int,array<string,mixed>>|array<string,mixed>> $uploadedFiles
      * @return array<string,array<int,UploadedFile>>
      */
     private function makeUploadedFiles(array $uploadedFiles): array
@@ -127,7 +126,7 @@ class RequestFactory
     }
 
     /**
-     * @param array<string,mixed>|array<int,array<string,mixed>> $fileSet
+     * @param array<int,array<string,mixed>>|array<string,mixed> $fileSet
      * @return array<int,UploadedFile>
      */
     private function makeUploadedInput(array $fileSet): array

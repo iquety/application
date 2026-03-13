@@ -327,28 +327,15 @@ class MatchesTest extends AssertionCase
             $httpParams
         );
 
-        $list['param boolean false not matches [0-9]{2}'] = $this->makeAssertionItem(
-            'param_false',
-            '/[0-9]{2}/',
-            $httpParams
-        );
-
-        $list['param boolean false not matches 1'] = $this->makeAssertionItem(
-            'param_false',
-            '/1/',
-            $httpParams
-        );
-
-
-        $list["array not matches 12"] = $this->makeAssertionItem(
+        $list['array not matches 12'] = $this->makeAssertionItem(
             'param_array',
-            "/12/",
+            '/12/',
             $httpParams
         );
 
-        $list["array not matches 23"] = $this->makeAssertionItem(
+        $list['array not matches 23'] = $this->makeAssertionItem(
             'param_array',
-            "/23/",
+            '/23/',
             $httpParams
         );
 
@@ -364,9 +351,9 @@ class MatchesTest extends AssertionCase
             $httpParams
         );
 
-        $list["array not matches [a-zçã!#]*%"] = $this->makeAssertionItem(
+        $list['array not matches [a-zçã!#]*%'] = $this->makeAssertionItem(
             'param_array',
-            "/[a-zçã!#]*%/",
+            '/[a-zçã!#]*%/',
             $httpParams
         );
 

@@ -22,9 +22,7 @@ class EngineSet
 
     private ?IoEngine $mainEngine = null;
 
-    public function __construct(private Container $container)
-    {
-    }
+    public function __construct(private Container $container) {}
 
     public function add(IoEngine $engine): void
     {

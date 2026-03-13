@@ -10,9 +10,7 @@ use Iquety\Application\IoEngine\Action\Input;
 
 class CommandSource
 {
-    public function __construct(private string $namespace)
-    {
-    }
+    public function __construct(private string $namespace) {}
 
     public function getIdentity(): string
     {
@@ -37,7 +35,7 @@ class CommandSource
     private function processUriLevel(string $bootstrapClass, Input $input): ?ActionDescriptor
     {
         $className = $this->namespace
-            . "\\"
+            . '\\'
             . $this->makeNamespaceFrom($input);
 
         if (class_exists($className) === true) {
@@ -66,7 +64,7 @@ class CommandSource
             $nodeList[$index] = $this->makeCamelCase($nodePath);
         }
 
-        return implode("\\", $nodeList);
+        return implode('\\', $nodeList);
     }
 
     private function makeCamelCase(string $nodePath): string

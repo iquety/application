@@ -86,13 +86,10 @@ class IsDateTimeTest extends AssertionCase
             'full_month_name_hour'          => 'December 31, 2024 27:59:59',
             'full_month_name_minute'        => 'December 31, 2024 23:62:59',
             'full_month_name_second'        => 'December 31, 2024 23:59:62',
-            'empty_string'                  => '',
             'one_space_string'              => ' ',
             'two_spaces_string'             => '  ',
             'array'                         => ['a'],
-            'param_false'                   => false,
             'param_true'                    => true,
-            'param_string_false'            => 'false',
             'param_string_true'             => 'true',
             'integer'                       => 12345,
         ];

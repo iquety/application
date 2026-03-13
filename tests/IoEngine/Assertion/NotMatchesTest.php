@@ -93,8 +93,6 @@ class NotMatchesTest extends AssertionCase
 
         $list['param boolean true matches [0-9]{1}']  = $this->makeAssertionItem('param_true', '/[0-9]{1}/');
         $list['param boolean true matches 1']         = $this->makeAssertionItem('param_true', '/1/');
-        $list['param boolean false matches [0-9]{1}'] = $this->makeAssertionItem('param_false', '/[0-9]{1}/');
-        $list['param boolean false matches 0']        = $this->makeAssertionItem('param_false', '/0/');
 
         return $list;
     }

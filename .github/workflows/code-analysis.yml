@@ -6,7 +6,7 @@ on:
 
 jobs:
   phpcs:
-    name: PHPCodeSniffer
+    name: PHP CS Fixer
     runs-on: ubuntu-latest
 
     steps:
@@ -21,7 +21,7 @@ jobs:
 
       - run: composer update --no-progress
 
-      - run: vendor/bin/phpcs --standard=PSR1,PSR12 src tests
+      - run: vendor/bin/php-cs-fixer check --diff -v
 
   phpunit:
     name: PHPUnit on ${{ matrix.php }} ${{ matrix.composer-flags }}
@@ -39,10 +39,6 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: curl, mbstring
           tools: composer:v2
-
-      - name: "Use PHPUnit 9.3+ on PHP 8"
-        run: composer require --no-update --dev phpunit/phpunit:^9.3
-        if: "matrix.php == '8.4'"
 
       - run: composer update --no-progress
       - run: vendor/bin/phpunit --no-coverage

@@ -11,9 +11,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class TwoCommand extends Command
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function execute(Input $input): ResponseInterface
     {
@@ -22,6 +20,6 @@ class TwoCommand extends Command
 
         $response = $factory->createResponse(202);
 
-        return $response->withBody($factory->createStream((string)$input));
+        return $response->withBody($factory->createStream((string) $input));
     }
 }

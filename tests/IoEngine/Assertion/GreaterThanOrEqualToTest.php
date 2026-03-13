@@ -134,7 +134,7 @@ class GreaterThanOrEqualToTest extends AssertionCase
             '11.5'
         );
 
-        $list["array greater than or equal to 4"] = $this->makeAssertionItem('param_array', 4);
+        $list['array greater than or equal to 4'] = $this->makeAssertionItem('param_array', 4);
 
         return $list;
     }
@@ -219,7 +219,7 @@ class GreaterThanOrEqualToTest extends AssertionCase
             '11.6'
         );
 
-        $list["array not greater than or equal to 6"] = $this->makeAssertionItem('param_array', 6);
+        $list['array not greater than or equal to 6'] = $this->makeAssertionItem('param_array', 6);
 
         return $list;
     }

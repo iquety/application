@@ -52,17 +52,17 @@ class ConfigurationTest extends TestCase
         $config = Configuration::loadFrom(__DIR__ . '/Stubs/env');
 
         $this->assertSame([
-            "TEST"        => "xxxx",
-            "DB_NAME"     => "yyyy",
-            "EMPTY"       => "",
-            "NUMERIC_ONE" => 123,
-            "NUMERIC_TWO" => 1.23,
-            "FALSE_1"     => 0,
-            "FALSE_2"     => false,
-            "FALSE_3"     => false,
-            "TRUE_1"      => 1,
-            "TRUE_2"      => true,
-            "TRUE_3"      => true,
+            'TEST'        => 'xxxx',
+            'DB_NAME'     => 'yyyy',
+            'EMPTY'       => '',
+            'NUMERIC_ONE' => 123,
+            'NUMERIC_TWO' => 1.23,
+            'FALSE_1'     => 0,
+            'FALSE_2'     => false,
+            'FALSE_3'     => false,
+            'TRUE_1'      => 1,
+            'TRUE_2'      => true,
+            'TRUE_3'      => true,
         ], $config->toArray());
     }
 

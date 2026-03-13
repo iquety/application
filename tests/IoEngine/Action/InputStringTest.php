@@ -269,7 +269,7 @@ class InputStringTest extends TestCase
 
         $this->assertSame(
             '0=two&1=three&x=four&y=1&z=1.1',
-            (string)$input
+            (string) $input
         );
 
         $input->next();
@@ -283,7 +283,7 @@ class InputStringTest extends TestCase
 
         $this->assertSame(
             '0=three&x=four&y=1&z=1.1',
-            (string)$input
+            (string) $input
         );
     }
 

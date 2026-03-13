@@ -20,17 +20,50 @@ class Input
 
     private string $method = 'GET';
 
-    /** @var array<int|string,float|int|string|FileSet> */
+    /** @var array<int|string,FileSet|float|int|string> */
     private array $paramList = [];
 
     /** @var array<int,string> */
     private array $path = [];
 
-    /** @var array<int|string,float|int|string|FileSet> */
+    /** @var array<int|string,FileSet|float|int|string> */
     private array $originalParamList = [];
 
     /** @var array<int,string> */
     private array $target = [];
+
+    /**
+     * @param array<int,string> $originalPath
+     * @param array<int|string,mixed> $originalParamList
+     */
+    private function __construct(array $originalPath, array $originalParamList, string $method)
+    {
+        $this->method = mb_strtoupper($method);
+
+        $this->path = $originalPath;
+
+        foreach ($originalParamList as $name => $value) {
+            if (is_array($value) === true && isset($value[0]) && gettype($value[0]) === 'object') {
+                $this->paramList[$name] = $this->makeFileSet($value);
+
+                continue;
+            }
+
+            $this->paramList[$name] = $value;
+        }
+
+        $this->originalParamList = $this->paramList;
+
+        $this->reset();
+    }
+
+    public function __toString(): string
+    {
+        return http_build_query(array_map(
+            fn($item) => (string) $item,
+            $this->paramList
+        ));
+    }
 
     /** @param array<int,string> $argumentList */
     public static function fromConsoleArguments(array $argumentList): self
@@ -57,36 +90,11 @@ class Input
 
         $paramList = array_merge(
             $parser->toArray(),
-            (array)$request->getParsedBody(),
+            (array) $request->getParsedBody(),
             $request->getUploadedFiles()
         );
 
         return new self($parser->getPath(), $paramList, $request->getMethod());
-    }
-
-    /**
-     * @param array<int,string> $originalPath
-     * @param array<int|string,mixed> $originalParamList
-     */
-    private function __construct(array $originalPath, array $originalParamList, string $method)
-    {
-        $this->method = mb_strtoupper($method);
-
-        $this->path = $originalPath;
-
-        foreach ($originalParamList as $name => $value) {
-            if (is_array($value) === true && isset($value[0]) && gettype($value[0]) === 'object') {
-                $this->paramList[$name] = $this->makeFileSet($value);
-
-                continue;
-            }
-
-            $this->paramList[$name] = $value;
-        }
-
-        $this->originalParamList = $this->paramList;
-
-        $this->reset();
     }
 
     /** @param array<int|string,mixed> $paramList */
@@ -157,8 +165,8 @@ class Input
         $this->next();
     }
 
-    /** @return array<string,mixed>|bool|float|int|string|FileSet|null */
-    public function param(int|string $param): array|bool|float|int|string|FileSet|null
+    /** @return null|array<string,mixed>|bool|FileSet|float|int|string */
+    public function param(int|string $param): null|array|bool|FileSet|float|int|string
     {
         return $this->paramList[$param] ?? null;
     }
@@ -167,14 +175,6 @@ class Input
     public function toArray(): array
     {
         return $this->paramList;
-    }
-
-    public function __toString(): string
-    {
-        return http_build_query(array_map(
-            fn($item) => (string)$item,
-            $this->paramList
-        ));
     }
 
     /** @param array<int,UploadedFileInterface> $fileList */

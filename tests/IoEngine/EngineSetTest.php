@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\IoEngine;
 
 use Iquety\Application\IoEngine\EngineSet;
-use Iquety\Injection\Container;
 use RuntimeException;
 use Tests\TestCase;
 

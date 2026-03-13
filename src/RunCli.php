@@ -24,8 +24,7 @@ class RunCli
         private Container $container,
         private Module $mainModule, // @phpstan-ignore-line
         private EngineSet $engineSet
-    ) {
-    }
+    ) {}
 
     /** @SuppressWarnings(PHPMD.StaticAccess) */
     public function run(ConsoleInput $consoleInput): ConsoleOutput

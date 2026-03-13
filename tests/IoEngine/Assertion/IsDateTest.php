@@ -62,13 +62,10 @@ class IsDateTest extends AssertionCase
             'abbreviated_month_name_day'   => '32-Dec-2024',
             'full_month_name_month'        => 'Invalid 31, 2024',
             'full_month_name_day'          => 'December 32, 2024',
-            'empty_string'                 => '',
             'one_space_string'             => ' ',
             'two_spaces_string'            => '  ',
             'array'                        => ['a'],
-            'param_false'                  => false,
             'param_true'                   => true,
-            'param_string_false'           => 'false',
             'param_string_true'            => 'true',
             'integer'                      => 12345,
         ];

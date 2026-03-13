@@ -127,7 +127,7 @@ class InputConsoleArgumentsTest extends TestCase
         $this->assertSame('my-script', $input->param(0));
         $this->assertSame('-x', $input->param(1));
 
-         // o próximo nó do 'path' nunca vai existir no terminal
+        // o próximo nó do 'path' nunca vai existir no terminal
         $this->assertFalse($input->hasNext());
 
         $this->assertSame([
@@ -153,7 +153,7 @@ class InputConsoleArgumentsTest extends TestCase
         $this->assertSame('my-script', $input->param(0));
         $this->assertSame('-x', $input->param(1));
 
-         // o próximo nó do 'path' nunca vai existir no terminal
+        // o próximo nó do 'path' nunca vai existir no terminal
         $this->assertFalse($input->hasNext());
 
         $this->assertSame([
@@ -188,7 +188,7 @@ class InputConsoleArgumentsTest extends TestCase
         $this->assertSame('my-script', $input->param(0));
         $this->assertSame('-x', $input->param(1));
 
-         // o próximo nó do 'path' nunca vai existir no terminal
+        // o próximo nó do 'path' nunca vai existir no terminal
         $this->assertFalse($input->hasNext());
 
         $this->assertSame([
@@ -214,7 +214,7 @@ class InputConsoleArgumentsTest extends TestCase
         $this->assertSame('my-script', $input->param(0));
         $this->assertSame('-x', $input->param(1));
 
-         // o próximo nó do 'path' nunca vai existir no terminal
+        // o próximo nó do 'path' nunca vai existir no terminal
         $this->assertFalse($input->hasNext());
 
         $this->assertSame([
@@ -237,7 +237,7 @@ class InputConsoleArgumentsTest extends TestCase
         $this->assertSame('my-script', $input->param(0));
         $this->assertSame('-x', $input->param(1));
 
-         // o próximo nó do 'path' nunca vai existir no terminal
+        // o próximo nó do 'path' nunca vai existir no terminal
         $this->assertFalse($input->hasNext());
 
         $this->assertSame([
@@ -272,7 +272,7 @@ class InputConsoleArgumentsTest extends TestCase
         $this->assertSame('my-script', $input->param(0));
         $this->assertSame('-x', $input->param(1));
 
-         // o próximo nó do 'path' nunca vai existir no terminal
+        // o próximo nó do 'path' nunca vai existir no terminal
         $this->assertFalse($input->hasNext());
 
         $this->assertSame([
@@ -343,7 +343,7 @@ class InputConsoleArgumentsTest extends TestCase
 
         $this->assertSame(
             '0=my-script&1=-x&2=four&3=-y&4=five&5=-z&6=six',
-            (string)$input
+            (string) $input
         );
     }
 
@@ -376,7 +376,7 @@ class InputConsoleArgumentsTest extends TestCase
 
         $this->assertSame(
             '0=my-script&1=-x&2=four&3=-y&4=five&5=-z&6=six',
-            (string)$input
+            (string) $input
         );
 
         $input->appendParams(['id' => 99, 'name' => 'Teste']);
@@ -395,7 +395,7 @@ class InputConsoleArgumentsTest extends TestCase
 
         $this->assertSame(
             '0=my-script&1=-x&2=four&3=-y&4=five&5=-z&6=six&id=99&name=Teste',
-            (string)$input
+            (string) $input
         );
     }
 }

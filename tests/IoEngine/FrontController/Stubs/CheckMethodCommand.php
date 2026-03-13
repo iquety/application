@@ -12,11 +12,6 @@ class CheckMethodCommand extends Command
 {
     private HttpMethod $httpMethod;
 
-    protected function useMethod(HttpMethod $httpMethod): void
-    {
-        $this->httpMethod = $httpMethod;
-    }
-
     /** @SuppressWarnings(PHPMD.ShortVariable) */
     public function execute(Input $input, int $id): string
     {
@@ -28,5 +23,10 @@ class CheckMethodCommand extends Command
             $id,
             $input
         );
+    }
+
+    protected function useMethod(HttpMethod $httpMethod): void
+    {
+        $this->httpMethod = $httpMethod;
     }
 }

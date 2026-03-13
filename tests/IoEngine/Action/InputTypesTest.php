@@ -131,12 +131,12 @@ class InputTypesTest extends TestCase
     {
         return [
             'inputFile' => [
-                "name"      => "attachment.gif",
-                "full_path" => "attachment.gif",
-                'type'      => "image/gif",
-                "tmp_name"  => __DIR__ . "/attachment.gif",
-                "error"     => 0,
-                "size"      => 173
+                'name'      => 'attachment.gif',
+                'full_path' => 'attachment.gif',
+                'type'      => 'image/gif',
+                'tmp_name'  => __DIR__ . '/attachment.gif',
+                'error'     => 0,
+                'size'      => 173
             ]
         ];
     }

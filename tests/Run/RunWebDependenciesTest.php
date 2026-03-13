@@ -34,9 +34,9 @@ class RunWebDependenciesTest extends TestCase
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(sprintf(
-            'Please provide an implementation for the %s dependency ' .
-            'in the given module in the Application->bootApplication or ' .
-            'Application->bootModule method',
+            'Please provide an implementation for the %s dependency '
+            . 'in the given module in the Application->bootApplication or '
+            . 'Application->bootModule method',
             'Session'
         ));
 
@@ -48,9 +48,9 @@ class RunWebDependenciesTest extends TestCase
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(sprintf(
-            'Please provide an implementation for the %s dependency ' .
-            'in the given module in the Application->bootApplication or ' .
-            'Application->bootModule method',
+            'Please provide an implementation for the %s dependency '
+            . 'in the given module in the Application->bootApplication or '
+            . 'Application->bootModule method',
             'HttpFactory'
         ));
 
@@ -109,7 +109,7 @@ class RunWebDependenciesTest extends TestCase
         $response = $container->getWithArguments(ResponseInterface::class, [201, 'Test']);
 
         $this->assertSame(201, $response->getStatusCode());
-        $this->assertSame('Test', (string)$response->getReasonPhrase());
+        $this->assertSame('Test', (string) $response->getReasonPhrase());
     }
 
     /** @test */
@@ -117,8 +117,8 @@ class RunWebDependenciesTest extends TestCase
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            'The implementation provided to the HttpFactory dependency in the module ' .
-            'provided in the Application->bootApplication method is invalid',
+            'The implementation provided to the HttpFactory dependency in the module '
+            . 'provided in the Application->bootApplication method is invalid',
         );
 
         $container = $this->makeContainer();
@@ -141,8 +141,8 @@ class RunWebDependenciesTest extends TestCase
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            'The implementation provided to the Session dependency in the module ' .
-            'provided in the Application->bootApplication method is invalid',
+            'The implementation provided to the Session dependency in the module '
+            . 'provided in the Application->bootApplication method is invalid',
         );
 
         $factory = $this->makeHttpFactory();

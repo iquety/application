@@ -17,8 +17,7 @@ class MvcModuleTwo extends MvcModule
         private string $routePath = '/',
         private string $routeAction = '',
         private array $dependencyList = []
-    ) {
-    }
+    ) {}
 
     public function bootDependencies(Container $container): void
     {
