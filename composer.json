@@ -4,6 +4,7 @@
     "description": "Libraries to create a decoupled application",
     "keywords": ["framework", "application", "mvc", "application controller"],
     "license": "MIT",
+    "minimum-stability": "stable",
     "require": {
         "php": "^8.4",
         "guzzlehttp/guzzle": "^7.10",
@@ -47,7 +48,6 @@
         "preferred-install": "dist",
         "sort-packages": true
     },
-    "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts" : {
         "test": [
