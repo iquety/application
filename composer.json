@@ -7,18 +7,20 @@
     "require": {
         "php": "^8.4",
         "guzzlehttp/guzzle": "^7.10",
-        "iquety/console": "*",
-        "iquety/http": "^2.0",
-        "iquety/injection": "dev-main",
-        "iquety/pubsub": "dev-main",
-        "iquety/routing": "dev-main",
-        "iquety/shield": "dev-main",
+        "iquety/console": "@stable",
+        "iquety/http": "@stable",
+        "iquety/injection": "@stable",
+        "iquety/pubsub": "@stable",
+        "iquety/routing": "@stable",
+        "iquety/shield": "@stable",
         "laminas/laminas-diactoros": "^3.8",
         "nyholm/psr7": "^1.8",
         "nyholm/psr7-server": "^1.1",
         "psr/container": "^2.0",
         "psr/http-factory": "^1.0",
-        "psr/http-message": "^1.0"
+        "psr/http-message": "^1.0",
+        "twig/twig": "^3.14",
+        "filp/whoops": "^2.18"
     },
     "require-dev": {
         "behat/behat": "^3.14",
